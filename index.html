@@ -8,113 +8,105 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; }
-        .marquee-container { background: linear-gradient(90deg, #ff4d00, #ff9000); color: white; padding: 10px 0; font-weight: 900; font-size: 11px; overflow: hidden; }
-        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; -webkit-tap-highlight-color: transparent; }
+        /* BANDE ANNONCE RÉDUITE */
+        .marquee-container { background: #000; color: #fff; padding: 5px 0; font-weight: 700; font-size: 10px; overflow: hidden; border-bottom: 2px solid #ff6600; }
+        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; white-space: nowrap; }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-        .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; padding: 20px; overflow-y: auto; }
+        
+        .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; padding: 15px; }
         .layer.active { display: flex; align-items: center; justify-content: center; }
-        .ali-card { background: white; border-radius: 20px; border: 1px solid #eee; overflow: hidden; }
+        .ali-card { background: white; border-radius: 15px; overflow: hidden; border: 1px solid #eee; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="pb-24">
+<body class="pb-20">
 
-    <div class="marquee-container shadow-lg">
-        <div class="marquee-text italic">
-            🌟 LATYFA SHOP.COM • PROMO DU 14 AU 28 FÉVRIER : -15% DÈS 20.000 F ! • LIVRAISON 1000 F VIA WAVE • RETRAIT ABOBO MARCHÉ NUIT • 🌟
+    <div class="marquee-container">
+        <div class="marquee-text uppercase tracking-tighter">
+            🔥 PROMO DU 14 AU 28 FÉVRIER : -15% DÈS 20.000 F ! • LIVRAISON 1000 F VIA WAVE • RETRAIT ABOBO MARCHÉ NUIT • BIENVENUE ! 🔥
         </div>
     </div>
 
-    <header class="sticky top-0 z-[100] bg-white p-4 border-b flex items-center justify-between shadow-sm">
+    <header class="sticky top-0 z-[100] bg-white p-3 border-b flex items-center justify-between shadow-sm">
         <div class="flex items-center gap-2" onclick="location.reload()">
-            <div class="bg-orange-600 text-white font-black px-2 py-1 rounded-lg">L</div>
-            <h1 class="font-black text-xl tracking-tighter uppercase italic">Latyfa<span class="text-orange-500">shop.com</span></h1>
+            <div class="bg-orange-600 text-white font-black px-2 py-0.5 rounded text-sm">L</div>
+            <h1 class="font-black text-lg tracking-tighter uppercase italic">Latyfa<span class="text-orange-500 italic">shop.com</span></h1>
         </div>
-        <button onclick="showCart()" class="relative bg-gray-100 p-3 rounded-full">
+        <button onclick="showCart()" class="relative bg-orange-50 p-2.5 rounded-full">
             <span class="text-xl">🛒</span>
-            <span id="cart-count" class="absolute -top-1 -right-1 bg-orange-600 text-white text-[10px] h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
+            <span id="cart-count" class="absolute -top-1 -right-1 bg-black text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">0</span>
         </button>
     </header>
 
-    <div class="flex gap-6 overflow-x-auto p-5 bg-white border-b no-scrollbar">
-        <div onclick="filterCat('Tous')" class="flex-none text-center cursor-pointer">
-            <div class="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center text-xl">🏠</div>
-            <span class="text-[10px] font-black uppercase mt-2 block">Tous</span>
-        </div>
-        <div onclick="filterCat('Vêtement')" class="flex-none text-center cursor-pointer">
-            <div class="w-14 h-14 bg-orange-50 rounded-full flex items-center justify-center text-xl">👗</div>
-            <span class="text-[10px] font-black uppercase mt-2 block">Styles</span>
-        </div>
-        <div onclick="filterCat('Chaussures')" class="flex-none text-center cursor-pointer">
-            <div class="w-14 h-14 bg-orange-50 rounded-full flex items-center justify-center text-xl">👠</div>
-            <span class="text-[10px] font-black uppercase mt-2 block">Paires</span>
-        </div>
-        <div onclick="filterCat('Accessoire')" class="flex-none text-center cursor-pointer">
-            <div class="w-14 h-14 bg-orange-50 rounded-full flex items-center justify-center text-xl">👜</div>
-            <span class="text-[10px] font-black uppercase mt-2 block">Luxe</span>
-        </div>
+    <div class="flex gap-4 overflow-x-auto p-4 bg-white no-scrollbar border-b">
+        <button onclick="filterCat('Tous')" class="bg-orange-600 text-white px-5 py-2 rounded-full text-[10px] font-black uppercase">Tous</button>
+        <button onclick="filterCat('Vêtement')" class="bg-gray-100 px-5 py-2 rounded-full text-[10px] font-black uppercase">Styles</button>
+        <button onclick="filterCat('Chaussures')" class="bg-gray-100 px-5 py-2 rounded-full text-[10px] font-black uppercase">Paires</button>
+        <button onclick="filterCat('Accessoire')" class="bg-gray-100 px-5 py-2 rounded-full text-[10px] font-black uppercase">Luxe</button>
     </div>
 
-    <main id="grid" class="p-4 grid grid-cols-2 md:grid-cols-4 gap-4"></main>
+    <main id="grid" class="p-3 grid grid-cols-2 md:grid-cols-4 gap-3"></main>
 
     <div id="modal-cart" class="layer">
-        <div class="bg-white w-full max-w-md rounded-3xl p-6 relative shadow-2xl">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-2xl">✕</button>
-            <h2 class="font-black text-2xl mb-6 text-orange-600 italic">VOTRE PANIER</h2>
-            <div id="cart-items" class="space-y-3 mb-6 max-h-48 overflow-y-auto"></div>
+        <div class="bg-white w-full max-w-md rounded-2xl p-5 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModals()" class="absolute top-3 right-3 text-xl">✕</button>
+            <h2 class="font-black text-xl mb-4 text-orange-600 italic uppercase">Mon Panier</h2>
+            
+            <div id="cart-items" class="space-y-2 mb-4"></div>
 
-            <div class="border-t pt-4 space-y-4">
-                <div class="flex justify-between font-black text-xl italic bg-gray-50 p-4 rounded-2xl">
-                    <span class="text-gray-400 uppercase text-xs self-center">Total à payer</span>
+            <div class="border-t pt-3 space-y-3">
+                <div class="flex justify-between font-black text-lg bg-orange-50 p-3 rounded-xl border border-orange-100">
+                    <span class="text-xs uppercase">Total Final</span>
                     <span id="final-total" class="text-orange-600">0 F</span>
                 </div>
                 
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Choisissez votre option</p>
-                <select id="method-select" onchange="updateCartUI()" class="w-full p-4 bg-gray-100 rounded-2xl outline-none font-bold text-sm border-2 border-transparent focus:border-orange-500">
+                <select id="method-select" onchange="updateCartUI()" class="w-full p-3 bg-gray-50 border rounded-xl text-xs font-bold outline-none">
                     <option value="Standard">Livraison Standard (+1.500 F)</option>
                     <option value="Wave">Paiement Wave (+1.000 F Livraison)</option>
-                    <option value="Boutique">Retrait Abobo Marché Nuit (Gratuit)</option>
+                    <option value="Boutique">Retrait Abobo Marché Nuit (0 F)</option>
                 </select>
 
-                <input type="text" id="c-nom" placeholder="Nom complet pour le reçu" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none">
+                <input type="text" id="c-nom" placeholder="Nom complet du client" class="w-full p-3 bg-gray-50 border rounded-xl text-xs outline-none">
                 
-                <button id="main-action-btn" onclick="handleCheckout()" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase text-sm tracking-widest">
-                    Confirmer la commande
+                <button id="main-action-btn" onclick="handleCheckout()" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest shadow-lg active:scale-95 transition">
+                    Valider la commande
                 </button>
             </div>
         </div>
     </div>
 
     <div id="modal-wave-verify" class="layer">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl border-4 border-blue-600">
-            <div class="text-blue-600 text-5xl mb-4">💳</div>
-            <h2 class="font-black text-xl mb-4 uppercase italic">Vérification Wave</h2>
-            <p class="text-[11px] text-gray-500 mb-6">Avez-vous finalisé le transfert sur Wave ?</p>
-            <div class="flex items-start gap-3 bg-blue-50 p-4 rounded-2xl mb-6 text-left">
-                <input type="checkbox" id="pay-confirm" class="w-6 h-6 mt-1 accent-blue-600">
-                <label for="pay-confirm" class="text-[10px] font-bold text-blue-900 uppercase">Je confirme avoir effectué le transfert du montant total.</label>
+        <div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center shadow-2xl border-2 border-blue-500">
+            <div class="text-blue-500 text-4xl mb-3">✔️</div>
+            <h2 class="font-black text-lg mb-2 uppercase">Paiement Terminé ?</h2>
+            <p class="text-[10px] text-gray-500 mb-4">Cliquez sur la case pour débloquer votre reçu officiel.</p>
+            
+            <div class="flex items-center gap-3 bg-blue-50 p-3 rounded-xl mb-4 text-left">
+                <input type="checkbox" id="pay-confirm" class="w-5 h-5 accent-blue-600">
+                <label for="pay-confirm" class="text-[9px] font-bold text-blue-900 uppercase">Je confirme avoir effectué le transfert Wave.</label>
             </div>
-            <button onclick="checkAndGenerateWave()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-lg">Générer mon Reçu Wave</button>
+
+            <button onclick="checkAndGenerate()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-black uppercase text-[10px] shadow-lg">
+                Générer Reçu & WhatsApp
+            </button>
         </div>
     </div>
 
     <div style="position: absolute; left: -9999px;">
-        <div id="pdf-receipt" style="padding: 50px; width: 600px; background: white; border: 20px solid #fdfdfd; font-family: sans-serif;">
-            <div style="text-align:center; border-bottom: 2px solid #ff6600; padding-bottom: 20px;">
-                <h1 style="color: #ff6600; font-size: 35px; font-weight: 900; margin: 0;">LATYFA SHOP</h1>
-                <p style="font-size: 14px; color: #888;">Luxe & Sourcing • Abobo Marché Nuit</p>
+        <div id="pdf-receipt" style="padding: 40px; width: 550px; background: white; font-family: sans-serif;">
+            <div style="text-align:center; border-bottom: 2px solid #ff6600; padding-bottom: 15px;">
+                <h1 style="color: #ff6600; font-size: 28px; margin: 0;">LATYFA SHOP</h1>
+                <p style="font-size: 11px; color: #666;">ABOBO MARCHÉ NUIT • CÔTE D'IVOIRE</p>
             </div>
-            <div style="margin: 40px 0; font-size: 14px; line-height: 1.8;">
-                <div style="background: #fdf2f2; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px dashed #ff6600;">
-                    <p style="margin:0; font-weight: 900; color: #ff6600;">CODE DE SÉCURITÉ : <span id="r-code" style="font-size: 18px;"></span></p>
-                </div>
+            <div style="margin: 20px 0; font-size: 13px;">
+                <p><b>CODE SÉCURITÉ :</b> <span id="r-code" style="color:#ff6600; font-weight:bold"></span></p>
                 <p><b>CLIENT :</b> <span id="r-nom"></span></p>
-                <p><b>DATE :</b> <span id="r-date"></span></p>
-                <p><b>MODE :</b> <span id="r-mode" style="font-weight: 900;"></span></p>
+                <p><b>MODE :</b> <span id="r-mode"></span></p>
             </div>
-            <div id="r-items" style="margin-bottom: 40px;"></div>
-            <div style="background: #000; color: #fff; padding: 25px; border-radius: 15px; text-align: right;">
-                <h2 id="r-total" style="margin: 0; font-size: 30px; font-weight: 900; color: #ff6600;"></h2>
+            <div id="r-items" style="border-top: 1px solid #eee; margin-bottom: 20px;"></div>
+            <div style="background: #000; color: #fff; padding: 15px; text-align: right; font-size: 20px; font-weight: bold;">
+                TOTAL : <span id="r-total"></span>
             </div>
         </div>
     </div>
@@ -122,7 +114,7 @@
     <script>
         const products = [
             { id: 1, cat: "Vêtement", nom: "Robe Satin Royale", prix: 45000, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" },
-            { id: 2, cat: "Chaussures", nom: "Escarpins Crystal Luxe", prix: 35000, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500" },
+            { id: 2, cat: "Chaussures", nom: "Escarpins Crystal", prix: 35000, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500" },
             { id: 3, cat: "Accessoire", nom: "Sac Croco Signature", prix: 28000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500" }
         ];
 
@@ -131,13 +123,13 @@
 
         function render() {
             const grid = document.getElementById('grid');
-            const filtered = products.filter(p => (currentCat === "Tous" || p.cat === currentCat));
+            const filtered = products.filter(p => currentCat === "Tous" || p.cat === currentCat);
             grid.innerHTML = filtered.map(p => `
                 <div class="ali-card flex flex-col" onclick="addToCartAuto(${p.id})">
                     <img src="${p.img}" class="w-full aspect-square object-cover">
-                    <div class="p-3">
-                        <h3 class="text-[10px] font-black uppercase truncate">${p.nom}</h3>
-                        <p class="text-orange-600 font-black text-sm italic">${p.prix.toLocaleString()} F</p>
+                    <div class="p-2">
+                        <h3 class="text-[10px] font-bold uppercase truncate">${p.nom}</h3>
+                        <p class="text-orange-600 font-black text-xs italic">${p.prix.toLocaleString()} F</p>
                     </div>
                 </div>`).join('');
         }
@@ -148,22 +140,30 @@
             showCart();
         }
 
+        // SUPPRIMER DU PANIER
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            document.getElementById('cart-count').innerText = cart.length;
+            updateCartUI();
+        }
+
         function updateCartUI() {
             const m = document.getElementById('method-select').value;
             const btn = document.getElementById('main-action-btn');
             let bruteTotal = cart.reduce((s, i) => s + i.prix, 0);
             let ship = (m === "Standard") ? 1500 : (m === "Wave") ? 1000 : 0;
             
-            document.getElementById('cart-items').innerHTML = cart.map(i => `<div class="flex justify-between text-xs font-bold border-b border-gray-50 pb-2"><span>${i.nom}</span><span>${i.prix.toLocaleString()} F</span></div>`).join('');
+            document.getElementById('cart-items').innerHTML = cart.map((i, idx) => `
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg border border-gray-100">
+                    <span class="text-[10px] font-bold uppercase truncate w-2/3">${i.nom}</span>
+                    <div class="flex items-center gap-2">
+                        <b class="text-[10px]">${i.prix.toLocaleString()} F</b>
+                        <button onclick="removeFromCart(${idx})" class="text-red-500 font-bold px-1">✕</button>
+                    </div>
+                </div>`).join('');
+            
             document.getElementById('final-total').innerText = (bruteTotal + ship).toLocaleString() + " F";
-
-            if(m === "Wave") {
-                btn.innerText = "Payer avec Wave (Sécurisé)";
-                btn.className = "w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase text-xs";
-            } else {
-                btn.innerText = "Commander sur WhatsApp";
-                btn.className = "w-full bg-black text-white py-5 rounded-2xl font-black uppercase text-xs";
-            }
+            btn.innerText = (m === "Wave") ? "Payer avec Wave" : "Confirmer WhatsApp";
         }
 
         function handleCheckout() {
@@ -173,42 +173,37 @@
 
             if(m === "Wave") {
                 window.open("https://pay.wave.com/m/M_ci_C7lQKnUsMYT3/c/ci/");
-                setTimeout(() => {
-                    closeModals();
-                    document.getElementById('modal-wave-verify').classList.add('active');
-                }, 1000);
+                closeModals();
+                setTimeout(() => { document.getElementById('modal-wave-verify').classList.add('active'); }, 1500);
             } else {
-                // COMMANDE NORMALE (Standard ou Boutique)
                 generateAndSend(false);
             }
         }
 
-        function checkAndGenerateWave() {
-            if(!document.getElementById('pay-confirm').checked) return alert("Confirmez le paiement !");
+        function checkAndGenerate() {
+            if(!document.getElementById('pay-confirm').checked) return alert("Veuillez cocher la confirmation.");
             generateAndSend(true);
         }
 
         function generateAndSend(isWave) {
             const nom = document.getElementById('c-nom').value;
             const total = document.getElementById('final-total').innerText;
-            const m = document.getElementById('method-select').value;
-            const secCode = "LAT-" + (isWave ? "WV" : "OK") + "-" + Math.random().toString(36).substr(2, 5).toUpperCase();
-            const date = new Date().toLocaleString('fr-FR');
+            const secCode = "LAT-" + (isWave ? "WV" : "ST") + "-" + Math.random().toString(36).substr(2, 4).toUpperCase();
 
-            // Mise à jour du PDF
             document.getElementById('r-code').innerText = secCode;
             document.getElementById('r-nom').innerText = nom.toUpperCase();
-            document.getElementById('r-date').innerText = date;
-            document.getElementById('r-mode').innerText = (isWave) ? "WAVE PAYÉ" : m.toUpperCase();
-            document.getElementById('r-items').innerHTML = cart.map(i => `<p style="border-bottom: 1px solid #eee; padding: 10px 0;">${i.nom} <span style="float:right">${i.prix.toLocaleString()} F</span></p>`).join('');
+            document.getElementById('r-mode').innerText = isWave ? "WAVE DIRECT" : "LIVRAISON STANDARD";
+            document.getElementById('r-items').innerHTML = cart.map(i => `<p style="font-size:12px; border-bottom:1px solid #eee; padding:5px 0;">${i.nom} <span style="float:right">${i.prix.toLocaleString()} F</span></p>`).join('');
             document.getElementById('r-total').innerText = total;
 
             const element = document.getElementById('pdf-receipt');
-            html2pdf().from(element).set({ margin: 10, filename: `Reçu_Latyfa_${secCode}.pdf` }).save();
+            html2pdf().from(element).set({ filename: `Latyfa_${secCode}.pdf` }).save();
 
-            // WhatsApp
-            let msg = `🌟 COMMANDE LATYFA SHOP 🌟\n🆔 CODE: ${secCode}\n👤 CLIENT: ${nom}\n💰 TOTAL: ${total}\n🚚 MODE: ${m}\n\nJ'envoie mon reçu officiel PDF.`;
-            window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
+            // WhatsApp avec petit délai pour éviter les blocages navigateurs
+            setTimeout(() => {
+                let msg = `✨ COMMANDE LATYFA SHOP ✨\n\n🆔 CODE: ${secCode}\n👤 CLIENT: ${nom}\n💰 TOTAL: ${total}\n✅ PAIEMENT: ${isWave ? "WAVE" : "Standard"}\n\nJ'envoie mon reçu PDF...`;
+                window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`, '_blank');
+            }, 800);
 
             cart = [];
             document.getElementById('cart-count').innerText = "0";
