@@ -1,100 +1,129 @@
 <!DOCTYPE html>
-<html lang="fr" translate="no">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA | Maison de Luxe</title>
+    <title>LATYFA SHOP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Montserrat', sans-serif; background-color: #ffffff; scroll-behavior: smooth; }
-        .luxury-font { font-family: 'Playfair Display', serif; }
-        .btn-black { background-color: #1a1a1a; color: white; transition: 0.3s; border: 1px solid #1a1a1a; }
-        .btn-black:hover { background-color: white; color: #1a1a1a; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); overflow-y: auto; }
+        .modal { display: none; position: fixed; inset: 0; background: white; z-index: 1000; overflow-y: auto; padding: 20px; }
         .modal.active { display: block; }
-        .category-btn { position: relative; color: #888; transition: 0.3s; background: none; border: none; cursor: pointer; }
-        .category-btn.active { color: #c49a6c; font-weight: 600; }
-        .category-btn::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background-color: #c49a6c; transition: 0.3s; }
-        .category-btn.active::after { width: 100%; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .luxury { font-family: 'Playfair Display', serif; }
     </style>
 </head>
-<body>
+<body class="bg-white text-gray-900">
 
-    <div class="bg-[#c49a6c] text-white text-[9px] py-2 text-center uppercase font-bold tracking-[0.2em] sticky top-0 z-[60]">
-        ✨ -15% SUR TOUT DÈS 20 000 F CFA ✨
-    </div>
-
-    <header class="border-b border-gray-100 sticky top-[26px] bg-white/95 backdrop-blur-md z-50 px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <img src="https://i.ibb.co/v4m8fXp/1000167529.png" class="h-10 w-10 rounded-full border">
-            <h1 class="luxury-font text-xl uppercase tracking-widest">Latyfa</h1>
-        </div>
-        <div class="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest">
-            <div onclick="toggleCompte()" class="cursor-pointer">Compte</div>
-            <div onclick="ouvrirPanier()" class="cursor-pointer">Panier <span id="cart-count" class="text-[#c49a6c] font-bold">(0)</span></div>
+    <header class="p-4 border-b flex justify-between items-center sticky top-0 bg-white z-50">
+        <h1 class="luxury text-xl">LATYFA</h1>
+        <button onclick="ouvrirPanier()" class="text-[10px] font-bold uppercase tracking-widest">
+            Panier (<span id="cart-count">0</span>)
         </div>
     </header>
 
-    <div class="px-6 py-4 bg-gray-50/50 border-b border-gray-100">
-        <div class="max-w-md mx-auto relative">
-            <input type="text" id="search-input" onkeyup="rechercher()" placeholder="RECHERCHER UN ARTICLE..." class="w-full bg-white border border-gray-200 rounded-full py-2.5 px-10 text-[9px] tracking-[0.2em] outline-none focus:border-[#c49a6c]">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 opacity-30">🔍</span>
+    <main class="p-4 grid grid-cols-2 gap-4" id="grid"></main>
+
+    <div id="cartModal" class="modal">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="luxury text-2xl">MON PANIER</h2>
+            <button onclick="fermerPanier()" class="text-2xl">&times;</button>
+        </div>
+        <div id="cart-list" class="space-y-4 mb-8"></div>
+        
+        <div id="checkout-zone" style="display:none">
+            <div class="bg-gray-50 p-4 mb-6 text-sm">
+                <div class="flex justify-between"><span>Total</span> <span id="total-price" class="font-bold">0</span> F</div>
+            </div>
+            <input type="text" id="client-nom" placeholder="VOTRE NOM" class="w-full border-b p-3 mb-4 outline-none">
+            <input type="text" id="client-tel" placeholder="N° WHATSAPP" class="w-full border-b p-3 mb-6 outline-none">
+            
+            <button onclick="validerCommande()" class="w-full bg-black text-white py-4 text-xs font-bold uppercase">Passer la commande</button>
         </div>
     </div>
 
-    <nav class="flex overflow-x-auto gap-8 px-6 py-6 justify-start md:justify-center border-b border-gray-50 text-[10px] tracking-widest uppercase font-medium no-scrollbar">
-        <button onclick="filtrer('Tous', event)" class="category-btn active whitespace-nowrap">Tous</button>
-        <button onclick="filtrer('Bijoux', event)" class="category-btn whitespace-nowrap">Bijoux</button>
-        <button onclick="filtrer('Vêtements Homme', event)" class="category-btn whitespace-nowrap">Homme</button>
-        <button onclick="filtrer('Vêtements Femme', event)" class="category-btn whitespace-nowrap">Femme</button>
-        <button onclick="filtrer('Sac', event)" class="category-btn whitespace-nowrap">Sacs</button>
-        <button onclick="filtrer('Chaussures', event)" class="category-btn whitespace-nowrap">Chaussures</button>
-        <button onclick="filtrer('Draps', event)" class="category-btn whitespace-nowrap">Draps</button>
-        <button onclick="filtrer('Perles', event)" class="category-btn whitespace-nowrap">Perles Hanches</button>
-    </nav>
+    <script>
+        // 1. Vos données
+        const produits = [
+            { id: 1, nom: "Sac Croco Luxe", prix: 45000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500" },
+            { id: 2, nom: "Escarpins Gold", prix: 35000, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500" },
+            { id: 3, nom: "Robe Soie", prix: 28000, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" }
+        ];
 
-    <main class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8" id="product-grid"></div>
-    </main>
+        let panier = [];
 
-    <div id="cartModal" class="modal">
-        <div class="max-w-2xl mx-auto py-12 px-6">
-            <h2 class="luxury-font text-3xl text-center mb-10">Ma Sélection</h2>
-            <div id="cart-items" class="space-y-4 mb-8"></div>
+        // 2. Affichage des produits
+        function afficherBoutique() {
+            const container = document.getElementById('grid');
+            container.innerHTML = '';
+            produits.forEach(p => {
+                container.innerHTML += `
+                    <div class="border p-2">
+                        <img src="${p.img}" class="w-full aspect-square object-cover mb-2">
+                        <h3 class="text-[10px] font-bold uppercase">${p.nom}</h3>
+                        <p class="text-xs mb-2">${p.prix.toLocaleString()} F</p>
+                        <button onclick="ajouter(${p.id})" class="w-full bg-gray-100 py-2 text-[9px] font-bold uppercase active:bg-black active:text-white">Ajouter</button>
+                    </div>`;
+            });
+        }
 
-            <div id="checkout-form" style="display:none;" class="space-y-6">
-                <div class="bg-gray-50 p-4 rounded-lg space-y-2 text-sm uppercase tracking-wider">
-                    <div class="flex justify-between"><span>Sous-total</span> <span id="subtotal">0</span> F</div>
-                    <div id="promo-row" class="flex justify-between text-green-600 hidden font-bold">
-                        <span>Remise Promo (-15%)</span> <span>- <span id="discount-val">0</span> F</span>
-                    </div>
-                    <div class="flex justify-between font-bold text-lg border-t pt-2">
-                        <span>TOTAL</span> <span><span id="total">0</span> F CFA</span>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 gap-4">
-                    <input type="text" id="nom" placeholder="NOM COMPLET" class="border-b p-3 outline-none focus:border-[#c49a6c] text-sm uppercase">
-                    <input type="text" id="adresse" placeholder="VILLE & QUARTIER DE LIVRAISON" class="border-b p-3 outline-none focus:border-[#c49a6c] text-sm uppercase">
-                </div>
-                <div class="space-y-3 pt-4 border-t">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase">Réception</p>
-                    <div class="flex gap-4">
-                        <label class="flex-1 p-3 border rounded text-center cursor-pointer">
-                            <input type="radio" name="delivery-mode" value="LIVRAISON" checked onchange="toggleAdresse(true)"> <span class="text-[9px] font-bold block">LIVRAISON</span>
-                        </label>
-                        <label class="flex-1 p-3 border rounded text-center cursor-pointer">
-                            <input type="radio" name="delivery-mode" value="BOUTIQUE" onchange="toggleAdresse(false)"> <span class="text-[9px] font-bold block">BOUTIQUE</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase">Paiement</p>
-                    <label class="flex items-center gap-3 p-3 border rounded cursor-pointer">
-                        <input type="radio" name="pay" value="WAVE" checked> <span class="text-sm">WAVE (Lien direct)</span>
-                    </label>
-                    
+        // 3. Ajouter au panier
+        window.ajouter = function(id) {
+            const p = produits.find(item => item.id === id);
+            panier.push(p);
+            document.getElementById('cart-count').innerText = panier.length;
+            // Petit retour visuel
+            console.log("Ajouté:", p.nom);
+        };
+
+        // 4. Gestion Panier
+        window.ouvrirPanier = function() {
+            const modal = document.getElementById('cartModal');
+            const list = document.getElementById('cart-list');
+            modal.classList.add('active');
+            
+            if(panier.length === 0) {
+                list.innerHTML = "<p class='text-center text-gray-400 py-10'>Votre panier est vide.</p>";
+                document.getElementById('checkout-zone').style.display = 'none';
+            } else {
+                list.innerHTML = '';
+                let total = 0;
+                panier.forEach((item, index) => {
+                    total += item.prix;
+                    list.innerHTML += `
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <span class="text-xs font-bold uppercase">${item.nom}</span>
+                            <div class="flex items-center gap-4">
+                                <span class="text-xs">${item.prix.toLocaleString()} F</span>
+                                <button onclick="supprimer(${index})" class="text-red-500 font-bold">&times;</button>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById('total-price').innerText = total.toLocaleString();
+                document.getElementById('checkout-zone').style.display = 'block';
+            }
+        };
+
+        window.fermerPanier = function() {
+            document.getElementById('cartModal').classList.remove('active');
+        };
+
+        window.supprimer = function(index) {
+            panier.splice(index, 1);
+            document.getElementById('cart-count').innerText = panier.length;
+            ouvrirPanier();
+        };
+
+        window.validerCommande = function() {
+            const nom = document.getElementById('client-nom').value;
+            if(!nom) return alert("Entrez votre nom");
+            
+            const msg = `Bonjour Latyfa, je souhaite commander pour ${document.getElementById('total-price').innerText} F. Nom: ${nom}`;
+            window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
+        };
+
+        // Lancement
+        afficherBoutique();
+    </script>
+</body>
+</html>
