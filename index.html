@@ -8,14 +8,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f8f8; scroll-behavior: smooth; }
         .marquee-container { background: #000; color: #fff; padding: 6px 0; font-weight: 700; font-size: 10px; overflow: hidden; border-bottom: 2px solid #ff6600; }
         .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; white-space: nowrap; }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
         .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; padding: 15px; }
         .layer.active { display: flex; align-items: center; justify-content: center; }
-        .social-icon { transition: 0.3s; filter: grayscale(1); }
-        .social-icon:hover { filter: grayscale(0); transform: scale(1.1); }
+        .section-card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 20px; border: 1px solid #eee; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -23,79 +22,87 @@
 
     <div class="marquee-container">
         <div class="marquee-text uppercase">
-            🔥 PROMO FÉVRIER : -15% DÈS 20.000 F ! • LIVRAISON 1000 F VIA WAVE • RETRAIT ABOBO MARCHÉ NUIT • QUALITÉ SUPÉRIEURE 🔥
+            🌟 BIENVENUE SUR LATYFA SHOP.COM • CRÉÉ LE 06 FÉVRIER 2026 • MAGASIN PHYSIQUE À ABOBO MARCHÉ NUIT • 🌟
         </div>
     </div>
 
     <header class="sticky top-0 z-[100] bg-white p-4 border-b flex items-center justify-between shadow-sm">
         <div class="flex items-center gap-2" onclick="location.reload()">
-            <div class="bg-orange-600 text-white font-black px-2 py-1 rounded">L</div>
-            <h1 class="font-black text-lg tracking-tighter uppercase italic">Latyfa<span class="text-orange-500">shop.com</span></h1>
+            <div class="bg-orange-600 text-white font-black px-2 py-1 rounded text-sm">L</div>
+            <h1 class="font-black text-lg tracking-tighter uppercase italic">Latyfa<span class="text-orange-500 italic">shop.com</span></h1>
         </div>
-        <button onclick="showCart()" class="relative bg-orange-50 p-2 rounded-full">
+        <button onclick="showCart()" class="relative bg-orange-50 p-2.5 rounded-full">
             <span class="text-xl">🛒</span>
             <span id="cart-count" class="absolute -top-1 -right-1 bg-black text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full">0</span>
         </button>
     </header>
 
     <div class="flex gap-4 overflow-x-auto p-4 bg-white no-scrollbar border-b">
-        <button onclick="filterCat('Tous')" class="bg-orange-600 text-white px-6 py-2 rounded-full text-[10px] font-bold uppercase shrink-0">Tout voir</button>
-        <button onclick="filterCat('Vêtement')" class="bg-gray-100 px-6 py-2 rounded-full text-[10px] font-bold uppercase shrink-0">Habillements</button>
-        <button onclick="filterCat('Chaussures')" class="bg-gray-100 px-6 py-2 rounded-full text-[10px] font-bold uppercase shrink-0">Chaussures</button>
-        <button onclick="filterCat('Accessoire')" class="bg-gray-100 px-6 py-2 rounded-full text-[10px] font-bold uppercase shrink-0">Sacs & Access</button>
+        <button onclick="filterCat('Tous')" class="bg-orange-600 text-white px-6 py-2 rounded-full text-[10px] font-bold uppercase shrink-0">Boutique</button>
+        <button onclick="location.href='#a-propos'" class="bg-gray-100 px-6 py-2 rounded-full text-[10px] font-bold uppercase shrink-0">À Propos</button>
+        <button onclick="location.href='#politique'" class="bg-gray-100 px-6 py-2 rounded-full text-[10px] font-bold uppercase shrink-0">Retours</button>
     </div>
 
-    <main id="grid" class="p-4 grid grid-cols-2 md:grid-cols-4 gap-4 min-h-[50vh]"></main>
+    <main id="grid" class="p-4 grid grid-cols-2 md:grid-cols-4 gap-4 min-h-[40vh]"></main>
 
-    <footer class="bg-white border-t mt-10 p-8">
-        <div class="max-w-4xl mx-auto text-center space-y-6">
-            <h3 class="font-black text-sm uppercase tracking-widest text-orange-600">Rejoignez-nous</h3>
-            
-            <div class="flex justify-center gap-6">
-                <a href="#" class="social-icon">🔵 Facebook</a>
-                <a href="#" class="social-icon">📸 Instagram</a>
-                <a href="#" class="social-icon">🎵 Tik Tok</a>
-                <a href="https://wa.me/2250709002881" class="font-bold text-green-600">💬 WhatsApp</a>
-            </div>
+    <div class="p-4 space-y-4 max-w-4xl mx-auto">
+        
+        <section id="a-propos" class="section-card">
+            <h2 class="font-black text-orange-600 text-sm uppercase mb-3 tracking-widest">✨ À Propos de nous</h2>
+            <p class="text-xs text-gray-600 leading-relaxed">
+                <strong>Latyfa Shop</strong> est une boutique en ligne avec un magasin physique situé à <strong>Abobo marché de nuit</strong>. 
+                Créé le <strong>6 février 2026</strong>, Latyfa shop met à votre disposition divers articles disponibles sur le site et en boutique. 
+                <br><br>
+                Propriétaire : <strong>Traoré Djeneba</strong><br>
+                Contact : <strong>07 09 00 28 81</strong>
+            </p>
+        </section>
 
-            <div class="space-y-2 text-xs text-gray-500 font-bold">
-                <p>📞 Service Client : +225 07 09 00 28 81</p>
-                <p>📍 Boutique : Abobo Marché Nuit, Côte d'Ivoire</p>
-            </div>
+        <section id="politique" class="section-card border-l-4 border-l-orange-500">
+            <h2 class="font-black text-gray-800 text-sm uppercase mb-3 tracking-widest">🔄 Politique de retour</h2>
+            <p class="text-xs text-gray-600 leading-relaxed">
+                Aucun produit livré ou récupéré ne sera remboursé passé un délai de <strong>10 jours</strong>. 
+                Les produits remboursés ne doivent pas être abîmés ; si ils le sont, aucun remboursement n'est possible. 
+                <br><br>
+                Pour éviter tout désagrément, veuillez bien vous rassurer que le produit désiré est compatible à votre souhait. 
+                Pour toute information, veuillez nous contacter à notre adresse WhatsApp ou par appel. 
+                <br><br>
+                <em>Merci pour la compréhension.</em>
+            </p>
+        </section>
+    </div>
 
-            <hr class="w-10 mx-auto border-orange-200">
-
-            <div class="text-[9px] text-gray-400 uppercase tracking-widest leading-loose">
-                <p>&copy; 2026 LATYFA SHOP.COM - TOUS DROITS RÉSERVÉS.</p>
-                <p>LUXE & SOURCING INTERNATIONAL</p>
-            </div>
+    <footer class="bg-white border-t p-8 text-center space-y-6">
+        <div class="flex justify-center gap-6 text-xs font-bold uppercase tracking-tighter">
+            <a href="#" class="text-blue-600">Facebook</a>
+            <a href="#" class="text-pink-600">Instagram</a>
+            <a href="#" class="text-black">TikTok</a>
+            <a href="https://wa.me/2250709002881" class="text-green-600">WhatsApp</a>
+        </div>
+        <div class="text-[9px] text-gray-400 font-bold uppercase">
+            <p>&copy; 2026 LATYFA SHOP.COM - TOUS DROITS RÉSERVÉS</p>
+            <p>CONCEPTION OFFICIELLE DU 06 FÉVRIER 2026</p>
         </div>
     </footer>
 
     <div id="modal-cart" class="layer">
         <div class="bg-white w-full max-w-md rounded-3xl p-6 relative max-h-[85vh] overflow-y-auto">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-xl">✕</button>
-            <h2 class="font-black text-xl mb-6 text-orange-600 uppercase">Mon Panier</h2>
-            
-            <div id="cart-items" class="space-y-3 mb-6"></div>
-
+            <h2 class="font-black text-xl mb-6 text-orange-600 uppercase italic">Mon Panier</h2>
+            <div id="cart-items" class="space-y-2 mb-6"></div>
             <div class="border-t pt-4 space-y-4">
-                <div class="bg-orange-50 p-4 rounded-2xl flex justify-between font-black text-lg border border-orange-100">
-                    <span class="text-xs uppercase self-center">Total à payer</span>
+                <div class="bg-orange-50 p-4 rounded-2xl flex justify-between font-black">
+                    <span class="text-[10px] uppercase">Total net</span>
                     <span id="final-total" class="text-orange-600">0 F</span>
                 </div>
-                
-                <p class="text-[10px] font-black text-gray-400 uppercase">Mode de réception :</p>
-                <select id="method-select" onchange="updateCartUI()" class="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl text-xs font-bold outline-none focus:border-orange-500">
+                <select id="method-select" onchange="updateCartUI()" class="w-full p-4 bg-gray-50 border rounded-2xl text-xs font-bold">
                     <option value="Standard">Livraison Standard (+1.500 F)</option>
                     <option value="Wave">Paiement Wave (+1.000 F Livraison)</option>
                     <option value="Boutique">Retrait Abobo Marché Nuit (Gratuit)</option>
                 </select>
-
-                <input type="text" id="c-nom" placeholder="Entrez votre nom complet" class="w-full p-4 bg-gray-50 border rounded-2xl text-sm outline-none">
-                
-                <button id="main-action-btn" onclick="handleCheckout()" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl active:scale-95 transition">
-                    Passer la commande
+                <input type="text" id="c-nom" placeholder="Votre Nom complet" class="w-full p-4 bg-gray-50 border rounded-2xl text-sm outline-none">
+                <button id="main-action-btn" onclick="handleCheckout()" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl">
+                    Confirmer la commande
                 </button>
             </div>
         </div>
@@ -103,24 +110,15 @@
 
     <div id="modal-wave-verify" class="layer">
         <div class="bg-white w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl">
-            <div class="text-blue-500 text-5xl mb-4 italic font-black">Wave</div>
-            <h2 class="font-black text-lg mb-4 uppercase">Action Requise</h2>
-            
-            <div class="bg-blue-50 p-4 rounded-2xl text-left mb-6 border-l-4 border-blue-500">
-                <p class="text-[10px] text-blue-900 font-bold leading-relaxed italic">
-                    💡 NOTE : Une fois le paiement validé, un reçu PDF sera automatiquement téléchargé. 
-                    Vous devrez l'envoyer sur WhatsApp accompagné de la capture d'écran de votre paiement Wave.
-                </p>
-            </div>
-            
+            <div class="text-blue-600 font-black text-3xl mb-4 italic">Wave Direct</div>
+            <p class="text-[10px] text-gray-500 mb-6 leading-relaxed bg-blue-50 p-4 rounded-xl italic">
+                💡 <strong>Important :</strong> Une fois le paiement validé, un reçu PDF sera téléchargé automatiquement. Envoyez ce reçu sur WhatsApp avec la <strong>capture d'écran</strong> de votre paiement.
+            </p>
             <div class="flex items-center gap-3 mb-6">
                 <input type="checkbox" id="pay-confirm" class="w-6 h-6 accent-blue-600">
-                <label for="pay-confirm" class="text-[10px] font-black text-gray-600 uppercase">J'ai effectué le paiement</label>
+                <label for="pay-confirm" class="text-[10px] font-black text-gray-700 uppercase">J'ai payé le montant total</label>
             </div>
-
-            <button onclick="checkAndGenerate()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase text-[10px] shadow-lg">
-                Générer Reçu & WhatsApp
-            </button>
+            <button onclick="checkAndGenerate()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase text-[10px]">Générer Reçu & WhatsApp</button>
         </div>
     </div>
 
@@ -128,26 +126,26 @@
         <div id="pdf-receipt" style="padding: 50px; width: 600px; background: white; font-family: sans-serif; border: 15px solid #f8f8f8;">
             <div style="text-align:center; border-bottom: 3px solid #ff6600; padding-bottom: 20px;">
                 <h1 style="color: #ff6600; font-size: 32px; margin: 0; font-weight: 900;">LATYFA SHOP</h1>
-                <p style="font-size: 12px; color: #666; letter-spacing: 3px;">LUXE & SOURCING INTERNATIONAL</p>
+                <p style="font-size: 11px; color: #666;">MAGASIN PHYSIQUE : ABOBO MARCHÉ NUIT</p>
             </div>
             <div style="margin: 30px 0; font-size: 14px;">
                 <p><b>RÉFÉRENCE :</b> <span id="r-code" style="color:#ff6600"></span></p>
                 <p><b>CLIENT :</b> <span id="r-nom"></span></p>
                 <p><b>DATE :</b> <span id="r-date"></span></p>
-                <p><b>MODE :</b> <span id="r-mode" style="font-weight: 900;"></span></p>
+                <p><b>MODE :</b> <span id="r-mode"></span></p>
             </div>
-            <div id="r-items" style="border-top: 2px solid #eee; margin-bottom: 30px;"></div>
+            <div id="r-items" style="border-top: 1px solid #eee; margin-bottom: 30px;"></div>
             <div style="background: #000; color: #fff; padding: 20px; text-align: right; font-size: 24px; font-weight: 900; border-radius: 10px;">
-                TOTAL PAYÉ : <span id="r-total"></span>
+                TOTAL : <span id="r-total"></span>
             </div>
-            <p style="text-align: center; font-size: 10px; color: gray; margin-top: 40px;">Merci de nous envoyer ce document + la capture Wave sur WhatsApp.</p>
+            <p style="text-align: center; font-size: 9px; color: gray; margin-top: 40px;">Propriétaire : Traoré Djeneba | Créé le 06/02/2026</p>
         </div>
     </div>
 
     <script>
         const products = [
             { id: 1, cat: "Vêtement", nom: "Robe Satin Royale", prix: 45000, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" },
-            { id: 2, cat: "Chaussures", nom: "Escarpins Crystal Luxe", prix: 35000, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500" },
+            { id: 2, cat: "Chaussures", nom: "Escarpins Crystal", prix: 35000, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500" },
             { id: 3, cat: "Accessoire", nom: "Sac Croco Signature", prix: 28000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500" }
         ];
 
@@ -161,7 +159,7 @@
                 <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm" onclick="addToCartAuto(${p.id})">
                     <img src="${p.img}" class="w-full aspect-square object-cover">
                     <div class="p-3">
-                        <h3 class="text-[10px] font-bold uppercase truncate text-gray-600">${p.nom}</h3>
+                        <h3 class="text-[10px] font-bold uppercase truncate text-gray-500">${p.nom}</h3>
                         <p class="text-orange-600 font-black text-xs italic">${p.prix.toLocaleString()} F</p>
                     </div>
                 </div>`).join('');
@@ -186,7 +184,7 @@
             let ship = (m === "Standard") ? 1500 : (m === "Wave") ? 1000 : 0;
             
             document.getElementById('cart-items').innerHTML = cart.map((i, idx) => `
-                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl">
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl">
                     <span class="text-[10px] font-black uppercase w-2/3">${i.nom}</span>
                     <div class="flex items-center gap-3">
                         <b class="text-[10px]">${i.prix.toLocaleString()} F</b>
@@ -195,13 +193,13 @@
                 </div>`).join('');
             
             document.getElementById('final-total').innerText = (bruteTotal + ship).toLocaleString() + " F";
-            btn.innerText = (m === "Wave") ? "Payer via Wave App" : "Confirmer via WhatsApp";
+            btn.innerText = (m === "Wave") ? "Payer via Wave" : "WhatsApp Direct";
         }
 
         function handleCheckout() {
             const m = document.getElementById('method-select').value;
             const nom = document.getElementById('c-nom').value;
-            if(!nom || cart.length === 0) return alert("Veuillez remplir votre nom !");
+            if(!nom || cart.length === 0) return alert("Vérifiez votre panier et votre nom.");
 
             if(m === "Wave") {
                 window.open("https://pay.wave.com/m/M_ci_C7lQKnUsMYT3/c/ci/");
@@ -213,7 +211,7 @@
         }
 
         function checkAndGenerate() {
-            if(!document.getElementById('pay-confirm').checked) return alert("Veuillez confirmer le paiement !");
+            if(!document.getElementById('pay-confirm').checked) return alert("Veuillez confirmer le paiement.");
             generateAndSend(true);
         }
 
@@ -225,15 +223,15 @@
             document.getElementById('r-code').innerText = secCode;
             document.getElementById('r-nom').innerText = nom.toUpperCase();
             document.getElementById('r-date').innerText = new Date().toLocaleString();
-            document.getElementById('r-mode').innerText = isWave ? "PAIEMENT WAVE" : "LIVRAISON STANDARD";
+            document.getElementById('r-mode').innerText = isWave ? "WAVE DIRECT" : "LIVRAISON STANDARD";
             document.getElementById('r-items').innerHTML = cart.map(i => `<p style="font-size:14px; border-bottom:1px solid #eee; padding:8px 0;">${i.nom} <span style="float:right">${i.prix.toLocaleString()} F</span></p>`).join('');
             document.getElementById('r-total').innerText = total;
 
             const element = document.getElementById('pdf-receipt');
-            html2pdf().from(element).set({ margin: 10, filename: `Recu_Latyfa_${secCode}.pdf` }).save();
+            html2pdf().from(element).set({ filename: `Latyfa_${secCode}.pdf` }).save();
 
             setTimeout(() => {
-                let msg = `🌟 NOUVELLE COMMANDE LATYFA 🌟\n\n🆔 CODE: ${secCode}\n👤 CLIENT: ${nom}\n💰 TOTAL: ${total}\n✅ MODE: ${isWave ? "WAVE (Capture jointe)" : "Standard"}\n\nJ'ai bien reçu mon reçu PDF.`;
+                let msg = `🌟 COMMANDE LATYFA SHOP 🌟\n\n🆔 CODE: ${secCode}\n👤 CLIENT: ${nom}\n💰 TOTAL: ${total}\n✅ PAIEMENT: ${isWave ? "WAVE" : "LIVRAISON"}\n\nJ'ai bien noté les conditions de retour (10j). Voici mon reçu PDF.`;
                 window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
             }, 1000);
 
