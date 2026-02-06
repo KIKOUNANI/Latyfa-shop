@@ -3,193 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA | Maison de Luxe</title>
+    <title>LATYFA SHOP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #ffffff; --txt: #1a1a1a; --gold: #c49a6c; }
-        .dark-mode { --bg: #0a0a0a; --txt: #ffffff; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg); color: var(--txt); transition: 0.3s; }
+        body { font-family: 'Montserrat', sans-serif; background: #fff; color: #1a1a1a; }
         .luxury { font-family: 'Playfair Display', serif; }
-        
-        /* Modals */
-        .modal { 
-            display: none; position: fixed; inset: 0; background: var(--bg); 
-            z-index: 9999; overflow-y: auto; padding: 20px;
+        /* Fenêtres surgissantes */
+        .modal-overlay { 
+            display: none; position: fixed; inset: 0; 
+            background: white; z-index: 100; overflow-y: auto; padding: 20px; 
         }
-        .modal.active { display: block; }
-        
-        .product-card { border: 1px solid #eee; padding: 10px; border-radius: 4px; }
-        .category-btn.active { border-bottom: 2px solid var(--gold); font-weight: bold; }
+        .modal-overlay.active { display: block; }
     </style>
 </head>
 <body>
 
-    <header class="border-b p-4 sticky top-0 bg-white z-50 flex justify-between items-center">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="handleLogoClick()">
-            <img src="https://i.ibb.co/v4m8fXp/1000167529.png" class="h-8 w-8 rounded-full">
-            <h1 class="luxury text-lg uppercase tracking-tighter">Latyfa</h1>
+    <header class="p-4 border-b flex justify-between items-center sticky top-0 bg-white z-50">
+        <div class="flex items-center gap-2">
+            <img src="https://i.ibb.co/v4m8fXp/1000167529.png" class="h-10 w-10 rounded-full border border-[#c49a6c]">
+            <h1 class="luxury text-xl uppercase tracking-tighter">Latyfa</h1>
         </div>
-        <div class="flex gap-4 items-center">
-            <button onclick="toggleDarkMode()">🌙</button>
-            <button onclick="ouvrirPanier()" class="text-xs font-bold uppercase">Panier (<span id="cart-count">0</span>)</button>
-        </div>
+        <button onclick="ouvrirPanier()" class="text-[10px] font-bold border-b-2 border-black">
+            PANIER (<span id="cart-count">0</span>)
+        </button>
     </header>
 
-    <nav class="flex gap-4 p-4 overflow-x-auto border-b text-[10px] uppercase font-bold bg-white">
-        <button onclick="filtrer('Tous')" class="category-btn active" id="btn-Tous">Tous</button>
-        <button onclick="filtrer('Sac')" class="category-btn" id="btn-Sac">Sacs</button>
-        <button onclick="filtrer('Chaussures')" class="category-btn" id="btn-Chaussures">Chaussures</button>
-        <button onclick="filtrer('Bijoux')" class="category-btn" id="btn-Bijoux">Bijoux</button>
-    </nav>
+    <main class="p-4 grid grid-cols-2 gap-6" id="product-grid">
+        </main>
 
-    <main class="p-4 grid grid-cols-2 gap-4" id="product-grid"></main>
-
-    <div id="cartModal" class="modal">
+    <div id="cartModal" class="modal-overlay">
         <div class="flex justify-between items-center mb-8">
-            <h2 class="luxury text-xl uppercase">Mon Panier</h2>
-            <button onclick="fermerPanier()" class="text-2xl">&times;</button>
+            <h2 class="luxury text-2xl uppercase">Mon Panier</h2>
+            <button onclick="fermerPanier()" class="text-3xl">&times;</button>
         </div>
-        <div id="cart-items" class="space-y-4 mb-8"></div>
-        <div id="checkout-form" class="hidden border-t pt-4">
-            <div class="text-right mb-6">
-                <p class="text-sm font-bold uppercase">Total: <span id="cart-total">0</span> F CFA</p>
-            </div>
-            <input type="text" id="client-nom" placeholder="VOTRE NOM" class="w-full border p-3 mb-3 text-sm rounded">
-            <input type="text" id="client-adr" placeholder="VOTRE ADRESSE" class="w-full border p-3 mb-6 text-sm rounded">
-            <button onclick="validerCommande()" class="w-full bg-black text-white py-4 text-xs font-bold uppercase tracking-widest">
-                Valider sur WhatsApp
+        <div id="cart-list" class="space-y-4 mb-8 text-sm"></div>
+        <div id="form-commande" class="hidden border-t pt-6">
+            <p class="text-right font-bold text-lg mb-6">Total: <span id="total-prix">0</span> F CFA</p>
+            <input type="text" id="nom" placeholder="VOTRE NOM" class="w-full border p-4 mb-3 rounded-lg outline-none">
+            <input type="text" id="adr" placeholder="VOTRE QUARTIER" class="w-full border p-4 mb-6 rounded-lg outline-none">
+            <button onclick="envoyerWhatsApp()" class="w-full bg-green-600 text-white py-4 font-bold rounded-lg uppercase">
+                Commander sur WhatsApp
             </button>
         </div>
     </div>
 
-    <div id="successModal" class="modal flex flex-col items-center justify-center text-center">
-        <h2 class="luxury text-2xl mb-4 uppercase">Merci !</h2>
-        <p class="text-xs mb-8">Votre commande <span id="order-id-display" class="font-bold"></span> a été initiée.</p>
-        <button onclick="telechargerRecu()" class="w-full max-w-xs border border-black p-4 mb-4 text-[10px] font-bold uppercase">Télécharger le Reçu PDF</button>
-        <button onclick="location.reload()" class="w-full max-w-xs bg-black text-white p-4 text-[10px] font-bold uppercase">Retour</button>
+    <div id="successModal" class="modal-overlay text-center flex flex-col items-center justify-center">
+        <h2 class="luxury text-3xl mb-4">MERCI !</h2>
+        <p class="mb-8 uppercase text-[10px] tracking-widest text-gray-500">Votre commande a été envoyée.</p>
+        <button onclick="genererPDF()" class="w-full border border-black p-4 mb-4 font-bold rounded-lg">TÉLÉCHARGER MON REÇU</button>
+        <button onclick="location.reload()" class="text-gray-400 font-bold underline">RETOUR BOUTIQUE</button>
     </div>
 
-    <div style="display:none">
-        <div id="receipt-pdf" style="padding:40px; color:black; background:white;">
-            <h1 style="text-align:center;">LATYFA</h1>
-            <p>Commande: <span id="pdf-id"></span></p>
-            <p>Client: <span id="pdf-nom"></span></p>
+    <div style="position: absolute; left: -9999px; top: -9999px;">
+        <div id="pdf-content" style="padding: 50px; width: 600px; background: white; color: black;">
+            <h1 style="text-align:center;">LATYFA SHOP</h1>
+            <p>Date: <span id="pdf-date"></span></p>
+            <p>Client: <span id="pdf-client"></span></p>
             <hr>
-            <div id="pdf-items"></div>
+            <div id="pdf-items" style="margin: 20px 0;"></div>
             <hr>
-            <h3>Total: <span id="pdf-total"></span> F CFA</h3>
+            <h2 style="text-align:right;">TOTAL: <span id="pdf-total"></span> F CFA</h2>
         </div>
     </div>
 
     <script>
         const produits = [
-            { id: 1, ref: "LT-SAC-01", cat: "Sac", nom: "Sac Croco Gold", prix: 45000, stock: 5, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500" },
-            { id: 2, ref: "LT-CHA-02", cat: "Chaussures", nom: "Escarpins Nude", prix: 35000, stock: 3, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500" },
-            { id: 3, ref: "LT-BIJ-03", cat: "Bijoux", nom: "Collier Royal", prix: 18000, stock: 10, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" }
+            { id: 1, nom: "Sac Croco Gold", prix: 45000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500" },
+            { id: 2, nom: "Escarpins Nude", prix: 35000, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500" },
+            { id: 3, nom: "Bijoux Royal", prix: 18000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500" }
         ];
 
         let panier = [];
-        let orderId = "";
 
-        function render(list = produits) {
+        function afficherProduits() {
             const grid = document.getElementById('product-grid');
-            grid.innerHTML = list.map(p => `
-                <div class="product-card">
-                    <img src="${p.img}" class="w-full aspect-[3/4] object-cover mb-2 rounded">
-                    <p class="text-[9px] font-bold uppercase">${p.nom}</p>
-                    <p class="text-[10px] text-gray-500 mb-2">${p.prix.toLocaleString()} F</p>
-                    <button onclick="ajouterPanier(${p.id})" class="w-full bg-black text-white py-2 text-[8px] font-bold uppercase">Ajouter</button>
+            grid.innerHTML = produits.map(p => `
+                <div class="bg-gray-50 p-2 rounded-xl">
+                    <img src="${p.img}" class="w-full aspect-[3/4] object-cover rounded-lg mb-2">
+                    <h3 class="text-[10px] font-bold uppercase">${p.nom}</h3>
+                    <p class="text-xs font-bold text-[#c49a6c] mb-2">${p.prix.toLocaleString()} F</p>
+                    <button onclick="ajouter(${p.id})" class="w-full bg-black text-white py-2 rounded text-[10px] font-bold">AJOUTER</button>
                 </div>
             `).join('');
         }
 
-        function ajouterPanier(id) {
+        function ajouter(id) {
             const p = produits.find(x => x.id === id);
             panier.push(p);
             document.getElementById('cart-count').innerText = panier.length;
-            confetti({ particleCount: 50, spread: 60 });
+            alert(p.nom + " ajouté au panier !");
         }
 
         function ouvrirPanier() {
-            const m = document.getElementById('cartModal');
-            m.classList.add('active');
-            const itemsDiv = document.getElementById('cart-items');
-            const form = document.getElementById('checkout-form');
+            document.getElementById('cartModal').classList.add('active');
+            const list = document.getElementById('cart-list');
+            const form = document.getElementById('form-commande');
             
             if(panier.length === 0) {
-                itemsDiv.innerHTML = "<p class='text-center text-xs uppercase text-gray-400 py-10'>Votre panier est vide</p>";
+                list.innerHTML = "<p class='text-center py-10'>Panier vide</p>";
                 form.classList.add('hidden');
             } else {
                 let total = 0;
-                itemsDiv.innerHTML = panier.map((it, idx) => {
+                list.innerHTML = panier.map(it => {
                     total += it.prix;
-                    return `<div class="flex justify-between text-xs border-b pb-2"><span>${it.nom}</span><b>${it.prix.toLocaleString()} F</b></div>`;
+                    return `<div class="flex justify-between border-b pb-2"><span>${it.nom}</span><b>${it.prix.toLocaleString()} F</b></div>`;
                 }).join('');
-                document.getElementById('cart-total').innerText = total.toLocaleString();
+                document.getElementById('total-prix').innerText = total.toLocaleString();
                 form.classList.remove('hidden');
             }
         }
 
-        function validerCommande() {
-            const nom = document.getElementById('client-nom').value;
-            const adr = document.getElementById('client-adr').value;
-            if(!nom || !adr) return alert("Veuillez remplir votre nom et adresse.");
+        function envoyerWhatsApp() {
+            const nom = document.getElementById('nom').value;
+            const adr = document.getElementById('adr').value;
+            if(!nom || !adr) return alert("Remplissez vos infos");
 
-            orderId = "LAT-" + Math.floor(1000 + Math.random() * 9000);
-            let total = document.getElementById('cart-total').innerText;
-
-            // Message WhatsApp
-            let msg = `✨ NOUVELLE COMMANDE LATYFA ✨\n\nN°: ${orderId}\nClient: ${nom}\nAdresse: ${adr}\n\nArticles:\n`;
-            panier.forEach(it => msg += `- ${it.nom} (${it.ref})\n`);
+            let total = document.getElementById('total-prix').innerText;
+            let msg = `✨ NOUVELLE COMMANDE LATYFA ✨\nClient: ${nom}\nQuartier: ${adr}\n\nArticles:\n`;
+            panier.forEach(it => msg += `- ${it.nom}\n`);
             msg += `\nTOTAL: ${total} F CFA`;
 
             // Envoi WhatsApp
-            window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
 
             // Préparer PDF
-            document.getElementById('pdf-id').innerText = orderId;
-            document.getElementById('pdf-nom').innerText = nom;
+            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString();
+            document.getElementById('pdf-client').innerText = nom;
             document.getElementById('pdf-total').innerText = total;
             document.getElementById('pdf-items').innerHTML = panier.map(it => `<p>${it.nom} - ${it.prix} F</p>`).join('');
-            document.getElementById('order-id-display').innerText = orderId;
 
-            // Afficher Succès
-            fermerPanier();
+            // Afficher succès
+            document.getElementById('cartModal').classList.remove('active');
             document.getElementById('successModal').classList.add('active');
         }
 
-        function telechargerRecu() {
-            const el = document.getElementById('receipt-pdf');
-            html2pdf().from(el).save(`Recu_${orderId}.pdf`);
-        }
-
-        function filtrer(cat) {
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + cat).classList.add('active');
-            render(cat === 'Tous' ? produits : produits.filter(p => p.cat === cat));
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
+        function genererPDF() {
+            const element = document.getElementById('pdf-content');
+            html2pdf().from(element).save('Recu_Latyfa.pdf');
         }
 
         function fermerPanier() { document.getElementById('cartModal').classList.remove('active'); }
-        
-        let logoClicks = 0;
-        function handleLogoClick() {
-            logoClicks++;
-            if(logoClicks === 3) {
-                alert("Mode Admin activé (Historique en console)");
-                console.log("Stocks:", produits);
-                logoClicks = 0;
-            }
-        }
 
-        render();
+        afficherProduits();
     </script>
 </body>
 </html>
