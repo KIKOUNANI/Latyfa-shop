@@ -3,210 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA | Global Luxe Marketplace</title>
+    <title>Latyfa shop.com | Luxe & Sourcing</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f7f7f7; overflow-x: hidden; }
-        
-        /* STYLE BANDE ANNONCE DÉFILANTE */
+        body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; color: #1a1a1a; }
         .marquee-container {
             background: linear-gradient(90deg, #ff4d00, #ff9000);
-            color: white;
-            white-space: nowrap;
-            overflow: hidden;
-            position: relative;
-            padding: 10px 0;
-            font-weight: 900;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 10px rgba(255, 77, 0, 0.3);
+            color: white; white-space: nowrap; overflow: hidden; padding: 12px 0;
+            font-weight: 900; text-transform: uppercase; font-size: 11px; letter-spacing: 1px;
         }
-
-        .marquee-text {
-            display: inline-block;
-            padding-left: 100%;
-            animation: marquee 20s linear infinite;
-        }
-
-        @keyframes marquee {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-100%, 0); }
-        }
-
-        /* Effet de brillance sur les cartes */
-        .ali-card { background: white; border-radius: 12px; border: 1px solid #eee; cursor: pointer; transition: 0.3s; }
-        .ali-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
-        
-        .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; padding: 15px; overflow-y: auto; }
+        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+        .ali-card { background: white; border-radius: 18px; border: 1px solid #eee; transition: 0.3s; overflow: hidden; }
+        .ali-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; padding: 15px; overflow-y: auto; }
         .layer.active { display: flex; align-items: center; justify-content: center; }
-        .star-gold { color: #ff9900; }
-        .btn-wave { background-color: #1ba0e1; }
+        .method-card { border: 2px solid #f0f0f0; border-radius: 16px; cursor: pointer; transition: 0.2s; padding: 16px; }
+        .method-card.selected { border-color: #ff6600; background-color: #fffaf0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-24">
 
-    <div id="promo-marquee" class="marquee-container">
+    <div class="marquee-container shadow-lg">
         <div class="marquee-text">
-            🚀 PROMO EXCEPTIONNELLE DU 14 AU 28 FÉVRIER 2026 : -15% DE RÉDUCTION SUR TOUT LE SITE DÈS 20.000 F D'ACHAT ! 🚀 PRÉPAREZ VOS PANIERS... 🚀 LIVRAISON PARTOUT... 🚀 QUALITÉ LUXE GARANTIE... 🚀
+            🌟 BIENVENUE SUR LATYFA SHOP.COM • PROMO DU 14 AU 28 FÉVRIER : -15% DÈS 20.000 F ! • LIVRAISON RÉDUITE À 1000 F VIA WAVE ! • RETRAIT DISPONIBLE À ABOBO MARCHÉ NUIT • 🌟
         </div>
     </div>
 
     <header class="sticky top-0 z-[100] bg-white p-4 border-b flex items-center justify-between shadow-sm">
         <div class="flex items-center gap-2" onclick="location.reload()">
-            <div class="bg-orange-600 text-white font-black px-2 py-1 rounded">L</div>
-            <h1 class="font-black text-xl tracking-tighter uppercase italic">Latyfa<span class="text-orange-500 text-xs">.com</span></h1>
+            <div class="bg-orange-600 text-white font-black px-2 py-1 rounded-lg shadow-orange-200 shadow-lg">L</div>
+            <h1 class="font-black text-xl tracking-tighter uppercase italic">Latyfa<span class="text-orange-500">shop.com</span></h1>
         </div>
-        <button onclick="showCart()" class="relative bg-gray-100 p-2 rounded-full">
+        <button onclick="showCart()" class="relative bg-gray-100 p-3 rounded-full hover:bg-gray-200 transition">
             <span class="text-xl">🛒</span>
-            <span id="cart-count" class="absolute -top-1 -right-1 bg-orange-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full">0</span>
+            <span id="cart-count" class="absolute -top-1 -right-1 bg-orange-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
         </button>
     </header>
 
-    <div class="p-4 bg-white space-y-4">
-        <div class="flex border-2 border-orange-500 rounded-2xl overflow-hidden bg-white">
-            <input type="text" id="search" onkeyup="render()" placeholder="Que recherchez-vous aujourd'hui ?" class="w-full p-4 outline-none text-sm">
-            <button class="bg-orange-500 px-6 text-white font-bold">LUK</button>
-        </div>
-        
-        <div class="flex gap-2 overflow-x-auto no-scrollbar py-2">
-            <button onclick="filterCat('Tous')" class="bg-black text-white px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-md">Tous</button>
-            <button onclick="filterCat('Vêtement')" class="bg-white border px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-sm">Habillements</button>
-            <button onclick="filterCat('Chaussures')" class="bg-white border px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-sm">Chaussures</button>
-            <button onclick="filterCat('Accessoire')" class="bg-white border px-5 py-2 rounded-full text-xs font-bold whitespace-nowrap shadow-sm">Accessoires</button>
+    <div class="p-4 bg-white">
+        <div class="flex bg-gray-100 rounded-2xl overflow-hidden p-1 border border-transparent focus-within:border-orange-500 transition">
+            <input type="text" id="search" onkeyup="render()" placeholder="Trouvez votre bonheur..." class="w-full p-3 bg-transparent outline-none text-sm">
+            <button class="bg-orange-500 px-6 rounded-xl text-white font-bold text-xs uppercase shadow-md">Chercher</button>
         </div>
     </div>
 
-    <main id="grid" class="p-3 grid grid-cols-2 md:grid-cols-4 gap-4"></main>
+    <main id="grid" class="p-4 grid grid-cols-2 md:grid-cols-4 gap-4"></main>
 
     <div id="modal-product" class="layer">
-        <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden relative shadow-2xl">
-            <button onclick="closeModals()" class="absolute top-4 right-4 bg-black/50 text-white w-10 h-10 rounded-full z-10 font-bold">✕</button>
+        <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
+            <button onclick="closeModals()" class="absolute top-4 right-4 bg-black/40 backdrop-blur-md text-white w-10 h-10 rounded-full z-10 font-bold">✕</button>
             <div id="product-detail-content"></div>
         </div>
     </div>
 
     <div id="modal-cart" class="layer">
-        <div class="bg-white w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-3xl font-light">✕</button>
-            <h2 class="font-black text-2xl mb-8 uppercase italic tracking-tighter border-b pb-4 text-orange-600">Mon Panier</h2>
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 relative shadow-2xl">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-2xl font-light">✕</button>
+            <h2 class="font-black text-2xl mb-6 uppercase italic text-orange-600 tracking-tighter">Mon Panier</h2>
             
-            <div id="cart-items" class="space-y-4 mb-8 max-h-[40vh] overflow-y-auto pr-2"></div>
-            
-            <div id="cart-footer" class="space-y-5">
-                <div id="promo-msg" class="bg-orange-50 text-orange-600 p-3 rounded-xl font-bold text-xs hidden text-center border border-orange-200">
-                    ✨ RÉDUCTION -15% APPLIQUÉE ! ✨
-                </div>
-                
-                <div class="flex justify-between items-end">
-                    <span class="text-gray-400 font-bold text-sm uppercase">Total à payer</span>
-                    <span id="total-price" class="text-3xl font-black text-black">0 F</span>
+            <div id="cart-items" class="space-y-4 mb-6 max-h-48 overflow-y-auto pr-2 no-scrollbar"></div>
+
+            <div class="border-t pt-4 space-y-4">
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Options de réception</p>
+                <div class="grid grid-cols-1 gap-2">
+                    <div onclick="setMethod('Standard')" id="m-Standard" class="method-card flex justify-between items-center selected">
+                        <div class="text-xs">
+                            <p class="font-black uppercase">Livraison Standard</p>
+                            <p class="text-[10px] opacity-60">Paiement à la livraison possible</p>
+                        </div>
+                        <span class="text-sm font-black text-orange-600">+1.500 F</span>
+                    </div>
+                    <div onclick="setMethod('Wave')" id="m-Wave" class="method-card flex justify-between items-center">
+                        <div class="text-xs">
+                            <p class="font-black uppercase text-blue-600">Paiement WAVE (Réduction)</p>
+                            <p class="text-[10px] opacity-60">Frais de livraison réduits</p>
+                        </div>
+                        <span class="text-sm font-black text-blue-600">+1.000 F</span>
+                    </div>
+                    <div onclick="setMethod('Boutique')" id="m-Boutique" class="method-card flex justify-between items-center">
+                        <div class="text-xs">
+                            <p class="font-black uppercase text-green-600">Retrait en Boutique</p>
+                            <p class="text-[10px] font-bold text-gray-500">📍 Abobo marché nuit</p>
+                        </div>
+                        <span class="text-xs font-black bg-green-100 text-green-600 px-2 py-1 rounded">OFFERT</span>
+                    </div>
                 </div>
 
-                <div class="space-y-3 pt-4">
-                    <input type="text" id="c-nom" placeholder="Votre Nom complet" class="w-full p-4 bg-gray-50 border-0 rounded-2xl text-sm outline-none focus:ring-2 ring-orange-500">
-                    <input type="text" id="c-ville" placeholder="Lieu de livraison (Ex: Cocody, Abidjan)" class="w-full p-4 bg-gray-50 border-0 rounded-2xl text-sm outline-none focus:ring-2 ring-orange-500">
+                <div class="bg-gray-50 p-5 rounded-2xl space-y-3 border border-gray-100">
+                    <div class="flex justify-between text-xs font-bold text-gray-500 uppercase"><span>Sous-total</span><span id="sub-total">0 F</span></div>
+                    <div class="flex justify-between text-xs font-bold text-gray-500 uppercase"><span>Livraison</span><span id="ship-total">0 F</span></div>
+                    <div id="promo-line" class="flex justify-between text-xs text-orange-600 font-black hidden uppercase"><span>Remise Promo (-15%)</span><span id="promo-val">0 F</span></div>
+                    <div class="flex justify-between text-xl font-black pt-3 border-t-2 border-dashed border-gray-200"><span>TOTAL FINAL</span><span id="final-total" class="text-orange-600">0 F</span></div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-3 pt-4">
-                    <button onclick="finalize('Wave')" class="btn-wave text-white py-5 rounded-2xl font-black text-sm uppercase shadow-xl tracking-widest flex items-center justify-center gap-2">
-                        Payer via WAVE (Lien Direct)
-                    </button>
-                    <button onclick="finalize('WhatsApp')" class="bg-green-600 text-white py-4 rounded-2xl font-bold text-xs uppercase opacity-80">
-                        Finaliser sur WhatsApp
-                    </button>
+                <div class="space-y-2">
+                    <input type="text" id="c-nom" placeholder="Votre Nom complet" class="w-full p-4 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 ring-orange-500/20 transition">
                 </div>
+                <button onclick="sendOrder()" class="w-full bg-orange-600 text-white py-5 rounded-2xl font-black uppercase text-sm shadow-xl shadow-orange-200 active:scale-95 transition">Valider & Commander</button>
             </div>
         </div>
     </div>
 
     <script>
         const products = [
-            { 
-                id: 1, cat: "Vêtement", nom: "Ensemble Luxe Satin Silk", prix: 48000, 
-                img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500",
-                desc: "Un ensemble d'une élégance rare, tissu fluide et reflets soyeux. Idéal pour vos soirées VIP.",
-                stars: 4.9, reviews: 15,
-                sizes: ["S", "M", "L", "XL", "XXL"]
-            },
-            { 
-                id: 2, cat: "Chaussures", nom: "Escarpins Crystal Gold", prix: 38000, 
-                img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500",
-                desc: "Finition main avec détails en cristal. Talon stable de 9cm.",
-                stars: 4.7, reviews: 28,
-                sizes: ["36", "37", "38", "39", "40", "41", "42"]
-            },
-            { 
-                id: 3, cat: "Accessoire", nom: "Sac à main Diamond Croco", prix: 32000, 
-                img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500",
-                desc: "Le best-seller de chez Latyfa. Cuir texturé et fermoir doré.",
-                stars: 5.0, reviews: 42,
-                sizes: ["Taille Unique"]
-            }
+            { id: 1, cat: "Vêtement", nom: "Ensemble Satin Silk", prix: 45000, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500", sizes: ["S","M","L","XL"] },
+            { id: 2, cat: "Chaussures", nom: "Escarpins Crystal", prix: 35000, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500", sizes: ["37","38","39","40","41"] },
+            { id: 3, cat: "Accessoire", nom: "Sac Croco Signature", prix: 28000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", sizes: ["Unique"] }
         ];
 
         let cart = [];
-        let currentCat = "Tous";
+        let method = "Standard";
+        let shipCost = 1500;
 
         function render() {
             const grid = document.getElementById('grid');
             const q = document.getElementById('search').value.toLowerCase();
-            const filtered = products.filter(p => (currentCat === "Tous" || p.cat === currentCat) && p.nom.toLowerCase().includes(q));
-
-            grid.innerHTML = filtered.map(p => `
-                <div class="ali-card p-3 flex flex-col" onclick="viewProduct(${p.id})">
-                    <img src="${p.img}" class="w-full aspect-square object-cover rounded-xl mb-3 shadow-sm">
-                    <h3 class="text-[11px] font-black uppercase line-clamp-2 leading-tight h-8 mb-2">${p.nom}</h3>
-                    <div class="flex items-center gap-1 mb-2">
-                        <span class="text-orange-500">★</span>
-                        <span class="text-[10px] font-bold text-gray-400">${p.stars} (${p.reviews})</span>
+            grid.innerHTML = products.filter(p => p.nom.toLowerCase().includes(q)).map(p => `
+                <div class="ali-card flex flex-col" onclick="viewProduct(${p.id})">
+                    <div class="relative overflow-hidden group">
+                        <img src="${p.img}" class="w-full aspect-square object-cover group-hover:scale-110 transition duration-500">
                     </div>
-                    <p class="text-black font-black text-sm mt-auto italic">${p.prix.toLocaleString()} F CFA</p>
+                    <div class="p-3">
+                        <h3 class="text-[11px] font-black uppercase mb-1 truncate text-gray-700">${p.nom}</h3>
+                        <p class="text-orange-600 font-black text-sm italic">${p.prix.toLocaleString()} F CFA</p>
+                    </div>
                 </div>
             `).join('');
         }
 
         function viewProduct(id) {
             const p = products.find(x => x.id === id);
-            const content = document.getElementById('product-detail-content');
             document.getElementById('modal-product').classList.add('active');
-
-            content.innerHTML = `
+            document.getElementById('product-detail-content').innerHTML = `
                 <img src="${p.img}" class="w-full h-80 object-cover shadow-inner">
                 <div class="p-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="font-black text-2xl uppercase italic tracking-tighter">${p.nom}</h2>
-                        <span class="text-orange-600 font-black text-xl">${p.prix.toLocaleString()} F</span>
+                    <h2 class="font-black text-2xl mb-2 tracking-tighter uppercase italic">${p.nom}</h2>
+                    <p class="text-orange-600 font-black text-xl mb-6">${p.prix.toLocaleString()} F</p>
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Choisir Taille / Pointure</label>
+                    <div class="grid grid-cols-4 gap-2 mb-8">
+                        ${p.sizes.map(s => `<button onclick="selSize(this)" class="size-btn border-2 border-gray-100 py-3 rounded-xl text-xs font-bold hover:border-orange-500 transition">${s}</button>`).join('')}
                     </div>
-                    <p class="text-gray-400 text-xs leading-relaxed mb-8">${p.desc}</p>
-                    
-                    <div class="mb-8">
-                        <label class="text-[10px] font-black uppercase text-orange-600 mb-2 block">Choisir ${p.cat === 'Chaussures' ? 'Pointure' : 'Taille'}</label>
-                        <div class="flex gap-2 flex-wrap">
-                            ${p.sizes.map(s => `
-                                <button onclick="selectSize(this)" class="size-btn border-2 border-gray-100 px-4 py-2 rounded-xl text-xs font-bold hover:border-orange-500 transition">${s}</button>
-                            `).join('')}
-                        </div>
-                    </div>
-
-                    <button onclick="addToCart(${p.id})" class="w-full bg-orange-600 text-white py-5 rounded-2xl font-black uppercase text-sm shadow-2xl hover:bg-orange-700 transition">Ajouter au Panier</button>
-                    
-                    <div class="mt-8 pt-6 border-t">
-                        <h4 class="font-black text-[10px] uppercase mb-4 tracking-widest text-gray-400">Avis Clients (${p.reviews})</h4>
-                        <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-2xl">
-                            <div class="text-2xl font-black">${p.stars}</div>
-                            <div class="text-[10px] text-gray-400 leading-tight italic">"Produit conforme à la description, qualité exceptionnelle." - Client Vérifié</div>
-                        </div>
-                    </div>
+                    <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-5 rounded-2xl font-black uppercase shadow-2xl">Ajouter au panier</button>
                 </div>
             `;
         }
 
         let selectedSize = "";
-        function selectSize(btn) {
-            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('border-orange-500', 'bg-orange-50'));
-            btn.classList.add('border-orange-500', 'bg-orange-50');
+        function selSize(btn) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('border-orange-500','bg-orange-50'));
+            btn.classList.add('border-orange-500','bg-orange-50');
             selectedSize = btn.innerText;
         }
 
@@ -219,63 +167,54 @@
             closeModals();
         }
 
-        function showCart() {
-            document.getElementById('modal-cart').classList.add('active');
+        function setMethod(m) {
+            method = m;
+            document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById('m-'+m).classList.add('selected');
+            shipCost = (m === "Standard") ? 1500 : (m === "Wave") ? 1000 : 0;
             updateCart();
         }
 
         function updateCart() {
             const list = document.getElementById('cart-items');
-            const totalEl = document.getElementById('total-price');
-            const promoMsg = document.getElementById('promo-msg');
-            
             let bruteTotal = cart.reduce((s, i) => s + i.prix, 0);
-            let finalTotal = bruteTotal;
+            let promo = 0;
 
-            // Logique Promo : 14 au 28 Fév 2026 + Panier >= 20.000
             const today = new Date();
-            const start = new Date("2026-02-14");
-            const end = new Date("2026-02-28");
-            
-            if (today >= start && today <= end && bruteTotal >= 20000) {
-                finalTotal = bruteTotal * 0.85;
-                promoMsg.classList.remove('hidden');
+            if(today >= new Date("2026-02-14") && today <= new Date("2026-02-28") && bruteTotal >= 20000) {
+                promo = bruteTotal * 0.15;
+                document.getElementById('promo-line').classList.remove('hidden');
             } else {
-                promoMsg.classList.add('hidden');
+                document.getElementById('promo-line').classList.add('hidden');
             }
 
-            list.innerHTML = cart.length ? cart.map((it, idx) => `
-                <div class="flex justify-between items-center bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                    <div>
-                        <p class="font-black text-xs uppercase">${it.nom}</p>
-                        <p class="text-[10px] text-orange-500 font-bold">Option: ${it.size}</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <b class="text-sm font-black italic">${it.prix.toLocaleString()} F</b>
-                        <button onclick="remove(${idx})" class="text-red-500 text-xl font-light">✕</button>
-                    </div>
-                </div>`).join('') : "<div class='py-20 text-center opacity-20 font-bold italic'>PANIER VIDE</div>";
-
-            totalEl.innerText = Math.floor(finalTotal).toLocaleString() + " F";
+            list.innerHTML = cart.length ? cart.map(i => `
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl">
+                    <div class="text-[10px] font-black uppercase"><span>${i.nom}</span><br><span class="text-orange-500 font-bold">${i.size}</span></div>
+                    <span class="text-xs font-black italic">${i.prix.toLocaleString()} F</span>
+                </div>`).join('') : "<p class='text-center py-10 opacity-30 text-sm italic'>Votre panier est vide</p>";
+            
+            document.getElementById('sub-total').innerText = bruteTotal.toLocaleString() + " F";
+            document.getElementById('ship-total').innerText = shipCost.toLocaleString() + " F";
+            document.getElementById('promo-val').innerText = "-" + Math.floor(promo).toLocaleString() + " F";
+            document.getElementById('final-total').innerText = Math.floor(bruteTotal - promo + shipCost).toLocaleString() + " F";
         }
 
-        function finalize(mode) {
+        function sendOrder() {
             const nom = document.getElementById('c-nom').value;
-            const ville = document.getElementById('c-ville').value;
-            if(!nom || !ville || cart.length === 0) return alert("Veuillez remplir vos informations de livraison !");
+            if(!nom || cart.length === 0) return alert("Vérifiez votre nom et votre panier !");
             
-            const total = document.getElementById('total-price').innerText;
-            let msg = `✨ COMMANDE SITE LATYFA ✨\n────────────────────\nClient: ${nom}\nLieu: ${ville}\nTotal: ${total}\nMode: ${mode}\n\nArticles:\n`;
+            const total = document.getElementById('final-total').innerText;
+            let msg = `✨ LATYFA SHOP.COM - COMMANDE ✨\n\n👤 Client: ${nom}\n🚚 Réception: ${method}\n📍 Boutique: Abobo marché nuit\n💰 Total: ${total}\n\nArticles:\n`;
             cart.forEach(i => msg += `• ${i.nom} (Taille: ${i.size})\n`);
 
-            if(mode === 'Wave') window.open("https://pay.wave.com/m/M_ci_C7lQKnUsMYT3/c/ci/");
-            setTimeout(() => window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`), 1200);
+            if(method === "Wave") window.open("https://pay.wave.com/m/M_ci_C7lQKnUsMYT3/c/ci/");
+            setTimeout(() => window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`), 1500);
         }
 
-        function remove(i) { cart.splice(i, 1); updateCart(); document.getElementById('cart-count').innerText = cart.length; }
-        function filterCat(c) { currentCat = c; render(); }
+        function showCart() { document.getElementById('modal-cart').classList.add('active'); updateCart(); }
         function closeModals() { document.querySelectorAll('.layer').forEach(l => l.classList.remove('active')); }
-
+        
         render();
     </script>
 </body>
