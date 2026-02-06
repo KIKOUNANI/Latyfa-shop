@@ -1,142 +1,93 @@
 <!DOCTYPE html>
-<html lang="fr"> translate="no">
-<head>
+<html lang="fr" translate="no">
 <head>
     <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latyfa Shop - Boutique</title>
+    <title>Latyya Shop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* CSS STRICT POUR CACHER LE FORMULAIRE AU DÉPART */
-        .modal { 
-            display: none !important; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0; top: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.8); 
-            backdrop-filter: blur(8px); 
-        }
+        .modal { display: none !important; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
         .modal.active { display: flex !important; }
-        
-        body { 
-            background-image: url('https://i.ibb.co/vz6mD2V/1000167529.png'); 
-            background-attachment: fixed; background-size: cover; 
-        }
         .emerald-bg { background-color: #0b3d39; }
         .gold-text { color: #c49a6c; }
     </style>
 </head>
-<body class="font-sans text-gray-800">
+<body class="bg-gray-100 font-sans text-gray-800">
 
-    <header class="emerald-bg text-white p-4 sticky top-0 z-50 shadow-2xl">
+    <header class="emerald-bg text-white p-4 sticky top-0 z-50 shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <img src="https://i.ibb.co/vz6mD2V/1000167529.png" class="h-10 w-10 rounded-full border border-white">
-                <h1 class="font-bold uppercase text-sm tracking-widest">Latyfa Shop</h1>
-            </div>
-            <div onclick="ouvrirPanier()" class="bg-white/20 px-5 py-2 rounded-full cursor-pointer flex items-center gap-2 border border-white/30">
+            <h1 class="font-bold uppercase tracking-widest">Latyya Shop</h1>
+            <div onclick="ouvrirPanier()" class="bg-white/20 px-4 py-2 rounded-full cursor-pointer flex items-center gap-2">
                 <i class="fas fa-shopping-bag"></i> 
-                <span id="cart-count" class="gold-text font-extrabold text-lg">0</span>
+                <span id="cart-count" class="gold-text font-bold">0</span>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto p-4 mt-6">
-        <div class="mb-6 border-l-4 border-[#c49a6c] pl-3">
-            <h2 class="text-xl font-black text-[#0b3d39] uppercase">Articles en vedette</h2>
-            <p class="text-xs text-gray-500 italic">Cliquez sur un article pour l'ajouter</p>
-        </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="product-grid">
-            </div>
+    <main class="container mx-auto p-4 mt-4">
+        <h2 class="text-xl font-bold text-[#0b3d39] mb-6 border-l-4 border-[#c49a6c] pl-3">NOS ARTICLES</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="product-grid"></div>
     </main>
 
     <div id="cartModal" class="modal items-center justify-center p-4">
-        <div class="bg-white p-6 rounded-3xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[90vh]">
-            <div class="flex justify-between items-center mb-4 border-b pb-2">
-                <h2 class="text-xl font-bold text-[#0b3d39]">Mon Panier</h2>
-                <button onclick="fermerPanier()" class="text-gray-400 text-2xl">&times;</button>
-            </div>
-
-            <div id="cart-items" class="mb-4 space-y-2 text-sm italic text-gray-600">
-                Votre panier est vide...
-            </div>
-
+        <div class="bg-white p-6 rounded-3xl w-full max-w-md shadow-2xl">
+            <h2 class="text-xl font-bold mb-4 text-[#0b3d39]">Mon Panier</h2>
+            <div id="cart-items" class="mb-4 space-y-2 text-sm italic">Votre panier est vide.</div>
             <div id="form-commande" style="display:none;">
-                <div class="space-y-3 bg-gray-100 p-4 rounded-2xl mb-4">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase text-center">Vos Coordonnées</p>
-                    <input type="text" id="nom" placeholder="Nom et Prénom" class="w-full p-3 border rounded-xl outline-none focus:border-[#c49a6c]">
-                    <input type="tel" id="tel" placeholder="Numéro WhatsApp" class="w-full p-3 border rounded-xl outline-none">
-                    <input type="text" id="ville" placeholder="Ville et Quartier de livraison" class="w-full p-3 border rounded-xl outline-none">
-                    <select id="pay" class="w-full p-3 border rounded-xl font-bold bg-white">
-                        <option>Cash à la livraison</option>
-                        <option>Wave / Orange Money</option>
-                    </select>
-                </div>
-                <div class="text-center my-4 font-black text-2xl text-[#0b3d39]">
-                    TOTAL: <span id="total">0</span> FCFA
-                </div>
-                <button onclick="validerCommande()" class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold shadow-xl flex items-center justify-center gap-3">
-                    <i class="fab fa-whatsapp text-2xl"></i> CONFIRMER SUR WHATSAPP
-                </button>
+                <input type="text" id="nom" placeholder="Nom et Prénom" class="w-full p-3 border rounded-xl mb-2">
+                <input type="tel" id="tel" placeholder="Numéro WhatsApp" class="w-full p-3 border rounded-xl mb-2">
+                <input type="text" id="ville" placeholder="Ville / Quartier" class="w-full p-3 border rounded-xl mb-2">
+                <div class="text-center my-4 font-black text-xl text-[#0b3d39]">TOTAL: <span id="total">0</span> F</div>
+                <button onclick="validerCommande()" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold">VALIDER SUR WHATSAPP</button>
             </div>
-            
-            <button onclick="fermerPanier()" class="w-full mt-4 text-gray-400 text-xs font-bold uppercase tracking-widest">Continuer mes achats</button>
+            <button onclick="fermerPanier()" class="w-full mt-4 text-gray-400 text-xs font-bold uppercase">Retour</button>
         </div>
     </div>
 
     <script>
-        // LISTE DE TES PRODUITS
-        let products = [
-            { name: "Ensemble Luxe Latyya", price: 25000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500" },
-            { name: "Sac à main Premium", price: 35000, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500" },
-            { name: "Chaussures Élégance", price: 15000, img: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500" }
+        // ICI TU PEUX AJOUTER TES ARTICLES
+        const products = [
+            { id: 1, name: "Article Test 1", price: 15000, img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" },
+            { id: 2, name: "Article Test 2", price: 25000, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" }
         ];
-        
+
         let cart = [];
 
-        // AFFICHER LES PRODUITS
-        function render() {
-            const g = document.getElementById('product-grid');
-            g.innerHTML = '';
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
             products.forEach((p, i) => {
-                g.innerHTML += `
-                    <div class="bg-white/90 p-3 rounded-2xl shadow-lg border border-white/50">
-                        <img src="${p.img}" class="h-40 w-full object-cover rounded-xl shadow-inner">
-                        <h4 class="text-[10px] font-bold mt-2 uppercase text-gray-700 h-8 overflow-hidden">${p.name}</h4>
+                grid.innerHTML += `
+                    <div class="bg-white p-3 rounded-2xl shadow">
+                        <img src="${p.img}" class="h-32 w-full object-cover rounded-xl mb-2">
+                        <h4 class="text-xs font-bold uppercase truncate">${p.name}</h4>
                         <p class="gold-text font-black text-sm my-1">${p.price.toLocaleString()} F</p>
-                        <button onclick="ajouterAuPanier(${i})" class="w-full emerald-bg text-white py-2 rounded-xl text-[9px] font-bold hover:bg-black transition">AJOUTER AU PANIER</button>
+                        <button onclick="ajouterAuPanier(${i})" class="w-full emerald-bg text-white py-2 rounded-lg text-[10px] font-bold uppercase">Ajouter</button>
                     </div>`;
             });
         }
 
-        // AJOUTER UN ARTICLE
-        function ajouterAuPanier(i) {
-            cart.push(products[i]);
+        function ajouterAuPanier(index) {
+            cart.push(products[index]);
             document.getElementById('cart-count').innerText = cart.length;
-            alert("✅ " + products[i].name + " ajouté !");
+            alert("Ajouté !");
         }
 
-        // OUVRIR LE PANIER ET CALCULER
         function ouvrirPanier() {
             const modal = document.getElementById('cartModal');
             const list = document.getElementById('cart-items');
             const form = document.getElementById('form-commande');
             let t = 0;
-
             modal.classList.add('active');
-
             if(cart.length === 0) {
-                list.innerHTML = "Votre panier est vide. Ajoutez des articles d'abord !";
+                list.innerHTML = "Votre panier est vide.";
                 form.style.display = "none";
             } else {
                 list.innerHTML = '';
-                cart.forEach((item, index) => {
-                    list.innerHTML += `<div class="flex justify-between border-b py-2">
-                        <span>${item.name}</span>
-                        <b class="gold-text">${item.price.toLocaleString()} F</b>
-                    </div>`;
+                cart.forEach(item => {
+                    list.innerHTML += `<div class="flex justify-between border-b py-2 text-xs"><span>${item.name}</span><b>${item.price} F</b></div>`;
                     t += item.price;
                 });
                 document.getElementById('total').innerText = t.toLocaleString();
@@ -144,43 +95,20 @@
             }
         }
 
-        function fermerPanier() {
-            document.getElementById('cartModal').classList.remove('active');
-        }
+        function fermerPanier() { document.getElementById('cartModal').classList.remove('active'); }
 
-        // ENVOYER SUR WHATSAPP
-        <label class="text-xs font-bold text-gray-500">Choisir la taille :</label>
-<select id="taille" class="w-full p-2 border rounded-lg mb-3">
-    <option value="S">Taille S</option>
-    <option value="M">Taille M</option>
-    <option value="L">Taille L</option>
-    <option value="XL">Taille XL</option>
-</select>
         function validerCommande() {
             const n = document.getElementById('nom').value;
-            const v = document.getElementById('ville').value;
             const t = document.getElementById('tel').value;
-            const p = document.getElementById('pay').value;
-            let taille = document.getElementByID('taille').value;
-            messageFinal += "*TAILLE :* " + taille;
-
-            if(!n || !v || !t) {
-                alert("Veuillez remplir vos informations de livraison.");
-                return;
-            }
-
-            let articlesMsg = "";
-            cart.forEach(item => articlesMsg += `- ${item.name} (${item.price} F)\n`);
-
-            let messageFinal = `*NOUVELLE COMMANDE - LatyfA SHOP*\n\n`;
-            messageFinal += `*CLIENT:* ${n}\n*TEL:* ${t}\n*LIEU:* ${v}\n*PAIEMENT:* ${p}\n\n`;
-            messageFinal += `*ARTICLES :*\n${articlesMsg}\n`;
-            messageFinal += `*TOTAL À PAYER : ${document.getElementById('total').innerText} FCFA*`;
-
-            window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(messageFinal)}`);
+            const v = document.getElementById('ville').value;
+            if(!n || !t || !v) return alert("Remplissez tout !");
+            let m = `*NOUVELLE COMMANDE*\nClient: ${n}\nTel: ${t}\nLieu: ${v}\nTotal: ${document.getElementById('total').innerText} F`;
+            window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(m)}`);
         }
 
-        render();
+        // Lancement de l'affichage
+        renderProducts();
     </script>
 </body>
 </html>
+
