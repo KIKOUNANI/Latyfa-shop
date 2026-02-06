@@ -20,9 +20,6 @@
         .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; padding: 15px; }
         .layer.active { display: flex; align-items: center; justify-content: center; }
         
-        @keyframes cart-pop { 0% { transform: scale(1); } 50% { transform: scale(1.4); background: #ff4d00; } 100% { transform: scale(1); } }
-        .cart-animate { animation: cart-pop 0.5s ease-out; }
-
         .option-btn.active { background: #000 !important; color: #fff !important; border-color: #000 !important; }
         .color-dot.active { ring: 3px solid #ff4d00; ring-offset: 2px; transform: scale(1.1); }
         .promo-banner-inline { grid-column: 1 / -1; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800'); background-size: cover; background-position: center; border-radius: 20px; padding: 30px; text-align: center; color: white; margin: 10px 0; border: 1px solid #ff4d00; }
@@ -54,14 +51,29 @@
 
     <div id="menu-overlay" onclick="toggleMenu()" class="menu-overlay"></div>
     <div id="side-menu" class="fixed top-0 left-0 h-full w-72 bg-white p-6 shadow-2xl flex flex-col">
-        <div class="flex justify-between items-center mb-8"><h2 class="font-black text-orange-600 italic text-xl uppercase tracking-tighter">Information</h2><button onclick="toggleMenu()">✕</button></div>
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="font-black text-orange-600 italic text-xl uppercase tracking-tighter">Information</h2>
+            <button onclick="toggleMenu()" class="text-2xl">✕</button>
+        </div>
         <nav class="space-y-6 flex-1 text-sm font-bold">
-            <button onclick="openInfo('about')" class="block w-full text-left border-b border-gray-50 pb-3">📖 À propos</button>
-            <button onclick="openInfo('policy')" class="block w-full text-left border-b border-gray-50 pb-3">🛡️ Politique de retour</button>
-            <div class="pt-4 space-y-4">
-                <p class="text-[10px] text-gray-400 font-black uppercase">Suivez-nous</p>
-                <div class="flex flex-col gap-4 text-xs">
-                    <a href="https://wa.me/2250709002881" class="text-green-600 font-bold italic">💬 WhatsApp Service</a>
+            <button onclick="openInfo('about')" class="block w-full text-left border-b border-gray-100 pb-3 uppercase text-[11px]">📖 À propos</button>
+            <button onclick="openInfo('policy')" class="block w-full text-left border-b border-gray-100 pb-3 uppercase text-[11px]">🛡️ Politique de retour</button>
+            
+            <div class="pt-6">
+                <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-4">Suivez-nous</p>
+                <div class="space-y-4">
+                    <a href="https://instagram.com/votre_compte" target="_blank" class="flex items-center gap-3 text-xs hover:text-orange-500 transition">
+                        <span>📸</span> Instagram
+                    </a>
+                    <a href="https://facebook.com/votre_page" target="_blank" class="flex items-center gap-3 text-xs hover:text-orange-500 transition">
+                        <span>🔵</span> Facebook
+                    </a>
+                    <a href="https://tiktok.com/@votre_compte" target="_blank" class="flex items-center gap-3 text-xs hover:text-orange-500 transition">
+                        <span>⚫</span> TikTok
+                    </a>
+                    <a href="https://wa.me/2250709002881" target="_blank" class="flex items-center gap-3 text-xs text-green-600 font-black">
+                        <span>💬</span> WhatsApp Service
+                    </a>
                 </div>
             </div>
         </nav>
@@ -82,7 +94,6 @@
             <div class="space-y-4 text-xs font-bold">
                 <input type="text" id="rev-name" placeholder="VOTRE NOM" class="w-full p-3 bg-gray-50 rounded-xl border focus:border-orange-500 outline-none">
                 <textarea id="rev-text" placeholder="VOTRE COMMENTAIRE..." class="w-full p-3 bg-gray-50 rounded-xl border focus:border-orange-500 h-24 outline-none"></textarea>
-                <p class="text-[8px] text-orange-600 bg-orange-50 p-2 rounded">📸 Vous pourrez joindre une photo sur WhatsApp.</p>
                 <button onclick="sendReviewWhatsApp()" class="w-full bg-green-600 text-white py-4 rounded-xl font-black uppercase tracking-widest">Envoyer via WhatsApp</button>
             </div>
         </div>
@@ -107,7 +118,7 @@
             <div class="bg-gray-50 p-4 rounded-2xl mb-4 border border-gray-100">
                 <div class="flex justify-between items-center mb-2">
                     <p class="text-[9px] font-black uppercase text-gray-400">Code Promotionnel</p>
-                    <div id="promo-timer-text" class="text-[10px] font-black text-orange-600 hidden">Expire : <span id="timer-count">15:00</span></div>
+                    <div id="promo-timer-text" class="text-[10px] font-black text-orange-600 hidden text-right">Expire : <span id="timer-count">15:00</span></div>
                 </div>
                 <div class="flex gap-2">
                     <input type="text" id="promo-input" placeholder="CODE" class="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-3 text-xs font-bold uppercase outline-none focus:border-orange-500">
@@ -127,8 +138,8 @@
                     <option value="Wave">Paiement Wave (+1.000 F Livraison)</option>
                     <option value="Boutique">Retrait Abobo Marché Nuit (0 F)</option>
                 </select>
-                <input type="text" id="c-nom" placeholder="VOTRE NOM COMPLET" class="w-full p-4 bg-gray-50 rounded-2xl text-sm font-bold border border-transparent focus:border-black outline-none">
-                <button onclick="handleCheckout()" class="w-full bg-orange-600 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg">Confirmer la Commande</button>
+                <input type="text" id="c-nom" placeholder="NOM COMPLET" class="w-full p-4 bg-gray-50 rounded-2xl text-sm font-bold border border-transparent focus:border-black outline-none">
+                <button onclick="handleCheckout()" class="w-full bg-orange-600 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg">Confirmer l'achat</button>
             </div>
         </div>
     </div>
@@ -138,9 +149,9 @@
             { 
                 id: 1, cat: "Vêtement", nom: "Robe Satin Royale", prix: 45000, 
                 img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500",
-                desc: "Robe en soie de Turquie, texture satinée fluide. Importée de Dubaï.",
+                desc: "Robe en soie de Turquie, texture satinée fluide. Idéale pour les grandes cérémonies.",
                 tailles: ["S", "M", "L", "XL"],
-                couleurs: [{nom: "Bleu Nuit", code: "#1a237e"}, {nom: "Rouge", code: "#b71c1c"}],
+                couleurs: [{nom: "Bleu", code: "#1a237e"}, {nom: "Rouge", code: "#b71c1c"}],
                 avis: [{user: "Fanta B.", comm: "Qualité exceptionnelle !"}]
             },
             { 
@@ -155,15 +166,14 @@
 
         const PROMO_CODES = { "LATYF@SHOP": 1000, "NEW2026": 1500 };
         const INFO_TEXTS = {
-            about: { title: "À Propos", content: "Bienvenue chez Latyfa Shop.com, votre destination pour le luxe... Sourcing Dubaï et Turquie. Retrait à Abobo Marché Nuit." },
-            policy: { title: "Retours", content: "Échanges possibles sous 48h sur articles non portés." }
+            about: { title: "À Propos", content: "Latyfa Shop.com : Luxe et Sourcing de Dubaï et Turquie. Nous sélectionnons le meilleur pour vous." },
+            policy: { title: "Retours", content: "Échanges sous 48h possibles." }
         };
 
         let cart = [];
         let activeDiscount = 0;
         let selectedSize = null;
         let selectedColor = null;
-        let currentViewingId = null;
 
         function render() {
             const grid = document.getElementById('grid');
@@ -177,13 +187,12 @@
                         <p class="text-orange-600 font-black text-xs">${p.prix.toLocaleString()} F</p>
                     </div>
                 </div>`;
-                if(idx === 0) html += `<div class="promo-banner-inline"><h2 class="text-xl font-black italic uppercase leading-none">Luxe & Sourcing</h2><p class="text-[9px] mt-1 opacity-80 uppercase font-bold">Import Dubaï & Turquie</p></div>`;
+                if(idx === 0) html += `<div class="promo-banner-inline"><h2 class="text-xl font-black italic uppercase leading-none text-white">Luxe & Sourcing</h2><p class="text-[9px] mt-1 opacity-80 uppercase font-bold text-white">Dubaï & Turquie</p></div>`;
             });
             grid.innerHTML = html;
         }
 
         function viewProduct(id) {
-            currentViewingId = id;
             const p = products.find(x => x.id === id);
             selectedSize = null; selectedColor = null;
             
@@ -199,7 +208,7 @@
                 <div class="mb-4"><h4 class="text-[9px] font-black text-gray-400 uppercase mb-2">Taille / Pointure</h4><div class="flex flex-wrap gap-2">${sizesHtml}</div></div>
                 <div class="bg-gray-50 p-4 rounded-xl mb-4 text-[11px] text-gray-600 leading-relaxed"><h4 class="font-black uppercase text-[9px] text-gray-400 mb-1">Description</h4>${p.desc}</div>
                 <div class="mb-6"><div class="flex justify-between items-center mb-2"><h4 class="text-[9px] font-black text-gray-400 uppercase">Avis</h4><button onclick="document.getElementById('modal-review').classList.add('active')" class="text-[9px] font-black text-orange-600 underline uppercase">Laisser un avis</button></div>${avisHtml}</div>
-                <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest">Ajouter au Panier</button>
+                <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">Ajouter au Panier</button>
             `;
             document.getElementById('modal-product').classList.add('active');
         }
@@ -249,15 +258,16 @@
             document.getElementById('sub-total').innerText = sub.toLocaleString() + " F";
             if(activeDiscount > 0) { document.getElementById('promo-line').classList.remove('hidden'); document.getElementById('promo-amount').innerText = "- " + activeDiscount.toLocaleString() + " F"; }
             document.getElementById('final-total').innerText = (sub - activeDiscount + ship).toLocaleString() + " F";
-            document.getElementById('cart-items').innerHTML = cart.map((i, idx) => `<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl"><div class="flex flex-col"><span class="text-[10px] font-black uppercase">${i.nom}</span><span class="text-[9px] text-orange-600 font-bold uppercase">${i.selectedColor} | ${i.selectedSize}</span></div><button onclick="removeFromCart(${idx})" class="text-red-500 font-bold">✕</button></div>`).join('');
+            document.getElementById('cart-items').innerHTML = cart.map((i, idx) => `<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border border-gray-100"><div class="flex flex-col"><span class="text-[10px] font-black uppercase">${i.nom}</span><span class="text-[9px] text-orange-600 font-bold uppercase">${i.selectedColor} | ${i.selectedSize}</span></div><button onclick="removeFromCart(${idx})" class="text-red-500 font-bold">✕</button></div>`).join('');
         }
 
         function removeFromCart(idx) { cart.splice(idx,1); updateCartUI(); document.getElementById('cart-count').innerText = cart.length; }
         function openInfo(type) { document.getElementById('info-title').innerText = INFO_TEXTS[type].title; document.getElementById('info-content').innerText = INFO_TEXTS[type].content; document.getElementById('modal-info').classList.add('active'); toggleMenu(); }
-        function sendReviewWhatsApp() { window.open(`https://wa.me/2250709002881?text=${encodeURIComponent("Avis Client: " + document.getElementById('rev-text').value)}`); }
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); document.getElementById('menu-overlay').classList.toggle('active'); }
         function showCart() { document.getElementById('modal-cart').classList.add('active'); updateCartUI(); }
         function closeModals() { document.querySelectorAll('.layer').forEach(l => l.classList.remove('active')); }
+        function sendReviewWhatsApp() { window.open(`https://wa.me/2250709002881?text=${encodeURIComponent("Avis Client: " + document.getElementById('rev-text').value)}`); }
+        
         function handleCheckout() { 
             const n = document.getElementById('c-nom').value;
             if(!n || cart.length === 0) return alert("Infos manquantes.");
