@@ -63,6 +63,33 @@
         #canvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
         .spin-trigger { background: #000; color: #fff; padding: 15px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; border: none; font-size: 14px; letter-spacing: 2px; width: 100%; }
         .spin-trigger:disabled { background: #ccc; cursor: not-allowed; }
+                    /* --- AJOUT OPTION 4 : TOAST NOTIFICATION --- */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast-notification {
+            position: fixed;
+            top: 85px;
+            right: 20px;
+            background: #1a1a1a;
+            color: #c5a059;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #c5a059;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: slideIn 0.4s ease-out;
+        }
+
     </style>
 </head>
 <body>
@@ -372,16 +399,21 @@
             document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=${encodeURIComponent(msgShare)}`, "_blank");
             document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`, "_blank");
         }
-
         function ajouterDepuisDetail() {
-            const size = document.getElementById('select-size').value || "";
-            const color = document.getElementById('select-color').value || "";
-            const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
-            const index = cart.findIndex(x => x.label === label);
-            if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
-            document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
-            document.getElementById('productDetailModal').classList.remove('active');
-            alert("✅ Ajouté au panier !");
+    const size = document.getElementById('select-size').value || "";
+    const color = document.getElementById('select-color').value || "";
+    const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
+    
+    const index = cart.findIndex(x => x.label === label);
+    if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
+    
+    document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+    document.getElementById('productDetailModal').classList.remove('active');
+
+    // --- REMPLACEMENT DE L'ALERT ICI ---
+    showToast("Article ajouté au panier ! ✨");
+}
+
         }
 
         function ouvrirPanier() {
@@ -563,6 +595,26 @@ setTimeout(() => {
     showSocialProof();
     setInterval(showSocialProof, 15000);
 }, 3000);
+       function showToast(message) {
+    // Création de l'élément
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `
+        <i class="fa-solid fa-circle-check"></i>
+        <span>${message}</span>
+    `;
+
+    // Ajout au document
+    document.body.appendChild(toast);
+
+    // Disparition automatique après 3 secondes
+    setTimeout(() => {
+        toast.style.transition = "opacity 0.5s ease";
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+}
+ 
    </script>
 </body>
 </html>
