@@ -27,8 +27,7 @@
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
     </style>
-</head>
-<body class="pb-10">
+</head/>
     
 <div id="loader">
     <div class="spinner"></div>
@@ -270,6 +269,59 @@
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); document.getElementById('menu-overlay').classList.toggle('active'); }
         function closeModals() { document.querySelectorAll('.layer').forEach(l => l.classList.remove('active')); }
         render();
+        function openInfo(type) { 
+    // Textes pour chaque onglet
+    const info = { 
+        about: [
+            "À Propos", 
+            "Latyfa Shop est une boutique de référence spécialisée dans le luxe et le sourcing d'articles de haute qualité. Sous la direction de Mme Traoré Djeneba à Abobo, nous nous engageons à vous fournir des produits authentiques et élégants."
+        ], 
+        policy: [
+            "Politique de Retours", 
+            "La satisfaction de nos clients est notre priorité. Cependant, tout article livré et conforme ne fera l'objet d'un remboursement. Vous disposez d'un délai de 72h maximum pour signaler une non-conformité."
+        ], 
+        condition: [
+            "Remboursement", 
+            "Nous procédons à un échange si l'article présente un défaut de fabrication avéré. Aucun remboursement monétaire n'est effectué après validation de la commande."
+        ], 
+        web: [
+            "Création de Site", 
+            "Ce site a été conçu pour offrir une expérience shopping fluide. Pour obtenir un site e-commerce similaire pour votre propre activité, contactez le développeur au : +225 05 06 11 32 92."
+        ] 
+    };
+    
+    // On vérifie si l'élément HTML existe avant d'écrire dedans
+    if(info[type] && document.getElementById('info-title')) {
+        document.getElementById('info-title').innerText = info[type][0]; 
+        document.getElementById('info-content').innerText = info[type][1]; 
+        
+        // On affiche la fenêtre
+        document.getElementById('modal-info').classList.add('active'); 
+        
+        // On ferme le menu de gauche
+        if(typeof toggleMenu === "function") toggleMenu();
+    }
+        }
+        
     </script>
+
+```html
+    <div id="modal-info" class="layer">
+        <div class="bg-white w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-xl">✕</button>
+            <h2 id="info-title" class="font-black text-xl mb-4 text-orange-600 uppercase italic"></h2>
+            <div id="info-content" class="text-[13px] leading-relaxed text-gray-700 space-y-4"></div>
+        </div>
+    </div>
+
+</body>
+    <body class="pb-10">
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p class="mt-4 font-black text-[10px] uppercase tracking-widest text-orange-600">Validation de votre commande...</p>
+    </div>
+        
+    
 </body>
 </html>
