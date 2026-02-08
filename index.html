@@ -10,7 +10,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #fff; color: #000; overflow-x: hidden; }
         .font-black { font-family: 'Archivo Black', sans-serif; }
         
-        /* Animations */
+        /* Animations et Couches */
         .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
         .layer.active { display: flex; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -22,6 +22,9 @@
         /* Menu Latéral */
         #side-menu { position: fixed; top: 0; left: -100%; width: 80%; height: 100%; background: white; z-index: 200; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 20px 0 50px rgba(0,0,0,0.1); }
         #side-menu.open { left: 0; }
+        
+        .animate-marquee { display: inline-block; animation: marquee 20s linear infinite; }
+        @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
     </style>
 </head>
 <body class="pb-20">
@@ -53,37 +56,29 @@
             <button onclick="openInfo('about')" class="block text-2xl font-bold uppercase tracking-tight">À Propos</button>
             <button onclick="openInfo('policy')" class="block text-2xl font-bold uppercase tracking-tight">Livraison & Retours</button>
             <button onclick="openInfo('condition')" class="block text-2xl font-bold uppercase tracking-tight">Remboursements</button>
-            <button onclick="openInfo('web')" class="block text-[10px] font-black uppercase text-gray-400 mt-10">Créer mon site web</button>
+            <button onclick="openInfo('web')" class="block text-[10px] font-black uppercase text-gray-400 mt-10 text-left">Créer mon site web</button>
         </nav>
-        <div class="pt-10 border-t border-gray-100 flex gap-6">
-            <a href="https://www.instagram.com/latyfa_shop_?igsh=MXR3cm90Zm1jdzEwNA%3D%3D&utm_source=qr" target="_blank" class="text-sm font-black italic">INSTAGRAM</a>
-            <a href="https://www.tiktok.com/@latyfa.shop1?_t=8qI6v0Y63eO&_r=1" target="_blank" class="text-sm font-black italic">TIKTOK</a>
-        </div>
     </div>
 
     <main class="p-4 grid grid-cols-2 gap-4" id="product-grid"></main>
 
     <div id="modal-product" class="layer">
         <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden relative shadow-2xl">
-            <button onclick="closeModals()" class="absolute top-4 right-4 z-50 bg-white/80 w-8 height-8 rounded-full shadow-lg">✕</button>
-            
-            <div id="p-images" class="flex overflow-x-auto snap-x snap-mandatory"></div>
-            
+            <button onclick="closeModals()" class="absolute top-4 right-4 z-50 bg-white/80 w-8 h-8 rounded-full shadow-lg flex items-center justify-center font-bold">✕</button>
+            <div id="p-images" class="flex overflow-x-auto snap-x snap-mandatory h-80 bg-gray-100"></div>
             <div class="p-6">
                 <h2 id="p-title" class="font-black text-2xl mb-2 italic tracking-tighter uppercase"></h2>
                 <p id="p-price" class="text-orange-600 font-black text-xl mb-6"></p>
-
-                <div class="space-y-6">
+                <div class="space-y-4">
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Couleurs disponibles</p>
-                        <div id="p-colors" class="flex gap-3"></div>
+                        <p class="text-[10px] font-black text-gray-400 uppercase mb-2">Couleur</p>
+                        <div id="p-colors" class="flex gap-2"></div>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Choisir la taille</p>
-                        <div id="p-sizes" class="flex gap-3"></div>
+                        <p class="text-[10px] font-black text-gray-400 uppercase mb-2">Taille</p>
+                        <div id="p-sizes" class="flex gap-2"></div>
                     </div>
                 </div>
-
                 <button onclick="addToCart()" class="w-full bg-black text-white py-5 mt-8 rounded-2xl font-black text-sm tracking-widest uppercase hover:bg-orange-600 transition-colors">Ajouter au panier</button>
             </div>
         </div>
@@ -91,10 +86,10 @@
 
     <div id="modal-cart" class="layer">
         <div class="bg-white w-full max-w-md rounded-3xl p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-xl">✕</button>
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-xl font-bold">✕</button>
             <h2 class="font-black text-2xl mb-6 italic uppercase tracking-tighter">Mon Panier</h2>
             
-            <div id="cart-items" class="space-y-4 mb-8"></div>
+            <div id="cart-items" class="space-y-4 mb-6"></div>
 
             <div class="bg-gray-50 p-4 rounded-2xl mb-6">
                 <div class="flex gap-2">
@@ -117,29 +112,26 @@
                         <option value="2000">Bingerville, Anyama</option>
                     </optgroup>
                     <optgroup label="EXTÉRIEUR - 3000 F">
-                        <option value="3000">Bassam, Songon</option>
-                        <option value="3000">Intérieur du pays (Compagnie)</option>
+                        <option value="3000">Bassam, Songon, Intérieur (Compagnie)</option>
                     </optgroup>
                     <option value="0">Retrait en boutique (Gratuit)</option>
                 </select>
             </div>
 
-            <div class="space-y-3 mb-8">
+            <div class="space-y-3 mb-6">
                 <input type="text" id="c-nom" placeholder="NOM COMPLET" class="w-full p-4 bg-gray-50 rounded-2xl text-sm font-bold outline-none">
                 <input type="tel" id="c-tel" placeholder="NUMÉRO WHATSAPP" class="w-full p-4 bg-gray-50 rounded-2xl text-sm font-bold outline-none">
             </div>
 
-            <div class="border-t pt-6 mb-6">
-                <div class="flex justify-between items-end">
-                    <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase">Total à payer</p>
-                        <p id="old-total" class="text-xs text-gray-400 line-through"></p>
-                        <p id="final-total" class="text-3xl font-black text-orange-600 italic">0 F</p>
-                    </div>
+            <div class="border-t pt-4 mb-6 flex justify-between items-end">
+                <div>
+                    <p class="text-[10px] font-black text-gray-400 uppercase">Total Final</p>
+                    <p id="old-total" class="text-xs text-gray-400 line-through"></p>
+                    <p id="final-total" class="text-3xl font-black text-orange-600 italic">0 F</p>
                 </div>
             </div>
 
-            <button onclick="handleCheckout()" class="w-full bg-orange-600 text-white py-5 rounded-2xl font-black text-sm tracking-widest uppercase">Confirmer sur WhatsApp</button>
+            <button onclick="handleCheckout()" class="w-full bg-orange-600 text-white py-5 rounded-2xl font-black text-sm tracking-widest uppercase">Commander sur WhatsApp</button>
         </div>
     </div>
 
@@ -147,7 +139,7 @@
         <div class="bg-white w-full max-w-md rounded-3xl p-8 relative shadow-2xl">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-xl">✕</button>
             <h2 id="info-title" class="font-black text-xl mb-4 text-orange-600 uppercase italic"></h2>
-            <div id="info-content" class="text-[13px] leading-relaxed text-gray-700 space-y-4"></div>
+            <div id="info-content" class="text-[13px] leading-relaxed text-gray-700"></div>
         </div>
     </div>
 
@@ -157,10 +149,7 @@
                 id: 1,
                 nom: "Parure de Luxe Or",
                 prix: 7000,
-                images: [
-                    "https://i.ibb.co/XfXG0YV/image-2025-02-05-181519782.png",
-                    "https://i.ibb.co/XfXG0YV/image-2025-02-05-181519782.png"
-                ],
+                images: ["https://i.ibb.co/XfXG0YV/image-2025-02-05-181519782.png", "https://i.ibb.co/XfXG0YV/image-2025-02-05-181519782.png"],
                 colors: ["Or", "Argent"],
                 sizes: ["Unique"]
             }
@@ -173,15 +162,14 @@
         let dPercent = 0;
         let dFixed = 0;
 
-        // RENDER PRODUITS
         function render() {
             document.getElementById('product-grid').innerHTML = products.map(p => `
                 <div class="group" onclick="openProduct(${p.id})">
-                    <div class="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-100 mb-3">
-                        <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gray-100 mb-2">
+                        <img src="${p.images[0]}" class="w-full h-full object-cover">
                     </div>
-                    <h3 class="font-black text-[11px] uppercase tracking-tighter italic leading-none">${p.nom}</h3>
-                    <p class="text-orange-600 font-bold text-[13px] mt-1">${p.prix.toLocaleString()} F</p>
+                    <h3 class="font-black text-[10px] uppercase italic">${p.nom}</h3>
+                    <p class="text-orange-600 font-bold text-xs">${p.prix.toLocaleString()} F</p>
                 </div>
             `).join('');
         }
@@ -193,94 +181,63 @@
             selectedProduct = products.find(p => p.id === id);
             sColor = selectedProduct.colors[0];
             sSize = selectedProduct.sizes[0];
-            
             document.getElementById('p-title').innerText = selectedProduct.nom;
             document.getElementById('p-price').innerText = selectedProduct.prix.toLocaleString() + " F";
+            document.getElementById('p-images').innerHTML = selectedProduct.images.map(img => `<img src="${img}" class="w-full h-80 object-cover snap-start flex-shrink-0">`).join('');
             
-            document.getElementById('p-images').innerHTML = selectedProduct.images.map(img => `
-                <img src="${img}" class="w-full h-80 object-cover snap-start flex-shrink-0">
-            `).join('');
-
             document.getElementById('p-colors').innerHTML = selectedProduct.colors.map(c => `
-                <button onclick="sColor='${c}'; updatePUI()" class="px-4 py-2 border-2 rounded-xl text-[10px] font-black uppercase ${sColor===c?'border-black bg-black text-white':'border-gray-100'}">${c}</button>
+                <button onclick="sColor='${c}'; openProduct(${id})" class="px-3 py-1 border-2 rounded-lg text-[10px] font-bold ${sColor===c?'border-black bg-black text-white':'border-gray-100'}">${c}</button>
             `).join('');
-
+            
             document.getElementById('p-sizes').innerHTML = selectedProduct.sizes.map(s => `
-                <button onclick="sSize='${s}'; updatePUI()" class="px-4 py-2 border-2 rounded-xl text-[10px] font-black uppercase ${sSize===s?'border-black bg-black text-white':'border-gray-100'}">${s}</button>
+                <button onclick="sSize='${s}'; openProduct(${id})" class="px-3 py-1 border-2 rounded-lg text-[10px] font-bold ${sSize===s?'border-black bg-black text-white':'border-gray-100'}">${s}</button>
             `).join('');
-
+            
             document.getElementById('modal-product').classList.add('active');
         }
 
-        function updatePUI() {
-            openProduct(selectedProduct.id);
-        }
-
         function addToCart() {
-            cart.push({ ...selectedProduct, selectedColor: sColor, selectedSize: sSize });
+            cart.push({ ...selectedProduct, sColor, sSize });
             closeModals();
             updateCartUI();
         }
 
-        function openCart() { 
-            document.getElementById('modal-cart').classList.add('active'); 
+        function openCart() {
+            document.getElementById('modal-cart').classList.add('active');
             updateCartUI();
         }
 
         function updateCartUI() {
             const subtotal = cart.reduce((s, i) => s + i.prix, 0);
             const deliveryFee = parseInt(document.getElementById('delivery-zone').value) || 0;
-            
             let reduction = (subtotal * (dPercent / 100)) + dFixed;
             let finalPrice = Math.max(0, subtotal - reduction) + deliveryFee;
 
             document.getElementById('cart-count').innerText = cart.length;
             document.getElementById('cart-items').innerHTML = cart.map((i, idx) => `
-                <div class="flex justify-between items-center bg-gray-50 p-4 rounded-2xl">
-                    <div>
-                        <p class="font-black text-[10px] uppercase">${i.nom}</p>
-                        <p class="text-[9px] text-gray-500 uppercase">${i.selectedColor} — ${i.selectedSize}</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <p class="font-black text-xs">${i.prix.toLocaleString()} F</p>
-                        <button onclick="removeFromCart(${idx})" class="text-red-500 font-bold">✕</button>
-                    </div>
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl text-[10px] font-bold">
+                    <span>${i.nom} (${i.sColor})</span>
+                    <button onclick="removeFromCart(${idx})" class="text-red-500">✕</button>
                 </div>
             `).join('');
 
             document.getElementById('final-total').innerText = finalPrice.toLocaleString() + " F";
-            
-            if (reduction > 0 || deliveryFee > 0) {
-                document.getElementById('old-total').innerText = subtotal.toLocaleString() + " F";
-            } else {
-                document.getElementById('old-total').innerText = "";
-            }
+            document.getElementById('old-total').innerText = (reduction > 0 || deliveryFee > 0) ? subtotal.toLocaleString() + " F" : "";
         }
 
-        function removeFromCart(idx) {
-            cart.splice(idx, 1);
-            updateCartUI();
-        }
+        function removeFromCart(idx) { cart.splice(idx, 1); updateCartUI(); }
 
         function applyPromo() {
             const code = document.getElementById('promo-code').value.toUpperCase();
-            const msg = document.getElementById('promo-msg');
             const usedCodes = JSON.parse(localStorage.getItem('used_promos') || "[]");
-
-            if (usedCodes.includes(code)) {
-                msg.innerText = "CODE DÉJÀ UTILISÉ PAR VOTRE APPAREIL !";
-                msg.className = "text-[9px] mt-1 font-bold text-center text-red-500";
-                return;
-            }
-
+            if (usedCodes.includes(code)) return alert("Code déjà utilisé !");
+            
             if (code === "LATYFA25") {
-                dPercent = 10; dFixed = 0;
-                msg.innerText = "CODE APPLIQUÉ : -10% SUR LES ARTICLES !";
-                msg.className = "text-[9px] mt-1 font-bold text-center text-green-500";
+                dPercent = 10;
+                document.getElementById('promo-msg').innerText = "RÉDUCTION 10% APPLIQUÉE !";
+                document.getElementById('promo-msg').style.color = "green";
             } else {
-                dPercent = 0; dFixed = 0;
-                msg.innerText = "CODE INVALIDE";
-                msg.className = "text-[9px] mt-1 font-bold text-center text-red-500";
+                alert("Code invalide");
             }
             updateCartUI();
         }
@@ -288,53 +245,25 @@
         function handleCheckout() {
             const nom = document.getElementById('c-nom').value;
             const tel = document.getElementById('c-tel').value;
-            const pCode = document.getElementById('promo-code').value.toUpperCase() || "";
-            const totalFinal = document.getElementById('final-total').innerText;
-            
-            const zoneSelect = document.getElementById('delivery-zone');
-            const zoneName = zoneSelect.options[zoneSelect.selectedIndex].text;
-            const deliveryFee = zoneSelect.value;
+            const zone = document.getElementById('delivery-zone');
+            const zoneName = zone.options[zone.selectedIndex].text;
+            if(!nom || !tel || zone.value === "0") return alert("Remplissez toutes les informations !");
 
-            if(!nom || !tel) return alert("Veuillez entrer votre nom et votre numéro !");
-            if(deliveryFee === "0" && zoneName.includes("---")) return alert("Veuillez choisir une zone de livraison !");
-            if(cart.length === 0) return alert("Votre panier est vide !");
+            const msg = `🌟 COMMANDE LATYFA 🌟\n👤 CLIENT: ${nom}\n📞 TEL: ${tel}\n📍 LIVRAISON: ${zoneName}\n💰 TOTAL: ${document.getElementById('final-total').innerText}\n📦 ARTICLES:\n${cart.map(i => `- ${i.nom} (${i.sColor})`).join('\n')}`;
 
-            const confirmation = confirm(`🛍️ CONFIRMER LA COMMANDE ?\n\nClient: ${nom}\nLivraison: ${zoneName}\nTotal: ${totalFinal}`);
-
-            if (confirmation) {
-                document.getElementById('loader').style.display = 'flex';
-
-                if (dPercent > 0 || dFixed > 0) {
-                    const usedCodes = JSON.parse(localStorage.getItem('used_promos') || "[]");
-                    if (!usedCodes.includes(pCode)) {
-                        usedCodes.push(pCode);
-                        localStorage.setItem('used_promos', JSON.stringify(usedCodes));
-                    }
-                }
-
-                const msg = `🌟 COMMANDE LATYFA 🌟\n` +
-                            `👤 CLIENT: ${nom}\n` +
-                            `📞 TEL: ${tel}\n` +
-                            `📍 ZONE: ${zoneName}\n` +
-                            `🎟️ CODE: ${pCode || "Aucun"}\n` +
-                            `--------------------------\n` +
-                            `📦 ARTICLES:\n${cart.map(i => `- ${i.nom} (${i.selectedColor}, ${i.selectedSize})`).join('\n')}\n` +
-                            `--------------------------\n` +
-                            `💰 TOTAL À PAYER : ${totalFinal}`;
-
-                setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                    window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
-                }, 2000);
-            }
+            document.getElementById('loader').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+                window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
+            }, 2000);
         }
 
         function openInfo(type) {
             const info = {
-                about: ["À Propos", "Latyfa Shop est une boutique de référence spécialisée dans le luxe et le sourcing d'articles de haute qualité. Sous la direction de Mme Traoré Djeneba à Abobo."],
-                policy: ["Livraison & Retours", "Délais : Abidjan (24h), Intérieur (48-72h). Toute marchandise conforme livrée n'est ni reprise ni échangée."],
-                condition: ["Remboursements", "Nous procédons à un échange uniquement en cas de défaut de fabrication avéré signalé sous 72h. Aucun remboursement monétaire."],
-                web: ["Créer un Site", "Pour obtenir un site e-commerce professionnel similaire, contactez le développeur au : +225 05 06 11 32 92."]
+                about: ["À Propos", "Latyfa Shop : Luxe et Sourcing de qualité. Dirigé par Mme Traoré Djeneba."],
+                policy: ["Livraison", "Abidjan (24h), Intérieur (48h). Pas de retour sur articles conformes."],
+                condition: ["Remboursement", "Échange uniquement sur défaut de fabrication sous 72h."],
+                web: ["Créer un site", "Contactez-nous au +225 05 06 11 32 92."]
             };
             document.getElementById('info-title').innerText = info[type][0];
             document.getElementById('info-content').innerText = info[type][1];
