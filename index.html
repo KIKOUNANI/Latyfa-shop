@@ -66,6 +66,10 @@
     </style>
 </head>
 <body>
+    
+<div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 bg-black/90 text-[#c5a059] px-6 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest z-[2000] opacity-0 transition-opacity duration-300 pointer-events-none">
+    ✨ Produit ajouté au panier
+</div>
 
     <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">
     ✨ Promo Exclusive -20% dès 20.000 F D'achat à partir du 14 fév au 28 fév 2026: <span id="countdown" class="text-white ml-1">--:--:--</span> ✨
@@ -379,15 +383,32 @@
         }
 
         function ajouterDepuisDetail() {
-            const size = document.getElementById('select-size').value || "";
-            const color = document.getElementById('select-color').value || "";
-            const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
-            const index = cart.findIndex(x => x.label === label);
-            if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
-            document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
-            document.getElementById('productDetailModal').classList.remove('active');
-            alert("✅ Ajouté au panier !");
-        }
+    const size = document.getElementById('select-size').value || "";
+    const color = document.getElementById('select-color').value || "";
+    const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
+    
+    const index = cart.findIndex(x => x.label === label);
+    if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
+    
+    // Mise à jour du compteur
+    document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+    
+    // Fermeture du modal détail
+    document.getElementById('productDetailModal').classList.remove('active');
+
+    // --- VIBRATION MOBILE ---
+    if (navigator.vibrate) {
+        navigator.vibrate(50); // Vibration de 50ms
+    }
+    
+    // --- ANIMATION DU TOAST ---
+    const toast = document.getElementById('toast');
+    toast.classList.remove('opacity-0');
+    setTimeout(() => {
+        toast.classList.add('opacity-0');
+    }, 2000);
+}
+
 
         function ouvrirPanier() {
             document.getElementById('cartModal').classList.add('active');
@@ -420,10 +441,17 @@
     let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
     let remise = 0;
 
-    // Calcul de la promo -20% dès 20.000 F
-    if(tArt >= 20000) {
-        remise = tArt * 0.2;
-        tArt = tArt - remise;
+    // --- VÉRIFICATION DE LA DATE POUR LA PROMO ---
+    const maintenant = new Date();
+    const debutPromo = new Date("February 14, 2026 00:00:00");
+    const finPromo = new Date("February 28, 2026 23:59:59");
+    
+    // La remise ne s'applique que si on est dans l'intervalle ET que le total >= 20.000 F
+    if (maintenant >= debutPromo && maintenant <= finPromo) {
+        if (tArt >= 20000) {
+            remise = tArt * 0.2;
+            tArt = tArt - remise;
+        }
     }
 
     let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
@@ -435,15 +463,16 @@
         infoBox.classList.add('hidden'); 
     }
 
+    // Affichage dynamique du résumé
     document.getElementById('resume-final').innerHTML = `
         <div class="flex justify-between"><span>Articles :</span> <span>${(tArt + remise).toLocaleString()} F</span></div>
-        ${remise > 0 ? `<div class="flex justify-between text-green-600"><span>Remise Promo (-20%) :</span> <span>- ${remise.toLocaleString()} F</span></div>` : ''}
+        ${remise > 0 ? `<div class="flex justify-between text-green-600 font-black"><span>PROMO VALENTIN (-20%) :</span> <span>- ${remise.toLocaleString()} F</span></div>` : ''}
         <div class="flex justify-between"><span>Livraison :</span> <span>${tLiv.toLocaleString()} F</span></div>
     `;
+    
     document.getElementById('total-display').innerText = (tArt + tLiv).toLocaleString();
 }
-
-
+        
         function toggleBouton() {
             const chk = document.getElementById('check-verif').checked;
             const btn = document.getElementById('btn-final');
@@ -508,13 +537,13 @@
                 const actualDeg = spins % 360;
                 const win = prizes[Math.floor((360 - actualDeg) / (360 / prizes.length)) % prizes.length];
                 stats.count++;
-                localStorage.setItem('latyya_wheel_stats', JSON.stringify(stats));
+                localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
                 majAffichageChances();
                 if(win === "RÉESSAYER") {
                     alert(stats.count < MAX_TENTATIVES ? "🤫 Retente ta chance !" : "🤫 Plus de chances pour aujourd'hui.");
                     if(stats.count < MAX_TENTATIVES) { btn.disabled = false; btn.innerText = "RETENTER"; }
                 } else {
-                    alert("🎁 GAGNÉ : " + win + " !\nCapture l'écran et envoie-le sur WhatsApp.");
+                    alert("🎁 GAGNÉ : " + win + " !):,if (navigator.vibrate) navigator.vibrate([100, 50, 100]); // Vibration en deux temps (Vibre, Pause, Vibre)\nCapture l'écran et envoie-le sur WhatsApp.");
                     btn.innerText = "BIEN JOUÉ !";
                 }
             }, 4000);
