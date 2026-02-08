@@ -264,32 +264,56 @@
         }
 
         function voirDetails(id) {
-            const p = products.find(x => x.id === id);
-            currentProduct = p;
-            document.getElementById('productDetailModal').classList.add('active');
-            document.getElementById('main-detail-img').src = p.images[0];
-            document.getElementById('thumbnails').innerHTML = p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-orange-500">`).join('');
-            document.getElementById('detail-name').innerText = p.name;
-            document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
-            document.getElementById('detail-desc').innerText = p.description;
+    const p = products.find(x => x.id === id);
+    currentProduct = p;
+    
+    // Ouvrir le modal
+    document.getElementById('productDetailModal').classList.add('active');
+    
+    // Charger l'image principale et les miniatures
+    document.getElementById('main-detail-img').src = p.images[0];
+    document.getElementById('thumbnails').innerHTML = p.images.map(img => `
+        <img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" 
+             class="h-14 w-14 object-cover rounded cursor-pointer border-2 border-transparent hover:border-[#ff6600] transition">
+    `).join('');
 
-            const sArea = document.getElementById('size-area');
-            const opts = p.tailles || p.pointures || [];
-            if(opts.length > 0) {
-                sArea.classList.remove('hidden');
-                document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
-            } else { sArea.classList.add('hidden'); }
+    // Remplir les infos textuelles
+    document.getElementById('detail-name').innerText = p.name;
+    document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
+    document.getElementById('detail-desc').innerText = p.description || "Élégance et qualité supérieure sélectionnées par LATYYA.";
 
-            const cArea = document.getElementById('color-area');
-            if(p.couleurs) {
-                cArea.classList.remove('hidden');
-                document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
-            } else { cArea.classList.add('hidden'); }
+    // Gérer l'affichage des Tailles/Pointures
+    const sArea = document.getElementById('size-area');
+    const opts = p.tailles || p.pointures || [];
+    if(opts.length > 0) {
+        sArea.classList.remove('hidden');
+        document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
+    } else { sArea.classList.add('hidden'); }
 
-            const url = encodeURIComponent(window.location.href);
-            document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=Regarde ce magnifique article chez LATYYA: ${url}`);
-            document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
-        }
+    // Gérer l'affichage des Couleurs
+    const cArea = document.getElementById('color-area');
+    if(p.couleurs && p.couleurs.length > 0) {
+        cArea.classList.remove('hidden');
+        document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
+    } else { cArea.classList.add('hidden'); }
+
+    // --- LOGIQUE DE PARTAGE CORRIGÉE ---
+    const urlSite = window.location.href;
+    const messageWhatsApp = `Coucou ! Regarde ce magnifique article chez *LATYYA Business* :\n\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\n\nTu peux le voir ici : ${urlSite}`;
+
+    // Partage WhatsApp
+    document.getElementById('share-wa').onclick = () => {
+        const link = `https://wa.me/?text=${encodeURIComponent(messageWhatsApp)}`;
+        window.open(link, "_blank");
+    };
+
+    // Partage Facebook
+    document.getElementById('share-fb').onclick = () => {
+        const link = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`;
+        window.open(link, "_blank");
+    };
+}
+
 
         function ajouterDepuisDetail() {
             const size = document.getElementById('select-size').value || "";
