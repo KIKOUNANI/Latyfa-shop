@@ -3,26 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYYA Business | Alibaba Edition</title>
+    <title>LATYYA | Alibaba Edition Corrigée</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --ali-orange: #ff6600; }
-        body { background-color: #f4f4f4; font-family: sans-serif; margin: 0; padding: 0; }
+        body { background-color: #f4f4f4; font-family: sans-serif; }
         .ali-gradient { background: linear-gradient(90deg, #ff6600 0%, #ff9900 100%); }
-        .product-card { background: white; border-radius: 8px; border: 1px solid transparent; height: 100%; display: flex; flex-direction: column; }
+        .product-card { background: white; border-radius: 8px; border: 1px solid transparent; height: 100%; display: flex; flex-direction: column; cursor: pointer; }
         .product-card:hover { border-color: var(--ali-orange); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: white; overflow-y: auto; padding: 20px; }
         .modal.active { display: block; }
-        .category-btn { cursor: pointer; padding: 8px; border-radius: 4px; transition: 0.2s; }
-        .category-btn:hover { background: #fff5e6; color: var(--ali-orange); }
     </style>
 </head>
 <body>
 
-    <div class="bg-[#fff5e6] text-[#d45d00] text-center py-2 text-xs font-bold border-b border-[#ffcc80]">
-        🔥 PROMO -20% DÈS 20.000 F (St Valentin 2026) : <span id="countdown">--:--:--</span>
+    <div class="bg-[#fff5e6] text-[#d45d00] text-center py-2 text-[10px] font-bold border-b border-[#ffcc80]">
+        🔥 OFFRE : -20% DÈS 20.000 F (Valable dès le 14 Fév 2026) : <span id="countdown">--:--:--</span>
     </div>
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
@@ -31,35 +28,29 @@
                 <img src="https://i.ibb.co/vz6mD2V/1000167529.png" class="h-10 w-10 rounded-full">
                 <span class="text-2xl font-black italic text-[#ff6600]">LATYYA</span>
             </div>
-            <div class="hidden md:block flex-1 max-w-md relative">
-                <input type="text" placeholder="Rechercher..." class="w-full border-2 border-[#ff6600] rounded-full py-1.5 px-5 outline-none text-sm">
-                <button class="absolute right-1 top-1 ali-gradient text-white px-4 py-1 rounded-full text-xs font-bold">Chercher</button>
-            </div>
-            <div class="flex gap-4">
-                <div onclick="suivreColis()" class="text-center cursor-pointer">
+            <div class="flex gap-6">
+                <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
                     <i class="fa-solid fa-truck text-gray-600"></i>
-                    <p class="text-[9px] font-bold uppercase">Suivi</p>
+                    <p class="text-[9px] font-bold">SUIVI</p>
                 </div>
-                <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative">
+                <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
                     <i class="fa-solid fa-cart-shopping text-gray-600"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1">0</span>
-                    <p class="text-[9px] font-bold uppercase">Panier</p>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
+                    <p class="text-[9px] font-bold uppercase">PANIER</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-6">
+    <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
         <aside class="w-full md:w-64 bg-white rounded-lg p-4 shadow-sm h-fit">
-            <h3 class="font-bold border-b pb-2 mb-4 text-sm uppercase">Catégories</h3>
-            <div class="flex flex-col gap-2 text-sm text-gray-600">
-                <span class="category-btn" onclick="render('tous')">Toutes les offres</span>
-                <span class="category-btn" onclick="render('bijoux')">Bijoux</span>
-                <span class="category-btn" onclick="render('habillement')">Habillement</span>
-                <span class="category-btn" onclick="render('parfum')">Parfum</span>
-                <span class="category-btn" onclick="render('montre')">Montre</span>
-                <span class="category-btn" onclick="render('chaussures')">Chaussures</span>
-                <span class="category-btn" onclick="render('sac')">Sacs à main</span>
+            <h3 class="font-bold border-b pb-2 mb-4 text-xs uppercase text-[#ff6600]">Catégories</h3>
+            <div class="flex flex-col gap-3 text-sm text-gray-600">
+                <span class="hover:text-[#ff6600] cursor-pointer" onclick="render('tous')">Toutes les offres</span>
+                <span class="hover:text-[#ff6600] cursor-pointer" onclick="render('bijoux')">Bijoux</span>
+                <span class="hover:text-[#ff6600] cursor-pointer" onclick="render('habillement')">Habillement</span>
+                <span class="hover:text-[#ff6600] cursor-pointer" onclick="render('chaussures')">Chaussures</span>
+                <span class="hover:text-[#ff6600] cursor-pointer" onclick="render('sac')">Sacs à main</span>
             </div>
         </aside>
 
@@ -70,43 +61,54 @@
 
     <footer class="bg-white border-t mt-12 py-10">
         <div class="container mx-auto px-4 text-center">
-            <h3 class="font-bold text-[#ff6600] mb-4">SERVICE CLIENT</h3>
-            <p class="text-sm text-gray-600 mb-2">WhatsApp / Appel : 0709002881</p>
-            <div class="flex justify-center gap-6 mt-6">
-                <a href="#" class="text-gray-400 hover:text-blue-600"><i class="fab fa-facebook fa-xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-pink-600"><i class="fab fa-instagram fa-xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-black"><i class="fab fa-tiktok fa-xl"></i></a>
+            <h3 class="font-bold text-[#ff6600] mb-4 uppercase tracking-widest text-sm">Service Client Latyya</h3>
+            <div class="flex justify-center gap-8 items-center mb-6">
+                <a href="https://wa.me/2250709002881" class="text-gray-400 hover:text-green-500 flex flex-col items-center">
+                    <i class="fab fa-whatsapp fa-2xl mb-2"></i>
+                    <span class="text-[10px] font-bold">WhatsApp</span>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-blue-600 flex flex-col items-center">
+                    <i class="fab fa-facebook fa-2xl mb-2"></i>
+                    <span class="text-[10px] font-bold">Facebook</span>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-pink-600 flex flex-col items-center">
+                    <i class="fab fa-instagram fa-2xl mb-2"></i>
+                    <span class="text-[10px] font-bold">Instagram</span>
+                </a>
             </div>
-            <p class="text-[10px] text-gray-400 mt-8 uppercase tracking-widest">© 2026 Latyya Shop Côte d'Ivoire</p>
+            <p class="text-xs text-gray-500">Contact direct : 07 09 00 28 81</p>
+            <p class="text-[9px] text-gray-400 mt-8 uppercase tracking-[0.3em]">© 2026 Maison Latyya - Côte d'Ivoire</p>
         </div>
     </footer>
 
     <div id="cartModal" class="modal">
         <div class="max-w-md mx-auto">
-            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600]">MON PANIER</h2>
-            <div id="cart-items" class="space-y-3 mb-6"></div>
-            <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
-                <div class="flex justify-between font-bold text-lg mb-4">
-                    <span>TOTAL :</span> <span id="total-display">0</span> F
+            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase tracking-tighter">Ma Sélection</h2>
+            <div id="cart-items" class="space-y-4 mb-6"></div>
+            
+            <div id="checkout-form" style="display:none;" class="border-t pt-4">
+                <div class="flex justify-between font-bold text-lg mb-4 text-gray-800">
+                    <span>TOTAL :</span> <span id="total-display">0</span> F CFA
                 </div>
-                <input type="text" id="nom-client" placeholder="Nom Complet" class="w-full border p-3 rounded">
-                <input type="text" id="tel-client" placeholder="Adresse de livraison" class="w-full border p-3 rounded">
-                <div class="space-y-2 text-xs font-bold text-gray-600 uppercase">Mode de Paiement :</div>
-                <select id="mode-pay" class="w-full border p-3 rounded">
-                    <option value="WAVE">WAVE</option>
-                    <option value="OM">ORANGE MONEY</option>
-                    <option value="CASH">CASH À LA LIVRAISON</option>
-                </select>
-                <button onclick="validerCommande()" class="w-full ali-gradient text-white py-4 rounded-full font-bold uppercase">Confirmer la commande</button>
+                <div class="space-y-3">
+                    <input type="text" id="nom-client" placeholder="Votre Nom" class="w-full border p-3 rounded-lg text-sm">
+                    <input type="text" id="tel-client" placeholder="Quartier de livraison" class="w-full border p-3 rounded-lg text-sm">
+                    <select id="mode-pay" class="w-full border p-3 rounded-lg text-sm bg-gray-50 font-bold">
+                        <option value="WAVE">WAVE (Lien direct)</option>
+                        <option value="OM">ORANGE MONEY (Transfert)</option>
+                        <option value="CASH">CASH À LA LIVRAISON</option>
+                    </select>
+                </div>
+                <button onclick="validerCommande()" class="w-full ali-gradient text-white py-4 rounded-full font-bold uppercase mt-6 shadow-lg">Commander maintenant</button>
             </div>
-            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-xs">RETOUR</button>
+            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold tracking-widest">Fermer le panier</button>
         </div>
     </div>
 
     <script>
         const products = [
-            { cat: "sac", name: "Sac à main Luxe", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", details: "Cuir supérieur.", note: 4.8 },
-            { cat: "bijoux", name: "Collier Perle d'Or", price: 25000, old: 30000, img: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", details: "Acier inoxydable.", note: 5.0 }
+            { id: 1, cat: "sac", name: "Sac de luxe Latyya", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", note: 4.8 },
+            { id: 2, cat: "bijoux", name: "Collier Perle d'Or", price: 25000, old: 30000, img: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", note: 5.0 }
         ];
 
         let cart = [];
@@ -114,27 +116,34 @@
         function render(filter = 'tous') {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
-            products.forEach((p, i) => {
+            products.forEach((p) => {
                 if(filter === 'tous' || p.cat === filter) {
                     grid.innerHTML += `
-                        <div class="product-card p-3" onclick="ajouter(${i})">
-                            <img src="${p.img}" class="h-40 w-full object-cover rounded mb-2">
-                            <h3 class="text-xs font-medium line-clamp-2 h-8 mb-2">${p.name}</h3>
+                        <div class="product-card p-3" onclick="ajouter(${p.id})">
+                            <img src="${p.img}" class="h-40 w-full object-cover rounded-md mb-2">
+                            <h3 class="text-[11px] font-medium line-clamp-2 h-8 mb-1">${p.name}</h3>
                             <div class="text-[#ff6600] font-bold text-lg">${p.price.toLocaleString()} F</div>
                             <div class="text-gray-400 line-through text-[10px] mb-2">${p.old.toLocaleString()} F</div>
                             <div class="mt-auto flex justify-between items-center text-[10px]">
-                                <span class="text-yellow-500 font-bold">★ ${p.note}</span>
-                                <span class="bg-gray-100 px-2 py-0.5 rounded text-gray-500 italic">Détails</span>
+                                <span class="text-yellow-500">★ ${p.note}</span>
+                                <span class="bg-orange-50 text-[#ff6600] px-2 py-1 rounded font-bold">ACHETER</span>
                             </div>
                         </div>`;
                 }
             });
         }
 
-        function ajouter(i) {
-            cart.push(products[i]);
+        function ajouter(id) {
+            const p = products.find(prod => prod.id === id);
+            cart.push({...p, cartId: Date.now()});
             document.getElementById('cart-count').innerText = cart.length;
-            alert("Ajouté au panier !");
+            alert("Article ajouté au panier !");
+        }
+
+        function supprimerDuPanier(cartId) {
+            cart = cart.filter(item => item.cartId !== cartId);
+            document.getElementById('cart-count').innerText = cart.length;
+            ouvrirPanier(); // Rafraîchir l'affichage
         }
 
         function ouvrirPanier() {
@@ -142,29 +151,37 @@
             const itemsDiv = document.getElementById('cart-items');
             const form = document.getElementById('checkout-form');
             if(cart.length === 0) {
-                itemsDiv.innerHTML = "Votre panier est vide.";
+                itemsDiv.innerHTML = "<p class='text-center py-10 text-gray-400'>Le panier est vide.</p>";
                 form.style.display = "none";
                 return;
             }
             itemsDiv.innerHTML = '';
             let total = 0;
             cart.forEach(item => {
-                itemsDiv.innerHTML += `<div class="flex justify-between text-xs border-b py-2 italic"><span>${item.name}</span><b>${item.price} F</b></div>`;
+                itemsDiv.innerHTML += `
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <div class="text-[11px]">
+                            <p class="font-bold">${item.name}</p>
+                            <p class="text-gray-500">${item.price.toLocaleString()} F</p>
+                        </div>
+                        <button onclick="supprimerDuPanier(${item.cartId})" class="text-red-500 px-2 hover:bg-red-50 rounded">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>`;
                 total += item.price;
             });
-            // Promo Automatique
-            if(total >= 20000) {
-                let remise = total * 0.20;
+
+            // LOGIQUE PROMO : Seulement si Date >= 14 Fév 2026
+            const datePromo = new Date("2026-02-14").getTime();
+            const aujourdhui = new Date().getTime();
+            if (total >= 20000 && aujourdhui >= datePromo) {
+                const remise = total * 0.20;
                 total = total - remise;
-                itemsDiv.innerHTML += `<div class="text-green-600 font-bold text-xs mt-2 text-right uppercase">Remise St Valentin (-20%) appliquée !</div>`;
+                itemsDiv.innerHTML += `<div class="bg-green-50 text-green-700 p-2 rounded mt-4 text-[11px] font-bold text-center">Félicitations ! Remise St Valentin -20% appliquée.</div>`;
             }
+
             document.getElementById('total-display').innerText = total.toLocaleString();
             form.style.display = "block";
-        }
-
-        function suivreColis() {
-            let num = prompt("Numéro de commande (ex: LAT-123) :");
-            if(num) window.open(`https://wa.me/2250709002881?text=Suivi de commande N° ${num}`);
         }
 
         function validerCommande() {
@@ -175,11 +192,17 @@
             window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
         }
 
+        function suivreColis() {
+            let num = prompt("Entrez le numéro de commande indiqué sur votre reçu :");
+            if(num) window.open(`https://wa.me/2250709002881?text=Suivi de commande : ${num}`);
+        }
+
         // Compte à rebours
         setInterval(() => {
             const target = new Date("Feb 14, 2026 00:00:00").getTime();
             const now = new Date().getTime();
             const diff = target - now;
+            if (diff < 0) { document.getElementById('countdown').innerText = "OFFRE EN COURS !"; return; }
             const d = Math.floor(diff / (1000*60*60*24));
             const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
             const m = Math.floor((diff % (1000*60*60)) / (1000*60));
