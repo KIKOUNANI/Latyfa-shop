@@ -20,6 +20,24 @@
             margin: 0; 
             scroll-behavior: smooth; 
         }
+            /* Style des liens de catégories */
+.category-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #555;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 8px;
+}
+
+.category-link:hover {
+    color: #c5a059; /* Ton Doré Luxe */
+    padding-left: 5px;
+    border-bottom-color: #c5a059;
+}
+
 
         /* Police de luxe pour les titres et le Logo */
         h1, h2, h3, .logo-font { 
@@ -83,21 +101,38 @@
     </section>
 
     <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
-        <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border">
-            <h3 class="logo-font font-black border-b pb-3 mb-5 text-[12px] uppercase text-[#c5a059] tracking-widest text-center">
-    Nos Catégories
-</h3>
-            <div class="flex flex-col gap-4 text-sm font-bold text-gray-500 uppercase text-[11px]">
-                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('tous')">Tout voir <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('bijoux')">Bijoux <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('sac')">Sacs à main <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('vêtemens')">vêtements <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('Chaussures')">Chaussures <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('Parfums')">parfums <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('Perles de hanche')">Perles de hanche <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
-               <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('autres')">autres <i class="fa-solid fa-chevron-right text-[10px]"></i></span> 
-            </div>
-        </aside>
+        <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border border-gray-100">
+    <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center">
+        Nos Univers
+    </h3>
+    <div class="flex flex-col gap-5">
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('tous')">
+            Tout voir <i class="fa-solid fa-crown text-[10px] text-[#c5a059]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('bijoux')">
+            Bijoux <i class="fa-solid fa-gem text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('vetements')">
+            Vêtements <i class="fa-solid fa-shirt text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('chaussures')">
+            Chaussures <i class="fa-solid fa-shoe-prints text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('sac')">
+            Sacs à main <i class="fa-solid fa-bag-shopping text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('parfum')">
+            Parfums <i class="fa-solid fa-spray-can-sparkles text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('hanche')">
+            Perles de hanche <i class="fa-solid fa-circle-nodes text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('autres')">
+            Autres <i class="fa-solid fa-plus text-[10px]"></i>
+        </span>
+    </div>
+</aside>
+
         <main class="flex-1">
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
         </main>
