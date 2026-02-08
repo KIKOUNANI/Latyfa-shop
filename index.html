@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYYA Business | Officiel</title>
+    <title>LATYFA BOUTIQUE | Officiel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -31,14 +31,14 @@
 <body>
 
     <div class="bg-[#fff5e6] text-[#d45d00] text-center py-2 text-[10px] font-bold border-b border-[#ffcc80]">
-        🔥 PROMO -20% DÈS 20.000 F (Dès le 14 Fév) : <span id="countdown">--:--:--</span>
-    </div>
+        🔥 PROMO -20% DÈS 20.000 F D'ACHAT (Du 14 Fév au 28 Fév 2026) : <span id="countdown">--:--:--</span>
+    </div/>
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
             <div class="flex items-center gap-2">
                 <img src="https://i.ibb.co/vz6mD2V/1000167529.png" class="h-10 w-10 rounded-full">
-                <span class="text-2xl font-black italic text-[#ff6600]">LATYYA</span>
+                <span class="text-2xl font-black italic text-[#ff6600]">LATYFA</span>
             </div>
             <div class="flex gap-6">
                 <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
@@ -57,8 +57,8 @@
     <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
         <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-            <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none">L'Élégance Signature</h1>
-            <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]">Bijoux & Maroquinerie de Luxe</p>
+            <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none">La Boutique du 225</h1>
+            <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]">Bijoux, vêtements, parfum...</p>
             <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg">Découvrir la Collection</a>
         </div>
     </section>
@@ -70,6 +70,11 @@
                 <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('tous')">Tout voir <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
                 <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('bijoux')">Bijoux <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
                 <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('sac')">Sacs à main <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('vêtemens')">vêtements <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('Chaussures')">Chaussures <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('Parfums')">parfums <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+                <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('Perles de hanche')">Perles de hanche <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
+               <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('autres')">autres <i class="fa-solid fa-chevron-right text-[10px]"></i></span> 
             </div>
         </aside>
         <main class="flex-1">
@@ -84,7 +89,7 @@
     <div class="wheel-mask">
         <div class="wheel-box">
             <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
-            <h3 class="text-xl font-black italic uppercase text-gray-800">LATYYA LUCKY WHEEL</h3>
+            <h3 class="text-xl font-black italic uppercase text-gray-800">LATYFA LUCKY WHEEL</h3>
             <p id="wheel-msg" class="text-[11px] font-black uppercase mt-2"></p>
             <div class="relative">
                 <canvas id="canvas" width="300" height="300"></canvas>
@@ -132,9 +137,9 @@
                 <div class="text-center md:text-left">
                     <div class="flex items-center justify-center md:justify-start gap-2 mb-4">
                         <img src="https://i.ibb.co/vz6mD2V/1000167529.png" class="h-8 w-8 rounded-full">
-                        <span class="text-xl font-black italic text-[#ff6600]">LATYYA</span>
+                        <span class="text-xl font-black italic text-[#ff6600]">LATYFA</span>
                     </div>
-                    <p class="text-gray-500 text-[10px] uppercase font-bold">L'élégance à portée de main.</p>
+                    <p class="text-gray-500 text-[10px] uppercase font-bold">Votre satisfaction, notre priorité.</p>
                 </div>
                 <div class="text-center md:text-left">
                     <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Aide</h4>
@@ -145,7 +150,7 @@
                 </div>
                 <div class="text-center md:text-left">
                     <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Boutique</h4>
-                    <p class="text-gray-500 text-[10px] uppercase font-bold">📍 Bouaké, Côte d'Ivoire</p>
+                    <p class="text-gray-500 text-[10px] uppercase font-bold">📍 Abidjan, Côte d'Ivoire</p>
                 </div>
                 <div class="text-center md:text-left">
                     <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Suivez-nous</h4>
@@ -157,7 +162,7 @@
                 </div>
             </div>
             <div class="border-t pt-6 text-center text-gray-400 text-[9px] font-bold uppercase tracking-widest">
-                © 2026 LATYYA BUSINESS | <button onclick="ouvrirCGV()" class="underline text-orange-600 uppercase">Juridique</button>
+                © 2026 LATYFA BUSINESS | <button onclick="ouvrirCGV()" class="underline text-orange-600 uppercase">Juridique</button>
             </div>
         </div>
     </footer>
@@ -172,14 +177,14 @@
                     <option value="">-- CHOISIR VOTRE ZONE --</option>
                     <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
                     <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-                    <option value="interieur">Intérieur pays (3.500 F)</option>
-                    <option value="bouake">Retrait Boutique Bouaké (Gratuit)</option>
+                    <option value="interieur">Intérieur pays (3.000 F)</option>
+                    <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
                 </select>
                 <div id="communes-info" class="text-[9px] text-gray-500 bg-gray-100 p-2 rounded hidden leading-tight"></div>
                 <input type="text" id="tel-client" oninput="majResume()" placeholder="Quartier et Précisions *" class="w-full border p-3 rounded-lg text-sm">
                 <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-gray-50 font-bold">
                     <option value="TRANSFERT MOBILE">TRANSFERT (WAVE / MOBILE MONEY)</option>
-                    <option value="CASH">CASH (Boutique / Bouaké uniquement)</option>
+                    <option value="CASH">CASH (Boutique & Bouaké uniquement)</option>
                 </select>
                 <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
                 <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
@@ -205,7 +210,7 @@
         <div class="text-[11px] space-y-6 text-gray-700 leading-relaxed overflow-y-auto max-h-[60vh] pr-2 uppercase font-semibold">
             <section>
                 <h3 class="text-[#ff6600] font-black mb-2">1. OBJET ET ACCEPTATION</h3>
-                <p>Les présentes conditions régissent les ventes de la boutique LATYYA BUSINESS. Toute validation de commande sur WhatsApp après consultation du site implique l'adhésion totale à ces conditions.</p>
+                <p>Les présentes conditions régissent les ventes de la boutique LATYFA BOUTIQUE. Toute validation de commande sur WhatsApp après consultation du site implique l'adhésion totale à ces conditions.</p>
             </section>
 
             <section>
@@ -220,7 +225,7 @@
 
             <section>
                 <h3 class="text-[#ff6600] font-black mb-2">4. RETRAITS EN BOUTIQUE</h3>
-                <p>Les clients résidant à Bouaké ont la possibilité de retirer leurs articles directement en boutique physique sans frais supplémentaires. Le paiement en espèces est accepté uniquement lors du retrait en magasin.</p>
+                <p>Les clients résidant à Bouaké ont la possibilité de recevoir leurs articles physiquement via un représentant sans frais supplémentaires. Le paiement en espèces est accepté uniquement lors du retrait physique par le client lui même.</p>
             </section>
 
             <section>
@@ -230,7 +235,7 @@
 
             <section>
                 <h3 class="text-[#ff6600] font-black mb-2">6. RESPONSABILITÉ</h3>
-                <p>LATYYA BUSINESS ne saurait être tenue pour responsable des retards causés par les services de transport tiers ou des erreurs de coordonnées fournies par le client lors de la validation du panier.</p>
+                <p>LATYFA BOUTIQUE ne saurait être tenue pour responsable des retards causés par les services de transport tiers ou des erreurs de coordonnées fournies par le client lors de la validation du panier.</p>
             </section>
         </div>
 
@@ -245,8 +250,8 @@
         const tarifsLivraison = {
             "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
             "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
-            "interieur": { nom: "Intérieur CI", prix: 3500, detail: "Toutes les villes de l'intérieur." },
-            "bouake": { nom: "Bouaké", prix: 0, detail: "Retrait gratuit en boutique à Bouaké." }
+            "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
+            "Abidjan": { nom: "Abidjan", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
         };
 
         const products = [
@@ -359,7 +364,7 @@
             const mode = document.getElementById('mode-pay').value;
             const total = document.getElementById('total-display').innerText;
             let list = ""; cart.forEach(i => list += `- ${i.label} (x${i.qty})\n`);
-            let msg = `*COMMANDE LATYYA BUSINESS*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n🛍️ ARTICLES:\n${list}\n💰 TOTAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
+            let msg = `*COMMANDE LATYFA BOUTIQUE*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n🛍️ ARTICLES:\n${list}\n💰 TOTAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
             window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
         }
 
