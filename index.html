@@ -619,5 +619,48 @@ function afficherCommandes() {
     `).join('');
 }
    </script>
+    <div id="admin-section" style="display:none; position:fixed; inset:0; background:white; z-index:10000; padding:20px; overflow-y:auto; font-family:sans-serif; color: black;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #c5a059; padding-bottom:10px; margin-bottom:20px;">
+        <h2 style="margin:0;">COMMANDES LATYYA</h2>
+        <button onclick="document.getElementById('admin-section').style.display='none'" style="background:#000; color:#fff; border:none; padding:10px 20px; border-radius:20px;">FERMER</button>
+    </div>
+    <div id="liste-commandes"></div>
+    <div style="text-align:center; margin-top:30px;">
+        <button onclick="localStorage.removeItem('latyya_commandes'); location.reload();" style="color:red; background:none; border:none; text-decoration:underline; font-size:12px;">Effacer tout</button>
+    </div>
+</div>
+
+<div style="text-align:center; padding:30px; background:#f9f9f9; border-top:1px solid #eee;">
+    <p style="color:#ccc; font-size:10px;">LATYYA © 2024 | <span onclick="ouvrirLeAdmin()" style="cursor:pointer; color:#bbb;">Accès Admin .</span></p>
+</div>
+
+<script>
+function ouvrirLeAdmin() {
+    let code = prompt("Entrez le code secret :");
+    if (code === "2024") {
+        document.getElementById('admin-section').style.display = 'block';
+        const container = document.getElementById('liste-commandes');
+        const historique = JSON.parse(localStorage.getItem('latyya_commandes') || "[]");
+        
+        if (historique.length === 0) {
+            container.innerHTML = "<p style='text-align:center; padding:20px;'>Aucune commande enregistrée.</p>";
+        } else {
+            container.innerHTML = historique.reverse().map(cmd => `
+                <div style="border:1px solid #eee; padding:15px; border-radius:10px; margin-bottom:10px; background:#f9f9f9; text-align:left;">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold; color:#c5a059;">
+                        <span>👤 ${cmd.nom}</span>
+                        <span>💰 ${cmd.total} FCFA</span>
+                    </div>
+                    <p style="margin:10px 0; font-size:14px; color:#333;">🛒 ${cmd.panier}</p>
+                    <div style="font-size:10px; color:#999;">📅 Le ${cmd.date} à ${cmd.heure}</div>
+                </div>
+            `).join('');
+        }
+    } else {
+        alert("Code incorrect");
+    }
+}
+</script>
+    
 </body>
 </html>
