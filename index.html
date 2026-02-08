@@ -331,7 +331,6 @@ let products = JSON.parse(localStorage.getItem('latyfa_db')) || [
     { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], description: "Élégance Signature Latyfa." },
     { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K." }
 ];
-
 function ouvrirAdmin() {
     const mdp = prompt("Mot de passe Admin :");
     if(mdp === "1234") { // Change ton mot de passe ici
@@ -379,8 +378,6 @@ function refreshAdminList() {
     `).join('');
 }
 ];
-
-
         let cart = [];
         let currentProduct = null;
 
@@ -627,7 +624,6 @@ function showSocialProof() {
         box.classList.add('translate-y-20', 'opacity-0');
     }, 5000);
 }
-
 // Lancer la première après 3 secondes, puis toutes les 15 secondes
 setTimeout(() => {
     showSocialProof();
@@ -637,14 +633,12 @@ setTimeout(() => {
     <button onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 opacity-10 hover:opacity-100 text-[8px] text-gray-400 z-50">
     [ADMIN]
 </button>
-
 <div id="adminModal" class="modal bg-gray-900/95 text-white">
     <div class="max-w-md mx-auto p-6">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold uppercase italic">Gestion Stock</h2>
             <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-2xl">&times;</button>
         </div>
-        
         <div class="space-y-4 text-black">
             <input type="text" id="adm-name" placeholder="Nom du produit" class="w-full p-2 rounded">
             <input type="number" id="adm-price" placeholder="Prix (ex: 15000)" class="w-full p-2 rounded">
@@ -658,13 +652,11 @@ setTimeout(() => {
             <textarea id="adm-desc" placeholder="Description" class="w-full p-2 rounded"></textarea>
             <button onclick="ajouterProduitAdmin()" class="w-full bg-[#c5a059] text-white py-3 rounded font-bold uppercase">Ajouter au catalogue</button>
         </div>
-
         <div class="mt-8 border-t pt-4">
             <h3 class="text-sm font-bold mb-4 uppercase">Produits actuels (cliquez pour supprimer)</h3>
             <div id="admin-list" class="space-y-2 text-[10px]"></div>
         </div>
     </div>
 </div>
-
 </body>
 </html>
