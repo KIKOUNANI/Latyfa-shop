@@ -143,30 +143,50 @@
             document.getElementById('modal-product').classList.add('active');
         }
 
-        function openInfo(type) { 
-            const info = { 
-                about: ["À Propos", "Latyfa Shop est une boutique spécialisée dans le luxe et le sourcing d'articles de qualité supérieure. Dirigée par Mme Traoré Djeneba, notre mission est de vous offrir le meilleur de la mode et des accessoires."], 
-                policy: ["Politique de Retours", "Tout article livré ne fera pas l'objet d'un remboursement sauf erreur de notre part. Vous disposez d'un délai de 72h pour signaler tout problème après réception."], 
-                condition: ["Remboursement", "Nous procédons au remplacement si l'article est défectueux par notre responsabilité. En cas de désistement, un échange peut être proposé sous conditions, mais aucun remboursement monétaire n'est effectué."], 
-                web: ["Création de Site", "Souhaitez-vous un site e-commerce professionnel et rapide comme celui-ci pour booster votre activité ? Contactez notre développeur au : +225 05 06 11 32 92."] 
-            };
-            if(info[type]) {
-                document.getElementById('info-title').innerText = info[type][0]; 
-                document.getElementById('info-content').innerText = info[type][1]; 
-                document.getElementById('modal-info').classList.add('active'); 
-                toggleMenu();
-            }
-        }
-
-        function applyPromo() {
+                function applyPromo() {
             const code = document.getElementById('promo-code').value.toUpperCase();
             const msg = document.getElementById('promo-msg');
+            
+            
+            if (dPercent > 0 || dFixed > 0) {
+                msg.innerText = "⚠️ UNE RÉDUCTION EST DÉJÀ APPLIQUÉE";
+                msg.style.color = "orange";
+                return;
+            }
+
+            
+            const usedCodes = JSON.parse(localStorage.getItem('used_promos') || "[]");
+            if (usedCodes.includes(code)) {
+                msg.innerText = "❌ CE CODE A DÉJÀ ÉTÉ UTILISÉ";
+                msg.style.color = "orange";
+                return;
+            }
+
             dPercent = 0; dFixed = 0;
-            if (code === "LATYFA15") { dPercent = 15; msg.innerText = "✅ RÉDUCTION APPLIQUÉE"; msg.style.color = "green"; }
-            else if (code === "BIENVENUE") { dFixed = 2000; msg.innerText = "✅ RÉDUCTION APPLIQUÉE"; msg.style.color = "green"; }
-            else { msg.innerText = "❌ CODE INVALIDE"; msg.style.color = "red"; }
+            let success = false;
+
+            if (code === "LATYFA15") { 
+                dPercent = 15; 
+                success = true;
+            }
+            else if (code === "BIENVENUE") { 
+                dFixed = 2000; 
+                success = true;
+            }
+
+            if (success) {
+                msg.innerText = "✅ RÉDUCTION APPLIQUÉE";
+                msg.style.color = "green";
+                
+                usedCodes.push(code);
+                localStorage.setItem('used_promos', JSON.stringify(usedCodes));
+            } else {
+                msg.innerText = "❌ CODE INVALIDE";
+                msg.style.color = "red";
+            }
+            
             updateCartUI();
-        }
+        };
 
         function updateCartUI() {
             const subtotal = cart.reduce((s, i) => s + i.prix, 0);
