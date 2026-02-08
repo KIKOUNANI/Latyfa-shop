@@ -7,10 +7,29 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --ali-orange: #ff6600; }
-        body { background-color: #f4f4f4; font-family: sans-serif; margin: 0; scroll-behavior: smooth; }
-        .ali-gradient { background: linear-gradient(90deg, #ff6600 0%, #ff9900 100%); }
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+        <style>
+        :root { 
+            --latyya-gold: #c5a059; /* Doré Luxe */
+            --latyya-dark: #1a1a1a; /* Noir Profond */
+        }
+        
+        body { 
+            background-color: #fcfcfc; 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            scroll-behavior: smooth; 
+        }
+
+        /* Police de luxe pour les titres et le Logo */
+        h1, h2, h3, .logo-font { 
+            font-family: 'Playfair Display', serif; 
+        }
+
+        .ali-gradient { 
+            background: linear-gradient(90deg, #c5a059 0%, #e2c286 100%); 
+        }
+
         .product-card { background: white; border-radius: 8px; border: 1px solid transparent; height: 100%; display: flex; flex-direction: column; cursor: pointer; transition: 0.2s; }
         .product-card:hover { border-color: var(--ali-orange); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: white; overflow-y: auto; padding: 20px; }
@@ -30,16 +49,16 @@
 </head>
 <body>
 
-    <div class="bg-[#fff5e6] text-[#d45d00] text-center py-2 text-[10px] font-bold border-b border-[#ffcc80]">
-        🔥 PROMO -20% DÈS 20.000 F D'ACHAT (Du 14 Fév au 28 Fév 2026) : <span id="countdown">--:--:--</span>
-    </div/>
+    <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">
+    ✨ Promo Exclusive -20% dès 20.000 F D'achat à partir du 14 fév au 28 fév 2026: <span id="countdown" class="text-white ml-1">--:--:--</span> ✨
+</div>
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
             <div class="flex items-center gap-2">
-                <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full">
-                <span class="text-2xl font-black italic text-[#ff6600]">LATYFA</span>
-            </div>
+    <img src="TON_LIEN_LOGO_DIRECT" class="h-10 w-10 rounded-full border border-gray-200">
+    <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYYA</span>
+</div>
             <div class="flex gap-6">
                 <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
                     <i class="fa-solid fa-truck text-gray-600"></i>
@@ -65,7 +84,9 @@
 
     <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
         <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border">
-            <h3 class="font-black border-b pb-3 mb-5 text-[10px] uppercase text-[#ff6600] tracking-widest text-center">Catégories</h3>
+            <h3 class="logo-font font-black border-b pb-3 mb-5 text-[12px] uppercase text-[#c5a059] tracking-widest text-center">
+    Nos Catégories
+</h3>
             <div class="flex flex-col gap-4 text-sm font-bold text-gray-500 uppercase text-[11px]">
                 <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('tous')">Tout voir <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
                 <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('bijoux')">Bijoux <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
@@ -89,7 +110,7 @@
     <div class="wheel-mask">
         <div class="wheel-box">
             <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
-            <h3 class="text-xl font-black italic uppercase text-gray-800">LATYFA LUCKY WHEEL</h3>
+            <h3 class="logo-font text-xl font-black italic uppercase text-gray-800">LATYFA LUCKY WHEEL</h3>
             <p id="wheel-msg" class="text-[11px] font-black uppercase mt-2"></p>
             <div class="relative">
                 <canvas id="canvas" width="300" height="300"></canvas>
