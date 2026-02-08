@@ -195,15 +195,49 @@
         </div>
     </div>
 
-    <div id="cgvModal" class="modal bg-gray-50">
-        <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg my-10 border text-[11px] uppercase font-bold text-gray-600 space-y-4">
-            <h2 class="text-xl font-black text-gray-800 italic border-b pb-4">Mentions Légales</h2>
-            <p>1. Paiement intégral exigé à la commande.</p>
-            <p>2. Retrait en boutique disponible à Bouaké.</p>
-            <p>3. Échanges sous 24h uniquement en cas de défaut majeur.</p>
-            <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 bg-black text-white py-3 rounded-lg">Fermer</button>
+    <div id="cgvModal" class="modal bg-gray-100">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-2xl my-6 border border-gray-200">
+        <div class="flex justify-between items-center border-b pb-4 mb-6">
+            <h2 class="text-xl font-black uppercase text-gray-800 italic">Conditions Générales de Vente</h2>
+            <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="text-2xl font-bold">&times;</button>
         </div>
+        
+        <div class="text-[11px] space-y-6 text-gray-700 leading-relaxed overflow-y-auto max-h-[60vh] pr-2 uppercase font-semibold">
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">1. OBJET ET ACCEPTATION</h3>
+                <p>Les présentes conditions régissent les ventes de la boutique LATYYA BUSINESS. Toute validation de commande sur WhatsApp après consultation du site implique l'adhésion totale à ces conditions.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">2. PRIX ET PAIEMENT</h3>
+                <p>Les prix sont indiqués en FCFA. Le paiement est exigible en totalité au moment de la commande via Mobile Money (Wave, Orange Money, MTN). Aucune expédition ne sera effectuée sans confirmation de réception du paiement intégral.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">3. LIVRAISONS ET DÉLAIS</h3>
+                <p>Abidjan : Livraison sous 24h à 48h. Intérieur : Expédition via les services de transport (UTB, AVS, etc.) sous 48h. Les frais de livraison sont à la charge du client et varient selon la zone géographique choisie lors de la commande.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">4. RETRAITS EN BOUTIQUE</h3>
+                <p>Les clients résidant à Bouaké ont la possibilité de retirer leurs articles directement en boutique physique sans frais supplémentaires. Le paiement en espèces est accepté uniquement lors du retrait en magasin.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">5. RETOURS ET ÉCHANGES</h3>
+                <p>Compte tenu de la nature de nos articles (Bijoux et Maroquinerie), aucun retour ou remboursement ne sera accepté après réception du colis. Le client est tenu de vérifier l'état du produit devant le livreur. En cas de défaut majeur constaté immédiatement, un échange par un article de valeur équivalente sera proposé.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">6. RESPONSABILITÉ</h3>
+                <p>LATYYA BUSINESS ne saurait être tenue pour responsable des retards causés par les services de transport tiers ou des erreurs de coordonnées fournies par le client lors de la validation du panier.</p>
+            </section>
+        </div>
+
+        <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 ali-gradient text-white py-4 rounded-xl font-black text-xs uppercase shadow-md">J'ai compris et j'accepte</button>
     </div>
+</div>
+
 
     <script>
         (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
