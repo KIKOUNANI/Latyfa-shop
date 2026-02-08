@@ -275,51 +275,21 @@
     // 1. On récupère les infos (Vérifie bien que ces noms de variables existent chez toi)
     const nomClient = document.getElementById('nom-client').value;
     const totalVente = total; // La variable de ton prix total
-    const contenuPanier = cart.map(item => item.name).join(", "); // La liste des produits
+    const contenuPanier = cart.map(item => item.name).join(", ")<div id="admin-section" style="display:none; position:fixed; inset:0; background:white; z-index:10000; padding:20px; overflow-y:auto; font-family:sans-serif; color:black;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #c5a059; padding-bottom:10px; margin-bottom:20px;">
+        <h2 style="margin:0;">COMMANDES LATYYA</h2>
+        <button onclick="document.getElementById('admin-section').style.display='none'" style="background:#000; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer;">FERMER</button>
+    </div>
+    <div id="liste-commandes"></div>
+    <div style="text-align:center; margin-top:30px;">
+        <button onclick="localStorage.removeItem('latyya_commandes'); location.reload();" style="color:red; background:none; border:none; text-decoration:underline; font-size:12px; cursor:pointer;">EFFACER TOUT</button>
+    </div>
+</div>
 
-    function validerCommande() {
-    try {
-        // 1. RÉCUPÉRATION DES INFOS (avec noms de secours)
-        const nomElement = document.getElementById('nom-client') || document.getElementById('nom');
-        const nomClient = nomElement ? nomElement.value : "Client inconnu";
-        
-        // On vérifie si ton panier s'appelle 'cart' ou 'panier'
-        const monPanier = (typeof cart !== 'undefined') ? cart : (typeof panier !== 'undefined' ? panier : []);
-        const totalVente = (typeof total !== 'undefined') ? total : "0";
+<div style="text-align:center; padding:30px; background:#f9f9f9; border-top:1px solid #eee;">
+    <p style="color:#ccc; font-size:10px;">LATYYA © 2024 | <span onclick="ouvrirLeAdmin()" style="cursor:pointer; color:#bbb;">Accès Admin .</span></p>
+</div>
 
-        // 2. SAUVEGARDE DANS L'ADMIN (avec sécurité try/catch)
-        try {
-            const nouvelleCommande = {
-                nom: nomClient,
-                panier: monPanier.map(item => item.name || item.nom).join(", "),
-                total: totalVente,
-                date: new Date().toLocaleDateString('fr-FR'),
-                heure: new Date().toLocaleTimeString('fr-FR')
-            };
-
-            let historique = JSON.parse(localStorage.getItem('latyya_commandes') || "[]");
-            historique.push(nouvelleCommande);
-            localStorage.setItem('latyya_commandes', JSON.stringify(historique));
-        } catch (e) {
-            console.log("Erreur de sauvegarde admin, mais on continue vers WhatsApp...");
-        }
-
-        // 3. ENVOI VERS WHATSAPP (Ton code de message actuel)
-        // Remplace '2250709002881' par ton vrai numéro
-        let message = `Bonjour LATYFA, je suis ${nomClient}.\nVoici ma commande :\n`;
-        monPanier.forEach(item => {
-            message += `- ${item.name || item.nom}\n`;
-        });
-        message += `\nTotal : ${totalVente} FCFA`;
-
-        const url = `https://wa.me/2250709002881?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
-
-    } catch (error) {
-        alert("Une erreur est survenue, mais vous pouvez nous contacter directement sur WhatsApp.");
-        console.error(error);
-    }
-}
 
             </div>
             <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
