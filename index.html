@@ -126,11 +126,68 @@
                 </div>`).join('');
         }
 
-        function filterProducts(cat) {
-            currentCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.toggle('active', btn.innerText.includes(cat.toUpperCase()) || (cat === "Tous" && btn.innerText === "TOUS")));
-            render();
-        }
+        function viewProduct(id) {
+    const p = products.find(x => x.id === id);
+    selectedSize = null; 
+    selectedColor = null;
+
+    // Gestion de l'image unique ou de la galerie (imgs)
+    const imagesToDisplay = p.imgs ? p.imgs : [p.img];
+    
+    const thumbnailsHtml = imagesToDisplay.map((url, i) => `
+        <img src="${url}" 
+             onclick="changeMainImg('${url}', this)" 
+             class="thumb w-16 h-16 object-cover rounded-xl border-2 border-transparent opacity-60 cursor-pointer transition-all ${i === 0 ? 'active' : ''}"
+             style="${i === 0 ? 'border-color: #ff4d00; opacity: 1;' : ''}"
+        >
+    `).join('');
+
+    document.getElementById('product-detail-content').innerHTML = `
+        <img id="main-product-img" src="${imagesToDisplay[0]}" class="w-full rounded-3xl mb-4 aspect-square object-cover shadow-sm">
+        
+        <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar">
+            ${thumbnailsHtml}
+        </div>
+
+        <h2 class="font-black text-lg uppercase italic text-orange-600">${p.nom}</h2>
+        <p class="text-sm font-black mb-4">${p.prix.toLocaleString()} F CFA</p>
+        
+        <div class="mb-4">
+            <h4 class="text-[9px] font-black text-gray-400 uppercase mb-2">Couleur</h4>
+            <div class="flex gap-3">
+                ${p.couleurs.map(c => `<button onclick="selectOpt(this, 'color', '${c.nom}')" class="color-dot w-8 h-8 rounded-full border border-gray-200" style="background:${c.code}"></button>`).join('')}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <h4 class="text-[9px] font-black text-gray-400 uppercase mb-2">Taille / Pointure</h4>
+            <div class="flex flex-wrap gap-2">
+                ${p.tailles.map(s => `<button onclick="selectOpt(this, 'size', '${s}')" class="option-btn border-2 border-gray-100 rounded-lg px-3 py-2 text-[10px] font-black">${s}</button>`).join('')}
+            </div>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-xl mb-6 text-[11px] text-gray-600 leading-relaxed italic">
+            ${p.desc}
+        </div>
+
+        <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">
+            Ajouter au Panier
+        </button>
+    `;
+    document.getElementById('modal-product').classList.add('active');
+}
+
+// AJOUTEZ AUSSI CETTE PETITE FONCTION JUSTE EN DESSOUS :
+function changeMainImg(url, el) {
+    document.getElementById('main-product-img').src = url;
+    document.querySelectorAll('.thumb').forEach(t => {
+        t.style.borderColor = 'transparent';
+        t.style.opacity = '0.6';
+    });
+    el.style.borderColor = '#ff4d00';
+    el.style.opacity = '1';
+}
+
 
         function viewProduct(id) {
             const p = products.find(x => x.id === id);
