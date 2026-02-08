@@ -229,6 +229,21 @@
             </div>
         </div>
     </footer>
+    <div id="admin-section" style="display:none; position:fixed; inset:0; background:white; z-index:9999; padding:20px; overflow-y:auto; font-family:sans-serif;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #c5a059; padding-bottom:10px; margin-bottom:20px;">
+        <h2 style="margin:0; color:#1a1a1a;">COMMANDES LATYYA</h2>
+        <button onclick="fermerAdmin()" style="background:#000; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer;">FERMER</button>
+    </div>
+    <div id="liste-commandes">
+        </div>
+    <div style="text-align:center; margin-top:30px;">
+        <button onclick="localStorage.removeItem('latyya_commandes'); afficherCommandes();" style="color:red; background:none; border:none; text-decoration:underline; font-size:12px; cursor:pointer;">Effacer tout l'historique</button>
+    </div>
+</div>
+
+<div style="text-align:center; padding:20px;">
+    <span onclick="ouvrirAdmin()" style="cursor:pointer; color:#ccc; font-size:12px;">.</span>
+</div>
 
     <div id="cartModal" class="modal">
         <div class="max-w-md mx-auto">
@@ -256,8 +271,8 @@
                 </div>
                 <div class="flex justify-between font-bold text-lg p-2 border-b-2">
                     <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
-                </div>
-                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
+                </div><button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
+            </div/>
             </div>
             <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
         </div>
@@ -563,6 +578,46 @@ setTimeout(() => {
     showSocialProof();
     setInterval(showSocialProof, 15000);
 }, 3000);
+        // --- FONCTIONS POUR LA SECTION PRIVÉE ---
+const CODE_SECRET = "2024"; // Ton code pour ouvrir la section
+
+function ouvrirAdmin() {
+    let pass = prompt("Entrez le code secret pour voir les commandes :");
+    if (pass === CODE_SECRET) {
+        document.getElementById('admin-section').style.display = 'block';
+        afficherCommandes();
+    } else if (pass !== null) {
+        alert("Code incorrect");
+    }
+}
+
+function fermerAdmin() {
+    document.getElementById('admin-section').style.display = 'none';
+}
+
+function afficherCommandes() {
+    const container = document.getElementById('liste-commandes');
+    const historique = JSON.parse(localStorage.getItem('latyya_commandes') || "[]");
+    
+    if (historique.length === 0) {
+        container.innerHTML = "<p style='color:gray; text-align:center;'>Aucune commande pour le moment.</p>";
+        return;
+    }
+
+    // On affiche de la plus récente à la plus ancienne
+    container.innerHTML = historique.reverse().map(cmd => `
+        <div style="border:1px solid #eee; padding:15px; border-radius:10px; margin-bottom:10px; background:#f9f9f9;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; color:#c5a059;">
+                <span>👤 ${cmd.nom}</span>
+                <span>💰 ${cmd.total} FCFA</span>
+            </div>
+            <p style="margin:10px 0; font-size:14px; color:#333;">🛒 ${cmd.panier}</p>
+            <div style="font-size:10px; color:#999; text-transform:uppercase;">
+                📅 Le ${cmd.date} à ${cmd.heure}
+            </div>
+        </div>
+    `).join('');
+}
    </script>
 </body>
 </html>
