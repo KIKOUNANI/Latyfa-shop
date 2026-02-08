@@ -326,58 +326,14 @@
         };
 
         const products = [
-    // On charge les produits : soit ceux du stockage, soit une liste par défaut
-let products = JSON.parse(localStorage.getItem('latyfa_db')) || [
-    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], description: "Élégance Signature Latyfa." },
-    { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K." }
+    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+    { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
+    { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"], description: "Perles de hanche traditionnelles avec une touche de modernité." },
+    { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], description: "Une fragrance envoûtante qui tient toute la journée." },
+    { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
 ];
-function ouvrirAdmin() {
-    const mdp = prompt("Mot de passe Admin :");
-    if(mdp === "1234") { // Change ton mot de passe ici
-        document.getElementById('adminModal').classList.add('active');
-        refreshAdminList();
-    } else {
-        alert("Accès refusé");
-    }
-}
 
-function ajouterProduitAdmin() {
-    const newP = {
-        id: Date.now(),
-        name: document.getElementById('adm-name').value,
-        price: parseInt(document.getElementById('adm-price').value),
-        cat: document.getElementById('adm-cat').value,
-        images: [document.getElementById('adm-img').value],
-        description: document.getElementById('adm-desc').value
-    };
 
-    products.push(newP);
-    sauvegarderEtRelancer();
-}
-
-function supprimerProduit(id) {
-    if(confirm("Supprimer cet article ?")) {
-        products = products.filter(p => p.id !== id);
-        sauvegarderEtRelancer();
-    }
-}
-
-function sauvegarderEtRelancer() {
-    localStorage.setItem('latyfa_db', JSON.stringify(products));
-    refreshAdminList();
-    render(); // Met à jour la boutique instantanément
-}
-
-function refreshAdminList() {
-    const list = document.getElementById('admin-list');
-    list.innerHTML = products.map(p => `
-        <div class="flex justify-between items-center bg-gray-800 p-2 rounded">
-            <span>${p.name} - ${p.price}F</span>
-            <button onclick="supprimerProduit(${p.id})" class="text-red-500">Supprimer</button>
-        </div>
-    `).join('');
-}
-];
         let cart = [];
         let currentProduct = null;
 
@@ -624,39 +580,12 @@ function showSocialProof() {
         box.classList.add('translate-y-20', 'opacity-0');
     }, 5000);
 }
+
 // Lancer la première après 3 secondes, puis toutes les 15 secondes
 setTimeout(() => {
     showSocialProof();
     setInterval(showSocialProof, 15000);
 }, 3000);
    </script>
-    <button onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 opacity-10 hover:opacity-100 text-[8px] text-gray-400 z-50">
-    [ADMIN]
-</button>
-<div id="adminModal" class="modal bg-gray-900/95 text-white">
-    <div class="max-w-md mx-auto p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold uppercase italic">Gestion Stock</h2>
-            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-2xl">&times;</button>
-        </div>
-        <div class="space-y-4 text-black">
-            <input type="text" id="adm-name" placeholder="Nom du produit" class="w-full p-2 rounded">
-            <input type="number" id="adm-price" placeholder="Prix (ex: 15000)" class="w-full p-2 rounded">
-            <select id="adm-cat" class="w-full p-2 rounded">
-                <option value="bijoux">Bijoux</option>
-                <option value="sac">Sacs</option>
-                <option value="parfum">Parfums</option>
-                <option value="vetements">Vêtements</option>
-            </select>
-            <input type="text" id="adm-img" placeholder="Lien de l'image (URL)" class="w-full p-2 rounded">
-            <textarea id="adm-desc" placeholder="Description" class="w-full p-2 rounded"></textarea>
-            <button onclick="ajouterProduitAdmin()" class="w-full bg-[#c5a059] text-white py-3 rounded font-bold uppercase">Ajouter au catalogue</button>
-        </div>
-        <div class="mt-8 border-t pt-4">
-            <h3 class="text-sm font-bold mb-4 uppercase">Produits actuels (cliquez pour supprimer)</h3>
-            <div id="admin-list" class="space-y-2 text-[10px]"></div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
