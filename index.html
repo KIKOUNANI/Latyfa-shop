@@ -298,18 +298,43 @@
         }
 
         function majResume() {
-            const zoneKey = document.getElementById('zone-livraison').value;
-            const infoBox = document.getElementById('communes-info');
-            let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-            let promo = 0; if(tArt >= 20000) { promo = tArt * 0.2; tArt *= 0.8; }
-            let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
-            if(zoneKey) { infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; infoBox.classList.remove('hidden'); }
-            else { infoBox.classList.add('hidden'); }
-            document.getElementById('resume-final').innerHTML = `<p>Articles : ${(tArt+promo).toLocaleString()} F</p>
-                ${promo > 0 ? `<p class="text-green-600">Remise Promo : -${promo.toLocaleString()} F</p>` : ''}
-                <p>Livraison : ${tLiv.toLocaleString()} F</p>`;
-            document.getElementById('total-display').innerText = (tArt + tLiv).toLocaleString();
+    const zoneKey = document.getElementById('zone-livraison').value;
+    const infoBox = document.getElementById('communes-info');
+    let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    let promo = 0;
+
+    // --- CORRECTION : Vérification de la date pour la promo ---
+    const maintenant = new Date();
+    const debutPromo = new Date("2026-02-14T00:00:00");
+    const finPromo = new Date("2026-02-28T23:59:59");
+
+    // La remise ne s'applique que si on est entre le 14 et le 28 février
+    if (maintenant >= debutPromo && maintenant <= finPromo) {
+        if (tArt >= 20000) {
+            promo = tArt * 0.2;
+            tArt *= 0.8;
         }
+    }
+    // ---------------------------------------------------------
+
+    let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
+    
+    if(zoneKey) { 
+        infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
+        infoBox.classList.remove('hidden'); 
+    } else { 
+        infoBox.classList.add('hidden'); 
+    }
+
+    document.getElementById('resume-final').innerHTML = `
+        <p>Articles : ${(tArt + promo).toLocaleString()} F</p>
+        ${promo > 0 ? `<p class="text-green-600 font-bold">REMISE PROMO : -${promo.toLocaleString()} F</p>` : ''}
+        <p>Livraison : ${tLiv.toLocaleString()} F</p>
+    `;
+    
+    document.getElementById('total-display').innerText = (tArt + tLiv).toLocaleString();
+}
+
 
         function toggleBouton() {
             const chk = document.getElementById('check-verif').checked;
