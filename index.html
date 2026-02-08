@@ -21,9 +21,19 @@
         .option-btn.active { background: #000 !important; color: #fff !important; }
         .color-dot.active { ring: 3px solid #ff4d00; ring-offset: 2px; transform: scale(1.1); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+#loader { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 10000; align-items: center; justify-content: center; flex-direction: column; }
+.spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #ff4d00; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
     </style>
 </head>
 <body class="pb-10">
+    
+<div id="loader">
+    <div class="spinner"></div>
+    <p class="mt-4 font-black text-[10px] uppercase tracking-widest text-orange-600">Validation de votre commande...</p>
+</div>
 
     <div class="marquee-container shadow-lg">
         <div class="marquee-text uppercase">🌟 BIENVENUE SUR LATYFA SHOP.COM • QUALITÉ & LUXE • LIVRAISON 1000 F VIA WAVE ! 🌟</div>
@@ -203,13 +213,53 @@
         }
 
         function handleCheckout() {
-            const nom = document.getElementById('c-nom').value;
-            const tel = document.getElementById('c-tel').value;
-            const pCode = document.getElementById('promo-code').value.toUpperCase() || "Aucun";
-            if(!nom || !tel || cart.length === 0) return alert("Veuillez remplir vos infos !");
-            const msg = `🌟 COMMANDE LATYFA 🌟\n👤 CLIENT: ${nom}\n📞 TEL: ${tel}\n🎟️ CODE: ${pCode}\n📦 ARTICLES:\n${cart.map(i => `- ${i.nom} (${i.selectedColor}, ${i.selectedSize})`).join('\n')}\n💰 TOTAL: ${document.getElementById('final-total').innerText}`;
-            window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
+    const nom = document.getElementById('c-nom').value;
+    const tel = document.getElementById('c-tel').value;
+    const pCode = document.getElementById('promo-code').value.toUpperCase() || "";
+    const totalFinal = document.getElementById('final-total').innerText;
+    
+    if(!nom || !tel) return alert("Veuillez entrer votre nom et votre numéro !");
+    if(cart.length === 0) return alert("Votre panier est vide !");
+
+    const confirmation = confirm(
+        `🛍️ CONFIRMATION DE COMMANDE\n\n` +
+        `👤 Client : ${nom}\n` +
+        `📞 Contact : ${tel}\n` +
+        `💰 Total : ${totalFinal}\n\n` +
+        `Souhaitez-vous finaliser l'envoi ?`
+    );
+
+    if (confirmation) {
+        // Affiche l'animation
+        const loader = document.getElementById('loader');
+        loader.style.display = 'flex';
+
+        // Verrouillage du code promo (Usage unique)
+        if (dPercent > 0 || dFixed > 0) {
+            const usedCodes = JSON.parse(localStorage.getItem('used_promos') || "[]");
+            if (!usedCodes.includes(pCode)) {
+                usedCodes.push(pCode);
+                localStorage.setItem('used_promos', JSON.stringify(usedCodes));
+            }
         }
+
+        const msg = `🌟 COMMANDE LATYFA 🌟\n` +
+                    `👤 CLIENT: ${nom}\n` +
+                    `📞 TEL: ${tel}\n` +
+                    `🎟️ CODE: ${pCode || "Aucun"}\n` +
+                    `--------------------------\n` +
+                    `📦 ARTICLES:\n${cart.map(i => `- ${i.nom} (${i.selectedColor}, ${i.selectedSize})`).join('\n')}\n` +
+                    `--------------------------\n` +
+                    `💰 TOTAL À PAYER : ${totalFinal}`;
+
+        // Pause de 2 secondes pour l'effet professionnel
+        setTimeout(() => {
+            loader.style.display = 'none';
+            window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
+        }, 2000);
+    }
+}
+
 
         function changeMainImg(url, el) { document.getElementById('main-product-img').src = url; document.querySelectorAll('.thumb').forEach(t => { t.style.borderColor = 'transparent'; t.style.opacity = '0.6'; }); el.style.borderColor = '#ff4d00'; el.style.opacity = '1'; }
         function filterProducts(cat) { currentCategory = cat; document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.toggle('active', btn.innerText.includes(cat.toUpperCase()) || (cat === "Tous" && btn.innerText === "TOUS"))); render(); }
