@@ -11,14 +11,12 @@
         .marquee-container { background: linear-gradient(90deg, #000, #ff4d00, #000); color: white; padding: 10px 0; font-weight: 900; font-size: 11px; overflow: hidden; border-bottom: 2px solid #ff9000; }
         .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; white-space: nowrap; }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-        
         #side-menu { transform: translateX(-100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1001; }
         #side-menu.active { transform: translateX(0); }
         .menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; backdrop-blur: 2px; }
         .menu-overlay.active { display: block; }
         .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; padding: 15px; }
         .layer.active { display: flex; align-items: center; justify-content: center; }
-        
         .cat-btn.active { background: #ff4d00; color: white; border-color: #ff4d00; }
         .option-btn.active { background: #000 !important; color: #fff !important; }
         .color-dot.active { ring: 3px solid #ff4d00; ring-offset: 2px; transform: scale(1.1); }
@@ -28,7 +26,7 @@
 <body class="pb-10">
 
     <div class="marquee-container shadow-lg">
-        <div class="marquee-text uppercase">🌟 BIENVENUE SUR LATYFA SHOP.COM • PROMO -15% AVEC "LATYFA15" • LIVRAISON 1000 F VIA WAVE ! 🌟</div>
+        <div class="marquee-text uppercase">🌟 BIENVENUE SUR LATYFA SHOP.COM • QUALITÉ & LUXE • LIVRAISON 1000 F VIA WAVE ! 🌟</div>
     </div>
 
     <header class="sticky top-0 z-[100] bg-white/95 backdrop-blur-md p-4 border-b flex items-center justify-between">
@@ -65,6 +63,12 @@
             <button onclick="openInfo('policy')" class="block w-full text-left border-b pb-3 text-[11px]">🛡️ Retours</button>
             <button onclick="openInfo('condition')" class="block w-full text-left border-b pb-3 text-[11px]">💰 Remboursement</button>
             <button onclick="openInfo('web')" class="block w-full text-left border-b pb-3 text-[11px] text-orange-600">🚀 Créer mon site</button>
+            <div class="pt-4 space-y-4 normal-case">
+                <p class="text-[10px] text-gray-400 font-black uppercase">Suivez-nous</p>
+                <a href="#" class="block text-xs">📸 Instagram</a>
+                <a href="#" class="block text-xs">⚫ TikTok</a>
+                <a href="https://wa.me/2250709002881" class="block text-xs text-green-600 font-black italic">💬 WhatsApp Service</a>
+            </div>
         </nav>
     </div>
 
@@ -75,45 +79,40 @@
             <button onclick="closeModals()" class="absolute top-4 right-4 text-xl">✕</button>
             <h2 class="font-black text-xl mb-6 text-orange-600 uppercase italic text-center">Mon Panier</h2>
             <div id="cart-items" class="space-y-3 mb-6"></div>
+
             <div class="mb-4">
-                <p class="text-[10px] font-black text-gray-400 uppercase mb-2 text-center">Code Promo (LATYFA15 ou BIENVENUE)</p>
+                <p class="text-[10px] font-black text-gray-400 uppercase mb-2">Avez-vous un code promo ?</p>
                 <div class="flex gap-2">
-                    <input type="text" id="promo-code" placeholder="CODE ICI" class="flex-1 p-3 bg-gray-50 rounded-xl text-xs font-bold border border-dashed border-gray-300 outline-none uppercase">
-                    <button onclick="applyPromo()" class="bg-black text-white px-4 rounded-xl text-[10px] font-black uppercase">Appliquer</button>
+                    <input type="text" id="promo-code" placeholder="ENTRER LE CODE" class="flex-1 p-3 bg-gray-50 rounded-xl text-xs font-bold border border-dashed border-gray-300 outline-none uppercase">
+                    <button onclick="applyPromo()" class="bg-black text-white px-4 rounded-xl text-[10px] font-black uppercase">Vérifier</button>
                 </div>
-                <p id="promo-msg" class="text-[9px] mt-1 font-bold text-center"></p>
+                <p id="promo-msg" class="text-[9px] mt-1 font-bold"></p>
             </div>
-            <div class="bg-black text-white p-5 rounded-2xl mb-4">
-                <div class="flex justify-between items-center">
-                    <span class="font-black text-xs uppercase opacity-70">Total à payer</span>
-                    <div class="text-right">
-                        <span id="old-total" class="block text-xs line-through opacity-50"></span>
-                        <span id="final-total" class="block font-black text-xl text-orange-500">0 F</span>
-                    </div>
-                </div>
+
+            <div class="bg-black text-white p-5 rounded-2xl mb-4 text-center">
+                <span id="old-total" class="block text-xs line-through opacity-50"></span>
+                <span id="final-total" class="block font-black text-2xl text-orange-500">0 F</span>
             </div>
+
             <div class="space-y-3">
                 <input type="text" id="c-nom" placeholder="VOTRE NOM COMPLET" class="w-full p-4 bg-gray-50 rounded-2xl text-sm font-bold outline-none border border-transparent focus:border-black uppercase">
                 <input type="tel" id="c-tel" placeholder="NUMÉRO DE TÉLÉPHONE" class="w-full p-4 bg-gray-50 rounded-2xl text-sm font-bold outline-none border border-transparent focus:border-black">
             </div>
-            <button onclick="handleCheckout()" class="w-full bg-orange-600 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg mt-4">Confirmer la Commande</button>
+            <button onclick="handleCheckout()" class="w-full bg-orange-600 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-4">Confirmer la Commande</button>
         </div>
     </div>
-
-    <div id="modal-info" class="layer"><div class="bg-white w-full max-w-md rounded-3xl p-8 relative shadow-2xl"><button onclick="closeModals()" class="absolute top-4 right-4 text-xl">✕</button><h2 id="info-title" class="font-black text-xl mb-4 text-orange-600 uppercase italic"></h2><div id="info-content" class="text-[11px] leading-relaxed text-gray-700 space-y-4"></div></div></div>
-    <div id="modal-review" class="layer"><div class="bg-white w-full max-w-sm rounded-3xl p-6 relative shadow-2xl"><button onclick="closeModals()" class="absolute top-4 right-4">✕</button><h2 class="font-black text-lg text-orange-600 mb-4 uppercase italic">Votre Avis</h2><textarea id="rev-text" placeholder="Votre commentaire..." class="w-full p-3 bg-gray-50 rounded-xl border h-24 mb-4 outline-none font-bold text-sm"></textarea><button onclick="sendReviewWhatsApp()" class="w-full bg-green-600 text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs">Envoyer via WhatsApp</button></div></div>
 
     <script>
         const products = [
             { id: 1, cat: "Vêtement", nom: "Robe Satin Royale", prix: 45000, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500", desc: "Robe en soie de Turquie.", tailles: ["S", "M", "L"], couleurs: [{nom: "Bleu", code: "#1a237e"}], avis: [] },
             { id: 2, cat: "Chaussures", nom: "Escarpins Crystal", prix: 35000, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500", desc: "Escarpins raffinés.", tailles: ["37", "38", "39"], couleurs: [{nom: "Argent", code: "#c0c0c0"}], avis: [] },
-            { id: 3, cat: "Bijoux", nom: "Parure Royale Rubis", prix: 12000, imgs:["https://i.postimg.cc/9FmYm9p1/IMG-20260207-WA0006.jpg", "https://i.postimg.cc/8cNxnQnv/1770343052871.png"], desc: "Ensemble montre et bijoux luxe.", tailles: ["Standard"], couleurs: [{nom: "Rouge", code: "#b71c1c"}], avis: [] }
+            { id: 3, cat: "Bijoux", nom: "Boucles & Bracelet", prix: 7000, imgs:["https://i.postimg.cc/8cNxnQnv/1770343052871.png", "https://i.postimg.cc/LsqTRCZ6/IMG-20260207-WA0006.jpg"], desc: "Ensemble moderne bijoux pour dame.", tailles: ["Standard"], couleurs: [{nom: "Vert", code: "#98FF98"}, {nom: "Rouge", code: "#E0115F"}], avis: [] }
         ];
 
         let cart = [];
         let currentCategory = "Tous";
         let selectedSize = null, selectedColor = null;
-        let discountPercent = 0, discountFixed = 0;
+        let dPercent = 0, dFixed = 0;
 
         function render() {
             const grid = document.getElementById('grid');
@@ -133,7 +132,6 @@
             selectedSize = null; selectedColor = null;
             const images = p.imgs ? p.imgs : [p.img];
             const thumbnailsHtml = images.map((url, i) => `<img src="${url}" onclick="changeMainImg('${url}', this)" class="thumb w-14 h-14 object-cover rounded-lg border-2 border-transparent opacity-60 cursor-pointer ${i === 0 ? 'active' : ''}" style="${i === 0 ? 'border-color: #ff4d00; opacity: 1;' : ''}">`).join('');
-            
             document.getElementById('product-detail-content').innerHTML = `
                 <img id="main-product-img" src="${images[0]}" class="w-full rounded-2xl mb-4 aspect-square object-cover shadow-sm">
                 <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar">${thumbnailsHtml}</div>
@@ -142,30 +140,23 @@
                 <div class="mb-4"><h4 class="text-[9px] font-black text-gray-400 uppercase mb-2">Couleur</h4><div class="flex gap-3">${p.couleurs.map(c => `<button onclick="selectOpt(this, 'color', '${c.nom}')" class="color-dot w-8 h-8 rounded-full border border-gray-200" style="background:${c.code}"></button>`).join('')}</div></div>
                 <div class="mb-4"><h4 class="text-[9px] font-black text-gray-400 uppercase mb-2">Taille</h4><div class="flex flex-wrap gap-2">${p.tailles.map(s => `<button onclick="selectOpt(this, 'size', '${s}')" class="option-btn border-2 border-gray-100 rounded-lg px-3 py-2 text-[10px] font-black">${s}</button>`).join('')}</div></div>
                 <div class="bg-gray-50 p-3 rounded-xl mb-4 text-[10px] text-gray-600 leading-relaxed">${p.desc}</div>
-                <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">Ajouter au Panier</button>
-            `;
+                <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">Ajouter au Panier</button>`;
             document.getElementById('modal-product').classList.add('active');
-        }
-
-        function changeMainImg(url, el) {
-            document.getElementById('main-product-img').src = url;
-            document.querySelectorAll('.thumb').forEach(t => { t.style.borderColor = 'transparent'; t.style.opacity = '0.6'; });
-            el.style.borderColor = '#ff4d00'; el.style.opacity = '1';
         }
 
         function applyPromo() {
             const code = document.getElementById('promo-code').value.toUpperCase();
             const msg = document.getElementById('promo-msg');
-            discountPercent = 0; discountFixed = 0;
-            if (code === "LATYFA15") { discountPercent = 15; msg.innerText = "✅ -15% APPLIQUÉ"; msg.style.color = "green"; }
-            else if (code === "BIENVENUE") { discountFixed = 2000; msg.innerText = "✅ -2000 F APPLIQUÉ"; msg.style.color = "green"; }
+            dPercent = 0; dFixed = 0;
+            if (code === "LATYFA15") { dPercent = 15; msg.innerText = "✅ RÉDUCTION APPLIQUÉE"; msg.style.color = "green"; }
+            else if (code === "BIENVENUE") { dFixed = 2000; msg.innerText = "✅ RÉDUCTION APPLIQUÉE"; msg.style.color = "green"; }
             else { msg.innerText = "❌ CODE INVALIDE"; msg.style.color = "red"; }
             updateCartUI();
         }
 
         function updateCartUI() {
             const subtotal = cart.reduce((s, i) => s + i.prix, 0);
-            let reduction = (subtotal * (discountPercent / 100)) + discountFixed;
+            let reduction = (subtotal * (dPercent / 100)) + dFixed;
             let finalPrice = Math.max(0, subtotal - reduction);
             document.getElementById('cart-items').innerHTML = cart.map((i, idx) => `<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl text-[10px] font-bold"><span>${i.nom} (${i.selectedSize})</span><button onclick="removeFromCart(${idx})" class="text-red-500">✕</button></div>`).join('');
             if (reduction > 0) {
@@ -180,12 +171,13 @@
         function handleCheckout() {
             const nom = document.getElementById('c-nom').value;
             const tel = document.getElementById('c-tel').value;
-            const promo = document.getElementById('promo-code').value.toUpperCase() || "Aucun";
+            const pCode = document.getElementById('promo-code').value.toUpperCase() || "Aucun";
             if(!nom || !tel || cart.length === 0) return alert("Veuillez remplir vos infos !");
-            const msg = `🌟 COMMANDE LATYFA 🌟\n👤 CLIENT: ${nom}\n📞 TEL: ${tel}\n🎟️ CODE: ${promo}\n📦 ARTICLES:\n${cart.map(i => `- ${i.nom} (${i.selectedColor}, ${i.selectedSize})`).join('\n')}\n💰 TOTAL: ${document.getElementById('final-total').innerText}`;
+            const msg = `🌟 COMMANDE LATYFA 🌟\n👤 CLIENT: ${nom}\n📞 TEL: ${tel}\n🎟️ CODE: ${pCode}\n📦 ARTICLES:\n${cart.map(i => `- ${i.nom} (${i.selectedColor}, ${i.selectedSize})`).join('\n')}\n💰 TOTAL: ${document.getElementById('final-total').innerText}`;
             window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
         }
 
+        function changeMainImg(url, el) { document.getElementById('main-product-img').src = url; document.querySelectorAll('.thumb').forEach(t => { t.style.borderColor = 'transparent'; t.style.opacity = '0.6'; }); el.style.borderColor = '#ff4d00'; el.style.opacity = '1'; }
         function filterProducts(cat) { currentCategory = cat; document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.toggle('active', btn.innerText.includes(cat.toUpperCase()) || (cat === "Tous" && btn.innerText === "TOUS"))); render(); }
         function selectOpt(btn, type, val) { document.querySelectorAll(type === 'size' ? '.option-btn' : '.color-dot').forEach(b => b.classList.remove('active')); btn.classList.add('active'); if(type === 'size') selectedSize = val; else selectedColor = val; }
         function addToCart(id) { if(!selectedSize || !selectedColor) return alert("Choisissez couleur et taille !"); cart.push({...products.find(x => x.id === id), selectedSize, selectedColor}); document.getElementById('cart-count').innerText = cart.length; closeModals(); }
