@@ -305,7 +305,15 @@
         <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 ali-gradient text-white py-4 rounded-xl font-black text-xs uppercase shadow-md">J'ai compris et j'accepte</button>
     </div>
 </div>
-
+<div id="social-proof" class="fixed bottom-5 left-5 bg-white shadow-2xl rounded-lg p-3 flex items-center gap-3 border-l-4 border-[#c5a059] transform translate-y-20 opacity-0 transition-all duration-700 z-[100] max-w-[280px]">
+    <div class="w-10 h-10 bg-gray-100 rounded-full flex-shrink-0 flex items-center justify-center text-[#c5a059]">
+        <i class="fa-solid fa-bag-shopping"></i>
+    </div>
+    <div>
+        <p id="proof-text" class="text-[11px] text-gray-800 font-medium leading-tight"></p>
+        <p class="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Il y a quelques instants</p>
+    </div>
+</div>
 
     <script>
         (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
@@ -523,6 +531,38 @@ function updateVisitorCount() {
 
 // Appeler la fonction au chargement
 updateVisitorCount();
+        // --- LOGIQUE DE PREUVE SOCIALE ---
+const notifications = [
+    "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
+    "Nouveau colis expédié vers Yamoussoukro 📦",
+    "Une commande de Parfum Prestige vient d'être validée 🕯️",
+    "5 personnes consultent actuellement ce produit 🔥",
+    "Un ensemble de bijoux a été ajouté au panier à Bouaké 💎",
+    "Dernier stock disponible pour les Perles de hanche 'Baya' ⚠️"
+];
+
+function showSocialProof() {
+    const box = document.getElementById('social-proof');
+    const text = document.getElementById('proof-text');
+    
+    // Choisir un message au hasard
+    const randomMsg = notifications[Math.floor(Math.random() * notifications.length)];
+    text.innerText = randomMsg;
+
+    // Faire apparaître
+    box.classList.remove('translate-y-20', 'opacity-0');
+    
+    // Faire disparaître après 5 secondes
+    setTimeout(() => {
+        box.classList.add('translate-y-20', 'opacity-0');
+    }, 5000);
+}
+
+// Lancer la première après 3 secondes, puis toutes les 15 secondes
+setTimeout(() => {
+    showSocialProof();
+    setInterval(showSocialProof, 15000);
+}, 3000);
    </script>
 </body>
 </html>
