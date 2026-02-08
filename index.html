@@ -586,6 +586,90 @@ setTimeout(() => {
     showSocialProof();
     setInterval(showSocialProof, 15000);
 }, 3000);
+        // --- LOGIQUE ADMIN ---
+function ouvrirAdmin() {
+    const mdp = prompt("Code d'accès Admin :");
+    if(mdp === "2026") { // Ton mot de passe
+        document.getElementById('adminModal').classList.add('active');
+        refreshAdminList();
+    } else { alert("Accès refusé"); }
+}
+
+function ajouterProduitAdmin() {
+    const name = document.getElementById('adm-name').value;
+    const price = document.getElementById('adm-price').value;
+    const img = document.getElementById('adm-img').value;
+
+    if(!name || !price || !img) return alert("Remplis les champs obligatoires !");
+
+    const newP = {
+        id: Date.now(),
+        name: name,
+        price: parseInt(price),
+        cat: document.getElementById('adm-cat').value,
+        images: [img],
+        description: document.getElementById('adm-desc').value || "Produit Latyfa Business"
+    };
+
+    products.push(newP);
+    sauvegarderEtRelancer();
+    alert("Produit ajouté !");
+}
+
+function supprimerProduit(id) {
+    if(confirm("Supprimer définitivement cet article ?")) {
+        products = products.filter(p => p.id !== id);
+        sauvegarderEtRelancer();
+    }
+}
+
+function sauvegarderEtRelancer() {
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    refreshAdminList();
+    render(); // Rafraîchit la boutique immédiatement
+}
+
+function refreshAdminList() {
+    const list = document.getElementById('admin-list');
+    list.innerHTML = products.map(p => `
+        <div class="flex justify-between items-center bg-gray-100 p-2 rounded border">
+            <span class="font-bold">${p.name}</span>
+            <button onclick="supprimerProduit(${p.id})" class="text-red-500 font-bold text-xs uppercase">Supprimer</button>
+        </div>
+    `).join('');
+}
+
    </script>
+    <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
+
+<div id="adminModal" class="modal bg-white">
+    <div class="max-w-md mx-auto py-8">
+        <div class="flex justify-between items-center border-b pb-4 mb-6">
+            <h2 class="text-xl font-black italic uppercase">Gestion du Catalogue</h2>
+            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-2xl">&times;</button>
+        </div>
+        
+        <div class="space-y-4 bg-gray-50 p-4 rounded-xl border">
+            <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full p-3 border rounded">
+            <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full p-3 border rounded">
+            <select id="adm-cat" class="w-full p-3 border rounded bg-white font-bold">
+                <option value="bijoux">Bijoux</option>
+                <option value="sac">Sacs à main</option>
+                <option value="parfum">Parfums</option>
+                <option value="vetements">Vêtements</option>
+                <option value="chaussures">Chaussures</option>
+                <option value="hanche">Perles de hanche</option>
+            </select>
+            <input type="text" id="adm-img" placeholder="Lien de la photo (URL) *" class="w-full p-3 border rounded">
+            <textarea id="adm-desc" placeholder="Description courte" class="w-full p-3 border rounded h-20"></textarea>
+            <button onclick="ajouterProduitAdmin()" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase">Mettre en ligne</button>
+        </div>
+
+        <div class="mt-10">
+            <h3 class="text-[10px] font-black uppercase mb-4 text-gray-400 tracking-widest">Articles en ligne</h3>
+            <div id="admin-list" class="space-y-2 max-h-60 overflow-y-auto pr-2 text-[10px] font-bold uppercase"></div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
