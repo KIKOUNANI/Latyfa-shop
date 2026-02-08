@@ -18,6 +18,14 @@
         .btn-disabled { background: #cccccc !important; cursor: not-allowed; opacity: 0.6; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Styles de la Roue */
+        .wheel-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .wheel-mask.active { display: flex; }
+        .wheel-box { background: white; padding: 30px; border-radius: 30px; text-align: center; position: relative; width: 95%; max-width: 400px; border: 5px solid #ff6600; }
+        #canvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+        .spin-trigger { background: #000; color: #fff; padding: 15px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; border: none; font-size: 14px; letter-spacing: 2px; width: 100%; }
+        .spin-trigger:disabled { background: #ccc; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -55,125 +63,101 @@
         </div>
     </section>
 
-    <section class="bg-white border-b">
-        <div class="container mx-auto px-4 py-5 flex justify-between items-center gap-4 overflow-x-auto no-scrollbar text-[10px] md:text-[12px] font-bold uppercase text-gray-600">
-            <div class="flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-gem text-[#ff6600]"></i> Qualité Premium</div>
-            <div class="flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-truck-fast text-[#ff6600]"></i> Livraison 24h/48h</div>
-            <div class="flex items-center gap-2 whitespace-nowrap"><i class="fa-solid fa-shop text-[#ff6600]"></i> Boutique : Bouaké</div>
-        </div>
-    </section>
-
     <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
-        <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24">
-            <h3 class="font-black border-b pb-3 mb-5 text-xs uppercase text-[#ff6600] tracking-widest">Rayons</h3>
-            <div class="flex flex-col gap-4 text-sm font-bold text-gray-500">
+        <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border">
+            <h3 class="font-black border-b pb-3 mb-5 text-[10px] uppercase text-[#ff6600] tracking-widest text-center">Catégories</h3>
+            <div class="flex flex-col gap-4 text-sm font-bold text-gray-500 uppercase text-[11px]">
                 <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('tous')">Tout voir <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
                 <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('bijoux')">Bijoux <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
                 <span class="hover:text-[#ff6600] cursor-pointer transition flex justify-between" onclick="render('sac')">Sacs à main <i class="fa-solid fa-chevron-right text-[10px]"></i></span>
             </div>
         </aside>
-
         <main class="flex-1">
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
         </main>
     </div>
 
+    <button onclick="document.querySelector('.wheel-mask').classList.add('active')" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#ff6600]">
+        <i class="fa-solid fa-gift text-[#ff6600] text-2xl"></i>
+    </button>
+
+    <div class="wheel-mask">
+        <div class="wheel-box">
+            <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
+            <h3 class="text-xl font-black italic uppercase text-gray-800">LATYYA LUCKY WHEEL</h3>
+            <p id="wheel-msg" class="text-[11px] font-black uppercase mt-2"></p>
+            <div class="relative">
+                <canvas id="canvas" width="300" height="300"></canvas>
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 text-3xl text-orange-600">▼</div>
+            </div>
+            <button id="spin" class="spin-trigger">TENTER MA CHANCE</button>
+        </div>
+    </div>
+
     <div id="productDetailModal" class="modal">
         <div class="max-w-2xl mx-auto">
-            <button onclick="document.getElementById('productDetailModal').classList.remove('active')" class="mb-6 text-gray-500 font-bold uppercase text-[10px]"><i class="fa-solid fa-arrow-left"></i> Retour au catalogue</button>
+            <button onclick="document.getElementById('productDetailModal').classList.remove('active')" class="mb-6 text-gray-500 font-bold uppercase text-[10px]"><i class="fa-solid fa-arrow-left"></i> Retour</button>
             <div class="flex flex-col md:flex-row gap-8">
                 <div class="md:w-1/2">
-                    <img id="main-detail-img" src="" class="w-full h-80 object-cover rounded-xl shadow-md">
+                    <img id="main-detail-img" src="" class="w-full h-80 object-cover rounded-xl shadow-md border">
                     <div id="thumbnails" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
                 </div>
                 <div class="md:w-1/2">
-                    <h2 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800 leading-tight"></h2>
+                    <h2 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800"></h2>
                     <p id="detail-price" class="text-[#ff6600] font-black text-2xl mt-2"></p>
-                    <div class="my-4 border-t pt-4">
-                        <h4 class="text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest">Description</h4>
-                        <p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p>
-                    </div>
+                    <div class="my-4 border-t pt-4"><p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p></div>
                     <div class="space-y-4 my-6">
                         <div id="size-area" class="hidden">
                             <label class="text-[10px] font-black uppercase text-gray-400">Taille / Pointure</label>
-                            <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm outline-none bg-gray-50"></select>
+                            <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
                         </div>
                         <div id="color-area" class="hidden">
                             <label class="text-[10px] font-black uppercase text-gray-400">Couleur</label>
-                            <select id="select-color" class="w-full border p-3 rounded-lg mt-1 text-sm outline-none bg-gray-50"></select>
+                            <select id="select-color" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
                         </div>
                     </div>
                     <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-6">Ajouter au panier</button>
                     <div class="flex items-center justify-center gap-6 pt-4 border-t">
-                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Partager :</span>
-                        <button id="share-wa" class="text-[#25D366] text-xl hover:scale-110 transition"><i class="fa-brands fa-whatsapp"></i></button>
-                        <button id="share-fb" class="text-[#1877F2] text-xl hover:scale-110 transition"><i class="fa-brands fa-facebook"></i></button>
+                        <button id="share-wa" class="text-[#25D366] text-xl"><i class="fa-brands fa-whatsapp"></i></button>
+                        <button id="share-fb" class="text-[#1877F2] text-xl"><i class="fa-brands fa-facebook"></i></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <section id="contact-section" class="py-16 bg-white border-t">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto bg-gray-50 rounded-2xl overflow-hidden shadow-sm border flex flex-col md:flex-row">
-                <div class="md:w-1/3 ali-gradient p-8 text-white">
-                    <h2 class="text-2xl font-black uppercase italic mb-6">Contact</h2>
-                    <p class="text-sm opacity-90 mb-8 font-medium">Une question ? Notre équipe vous répond rapidement sur WhatsApp.</p>
-                    <div class="flex items-center gap-4">
-                        <div class="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fa-solid fa-phone"></i></div>
-                        <span class="text-sm font-bold">+225 07 09 00 28 81</span>
-                    </div>
-                </div>
-                <div class="md:w-2/3 p-8 bg-white">
-                    <form onsubmit="envoyerMessage(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="contact-nom" placeholder="Votre Nom *" required class="w-full p-3 border rounded-lg text-sm outline-none">
-                            <input type="text" id="contact-sujet" placeholder="Sujet" required class="w-full p-3 border rounded-lg text-sm outline-none">
-                        </div>
-                        <textarea id="contact-msg" rows="3" placeholder="Votre message..." required class="w-full p-3 border rounded-lg text-sm outline-none"></textarea>
-                        <button type="submit" class="w-full bg-gray-900 text-white py-3 rounded-lg font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
-                            Envoyer sur WhatsApp <i class="fa-brands fa-whatsapp text-lg"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <footer class="bg-white border-t pt-12 pb-6">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
-                <div>
-                    <div class="flex items-center gap-2 mb-4">
+                <div class="text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-4">
                         <img src="https://i.ibb.co/vz6mD2V/1000167529.png" class="h-8 w-8 rounded-full">
                         <span class="text-xl font-black italic text-[#ff6600]">LATYYA</span>
                     </div>
                     <p class="text-gray-500 text-[10px] uppercase font-bold">L'élégance à portée de main.</p>
                 </div>
-                <div>
+                <div class="text-center md:text-left">
                     <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Aide</h4>
                     <ul class="text-gray-500 text-[10px] space-y-2 uppercase font-bold">
                         <li class="cursor-pointer hover:text-orange-600" onclick="ouvrirCGV()">Conditions de Vente</li>
                         <li class="cursor-pointer hover:text-orange-600" onclick="suivreColis()">Suivi Colis</li>
                     </ul>
                 </div>
-                <div>
+                <div class="text-center md:text-left">
                     <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Boutique</h4>
                     <p class="text-gray-500 text-[10px] uppercase font-bold">📍 Bouaké, Côte d'Ivoire</p>
                 </div>
-                <div>
+                <div class="text-center md:text-left">
                     <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Suivez-nous</h4>
-                    <div class="flex gap-3">
+                    <div class="flex justify-center md:justify-start gap-3">
                         <a href="https://wa.me/2250709002881" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#25D366] hover:text-white transition"><i class="fa-brands fa-whatsapp"></i></a>
                         <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#1877F2] hover:text-white transition"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#E4405F] hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
                         <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition"><i class="fa-brands fa-tiktok"></i></a>
                     </div>
                 </div>
             </div>
             <div class="border-t pt-6 text-center text-gray-400 text-[9px] font-bold uppercase tracking-widest">
-                © 2026 LATYYA BUSINESS. | <button onclick="ouvrirCGV()" class="underline text-orange-600">Juridique</button>
+                © 2026 LATYYA BUSINESS | <button onclick="ouvrirCGV()" class="underline text-orange-600 uppercase">Juridique</button>
             </div>
         </div>
     </footer>
@@ -182,55 +166,42 @@
         <div class="max-w-md mx-auto">
             <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Ma Commande</h2>
             <div id="cart-items" class="space-y-4 mb-6 border-b pb-4"></div>
-            
-            <div id="checkout-form" style="display:none;">
-                <div class="space-y-3 mb-6">
-                    <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm outline-none">
-                    <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
-                        <option value="">-- CHOISIR VOTRE ZONE --</option>
-                        <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
-                        <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-                        <option value="interieur">Intérieur pays (3.500 F)</option>
-                        <option value="bouake">Retrait Boutique Bouaké (Gratuit)</option>
-                    </select>
-                    <div id="communes-info" class="text-[9px] text-gray-500 bg-gray-100 p-2 rounded hidden leading-tight"></div>
-                    <input type="text" id="tel-client" oninput="majResume()" placeholder="Quartier et Précisions *" class="w-full border p-3 rounded-lg text-sm outline-none">
-                    
-                    <label class="block text-[10px] font-bold uppercase text-gray-400 mt-4 tracking-widest">Mode de Paiement</label>
-                    <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-gray-50 font-bold border-orange-200">
-                        <option value="WAVE / MOBILE MONEY">TRANSFERT (WAVE / ORANGE / MTN)</option>
-                        <option value="CASH (Boutique / Bouaké uniquement)">CASH (Boutique ou Bouaké Uniquement)</option>
-                    </select>
-                    <p class="text-[9px] text-red-600 font-bold uppercase italic mt-1">* Paiement intégral exigé à la commande.</p>
+            <div id="checkout-form" style="display:none;" class="space-y-4">
+                <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
+                <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
+                    <option value="">-- CHOISIR VOTRE ZONE --</option>
+                    <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+                    <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+                    <option value="interieur">Intérieur pays (3.500 F)</option>
+                    <option value="bouake">Retrait Boutique Bouaké (Gratuit)</option>
+                </select>
+                <div id="communes-info" class="text-[9px] text-gray-500 bg-gray-100 p-2 rounded hidden leading-tight"></div>
+                <input type="text" id="tel-client" oninput="majResume()" placeholder="Quartier et Précisions *" class="w-full border p-3 rounded-lg text-sm">
+                <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-gray-50 font-bold">
+                    <option value="TRANSFERT MOBILE">TRANSFERT (WAVE / MOBILE MONEY)</option>
+                    <option value="CASH">CASH (Boutique / Bouaké uniquement)</option>
+                </select>
+                <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
+                <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
+                    <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-5 w-5">
+                    <label for="check-verif" class="text-[9px] font-bold uppercase">Je confirme ma commande et j'accepte le paiement intégral.</label>
                 </div>
-
-                <div class="mb-6 p-4 bg-orange-50 rounded-lg border-2 border-orange-200 uppercase text-[10px] font-bold">
-                    <div id="resume-final" class="space-y-2 text-gray-700"></div>
-                </div>
-
-                <div class="flex items-start gap-3 mb-6 p-3 bg-blue-50 rounded border border-blue-100">
-                    <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 w-5 h-5 accent-[#ff6600]">
-                    <label for="check-verif" class="text-[10px] font-bold text-blue-900 leading-tight uppercase">Je confirme ma commande et j'accepte le paiement intégral.</label>
-                </div>
-
-                <div class="flex justify-between font-bold text-lg mb-6 p-2 border-b-2">
+                <div class="flex justify-between font-bold text-lg p-2 border-b-2">
                     <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
                 </div>
-                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase shadow-lg" disabled>Finaliser sur WhatsApp</button>
+                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
             </div>
-            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold text-center underline">Continuer mes achats</button>
+            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
         </div>
     </div>
 
     <div id="cgvModal" class="modal bg-gray-50">
-        <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg my-10 border">
-            <h2 class="text-xl font-black uppercase mb-6 border-b pb-4 italic">Mentions Légales</h2>
-            <div class="text-[11px] space-y-4 text-gray-600 uppercase font-bold">
-                <p>1. PAIEMENT : Intégral à la commande. Pas d'acomptes.</p>
-                <p>2. CASH : Uniquement pour retrait boutique ou Bouaké.</p>
-                <p>3. ÉCHANGES : Possible uniquement si défaut constaté devant le livreur.</p>
-            </div>
-            <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 bg-black text-white py-3 rounded-lg font-bold text-[10px] uppercase">Fermer</button>
+        <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg my-10 border text-[11px] uppercase font-bold text-gray-600 space-y-4">
+            <h2 class="text-xl font-black text-gray-800 italic border-b pb-4">Mentions Légales</h2>
+            <p>1. Paiement intégral exigé à la commande.</p>
+            <p>2. Retrait en boutique disponible à Bouaké.</p>
+            <p>3. Échanges sous 24h uniquement en cas de défaut majeur.</p>
+            <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 bg-black text-white py-3 rounded-lg">Fermer</button>
         </div>
     </div>
 
@@ -246,7 +217,7 @@
 
         const products = [
             { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=500"], couleurs: ["Noir", "Or"], description: "Élégance Signature Latyya. Cuir Premium." },
-            { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K." }
+            { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K. Design exclusif." }
         ];
 
         let cart = [];
@@ -256,64 +227,41 @@
             const grid = document.getElementById('product-grid');
             grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
                 <div class="product-card p-3" onclick="voirDetails(${p.id})">
-                    <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3">
+                    <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
                     <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2">${p.name}</h3>
                     <div class="text-[#ff6600] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-                    <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase">Voir Détails</div>
+                    <div class="bg-gray-100 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest">Détails</div>
                 </div>`).join('');
         }
 
         function voirDetails(id) {
-    const p = products.find(x => x.id === id);
-    currentProduct = p;
-    
-    // Ouvrir le modal
-    document.getElementById('productDetailModal').classList.add('active');
-    
-    // Charger l'image principale et les miniatures
-    document.getElementById('main-detail-img').src = p.images[0];
-    document.getElementById('thumbnails').innerHTML = p.images.map(img => `
-        <img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" 
-             class="h-14 w-14 object-cover rounded cursor-pointer border-2 border-transparent hover:border-[#ff6600] transition">
-    `).join('');
+            const p = products.find(x => x.id === id);
+            currentProduct = p;
+            document.getElementById('productDetailModal').classList.add('active');
+            document.getElementById('main-detail-img').src = p.images[0];
+            document.getElementById('thumbnails').innerHTML = p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-orange-500">`).join('');
+            document.getElementById('detail-name').innerText = p.name;
+            document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
+            document.getElementById('detail-desc').innerText = p.description;
 
-    // Remplir les infos textuelles
-    document.getElementById('detail-name').innerText = p.name;
-    document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
-    document.getElementById('detail-desc').innerText = p.description || "Élégance et qualité supérieure sélectionnées par LATYYA.";
+            const sArea = document.getElementById('size-area');
+            const opts = p.tailles || p.pointures || [];
+            if(opts.length > 0) {
+                sArea.classList.remove('hidden');
+                document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
+            } else { sArea.classList.add('hidden'); }
 
-    // Gérer l'affichage des Tailles/Pointures
-    const sArea = document.getElementById('size-area');
-    const opts = p.tailles || p.pointures || [];
-    if(opts.length > 0) {
-        sArea.classList.remove('hidden');
-        document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
-    } else { sArea.classList.add('hidden'); }
+            const cArea = document.getElementById('color-area');
+            if(p.couleurs) {
+                cArea.classList.remove('hidden');
+                document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
+            } else { cArea.classList.add('hidden'); }
 
-    // Gérer l'affichage des Couleurs
-    const cArea = document.getElementById('color-area');
-    if(p.couleurs && p.couleurs.length > 0) {
-        cArea.classList.remove('hidden');
-        document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
-    } else { cArea.classList.add('hidden'); }
-
-    // --- LOGIQUE DE PARTAGE CORRIGÉE ---
-    const urlSite = window.location.href;
-    const messageWhatsApp = `Coucou ! Regarde ce magnifique article chez *LATYYA Business* :\n\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\n\nTu peux le voir ici : ${urlSite}`;
-
-    // Partage WhatsApp
-    document.getElementById('share-wa').onclick = () => {
-        const link = `https://wa.me/?text=${encodeURIComponent(messageWhatsApp)}`;
-        window.open(link, "_blank");
-    };
-
-    // Partage Facebook
-    document.getElementById('share-fb').onclick = () => {
-        const link = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`;
-        window.open(link, "_blank");
-    };
-}
-
+            const urlSite = window.location.href;
+            const msgShare = `Regarde ce magnifique article chez *LATYYA Business* :\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\nLien : ${urlSite}`;
+            document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=${encodeURIComponent(msgShare)}`, "_blank");
+            document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`, "_blank");
+        }
 
         function ajouterDepuisDetail() {
             const size = document.getElementById('select-size').value || "";
@@ -330,7 +278,7 @@
             document.getElementById('cartModal').classList.add('active');
             const itemsDiv = document.getElementById('cart-items');
             const form = document.getElementById('checkout-form');
-            if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 font-bold text-[10px] uppercase'>Panier Vide</p>"; form.style.display = "none"; return; }
+            if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 text-[10px] font-bold uppercase text-gray-400'>Panier Vide</p>"; form.style.display = "none"; return; }
             form.style.display = "block";
             itemsDiv.innerHTML = cart.map(item => `
                 <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
@@ -377,14 +325,72 @@
             const mode = document.getElementById('mode-pay').value;
             const total = document.getElementById('total-display').innerText;
             let list = ""; cart.forEach(i => list += `- ${i.label} (x${i.qty})\n`);
-            let msg = `*COMMANDE LATYYA*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n🛍️ ARTICLES:\n${list}\n💰 TOTAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
+            let msg = `*COMMANDE LATYYA BUSINESS*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n🛍️ ARTICLES:\n${list}\n💰 TOTAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
             window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
         }
 
-        function envoyerMessage(e) { e.preventDefault(); window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(`Contact de ${document.getElementById('contact-nom').value}: ${document.getElementById('contact-msg').value}`)); }
+        // --- ROUE DE LA FORTUNE (16 SEGMENTS, 3 CHANCES/JOUR) ---
+        const prizes = ["-5%", "RÉESSAYER", "LIVRAISON GRATUITE", "RÉESSAYER", "-10%", "RÉESSAYER", "CADEAU SURPRISE", "RÉESSAYER", "-2%", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER"];
+        const colors = prizes.map((p, i) => i % 2 === 0 ? (p === "RÉESSAYER" ? "#333333" : "#ff6600") : "#000000");
+        const canva = document.getElementById('canvas');
+        const ctx = canva.getContext('2d');
+        const arc = Math.PI / (prizes.length / 2);
+        const MAX_TENTATIVES = 3;
+
+        function drawWheel() {
+            ctx.clearRect(0, 0, 300, 300);
+            prizes.forEach((p, i) => {
+                ctx.beginPath(); ctx.fillStyle = colors[i]; ctx.moveTo(150, 150);
+                ctx.arc(150, 150, 150, i * arc, (i + 1) * arc); ctx.fill();
+                ctx.save(); ctx.fillStyle = "white"; ctx.translate(150, 150);
+                ctx.rotate(i * arc + arc / 2); ctx.font = "bold 8px Arial";
+                ctx.textAlign = "right"; ctx.fillText(p, 140, 5); ctx.restore();
+            });
+        }
+
+        function majAffichageChances() {
+            const aujourdhui = new Date().toLocaleDateString();
+            let stats = JSON.parse(localStorage.getItem('latyya_wheel_stats')) || { date: aujourdhui, count: 0 };
+            if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
+            const reste = MAX_TENTATIVES - stats.count;
+            const msgZone = document.getElementById('wheel-msg');
+            if(reste <= 0) {
+                msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE (REVIENS DEMAIN)</span>`;
+                document.getElementById('spin').disabled = true;
+                document.getElementById('spin').innerText = "LIMITÉE ATTEINTE";
+            } else {
+                msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/3</span>`;
+            }
+            return stats;
+        }
+
+        document.getElementById('spin').onclick = function() {
+            const btn = this;
+            let stats = majAffichageChances();
+            if (stats.count >= MAX_TENTATIVES) return;
+            btn.disabled = true; btn.innerText = "LANCEMENT...";
+            const spins = 1800 + Math.random() * 1800; 
+            canva.style.transform = `rotate(${spins}deg)`;
+            setTimeout(() => {
+                const actualDeg = spins % 360;
+                const win = prizes[Math.floor((360 - actualDeg) / (360 / prizes.length)) % prizes.length];
+                stats.count++;
+                localStorage.setItem('latyya_wheel_stats', JSON.stringify(stats));
+                majAffichageChances();
+                if(win === "RÉESSAYER") {
+                    alert(stats.count < MAX_TENTATIVES ? "🤫 Retente ta chance !" : "🤫 Plus de chances pour aujourd'hui.");
+                    if(stats.count < MAX_TENTATIVES) { btn.disabled = false; btn.innerText = "RETENTER"; }
+                } else {
+                    alert("🎁 GAGNÉ : " + win + " !\nCapture l'écran et envoie-le sur WhatsApp.");
+                    btn.innerText = "BIEN JOUÉ !";
+                }
+            }, 4000);
+        };
+
+        // --- DIVERS ---
         function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
         function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
-
+        
         setInterval(() => {
             const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
             if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
@@ -392,7 +398,7 @@
             document.getElementById('countdown').innerText = d + "j " + h + "h " + m + "m " + s + "s";
         }, 1000);
 
-        render();
+        drawWheel(); majAffichageChances(); render();
     </script>
 </body>
 </html>
