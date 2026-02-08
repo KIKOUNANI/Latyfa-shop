@@ -218,6 +218,13 @@
                 </div>
             </div>
             <div class="border-t pt-6 text-center text-gray-400 text-[9px] font-bold uppercase tracking-widest">
+                <div class="flex flex-col items-center justify-center py-4 border-t border-gray-100 mt-6">
+    <div class="flex items-center gap-2 text-[#c5a059] mb-1">
+        <i class="fa-solid fa-eye text-[10px]"></i>
+        <span id="visitor-count" class="text-[12px] font-black tracking-widest">0000</span>
+    </div>
+    <p class="text-[8px] text-gray-400 uppercase font-bold tracking-[0.2em]">Visiteurs ont exploré l'univers Latyfa shop</p>
+</div>
                 © 2026 LATYFA BUSINESS | <button onclick="ouvrirCGV()" class="underline text-orange-600 uppercase">Juridique</button>
             </div>
         </div>
@@ -494,6 +501,28 @@
         }, 1000);
 
         drawWheel(); majAffichageChances(); render();
-    </script>
+        // --- LOGIQUE DU COMPTEUR DE VISITEURS ---
+function updateVisitorCount() {
+    // On récupère le nombre actuel ou on commence à un chiffre crédible (ex: 1250)
+    let count = localStorage.getItem('latyfa_visitors');
+    
+    if (!count) {
+        count = 1000; // Ton chiffre de départ marketing
+    } else {
+        count = parseInt(count) + 1;
+    }
+    
+    localStorage.setItem('latyya_visitors', count);
+    
+    // Animation d'affichage
+    const display = document.getElementById('visitor-count');
+    if(display) {
+        display.innerText = count.toLocaleString('fr-FR');
+    }
+}
+
+// Appeler la fonction au chargement
+updateVisitorCount();
+   </script>
 </body>
 </html>
