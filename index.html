@@ -114,7 +114,141 @@
 
     <script>
         // --- CONFIGURATION ---
-        (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
+(function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
+
+const products = [
+    { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", note: 4.8 },
+    { id: 2, cat: "bijoux", name: "Collier Perle d'Or", price: 25000, old: 30000, img: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", note: 5.0 }
+];
+
+let cart = [];
+let remiseCodePromo = 0;
+let couponApplique = false;
+
+// --- GESTION DU NUMÉRO DE COMMANDE ---
+function genererNumeroCommande() {
+    let dernierNumero = localStorage.getItem('last_cmd_id') || 0;
+    let nouveauNumero = parseInt(dernierNumero) + 1;
+    localStorage.setItem('last_cmd_id', nouveauNumero);
+    return "CMD#" + nouveauNumero;
+}
+
+function render(filter = 'tous') {
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = '';
+    products.forEach(p => {
+        if(filter === 'tous' || p.cat === filter) {
+            grid.innerHTML += `
+                <div class="product-card p-3" onclick="ajouter(${p.id})">
+                    <img src="${p.img}" class="h-40 w-full object-cover rounded mb-2">
+                    <h3 class="text-[11px] font-medium line-clamp-2 h-8 mb-1 uppercase">${p.name}</h3>
+                    <div class="text-[#ff6600] font-bold text-lg">${p.price.toLocaleString()} F</div>
+                    <div class="text-gray-400 line-through text-[10px] mb-2">${p.old.toLocaleString()} F</div>
+                    <div class="mt-auto flex justify-between items-center text-[10px]">
+                        <span class="text-yellow-500">★ ${p.note}</span>
+                        <span class="bg-orange-50 text-[#ff6600] px-2 py-1 rounded font-bold italic">AJOUTER</span>
+                    </div>
+                </div>`;
+        }
+    });
+}
+
+function ajouter(id) {
+    cart.push({...products.find(p => p.id === id), cartId: Date.now()});
+    document.getElementById('cart-count').innerText = cart.length;
+    alert("Ajouté !");
+}
+
+function supprimerDuPanier(cartId) {
+    cart = cart.filter(item => item.cartId !== cartId);
+    document.getElementById('cart-count').innerText = cart.length;
+    ouvrirPanier();
+}
+
+function toggleBouton() {
+    const isChecked = document.getElementById('check-verif').checked;
+    const btn = document.getElementById('btn-final');
+    btn.className = isChecked ? "w-full ali-gradient text-white py-4 rounded-full font-bold uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-bold uppercase shadow-lg";
+    btn.disabled = !isChecked;
+}
+
+function ouvrirPanier() {
+    document.getElementById('cartModal').classList.add('active');
+    const itemsDiv = document.getElementById('cart-items');
+    const form = document.getElementById('checkout-form');
+    if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 text-gray-400'>Panier vide.</p>"; form.style.display = "none"; return; }
+    
+    itemsDiv.innerHTML = cart.map(item => `
+        <div class="flex justify-between items-center border-b pb-2">
+            <div class="text-[11px] uppercase"><p class="font-bold text-gray-700">${item.name}</p><p class="text-orange-500">${item.price.toLocaleString()} F</p></div>
+            <button onclick="supprimerDuPanier(${item.cartId})" class="text-red-400"><i class="fa-solid fa-trash-can"></i></button>
+        </div>`).join('');
+    
+    form.style.display = "block";
+    majResume();
+}
+
+function majResume() {
+    const nom = document.getElementById('nom-client').value || "...";
+    const quartier = document.getElementById('tel-client').value || "...";
+    const pay = document.getElementById('mode-pay').value;
+    let brut = cart.reduce((acc, curr) => acc + curr.price, 0);
+    let total = brut;
+    if (brut >= 20000 && new Date().getTime() >= new Date("2026-02-14").getTime()) total *= 0.8;
+
+    document.getElementById('resume-final').innerHTML = `
+        <div class="bg-white p-2 rounded border border-orange-100">
+            <p class="font-bold text-black uppercase text-[10px]">Client : ${nom}</p>
+            <p class="text-gray-600 italic text-[10px]">Lieu : ${ quartier}</p>
+            <p class="font-bold text-[#ff6600] text-[10px]">Paiement : ${pay}</p>
+        </div>`;
+    document.getElementById('total-display').innerText = Math.max(0, total).toLocaleString();
+}
+
+function validerCommande() {
+    const nom = document.getElementById('nom-client').value;
+    const quartier = document.getElementById('tel-client').value;
+    const email = document.getElementById('email-client').value;
+    const total = document.getElementById('total-display').innerText;
+
+    if(!nom || !quartier) return alert("Nom et quartier obligatoires !");
+
+    // GÉNÉRATION DU NUMÉRO UNIQUE
+    const numCommande = genererNumeroCommande();
+
+    // ENVOI EMAILJS
+    if(email) {
+        const params = {
+            order_id: numCommande, // Nouvelle variable pour ton mail
+            client_name: nom,
+            delivery_address: quartier,
+            order_total: total,
+            payment_method: document.getElementById('mode-pay').value,
+            order_details: cart.map(i => i.name).join(", "),
+            to_email: email
+        };
+        emailjs.send('service_jxh29js', 'Template_wv2gv2s', params);
+    }
+
+    // WHATSAPP AVEC NUMÉRO DE COMMANDE
+    let articlesWA = cart.map(i => `- ${i.name}`).join('%0A');
+    let msgWA = `COMMANDE ${numCommande}%0A--------------------------%0AClient: ${nom}%0ALieu: ${quartier}%0AArticles:%0A${articlesWA}%0ATotal: ${total} F`;
+    
+    alert("Commande " + numCommande + " enregistrée ! Redirection vers WhatsApp...");
+    window.open(`https://wa.me/2250709002881?text=${msgWA}`);
+    
+    // Vider le panier après commande
+    cart = [];
+    document.getElementById('cart-count').innerText = 0;
+    document.getElementById('cartModal').classList.remove('active');
+}
+
+function suivreColis() {
+    let n = prompt("Entrez votre numéro de commande (ex: CMD#1) :");
+    if(n) window.open(`https://wa.me/2250709002881?text=Bonjour, je souhaite suivre l'état de ma commande ${n}`);
+}
+
+render();
 
         const products = [
             { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", note: 4.8 },
