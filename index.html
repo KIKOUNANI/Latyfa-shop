@@ -6,6 +6,7 @@
     <title>LATYFA BOUTIQUE | Officiel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -174,11 +175,16 @@
 
     <div id="admin-section" style="display:none; position:fixed; inset:0; background:white; z-index:10000; padding:20px; overflow-y:auto; font-family:sans-serif; color:black;">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #c5a059; padding-bottom:10px; margin-bottom:20px;">
-            <h2 style="margin:0;">COMMANDES LATYYA</h2>
+            <h2 style="margin:0;">COMMANDES LATYFA</h2>
             <button onclick="document.getElementById('admin-section').style.display='none'" style="background:#000; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer;">FERMER</button>
         </div>
         <div id="liste-commandes"></div>
         <div style="text-align:center; margin-top:30px;">
+            <div style="text-align:center; margin-bottom: 20px;">
+    <button onclick="genererPDF()" style="background:#c5a059; color:white; border:none; padding:12px 25px; border-radius:10px; font-weight:bold; cursor:pointer; width:100%;">
+        <i class="fa-solid fa-file-pdf"></i> TELECHARGER RAPPORT PDF
+    </button>
+            </div>
             <button onclick="localStorage.removeItem('latyya_commandes'); location.reload();" style="color:red; background:none; border:none; text-decoration:underline; font-size:12px; cursor:pointer;">EFFACER TOUT</button>
         </div>
     </div>
@@ -398,6 +404,62 @@
         document.getElementById('visitor-count').innerText = vCount.toLocaleString();
 
         drawWheel(); render();
+        async function genererPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const historique = JSON.parse(localStorage.getItem('latyya_commandes') || "[]");
+    const dateJour = new Date().toLocaleDateString('fr-FR');
+
+    if (historique.length === 0) {
+        alert("Aucune commande à exporter.");
+        return;
+    }
+
+    // Design du PDF
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(197, 160, 89); // Couleur Or Latyfa
+    doc.text("RAPPORT DE VENTES - LATYFA SHOP", 105, 20, { align: "center" });
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Date : ${dateJour}`, 20, 30);
+    doc.text(`Nombre total de commandes : ${historique.length}`, 20, 37);
+    doc.line(20, 42, 190, 42); // Ligne de séparation
+
+    let y = 52;
+    // On trie par ordre chronologique (le premier enregistré est le n°1)
+    historique.forEach((cmd, index) => {
+        if (y > 270) { doc.addPage(); y = 20; } // Nouvelle page si plein
+
+        doc.setFont("helvetica", "bold");
+        doc.text(`COMMANDE N°${index + 1}`, 20, y);
+        
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text(`Client : ${cmd.nom}`, 20, y + 5);
+        doc.text(`Heure : ${cmd.heure}`, 150, y + 5);
+        
+        // Gérer le texte long du panier
+        const splitPanier = doc.splitTextToSize(`Articles : ${cmd.panier}`, 160);
+        doc.text(splitPanier, 20, y + 10);
+        
+        doc.setFont("helvetica", "bold");
+        doc.text(`TOTAL : ${cmd.total} FCFA`, 20, y + 10 + (splitPanier.length * 5));
+        
+        y += 25 + (splitPanier.length * 5);
+        doc.setDrawColor(230, 230, 230);
+        doc.line(20, y - 5, 190, y - 5);
+    });
+
+    // Calcul du Chiffre d'Affaires total
+    const caTotal = historique.reduce((acc, curr) => acc + parseInt(curr.total.replace(/\s/g, '')), 0);
+    doc.setFontSize(14);
+    doc.setTextColor(197, 160, 89);
+    doc.text(`CHIFFRE D'AFFAIRES TOTAL : ${caTotal.toLocaleString()} FCFA`, 20, y + 10);
+
+    doc.save(`Commandes_Latyfa_${dateJour.replace(/\//g, '-')}.pdf`);
+        }
     </script>
 </body>
 </html>
