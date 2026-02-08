@@ -326,9 +326,13 @@
         };
 
         const products = [
-            { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=500"], couleurs: ["Noir", "Or"], description: "Élégance Signature Latyya. Cuir Premium." },
-            { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K. Design exclusif." }
-        ];
+    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+    { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
+    { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"], description: "Perles de hanche traditionnelles avec une touche de modernité." },
+    { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], description: "Une fragrance envoûtante qui tient toute la journée." },
+    { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
+];
+
 
         let cart = [];
         let currentProduct = null;
@@ -336,8 +340,9 @@
         function render(filter = 'tous') {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
-                <div class="product-card p-3" onclick="voirDetails(${p.id})">
-                    <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
+<div class="product-card p-3 relative" onclick="voirDetails(${p.id})">
+    ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10">Luxe</span>' : ''}
+    <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
                     <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2">${p.name}</h3>
                     <div class="text-[#ff6600] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
                     <div class="bg-gray-100 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest">Détails</div>
@@ -410,16 +415,34 @@
         }
 
         function majResume() {
-            const zoneKey = document.getElementById('zone-livraison').value;
-            const infoBox = document.getElementById('communes-info');
-            let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-            if(tArt >= 20000) tArt *= 0.8;
-            let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
-            if(zoneKey) { infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; infoBox.classList.remove('hidden'); }
-            else { infoBox.classList.add('hidden'); }
-            document.getElementById('resume-final').innerHTML = `<p>Articles : ${tArt.toLocaleString()} F</p><p>Livraison : ${tLiv.toLocaleString()} F</p>`;
-            document.getElementById('total-display').innerText = (tArt + tLiv).toLocaleString();
-        }
+    const zoneKey = document.getElementById('zone-livraison').value;
+    const infoBox = document.getElementById('communes-info');
+    let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    let remise = 0;
+
+    // Calcul de la promo -20% dès 20.000 F
+    if(tArt >= 20000) {
+        remise = tArt * 0.2;
+        tArt = tArt - remise;
+    }
+
+    let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
+    
+    if(zoneKey) { 
+        infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
+        infoBox.classList.remove('hidden'); 
+    } else { 
+        infoBox.classList.add('hidden'); 
+    }
+
+    document.getElementById('resume-final').innerHTML = `
+        <div class="flex justify-between"><span>Articles :</span> <span>${(tArt + remise).toLocaleString()} F</span></div>
+        ${remise > 0 ? `<div class="flex justify-between text-green-600"><span>Remise Promo (-20%) :</span> <span>- ${remise.toLocaleString()} F</span></div>` : ''}
+        <div class="flex justify-between"><span>Livraison :</span> <span>${tLiv.toLocaleString()} F</span></div>
+    `;
+    document.getElementById('total-display').innerText = (tArt + tLiv).toLocaleString();
+}
+
 
         function toggleBouton() {
             const chk = document.getElementById('check-verif').checked;
