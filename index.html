@@ -11,22 +11,24 @@
         .font-black { font-family: 'Archivo Black', sans-serif; }
         
         /* Animations Couches */
-        .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .layer { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
         .layer.active { display: flex; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Loader Professionnel */
+        /* Loader */
         #loader { display: none; position: fixed; inset: 0; background: white; z-index: 10000; align-items: center; justify-content: center; flex-direction: column; }
         .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #ff4d00; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Menu Latéral */
-        #side-menu { position: fixed; top: 0; left: -100%; width: 85%; height: 100%; background: white; z-index: 200; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 20px 0 50px rgba(0,0,0,0.1); }
+        #side-menu { position: fixed; top: 0; left: -100%; width: 85%; height: 100%; background: white; z-index: 200; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         #side-menu.open { left: 0; }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Bandeau défilant */
+        /* Style Boutons Catégories (Style Alibaba) */
+        .cat-btn.active { background-color: #000; color: #fff; border-color: #000; }
+
         .animate-marquee { display: inline-block; animation: marquee 20s linear infinite; }
         @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
     </style>
@@ -35,12 +37,12 @@
 
     <div id="loader">
         <div class="spinner"></div>
-        <p class="mt-4 font-black text-[10px] uppercase tracking-widest text-orange-600 italic">Validation de votre commande...</p>
+        <p class="mt-4 font-black text-[10px] uppercase tracking-widest text-orange-600 italic">Validation...</p>
     </div>
 
     <div class="bg-black text-white py-2 overflow-hidden whitespace-nowrap border-b border-white/10">
         <div class="inline-block animate-marquee uppercase text-[10px] font-black tracking-tighter italic">
-            ✨ Latyfa Shop : Le Luxe à votre portée — Livraison Rapide — Sourcing de Qualité ✨
+            ✨ Latyfa Shop : Le Luxe à votre portée — Livraison Rapide — Sourcing ✨
         </div>
     </div>
 
@@ -53,21 +55,20 @@
         </button>
     </header>
 
-    <div id="side-menu" class="p-10 flex flex-col">
+    <div id="side-menu" class="p-10 flex flex-col shadow-2xl">
         <button onclick="toggleMenu()" class="text-left text-3xl mb-12">✕</button>
         <nav class="space-y-8 flex-1">
-            <a href="#" onclick="toggleMenu()" class="block text-3xl font-black italic uppercase text-orange-600">Accueil</a>
+            <button onclick="location.reload()" class="block text-3xl font-black italic uppercase text-orange-600">Accueil</button>
             <button onclick="openInfo('about')" class="block text-2xl font-black italic uppercase text-left">À Propos</button>
             <button onclick="openInfo('policy')" class="block text-2xl font-black italic uppercase text-left">Livraison</button>
             <button onclick="openInfo('condition')" class="block text-2xl font-black italic uppercase text-left">Retours</button>
-            <button onclick="openInfo('web')" class="block text-[10px] font-black uppercase text-gray-400 mt-10 text-left">Créer mon site web</button>
         </nav>
     </div>
 
     <div class="flex gap-3 overflow-x-auto px-6 py-6 no-scrollbar">
-        <button class="whitespace-nowrap px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-black bg-black text-white">Tous</button>
-        <button class="whitespace-nowrap px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-100 bg-gray-50 text-gray-400">Bijoux</button>
-        <button class="whitespace-nowrap px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-100 bg-gray-50 text-gray-400">Sourcing</button>
+        <button onclick="filterProducts('Tous')" class="cat-btn active whitespace-nowrap px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-100 bg-gray-50 text-gray-400 transition-all">Tous</button>
+        <button onclick="filterProducts('Bijoux')" class="cat-btn whitespace-nowrap px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-100 bg-gray-50 text-gray-400 transition-all">Bijoux</button>
+        <button onclick="filterProducts('Sourcing')" class="cat-btn whitespace-nowrap px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 border-gray-100 bg-gray-50 text-gray-400 transition-all">Sourcing</button>
     </div>
 
     <main class="p-4 grid grid-cols-2 gap-4" id="product-grid"></main>
@@ -76,7 +77,7 @@
         <div class="bg-white w-full max-w-md rounded-[40px] overflow-hidden relative shadow-2xl">
             <button onclick="closeModals()" class="absolute top-6 right-6 z-50 bg-white/80 backdrop-blur w-10 h-10 rounded-full flex items-center justify-center shadow-xl font-bold">✕</button>
             
-            <div id="p-images" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar h-[380px] bg-gray-50"></div>
+            <div id="p-images" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar h-[380px] bg-gray-100"></div>
             
             <div class="p-8">
                 <h2 id="p-title" class="font-black text-2xl mb-1 italic uppercase tracking-tighter"></h2>
@@ -84,11 +85,11 @@
 
                 <div class="space-y-6">
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Couleur</p>
+                        <p class="text-[10px] font-black text-gray-400 uppercase mb-3 px-1">Couleur</p>
                         <div id="p-colors" class="flex gap-3"></div>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-gray-400 uppercase mb-3">Taille</p>
+                        <p class="text-[10px] font-black text-gray-400 uppercase mb-3 px-1">Taille</p>
                         <div id="p-sizes" class="flex gap-3"></div>
                     </div>
                 </div>
@@ -117,18 +118,9 @@
                 <p class="text-[10px] font-black text-gray-400 uppercase mb-3 px-1">📍 Zone de livraison</p>
                 <select id="delivery-zone" onchange="updateCartUI()" class="w-full p-5 bg-gray-50 rounded-[20px] text-[11px] font-bold outline-none border-2 border-transparent focus:border-black appearance-none shadow-sm">
                     <option value="0">--- CHOISIR MA COMMUNE ---</option>
-                    <optgroup label="ZONE A - 1000 F">
-                        <option value="1000">Abobo, Adjamé, Cocody (Angré, Riviera)</option>
-                        <option value="1000">Plateau, Treichville, Marcory</option>
-                    </optgroup>
-                    <optgroup label="ZONE B - 2000 F">
-                        <option value="2000">Yopougon, Port-Bouët, Koumassi</option>
-                        <option value="2000">Bingerville, Anyama</option>
-                    </optgroup>
-                    <optgroup label="EXTÉRIEUR - 3000 F">
-                        <option value="3000">Bassam, Songon, Intérieur (Compagnie)</option>
-                    </optgroup>
-                    <option value="0">Retrait en boutique (Gratuit)</option>
+                    <option value="1000">Zone A (Abobo, Cocody, Plateau) - 1000 F</option>
+                    <option value="2000">Zone B (Yopougon, Koumassi) - 2000 F</option>
+                    <option value="3000">Extérieur (Bassam, Intérieur) - 3000 F</option>
                 </select>
             </div>
 
@@ -139,7 +131,7 @@
 
             <div class="border-t pt-6 flex justify-between items-end mb-8">
                 <div>
-                    <p class="text-[10px] font-black text-gray-400 uppercase leading-none mb-1">Total Final</p>
+                    <p class="text-[10px] font-black text-gray-400 uppercase mb-1">Total Final</p>
                     <p id="old-total" class="text-xs text-gray-400 line-through"></p>
                     <p id="final-total" class="text-4xl font-black text-orange-600 italic tracking-tighter">0 F</p>
                 </div>
@@ -163,6 +155,7 @@
                 id: 1,
                 nom: "Parure de Luxe Or",
                 prix: 7000,
+                categorie: "Bijoux",
                 images: [
                     "https://i.ibb.co/XfXG0YV/image-2025-02-05-181519782.png",
                     "https://i.ibb.co/XfXG0YV/image-2025-02-05-181519782.png"
@@ -178,9 +171,13 @@
         let sSize = "";
         let dPercent = 0;
         let dFixed = 0;
+        let currentCat = "Tous";
 
         function render() {
-            document.getElementById('product-grid').innerHTML = products.map(p => `
+            const grid = document.getElementById('product-grid');
+            const filtered = currentCat === "Tous" ? products : products.filter(p => p.categorie === currentCat);
+            
+            grid.innerHTML = filtered.map(p => `
                 <div class="group" onclick="openProduct(${p.id})">
                     <div class="relative aspect-[3/4] rounded-[35px] overflow-hidden bg-gray-100 mb-4 shadow-sm">
                         <img src="${p.images[0]}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
@@ -191,6 +188,14 @@
             `).join('');
         }
 
+        function filterProducts(cat) {
+            currentCat = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText === cat);
+            });
+            render();
+        }
+
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('open'); }
         function closeModals() { document.querySelectorAll('.layer').forEach(l => l.classList.remove('active')); }
 
@@ -198,9 +203,14 @@
             selectedProduct = products.find(p => p.id === id);
             sColor = selectedProduct.colors[0];
             sSize = selectedProduct.sizes[0];
+            
             document.getElementById('p-title').innerText = selectedProduct.nom;
             document.getElementById('p-price').innerText = selectedProduct.prix.toLocaleString() + " F";
-            document.getElementById('p-images').innerHTML = selectedProduct.images.map(img => `<img src="${img}" class="w-full h-full object-cover snap-start flex-shrink-0">`).join('');
+            
+            // Correction affichage images
+            document.getElementById('p-images').innerHTML = selectedProduct.images.map(img => `
+                <img src="${img}" class="w-full h-full object-cover snap-start flex-shrink-0">
+            `).join('');
             
             document.getElementById('p-colors').innerHTML = selectedProduct.colors.map(c => `
                 <button onclick="sColor='${c}'; openProduct(${id})" class="px-5 py-2.5 border-2 rounded-2xl text-[10px] font-black uppercase transition-all ${sColor===c?'border-black bg-black text-white shadow-lg':'border-gray-100 bg-gray-50 text-gray-400'}">${c}</button>
@@ -235,53 +245,37 @@
                 <div class="flex justify-between items-center bg-gray-50 p-5 rounded-[20px]">
                     <div>
                         <p class="font-black text-[10px] uppercase italic">${i.nom}</p>
-                        <p class="text-[9px] text-gray-400 font-bold uppercase">${i.sColor} — ${i.sSize}</p>
+                        <p class="text-[9px] text-gray-400 font-bold uppercase">${i.sColor}</p>
                     </div>
-                    <button onclick="removeFromCart(${idx})" class="text-red-500 font-bold bg-white w-8 h-8 rounded-full shadow-sm flex items-center justify-center">✕</button>
+                    <button onclick="removeFromCart(${idx})" class="text-red-500 font-bold">✕</button>
                 </div>
             `).join('');
 
             document.getElementById('final-total').innerText = finalPrice.toLocaleString() + " F";
-            document.getElementById('old-total').innerText = (reduction > 0) ? (subtotal + deliveryFee).toLocaleString() + " F" : "";
+            document.getElementById('old-total').innerText = reduction > 0 ? (subtotal + deliveryFee).toLocaleString() + " F" : "";
         }
 
         function removeFromCart(idx) { cart.splice(idx, 1); updateCartUI(); }
 
-        function applyPromo() {
-            const code = document.getElementById('promo-code').value.toUpperCase();
-            if (code === "LATYFA25") {
-                dPercent = 10;
-                document.getElementById('promo-msg').innerText = "RÉDUCTION 10% APPLIQUÉE ! ✨";
-                document.getElementById('promo-msg').className = "text-[9px] mt-2 font-black text-center text-green-500";
-            } else {
-                alert("Code invalide");
-            }
-            updateCartUI();
-        }
-
         function handleCheckout() {
             const nom = document.getElementById('c-nom').value;
             const tel = document.getElementById('c-tel').value;
-            const zoneSelect = document.getElementById('delivery-zone');
-            const zoneName = zoneSelect.options[zoneSelect.selectedIndex].text;
-
-            if(!nom || !tel || zoneSelect.value === "0") return alert("Remplissez vos infos et la zone de livraison !");
+            const zone = document.getElementById('delivery-zone');
+            if(!nom || !tel || zone.value === "0") return alert("Infos manquantes !");
             
-            const msg = `🌟 COMMANDE LATYFA 🌟\n👤 CLIENT: ${nom}\n📞 TEL: ${tel}\n📍 LIVRAISON: ${zoneName}\n💰 TOTAL: ${document.getElementById('final-total').innerText}\n📦 ARTICLES:\n${cart.map(i => `- ${i.nom} (${i.sColor})`).join('\n')}`;
-
             document.getElementById('loader').style.display = 'flex';
             setTimeout(() => {
-                document.getElementById('loader').style.display = 'none';
+                const msg = `🌟 COMMANDE LATYFA 🌟\n👤 CLIENT: ${nom}\n📍 ZONE: ${zone.options[zone.selectedIndex].text}\n💰 TOTAL: ${document.getElementById('final-total').innerText}\n📦 ARTICLES:\n${cart.map(i => `- ${i.nom}`).join('\n')}`;
                 window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
-            }, 2500);
+                document.getElementById('loader').style.display = 'none';
+            }, 2000);
         }
 
         function openInfo(type) {
             const info = {
-                about: ["À Propos", "Latyfa Shop est votre destination luxe pour des parures et articles de sourcing exclusifs. Qualité garantie par Mme Traoré Djeneba."],
-                policy: ["Livraison", "Abidjan (1000F à 2000F) sous 24h. Intérieur (3000F) via compagnies de transport habituelles."],
-                condition: ["Retours", "Tout article conforme n'est pas repris. Échange sous 72h si défaut de fabrication constaté."],
-                web: ["Créer mon site", "Contactez le développeur pour un site premium similaire au +225 0506113292."]
+                about: ["À Propos", "Latyfa Shop : Luxe et Sourcing de qualité. Dirigé par Mme Traoré Djeneba."],
+                policy: ["Livraison", "Abidjan (24h), Intérieur (48h)."],
+                condition: ["Retours", "Échange sous 72h si défaut de fabrication."]
             };
             document.getElementById('info-title').innerText = info[type][0];
             document.getElementById('info-content').innerText = info[type][1];
