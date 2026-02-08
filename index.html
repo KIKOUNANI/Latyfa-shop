@@ -366,23 +366,77 @@
         }
 
         // Roue Logic
-        const prizes = ["-5%", "RÉESSAYER", "LIVRAISON GRATUITE", "RÉESSAYER", "-10%", "RÉESSAYER", "CADEAU SURPRISE", "RÉESSAYER"];
-        const canva = document.getElementById('canvas');
+        const prizes = [
+    "CADEAU SURPRISE", "PERDU", "PERDU", 
+    "-10% SUR COMMANDE", "PERDU", "PERDU", 
+    "LIVRAISON GRATUITE", "PERDU", "PERDU", 
+    "-5% SUR COMMANDE", "PERDU", "PERDU"];
+ const canva = document.getElementById('canvas');
         const ctx = canva.getContext('2d');
         function drawWheel() {
-            prizes.forEach((p, i) => {
-                ctx.beginPath(); ctx.fillStyle = i % 2 === 0 ? "#c5a059" : "#000"; ctx.moveTo(150, 150);
-                ctx.arc(150, 150, 150, i * (Math.PI/4), (i+1) * (Math.PI/4)); ctx.fill();
-                ctx.save(); ctx.fillStyle = "white"; ctx.translate(150, 150); ctx.rotate(i * (Math.PI/4) + Math.PI/8);
-                ctx.font = "bold 10px Arial"; ctx.fillText(p, 60, 5); ctx.restore();
-            });
+    const totalSections = prizes.length; // 12
+    const angleStep = (Math.PI * 2) / totalSections;
+
+    ctx.clearRect(0, 0, canva.width, canva.height); // Nettoie le canvas avant de dessiner
+
+    prizes.forEach((p, i) => {
+        ctx.beginPath();
+        // Or pour les gains, Noir/Anthracite pour les "PERDU"
+        ctx.fillStyle = (p === "PERDU") ? (i % 2 === 0 ? "#1a1a1a" : "#222222") : "#c5a059";
+        
+        ctx.moveTo(150, 150);
+        ctx.arc(150, 150, 150, i * angleStep, (i + 1) * angleStep);
+        ctx.fill();
+        ctx.strokeStyle = "#444";
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+        
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.translate(150, 150);
+        ctx.rotate(i * angleStep + angleStep / 2);
+        ctx.font = "bold 8px Arial";
+        ctx.textAlign = "right";
+        ctx.fillText(p, 140, 5);
+        ctx.restore();
+    });
+}
+
         }
         document.getElementById('spin').onclick = function() {
-            const deg = 1800 + Math.random() * 1800; canva.style.transform = `rotate(${deg}deg)`;
-            setTimeout(() => alert("Félicitations ! Capturez votre cadeau."), 4000);
-        };
+    const btn = document.getElementById('spin');
+    
+    // 1. Vérification de la restriction (1 fois par semaine)
+    const derniereChance = localStorage.getItem('latyfa_derniere_chance');
+    const maintenant = new Date().getTime();
+    if (derniereChance && (maintenant - derniereChance < 7 * 24 * 60 * 60 * 1000)) {
+        alert("Revenez dans une semaine !");
+        return;
+    }
 
-        function ouvrirLeAdmin() {
+    // 2. Lancement de la roue
+    btn.disabled = true;
+    const deg = 1800 + Math.random() * 1800; 
+    canva.style.transform = `rotate(${deg}deg)`;
+    
+    // 3. Le calcul du résultat après l'animation
+    setTimeout(() => {
+        // --- LA LIGNE À METTRE À JOUR : CALCUL SUR 30° ---
+        const angleReel = deg % 360;
+        const segmentIndex = Math.floor(((360 - angleReel) % 360) / 30);
+        const gain = prizes[segmentIndex];
+        // ------------------------------------------------
+
+        localStorage.setItem('latyfa_derniere_chance', new Date().getTime());
+
+        if(gain === "PERDU") {
+            alert("Oh non ! C'est perdu. Retentez dans 7 jours !");
+        } else {
+            alert("🔥 BRAVO ! 🔥\n\nGain : " + gain + "\n\nPrenez une CAPTURE D'ÉCRAN !");
+        }
+    }, 4000);
+};
+      function ouvrirLeAdmin() {
             if(prompt("CODE :") === "2024") {
                 document.getElementById('admin-section').style.display = 'block';
                 const hist = JSON.parse(localStorage.getItem('latyya_commandes') || "[]");
@@ -391,10 +445,26 @@
         }
 
         setInterval(() => {
-            const diff = new Date("Feb 28, 2026 00:00:00") - new Date();
-            const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-            document.getElementById('countdown').innerText = `${h}h ${m}m ${s}s`;
-        }, 1000);
+    // La date de fin de ta promo
+    const dateFin = new Date("Feb 28, 2026 23:59:59").getTime();
+    const maintenant = new Date().getTime();
+    const diff = dateFin - maintenant;
+
+    if (diff > 0) {
+        // Calcul des jours, heures, minutes et secondes
+        const jours = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const heures = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secondes = Math.floor((diff % (1000 * 60)) / 1000);
+
+        // Affichage formaté : 20j 14h 05m 12s
+        document.getElementById('countdown').innerText = 
+            `${jours}j ${heures}h ${minutes}m ${secondes}s`;
+    } else {
+        document.getElementById('countdown').innerText = "PROMO TERMINÉE";
+    }
+}, 1000);
+
 
         function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
         function suivreColis() { alert("Suivi sur WhatsApp uniquement."); }
