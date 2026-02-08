@@ -63,7 +63,7 @@
 
     <div id="cartModal" class="modal">
         <div class="max-w-md mx-auto">
-            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Récapitulatif</h2>
+            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Ma Commande</h2>
             <div id="cart-items" class="space-y-4 mb-6"></div>
             
             <div id="checkout-form" style="display:none;" class="border-t pt-4">
@@ -75,11 +75,11 @@
                     <p id="coupon-msg" class="text-[9px] mt-1 font-bold text-green-600"></p>
                 </div>
 
-                <h3 class="text-xs font-black uppercase mb-3 text-gray-400">Livraison</h3>
+                <h3 class="text-xs font-black uppercase mb-3 text-gray-400">Détails Livraison</h3>
                 <div class="space-y-3 mb-6">
                     <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded text-sm outline-none">
                     <input type="text" id="tel-client" oninput="majResume()" placeholder="Ville et Quartier *" class="w-full border p-3 rounded text-sm outline-none">
-                    <input type="email" id="email-client" placeholder="Email pour le reçu (Facultatif)" class="w-full border p-3 rounded text-sm outline-none">
+                    <input type="email" id="email-client" placeholder="Email (Pour le reçu automatique)" class="w-full border p-3 rounded text-sm outline-none">
                     <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded text-sm bg-gray-50 font-bold">
                         <option value="WAVE">WAVE</option>
                         <option value="ORANGE MONEY">ORANGE MONEY</option>
@@ -88,191 +88,197 @@
                 </div>
 
                 <div class="mb-6 p-4 bg-orange-50 rounded-lg border-2 border-orange-200">
-                    <h3 class="text-[10px] font-black uppercase text-[#ff6600] mb-3 border-b border-orange-200 pb-1 italic text-center">Vérification de vos infos</h3>
+                    <h3 class="text-[10px] font-black uppercase text-[#ff6600] mb-3 border-b border-orange-200 pb-1 italic text-center">Récapitulatif de validation</h3>
                     <div id="resume-final" class="space-y-2 text-[11px] text-gray-700"></div>
                 </div>
 
                 <div class="flex items-start gap-3 mb-6 p-3 bg-blue-50 rounded border border-blue-100">
                     <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 w-5 h-5 accent-[#ff6600] cursor-pointer">
                     <label for="check-verif" class="text-[10px] font-bold text-blue-900 leading-tight cursor-pointer">
-                        Je confirme que ma commande et mon adresse sont correctes.
+                        Je confirme que mes articles et mon adresse sont corrects.
                     </label>
                 </div>
 
                 <div class="flex justify-between font-bold text-lg mb-6 p-2 border-b-2">
-                    <span>TOTAL À PAYER :</span> <span id="total-display" class="text-red-600">0</span> F
+                    <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
                 </div>
                 
                 <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-bold uppercase shadow-lg transition-all" disabled>
-                    Finaliser via WhatsApp
+                    Confirmer sur WhatsApp
                 </button>
             </div>
-            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold text-center">Fermer</button>
+            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold text-center underline">Continuer mes achats</button>
         </div>
     </div>
 
     <script>
-    // 1. Initialisation
-    (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
+        // 1. Initialisation Configuration
+        (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
 
-    const products = [
-        { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", note: 4.8 },
-        { id: 2, cat: "bijoux", name: "Collier Perle d'Or", price: 25000, old: 30000, img: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", note: 5.0 }
-    ];
+        const products = [
+            { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", note: 4.8 },
+            { id: 2, cat: "bijoux", name: "Collier Perle d'Or", price: 25000, old: 30000, img: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", note: 5.0 }
+        ];
 
-    let cart = [];
-    let remiseCodePromo = 0;
-    let couponApplique = false;
-    const codesValides = { "LATYYA26": 0.10, "PROMO5000": 5000 };
+        let cart = [];
+        let remiseCodePromo = 0;
+        let couponApplique = false;
+        const codesValides = { "LATYYA26": 0.10, "PROMO5000": 5000 };
 
-    // 2. Gestion Numéro de Commande
-    function genererNumeroCommande() {
-        let dernier = localStorage.getItem('last_cmd_id') || 0;
-        let nouveau = parseInt(dernier) + 1;
-        localStorage.setItem('last_cmd_id', nouveau);
-        return "CMD#" + nouveau;
-    }
-
-    // 3. Fonctions d'Affichage
-    function render(filter = 'tous') {
-        const grid = document.getElementById('product-grid');
-        grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
-            <div class="product-card p-3" onclick="ajouter(${p.id})">
-                <img src="${p.img}" class="h-40 w-full object-cover rounded mb-2">
-                <h3 class="text-[11px] font-medium line-clamp-2 h-8 mb-1 uppercase">${p.name}</h3>
-                <div class="text-[#ff6600] font-bold text-lg">${p.price.toLocaleString()} F</div>
-                <div class="text-gray-400 line-through text-[10px] mb-2">${p.old.toLocaleString()} F</div>
-                <div class="mt-auto flex justify-between items-center text-[10px]">
-                    <span class="text-yellow-500">★ ${p.note}</span>
-                    <span class="bg-orange-50 text-[#ff6600] px-2 py-1 rounded font-bold italic">AJOUTER</span>
-                </div>
-            </div>`).join('');
-    }
-
-    function ajouter(id) {
-        cart.push({...products.find(p => p.id === id), cartId: Date.now()});
-        document.getElementById('cart-count').innerText = cart.length;
-        alert("Article ajouté !");
-    }
-
-    function supprimerDuPanier(cartId) {
-        cart = cart.filter(item => item.cartId !== cartId);
-        document.getElementById('cart-count').innerText = cart.length;
-        ouvrirPanier();
-    }
-
-    function ouvrirPanier() {
-        document.getElementById('cartModal').classList.add('active');
-        const itemsDiv = document.getElementById('cart-items');
-        const form = document.getElementById('checkout-form');
-        if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 text-gray-400'>Votre panier est vide.</p>"; form.style.display = "none"; return; }
-        itemsDiv.innerHTML = cart.map(item => `<div class="flex justify-between items-center border-b pb-2"><div class="text-[11px] uppercase"><p class="font-bold text-gray-700">${item.name}</p><p class="text-orange-500">${item.price.toLocaleString()} F</p></div><button onclick="supprimerDuPanier(${item.cartId})" class="text-red-400"><i class="fa-solid fa-trash-can"></i></button></div>`).join('');
-        form.style.display = "block";
-        majResume();
-    }
-
-    function appliquerPromo() {
-        const input = document.getElementById('coupon-input').value.toUpperCase();
-        if (codesValides[input]) {
-            let totalBrut = cart.reduce((acc, curr) => acc + curr.price, 0);
-            remiseCodePromo = codesValides[input] < 1 ? totalBrut * codesValides[input] : codesValides[input];
-            couponApplique = true;
-            document.getElementById('coupon-msg').innerText = "RÉDUCTION ACTIVÉE !";
-            majResume();
-        } else { alert("Code invalide"); }
-    }
-
-    function majResume() {
-        const nom = document.getElementById('nom-client').value || "...";
-        const quartier = document.getElementById('tel-client').value || "...";
-        const pay = document.getElementById('mode-pay').value;
-        let brut = cart.reduce((acc, curr) => acc + curr.price, 0);
-        let total = brut;
-        if (brut >= 20000 && new Date().getTime() >= new Date("2026-02-14").getTime()) total *= 0.8;
-        if (couponApplique) total -= remiseCodePromo;
-        document.getElementById('resume-final').innerHTML = `<div class="bg-white p-2 rounded border border-orange-100"><p class="font-bold text-black uppercase text-[10px]">👤 CLIENT : ${nom}</p><p class="text-gray-600 italic text-[10px]">📍 LIEU : ${quartier}</p><p class="font-bold text-[#ff6600] text-[10px]">💳 PAIEMENT : ${pay}</p></div>`;
-        document.getElementById('total-display').innerText = Math.max(0, total).toLocaleString();
-    }
-
-    function toggleBouton() {
-        const isChecked = document.getElementById('check-verif').checked;
-        const btn = document.getElementById('btn-final');
-        btn.className = isChecked ? "w-full ali-gradient text-white py-4 rounded-full font-bold uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-bold uppercase shadow-lg";
-        btn.disabled = !isChecked;
-    }
-
-    // 4. FONCTION VALIDATION CORRIGÉE (Détails & Numéro fixés)
-    function validerCommande() {
-        const nom = document.getElementById('nom-client').value;
-        const quartier = document.getElementById('tel-client').value;
-        const email = document.getElementById('email-client').value;
-        const total = document.getElementById('total-display').innerText;
-        const pay = document.getElementById('mode-pay').value;
-
-        if(!nom || !quartier) return alert("Veuillez remplir votre nom et votre quartier !");
-
-        const btn = document.getElementById('btn-final');
-        btn.disabled = true;
-        btn.innerText = "⏳ Transmission...";
-
-        // ON GÉNÈRE LE NUMÉRO ICI
-        const numCommande = genererNumeroCommande();
-
-        // 1. Préparation de la liste des articles pour WhatsApp
-        let listeArticles = "";
-        cart.forEach((item, index) => {
-            listeArticles += `${index + 1}. ${item.name} (${item.price.toLocaleString()} F)%0A`;
-        });
-
-        // 2. Envoi Email
-        let emailPromise = Promise.resolve();
-        if(email && email.includes('@')) {
-            const params = {
-                order_id: numCommande,
-                client_name: nom,
-                delivery_address: quartier,
-                order_total: total,
-                payment_method: pay,
-                order_details: cart.map(i => i.name).join(", "),
-                to_email: email
-            };
-            emailPromise = emailjs.send('service_jxh29js', 'Template_wv2gv2s', params);
+        // 2. Logique du Numéro de Commande
+        function genererNumeroCommande() {
+            let dernier = localStorage.getItem('last_cmd_id') || 0;
+            let nouveau = parseInt(dernier) + 1;
+            localStorage.setItem('last_cmd_id', nouveau);
+            return "CMD#" + nouveau;
         }
 
-        // 3. Ouverture WhatsApp APPRÈS l'Email
-        emailPromise.finally(() => {
-            let messageWhatsApp = `*NOUVELLE COMMANDE ${numCommande}*%0A` +
-                                 `----------------------------%0A` +
-                                 `👤 *CLIENT:* ${nom}%0A` +
-                                 `📍 *LIEU:* ${quartier}%0A` +
-                                 `💳 *PAIEMENT:* ${pay}%0A` +
-                                 `----------------------------%0A` +
-                                 `🛍️ *ARTICLES:*%0A${listeArticles}` +
-                                 `----------------------------%0A` +
-                                 `💰 *TOTAL: ${total} F*`;
+        // 3. Fonctions du Panier
+        function render(filter = 'tous') {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
+                <div class="product-card p-3" onclick="ajouter(${p.id})">
+                    <img src="${p.img}" class="h-40 w-full object-cover rounded mb-2">
+                    <h3 class="text-[11px] font-medium line-clamp-2 h-8 mb-1 uppercase">${p.name}</h3>
+                    <div class="text-[#ff6600] font-bold text-lg">${p.price.toLocaleString()} F</div>
+                    <div class="text-gray-400 line-through text-[10px] mb-2">${p.old.toLocaleString()} F</div>
+                    <div class="mt-auto flex justify-between items-center text-[10px]">
+                        <span class="text-yellow-500">★ ${p.note}</span>
+                        <span class="bg-orange-50 text-[#ff6600] px-2 py-1 rounded font-bold italic">AJOUTER</span>
+                    </div>
+                </div>`).join('');
+        }
 
-            setTimeout(() => {
-                window.open(`https://wa.me/2250709002881?text=${messageWhatsApp}`, '_blank');
-                
-                alert("La commande " + numCommande + " est prête à être envoyée sur WhatsApp !");
-                
-                // Réinitialisation
-                cart = [];
-                document.getElementById('cart-count').innerText = 0;
-                document.getElementById('cartModal').classList.remove('active');
-                btn.disabled = false;
-                btn.innerText = "Finaliser via WhatsApp";
-            }, 1000);
-        });
-    }
+        function ajouter(id) {
+            cart.push({...products.find(p => p.id === id), cartId: Date.now()});
+            document.getElementById('cart-count').innerText = cart.length;
+            alert("Ajouté au panier !");
+        }
 
-    function suivreColis() {
-        let n = prompt("N° de commande (ex: CMD#1) :");
-        if(n) window.open(`https://wa.me/2250709002881?text=Bonjour, je souhaite suivre ma commande ${n}`);
-    }
+        function supprimerDuPanier(cartId) {
+            cart = cart.filter(item => item.cartId !== cartId);
+            document.getElementById('cart-count').innerText = cart.length;
+            ouvrirPanier();
+        }
 
-    render();
-</script>
+        function ouvrirPanier() {
+            document.getElementById('cartModal').classList.add('active');
+            const itemsDiv = document.getElementById('cart-items');
+            const form = document.getElementById('checkout-form');
+            if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 text-gray-400'>Panier vide.</p>"; form.style.display = "none"; return; }
+            itemsDiv.innerHTML = cart.map(item => `<div class="flex justify-between items-center border-b pb-2"><div class="text-[11px] uppercase"><p class="font-bold text-gray-700">${item.name}</p><p class="text-orange-500">${item.price.toLocaleString()} F</p></div><button onclick="supprimerDuPanier(${item.cartId})" class="text-red-400"><i class="fa-solid fa-trash-can"></i></button></div>`).join('');
+            form.style.display = "block";
+            majResume();
+        }
 
+        function appliquerPromo() {
+            const input = document.getElementById('coupon-input').value.toUpperCase();
+            if (codesValides[input]) {
+                let totalBrut = cart.reduce((acc, curr) => acc + curr.price, 0);
+                remiseCodePromo = codesValides[input] < 1 ? totalBrut * codesValides[input] : codesValides[input];
+                couponApplique = true;
+                document.getElementById('coupon-msg').innerText = "RÉDUCTION APPLIQUÉE !";
+                majResume();
+            } else { alert("Code invalide"); }
+        }
+
+        function majResume() {
+            const nom = document.getElementById('nom-client').value || "...";
+            const quartier = document.getElementById('tel-client').value || "...";
+            const pay = document.getElementById('mode-pay').value;
+            let brut = cart.reduce((acc, curr) => acc + curr.price, 0);
+            let total = brut;
+            if (brut >= 20000 && new Date().getTime() >= new Date("2026-02-14").getTime()) total *= 0.8;
+            if (couponApplique) total -= remiseCodePromo;
+            document.getElementById('resume-final').innerHTML = `<div class="bg-white p-2 rounded border border-orange-100"><p class="font-bold text-black uppercase text-[10px]">👤 CLIENT : ${nom}</p><p class="text-gray-600 italic text-[10px]">📍 LIEU : ${quartier}</p><p class="font-bold text-[#ff6600] text-[10px]">💳 PAIEMENT : ${pay}</p></div>`;
+            document.getElementById('total-display').innerText = Math.max(0, total).toLocaleString();
+        }
+
+        function toggleBouton() {
+            const isChecked = document.getElementById('check-verif').checked;
+            const btn = document.getElementById('btn-final');
+            btn.className = isChecked ? "w-full ali-gradient text-white py-4 rounded-full font-bold uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-bold uppercase shadow-lg";
+            btn.disabled = !isChecked;
+        }
+
+        // 4. VALIDATION FINALE AVEC TOUS LES DÉTAILS
+        function validerCommande() {
+            const nom = document.getElementById('nom-client').value;
+            const quartier = document.getElementById('tel-client').value;
+            const email = document.getElementById('email-client').value;
+            const total = document.getElementById('total-display').innerText;
+            const pay = document.getElementById('mode-pay').value;
+
+            if(!nom || !quartier) return alert("Veuillez remplir votre nom et votre quartier.");
+
+            const btn = document.getElementById('btn-final');
+            btn.disabled = true;
+            btn.innerText = "⏳ Transmission...";
+
+            // GÉNÉRER LE NUMÉRO DE COMMANDE
+            const numCommande = genererNumeroCommande();
+
+            // CONSTRUIRE LA LISTE DES ARTICLES POUR WHATSAPP
+            let listePourWA = "";
+            cart.forEach((item, index) => {
+                listePourWA += `${index + 1}. ${item.name} (${item.price.toLocaleString()} F)%0A`;
+            });
+
+            // ENVOI EMAILJS AVEC ATTENTE
+            let emailPromise = Promise.resolve();
+            if(email && email.includes('@')) {
+                const params = {
+                    order_id: numCommande,
+                    client_name: nom,
+                    delivery_address: quartier,
+                    order_total: total,
+                    payment_method: pay,
+                    order_details: cart.map(i => i.name).join(", "),
+                    to_email: email
+                };
+                emailPromise = emailjs.send('service_jxh29js', 'Template_wv2gv2s', params);
+            }
+
+            // OUVERTURE WHATSAPP APRÈS L'EMAIL
+            emailPromise.finally(() => {
+                let messageWhatsApp = `*NOUVELLE COMMANDE ${numCommande}*%0A` +
+                                     `----------------------------%0A` +
+                                     `👤 *CLIENT:* ${nom}%0A` +
+                                     `📍 *LIEU:* ${quartier}%0A` +
+                                     `💳 *PAIEMENT:* ${pay}%0A` +
+                                     `----------------------------%0A` +
+                                     `🛍️ *ARTICLES:*%0A${listePourWA}` +
+                                     `----------------------------%0A` +
+                                     `💰 *TOTAL À PAYER: ${total} F*`;
+
+                setTimeout(() => {
+                    window.open(`https://wa.me/2250709002881?text=${messageWhatsApp}`, '_blank');
+                    
+                    alert("Commande " + numCommande + " prête !");
+                    
+                    // Reset
+                    cart = [];
+                    document.getElementById('cart-count').innerText = 0;
+                    document.getElementById('cartModal').classList.remove('active');
+                    btn.disabled = false;
+                    btn.innerText = "Finaliser via WhatsApp";
+                }, 1000);
+            });
+        }
+
+        function suivreColis() {
+            let n = prompt("N° de commande (ex: CMD#1) :");
+            if(n) window.open(`https://wa.me/2250709002881?text=Bonjour, je souhaite suivre l'état de ma commande ${n}`);
+        }
+
+        setInterval(() => {
+            const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
+            if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVE !"; return; }
+            const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+            document.getElementById('countdown').innerText = `${d}j ${h}h ${m}m ${s}s`;
+        }, 1000);
+
+        render();
+    </script>
 </body>
 </html>
