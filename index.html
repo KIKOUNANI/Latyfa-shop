@@ -208,26 +208,65 @@
         }
 
         function validerCommande() {
-            const nom = document.getElementById('nom-client').value;
-            const quartier = document.getElementById('tel-client').value;
-            const email = document.getElementById('email-client').value;
-            const total = document.getElementById('total-display').innerText;
-            const pay = document.getElementById('mode-pay').value;
+    const nom = document.getElementById('nom-client').value;
+    const quartier = document.getElementById('tel-client').value;
+    const email = document.getElementById('email-client').value;
+    const total = document.getElementById('total-display').innerText;
+    const pay = document.getElementById('mode-pay').value;
 
-            if(!nom || !quartier) return alert("Veuillez remplir les champs obligatoires (*)");
+    if(!nom || !quartier) return alert("Veuillez remplir votre nom et votre quartier !");
 
-            const numCommande = genererNumeroCommande();
+    // 1. Désactiver le bouton pour éviter les doubles clics
+    const btn = document.getElementById('btn-final');
+    btn.disabled = true;
+    btn.innerText = "Traitement en cours...";
 
-            if(email) {
-                const params = {
-                    order_id: numCommande,
-                    client_name: nom,
-                    delivery_address: quartier,
-                    order_total: total,
-                    payment_method: pay,
-                    order_details: cart.map(i => i.name).join(", "),
-                    to_email: email
-                };
+    const numCommande = genererNumeroCommande();
+
+    // 2. Envoi de l'Email avec promesse de réussite
+    let emailPromesse = Promise.resolve(); // Par défaut, on continue même sans email
+    
+    if(email && email.includes('@')) {
+        const params = {
+            order_id: numCommande,
+            client_name: nom,
+            delivery_address: quartier,
+            order_total: total,
+            payment_method: pay,
+            order_details: cart.map(i => i.name).join(", "),
+            to_email: email
+        };
+        // On stocke la promesse d'envoi d'email
+        emailPromesse = emailjs.send('service_jxh29js', 'Template_wv2gv2s', params);
+    }
+
+    // 3. On attend que l'email soit envoyé (ou l'échec) AVANT WhatsApp
+    emailPromesse.finally(() => {
+        // Préparation du message WhatsApp ultra-détaillé
+        let articlesListe = cart.map((i, index) => `${index + 1}. ${i.name} (${i.price.toLocaleString()} F)`).join('%0A');
+        
+        let entete = `*NOUVELLE COMMANDE ${numCommande}*%0A`;
+        let clientInfo = `👤 *CLIENT:* ${nom}%0A📍 *LIEU:* ${quartier}%0A💳 *PAIEMENT:* ${pay}%0A`;
+        let articlesInfo = `%0A🛍️ *ARTICLES:*%0A${articlesListe}%0A`;
+        let totalInfo = `%0A💰 *TOTAL À PAYER: ${total} F*`;
+
+        let msgFinal = entete + clientInfo + articlesInfo + totalInfo;
+
+        // Petite pause visuelle pour l'utilisateur
+        setTimeout(() => {
+            window.open(`https://wa.me/2250709002881?text=${msgFinal}`, '_blank');
+            
+            // Réinitialisation après ouverture de l'onglet
+            alert("Merci ! Votre commande " + numCommande + " a été transmise.");
+            cart = [];
+            document.getElementById('cart-count').innerText = 0;
+            document.getElementById('cartModal').classList.remove('active');
+            btn.disabled = false;
+            btn.innerText = "Finaliser via WhatsApp";
+        }, 1500); // 1.5 seconde de sécurité supplémentaire
+    });
+}
+  };
                 emailjs.send('service_jxh29js', 'Template_wv2gv2s', params);
             }
 
