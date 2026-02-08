@@ -388,5 +388,38 @@ render();
 
         render();
     </script>
+        <script>
+        // 1. L'initialisation EmailJS (Toujours en premier)
+        (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
+
+        // 2. Ta base de produits
+        const products = [
+            { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", note: 4.8 },
+            { id: 2, cat: "bijoux", name: "Collier Perle d'Or", price: 25000, old: 30000, img: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", note: 5.0 }
+        ];
+
+        let cart = [];
+
+        // 3. LA NOUVELLE FONCTION DE NUMÉROTATION (À insérer ici)
+        function genererNumeroCommande() {
+            let dernierNumero = localStorage.getItem('last_cmd_id') || 0;
+            let nouveauNumero = parseInt(dernierNumero) + 1;
+            localStorage.setItem('last_cmd_id', nouveauNumero);
+            return "CMD#" + nouveauNumero;
+        }
+
+        // 4. Tes autres fonctions (render, ajouter, majResume...)
+
+        function validerCommande() {
+            // ... (Ici on appelle genererNumeroCommande)
+        }
+
+        // ... Le reste de tes fonctions ...
+
+        render(); // Toujours à la fin pour lancer l'affichage
+    </script>
+</body>
+</html>
+
 </body>
 </html>
