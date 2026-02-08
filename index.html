@@ -271,7 +271,25 @@
                 </div>
                 <div class="flex justify-between font-bold text-lg p-2 border-b-2">
                     <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
-                </div><button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
+                </div><button id="btn-final" onclick="validerCommande(){
+    // 1. On récupère les infos (Vérifie bien que ces noms de variables existent chez toi)
+    const nomClient = document.getElementById('nom-client').value;
+    const totalVente = total; // La variable de ton prix total
+    const contenuPanier = cart.map(item => item.name).join(", "); // La liste des produits
+
+    // 2. LE CODE MAGIQUE À AJOUTER :
+    const nouvelleCommande = {
+        nom: nomClient,
+        panier: contenuPanier,
+        total: totalVente,
+        date: new Date().toLocaleDateString('fr-FR'),
+        heure: new Date().toLocaleTimeString('fr-FR')
+    };
+
+    // On récupère l'ancien historique, on ajoute la nouvelle commande, et on enregistre
+    let historique = JSON.parse(localStorage.getItem('latyya_commandes') || "[]");
+    historique.push(nouvelleCommande);
+    localStorage.setItem('latyya_commandes', JSON.stringify(historique));" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
             </div/>
             </div>
             <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
