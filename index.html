@@ -277,20 +277,50 @@
     const totalVente = total; // La variable de ton prix total
     const contenuPanier = cart.map(item => item.name).join(", "); // La liste des produits
 
-    // 2. LE CODE MAGIQUE À AJOUTER :
-    const nouvelleCommande = {
-        nom: nomClient,
-        panier: contenuPanier,
-        total: totalVente,
-        date: new Date().toLocaleDateString('fr-FR'),
-        heure: new Date().toLocaleTimeString('fr-FR')
-    };
+    function validerCommande() {
+    try {
+        // 1. RÉCUPÉRATION DES INFOS (avec noms de secours)
+        const nomElement = document.getElementById('nom-client') || document.getElementById('nom');
+        const nomClient = nomElement ? nomElement.value : "Client inconnu";
+        
+        // On vérifie si ton panier s'appelle 'cart' ou 'panier'
+        const monPanier = (typeof cart !== 'undefined') ? cart : (typeof panier !== 'undefined' ? panier : []);
+        const totalVente = (typeof total !== 'undefined') ? total : "0";
 
-    // On récupère l'ancien historique, on ajoute la nouvelle commande, et on enregistre
-    let historique = JSON.parse(localStorage.getItem('latyya_commandes') || "[]");
-    historique.push(nouvelleCommande);
-    localStorage.setItem('latyya_commandes', JSON.stringify(historique));" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
-            </div/>
+        // 2. SAUVEGARDE DANS L'ADMIN (avec sécurité try/catch)
+        try {
+            const nouvelleCommande = {
+                nom: nomClient,
+                panier: monPanier.map(item => item.name || item.nom).join(", "),
+                total: totalVente,
+                date: new Date().toLocaleDateString('fr-FR'),
+                heure: new Date().toLocaleTimeString('fr-FR')
+            };
+
+            let historique = JSON.parse(localStorage.getItem('latyya_commandes') || "[]");
+            historique.push(nouvelleCommande);
+            localStorage.setItem('latyya_commandes', JSON.stringify(historique));
+        } catch (e) {
+            console.log("Erreur de sauvegarde admin, mais on continue vers WhatsApp...");
+        }
+
+        // 3. ENVOI VERS WHATSAPP (Ton code de message actuel)
+        // Remplace '2250709002881' par ton vrai numéro
+        let message = `Bonjour LATYFA, je suis ${nomClient}.\nVoici ma commande :\n`;
+        monPanier.forEach(item => {
+            message += `- ${item.name || item.nom}\n`;
+        });
+        message += `\nTotal : ${totalVente} FCFA`;
+
+        const url = `https://wa.me/2250709002881?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+
+    } catch (error) {
+        alert("Une erreur est survenue, mais vous pouvez nous contacter directement sur WhatsApp.");
+        console.error(error);
+    }
+}
+
             </div>
             <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
         </div>
