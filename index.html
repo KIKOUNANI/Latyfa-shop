@@ -66,17 +66,21 @@
             <button onclick="openInfo('policy')" class="block w-full text-left border-b pb-3 text-[11px]">🛡️ Retours</button>
             <button onclick="openInfo('condition')" class="block w-full text-left border-b pb-3 text-[11px]">💰 Remboursement</button>
             <button onclick="openInfo('web')" class="block w-full text-left border-b pb-3 text-[11px] text-orange-600">🚀 Créer mon site</button>
+            
+            <div class="pt-4 space-y-4 normal-case">
+                <p class="text-[10px] text-gray-400 font-black uppercase">Suivez-nous</p>
+                <a href="#" class="block text-xs">📸 Instagram</a>
+                <a href="#" class="block text-xs">⚫ TikTok</a>
+                <a href="https://wa.me/2250709002881" class="block text-xs text-green-600 font-black italic">💬 WhatsApp Service</a>
+            </div>
         </nav>
     </div>
 
-    <div id="modal-product" class="layer">
-        <div class="bg-white w-full max-w-md rounded-3xl p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModals()" class="absolute top-4 right-4 text-xl z-10">✕</button>
-            <div id="product-detail-content"></div>
-        </div>
-    </div>
-
+    <div id="modal-product" class="layer"><div class="bg-white w-full max-w-md rounded-3xl p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto"><button onclick="closeModals()" class="absolute top-4 right-4 text-xl z-10">✕</button><div id="product-detail-content"></div></div></div>
+    
     <div id="modal-info" class="layer"><div class="bg-white w-full max-w-md rounded-3xl p-8 relative shadow-2xl"><button onclick="closeModals()" class="absolute top-4 right-4 text-xl">✕</button><h2 id="info-title" class="font-black text-xl mb-4 text-orange-600 uppercase italic"></h2><div id="info-content" class="text-[11px] leading-relaxed text-gray-700 space-y-4"></div></div></div>
+
+    <div id="modal-review" class="layer"><div class="bg-white w-full max-w-sm rounded-3xl p-6 relative shadow-2xl"><button onclick="closeModals()" class="absolute top-4 right-4">✕</button><h2 class="font-black text-lg text-orange-600 mb-4 uppercase italic">Votre Avis</h2><textarea id="rev-text" placeholder="Votre commentaire..." class="w-full p-3 bg-gray-50 rounded-xl border h-24 mb-4 outline-none focus:border-orange-500 font-bold text-sm"></textarea><button onclick="sendReviewWhatsApp()" class="w-full bg-green-600 text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs">Envoyer via WhatsApp</button></div></div>
 
     <div id="modal-cart" class="layer">
         <div class="bg-white w-full max-w-md rounded-3xl p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -93,16 +97,16 @@
 
     <script>
         const products = [
-            { id: 1, cat: "Vêtement", nom: "Robe Satin Royale", prix: 45000, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500", desc: "Robe en soie de Turquie, texture satinée fluide.", tailles: ["S", "M", "L", "XL"], couleurs: [{nom: "Bleu", code: "#1a237e"}], avis: [] },
+            { id: 1, cat: "Vêtement", nom: "Robe Satin Royale", prix: 45000, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500", desc: "Robe en soie de Turquie, texture satinée fluide.", tailles: ["S", "M", "L", "XL"], couleurs: [{nom: "Bleu", code: "#1a237e"}], avis: [{user: "Fanta", comm: "Top !"}] },
             { id: 2, cat: "Chaussures", nom: "Escarpins Crystal Luxe", prix: 35000, img: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?w=500", desc: "Escarpins raffinés sourcing Turquie.", tailles: ["37", "38", "39"], couleurs: [{nom: "Argent", code: "#c0c0c0"}], avis: [] },
             { id: 3, cat: "Bijoux", nom: "Boucles & Bracelet", prix: 7000, imgs:["https://i.postimg.cc/8cNxnQnv/1770343052871.png", "https://i.postimg.cc/LsqTRCZ6/IMG-20260207-WA0006.jpg"], desc: "Ensemble moderne bijoux pour dame.", tailles: ["Standard"], couleurs: [{nom: "Vert menthe", code: "#98FF98"}, {nom: "rouge rubis", code: "#E0115F"}], avis: [] }
         ];
 
         const INFO_TEXTS = {
-            about: { title: "À Propos", content: "Latyfa shop est une boutique en ligne et physique située à Abobo, dirigée par Mme Traoré Djeneba." },
-            policy: { title: "Retours", content: "Délai 72h pour signaler un problème." },
-            condition: { title: "Remboursement", content: "Remplacement possible si défaut constaté." },
-            web: { title: "Site Web", content: "Contactez le développeur : 05 06 11 32 92." }
+            about: { title: "À Propos", content: "Latyfa shop est une boutique en ligne et physique située à Abobo, dirigée par Mme Traoré Djeneba. Nous fournissons des produits de qualité depuis Février 2026." },
+            policy: { title: "Retours", content: "Tout article livré ne fera pas l'objet d'un remboursement sauf erreur de notre part (Délai 72h)." },
+            condition: { title: "Remboursement", content: "Remplacement si l'article est défectueux par notre responsabilité. En cas de désistement client, échange possible mais non remboursable." },
+            web: { title: "Création de Site", content: "Besoin d'un site pour votre business ? Contactez-nous au : 05 06 11 32 92." }
         };
 
         let cart = [];
@@ -113,7 +117,6 @@
             const grid = document.getElementById('grid');
             const filtered = currentCategory === "Tous" ? products : products.filter(p => p.cat === currentCategory);
             grid.innerHTML = filtered.map(p => {
-                // Utilise la première image de imgs ou l'image img par défaut
                 const mainImg = p.imgs ? p.imgs[0] : p.img;
                 return `
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100" onclick="viewProduct(${p.id})">
@@ -127,62 +130,37 @@
 
         function viewProduct(id) {
             const p = products.find(x => x.id === id);
-            selectedSize = null; 
-            selectedColor = null;
-
+            selectedSize = null; selectedColor = null;
             const imagesToDisplay = p.imgs ? p.imgs : [p.img];
+            const avisHtml = p.avis && p.avis.length ? p.avis.map(a => `<p class="text-[10px] italic text-gray-500 border-b pb-1">"${a.comm}"</p>`).join('') : '<p class="text-[10px] italic text-gray-400">Aucun avis pour le moment.</p>';
             
             const thumbnailsHtml = imagesToDisplay.map((url, i) => `
-                <img src="${url}" 
-                     onclick="changeMainImg('${url}', this)" 
+                <img src="${url}" onclick="changeMainImg('${url}', this)" 
                      class="thumb w-14 h-14 object-cover rounded-lg border-2 border-transparent opacity-60 cursor-pointer transition-all ${i === 0 ? 'active' : ''}"
-                     style="${i === 0 ? 'border-color: #ff4d00; opacity: 1;' : ''}"
-                >
+                     style="${i === 0 ? 'border-color: #ff4d00; opacity: 1;' : ''}">
             `).join('');
 
             document.getElementById('product-detail-content').innerHTML = `
                 <img id="main-product-img" src="${imagesToDisplay[0]}" class="w-full rounded-2xl mb-4 aspect-square object-cover shadow-sm">
-                
-                <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar">
-                    ${thumbnailsHtml}
-                </div>
-
-                <h2 class="font-black text-lg uppercase italic text-orange-600 leading-tight">${p.nom}</h2>
+                <div class="flex gap-2 mb-6 overflow-x-auto no-scrollbar">${thumbnailsHtml}</div>
+                <h2 class="font-black text-lg uppercase italic text-orange-600">${p.nom}</h2>
                 <p class="text-sm font-black mb-4">${p.prix.toLocaleString()} F CFA</p>
-                
+                <div class="mb-4"><h4 class="text-[9px] font-black text-gray-400 uppercase mb-2">Couleur</h4><div class="flex gap-3">${p.couleurs.map(c => `<button onclick="selectOpt(this, 'color', '${c.nom}')" class="color-dot w-8 h-8 rounded-full border border-gray-200" style="background:${c.code}"></button>`).join('')}</div></div>
+                <div class="mb-4"><h4 class="text-[9px] font-black text-gray-400 uppercase mb-2">Taille / Pointure</h4><div class="flex flex-wrap gap-2">${p.tailles.map(s => `<button onclick="selectOpt(this, 'size', '${s}')" class="option-btn border-2 border-gray-100 rounded-lg px-3 py-2 text-[10px] font-black">${s}</button>`).join('')}</div></div>
+                <div class="bg-gray-50 p-3 rounded-xl mb-4 text-[10px] text-gray-600 leading-relaxed">${p.desc}</div>
                 <div class="mb-4">
-                    <h4 class="text-[9px] font-black text-gray-400 uppercase mb-2">Couleur</h4>
-                    <div class="flex gap-3">
-                        ${p.couleurs.map(c => `<button onclick="selectOpt(this, 'color', '${c.nom}')" class="color-dot w-8 h-8 rounded-full border border-gray-200" style="background:${c.code}"></button>`).join('')}
-                    </div>
+                    <div class="flex justify-between mb-2"><h4 class="text-[9px] font-black text-gray-400 uppercase">Avis</h4><button onclick="document.getElementById('modal-review').classList.add('active')" class="text-[9px] font-black text-orange-600 underline">LAISSER UN AVIS</button></div>
+                    ${avisHtml}
                 </div>
-
-                <div class="mb-4">
-                    <h4 class="text-[9px] font-black text-gray-400 uppercase mb-2">Taille / Pointure</h4>
-                    <div class="flex flex-wrap gap-2">
-                        ${p.tailles.map(s => `<button onclick="selectOpt(this, 'size', '${s}')" class="option-btn border-2 border-gray-100 rounded-lg px-3 py-2 text-[10px] font-black">${s}</button>`).join('')}
-                    </div>
-                </div>
-
-                <div class="bg-gray-50 p-4 rounded-xl mb-6 text-[11px] text-gray-600 leading-relaxed italic">
-                    ${p.desc}
-                </div>
-
-                <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl">
-                    Ajouter au Panier
-                </button>
+                <button onclick="addToCart(${p.id})" class="w-full bg-black text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest">Ajouter au Panier</button>
             `;
             document.getElementById('modal-product').classList.add('active');
         }
 
         function changeMainImg(url, el) {
             document.getElementById('main-product-img').src = url;
-            document.querySelectorAll('.thumb').forEach(t => {
-                t.style.borderColor = 'transparent';
-                t.style.opacity = '0.6';
-            });
-            el.style.borderColor = '#ff4d00';
-            el.style.opacity = '1';
+            document.querySelectorAll('.thumb').forEach(t => { t.style.borderColor = 'transparent'; t.style.opacity = '0.6'; });
+            el.style.borderColor = '#ff4d00'; el.style.opacity = '1';
         }
 
         function filterProducts(cat) {
@@ -221,6 +199,7 @@
         function removeFromCart(idx) { cart.splice(idx,1); updateCartUI(); document.getElementById('cart-count').innerText = cart.length; }
         function toggleMenu() { document.getElementById('side-menu').classList.toggle('active'); document.getElementById('menu-overlay').classList.toggle('active'); }
         function closeModals() { document.querySelectorAll('.layer').forEach(l => l.classList.remove('active')); }
+        function sendReviewWhatsApp() { window.open(`https://wa.me/2250709002881?text=${encodeURIComponent("Avis Client: " + document.getElementById('rev-text').value)}`); }
         function handleCheckout() { 
             const n = document.getElementById('c-nom').value; if(!n || cart.length === 0) return alert("Infos manquantes.");
             const msg = `🌟 COMMANDE LATYFA 🌟\n👤 CLIENT: ${n}\n📦 ARTICLES:\n${cart.map(i => `- ${i.nom} (${i.selectedColor}, ${i.selectedSize})`).join('\n')}\n💰 TOTAL: ${document.getElementById('final-total').innerText}`;
