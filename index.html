@@ -112,7 +112,6 @@
     </div>
 
     <script>
-        // 1. Initialisation Configuration
         (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
 
         const products = [
@@ -125,7 +124,6 @@
         let couponApplique = false;
         const codesValides = { "LATYYA26": 0.10, "PROMO5000": 5000 };
 
-        // 2. Logique du Numéro de Commande
         function genererNumeroCommande() {
             let dernier = localStorage.getItem('last_cmd_id') || 0;
             let nouveau = parseInt(dernier) + 1;
@@ -133,7 +131,6 @@
             return "CMD#" + nouveau;
         }
 
-        // 3. Fonctions du Panier
         function render(filter = 'tous') {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
@@ -152,7 +149,7 @@
         function ajouter(id) {
             cart.push({...products.find(p => p.id === id), cartId: Date.now()});
             document.getElementById('cart-count').innerText = cart.length;
-            alert("Ajouté au panier !");
+            alert("Ajouté !");
         }
 
         function supprimerDuPanier(cartId) {
@@ -201,7 +198,6 @@
             btn.disabled = !isChecked;
         }
 
-        // 4. VALIDATION FINALE AVEC TOUS LES DÉTAILS
         function validerCommande() {
             const nom = document.getElementById('nom-client').value;
             const quartier = document.getElementById('tel-client').value;
@@ -209,73 +205,73 @@
             const total = document.getElementById('total-display').innerText;
             const pay = document.getElementById('mode-pay').value;
 
-            if(!nom || !quartier) return alert("Veuillez remplir votre nom et votre quartier.");
+            if(!nom || !quartier) return alert("Veuillez remplir votre nom et votre quartier !");
 
             const btn = document.getElementById('btn-final');
             btn.disabled = true;
-            btn.innerText = "⏳ Transmission...";
+            btn.innerText = "Traitement...";
 
-            // GÉNÉRER LE NUMÉRO DE COMMANDE
-            const numCommande = genererNumeroCommande();
+            // 1. GÉNÉRER LE NUMÉRO DE COMMANDE
+            const num = genererNumeroCommande();
 
-            // CONSTRUIRE LA LISTE DES ARTICLES POUR WHATSAPP
-            let listePourWA = "";
-            cart.forEach((item, index) => {
-                listePourWA += `${index + 1}. ${item.name} (${item.price.toLocaleString()} F)%0A`;
-            });
+            // 2. CONSTRUIRE LA LISTE DES ARTICLES (Boucle sécurisée)
+            let maListe = "";
+            for(let i=0; i < cart.length; i++) {
+                maListe += (i+1) + ". " + cart[i].name + " (" + cart[i].price.toLocaleString() + " F)%0A";
+            }
 
-            // ENVOI EMAILJS AVEC ATTENTE
+            // 3. CONSTRUCTION DU MESSAGE WHATSAPP (Concaténation classique)
+            let msgWA = "*NOUVELLE COMMANDE " + num + "*%0A";
+            msgWA += "----------------------------%0A";
+            msgWA += "👤 *CLIENT:* " + nom + "%0A";
+            msgWA += "📍 *LIEU:* " + quartier + "%0A";
+            msgWA += "💳 *PAIEMENT:* " + pay + "%0A";
+            msgWA += "----------------------------%0A";
+            msgWA += "🛍️ *ARTICLES:*%0A" + maListe;
+            msgWA += "----------------------------%0A";
+            msgWA += "💰 *TOTAL: " + total + " F*";
+
+            // 4. ENVOI EMAILJS AVEC ATTENTE
             let emailPromise = Promise.resolve();
             if(email && email.includes('@')) {
-                const params = {
-                    order_id: numCommande,
+                emailPromise = emailjs.send('service_jxh29js', 'Template_wv2gv2s', {
+                    order_id: num,
                     client_name: nom,
                     delivery_address: quartier,
                     order_total: total,
                     payment_method: pay,
                     order_details: cart.map(i => i.name).join(", "),
                     to_email: email
-                };
-                emailPromise = emailjs.send('service_jxh29js', 'Template_wv2gv2s', params);
+                });
             }
 
-            // OUVERTURE WHATSAPP APRÈS L'EMAIL
-            emailPromise.finally(() => {
-                let messageWhatsApp = `*NOUVELLE COMMANDE ${numCommande}*%0A` +
-                                     `----------------------------%0A` +
-                                     `👤 *CLIENT:* ${nom}%0A` +
-                                     `📍 *LIEU:* ${quartier}%0A` +
-                                     `💳 *PAIEMENT:* ${pay}%0A` +
-                                     `----------------------------%0A` +
-                                     `🛍️ *ARTICLES:*%0A${listePourWA}` +
-                                     `----------------------------%0A` +
-                                     `💰 *TOTAL À PAYER: ${total} F*`;
-
-                setTimeout(() => {
-                    window.open(`https://wa.me/2250709002881?text=${messageWhatsApp}`, '_blank');
+            // 5. OUVERTURE WHATSAPP APRÈS EMAIL
+            emailPromise.finally(function() {
+                setTimeout(function() {
+                    window.open("https://wa.me/2250709002881?text=" + msgWA, "_blank");
                     
-                    alert("Commande " + numCommande + " prête !");
+                    alert("Commande " + num + " validée !");
                     
                     // Reset
                     cart = [];
                     document.getElementById('cart-count').innerText = 0;
                     document.getElementById('cartModal').classList.remove('active');
                     btn.disabled = false;
-                    btn.innerText = "Finaliser via WhatsApp";
+                    btn.innerText = "Confirmer sur WhatsApp";
                 }, 1000);
             });
         }
 
         function suivreColis() {
             let n = prompt("N° de commande (ex: CMD#1) :");
-            if(n) window.open(`https://wa.me/2250709002881?text=Bonjour, je souhaite suivre l'état de ma commande ${n}`);
+            if(n) window.open("https://wa.me/2250709002881?text=Bonjour, je souhaite suivre l'état de ma commande " + n);
         }
 
         setInterval(() => {
             const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
-            if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVE !"; return; }
+            if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
             const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-            document.getElementById('countdown').innerText = `${d}j ${h}h ${m}m ${s}s`;
+            document.getElementById('countdown').innerText = d + "j " + h + "h " + m + "m " + s + "s";
         }, 1000);
 
         render();
