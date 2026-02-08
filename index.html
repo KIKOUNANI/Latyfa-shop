@@ -11,7 +11,7 @@
         :root { --ali-orange: #ff6600; }
         body { background-color: #f4f4f4; font-family: sans-serif; margin: 0; }
         .ali-gradient { background: linear-gradient(90deg, #ff6600 0%, #ff9900 100%); }
-        .product-card { background: white; border-radius: 8px; border: 1px solid transparent; height: 100%; display: flex; flex-direction: column; cursor: pointer; }
+        .product-card { background: white; border-radius: 8px; border: 1px solid transparent; height: 100%; display: flex; flex-direction: column; cursor: pointer; transition: 0.2s; }
         .product-card:hover { border-color: var(--ali-orange); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: white; overflow-y: auto; padding: 20px; }
         .modal.active { display: block; }
@@ -33,12 +33,12 @@
             <div class="flex gap-6">
                 <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
                     <i class="fa-solid fa-truck text-gray-600"></i>
-                    <p class="text-[9px] font-bold">SUIVI</p>
+                    <p class="text-[9px] font-bold uppercase">Suivi</p>
                 </div>
                 <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
                     <i class="fa-solid fa-cart-shopping text-gray-600"></i>
                     <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
-                    <p class="text-[9px] font-bold uppercase">PANIER</p>
+                    <p class="text-[9px] font-bold uppercase">Panier</p>
                 </div>
             </div>
         </div>
@@ -46,9 +46,9 @@
 
     <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
         <aside class="w-full md:w-64 bg-white rounded-lg p-4 shadow-sm h-fit">
-            <h3 class="font-bold border-b pb-2 mb-4 text-xs uppercase text-[#ff6600]">Catégories</h3>
+            <h3 class="font-bold border-b pb-2 mb-4 text-xs uppercase text-[#ff6600]">Rayons</h3>
             <div class="flex flex-col gap-3 text-sm text-gray-600">
-                <span class="hover:text-[#ff6600] cursor-pointer" onclick="render('tous')">Toutes les offres</span>
+                <span class="hover:text-[#ff6600] cursor-pointer font-medium" onclick="render('tous')">Tout voir</span>
                 <span class="hover:text-[#ff6600] cursor-pointer" onclick="render('bijoux')">Bijoux</span>
                 <span class="hover:text-[#ff6600] cursor-pointer" onclick="render('habillement')">Habillement</span>
                 <span class="hover:text-[#ff6600] cursor-pointer" onclick="render('chaussures')">Chaussures</span>
@@ -63,24 +63,23 @@
 
     <div id="cartModal" class="modal">
         <div class="max-w-md mx-auto">
-            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase">Ma Commande</h2>
+            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Récapitulatif</h2>
             <div id="cart-items" class="space-y-4 mb-6"></div>
             
             <div id="checkout-form" style="display:none;" class="border-t pt-4">
                 <div class="mb-4 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                    <p class="text-[10px] font-bold text-gray-500 uppercase mb-2">Bon de réduction</p>
                     <div class="flex gap-2">
-                        <input type="text" id="coupon-input" placeholder="CODE" class="flex-1 p-2 border rounded text-xs uppercase">
-                        <button onclick="appliquerPromo()" class="bg-gray-800 text-white px-3 py-2 rounded text-[10px] font-bold">OK</button>
+                        <input type="text" id="coupon-input" placeholder="CODE PROMO" class="flex-1 p-2 border rounded text-xs uppercase outline-none">
+                        <button onclick="appliquerPromo()" class="bg-gray-800 text-white px-4 py-2 rounded text-[10px] font-bold">APPLIQUER</button>
                     </div>
-                    <p id="coupon-msg" class="text-[9px] mt-1 font-bold"></p>
+                    <p id="coupon-msg" class="text-[9px] mt-1 font-bold text-green-600"></p>
                 </div>
 
-                <h3 class="text-xs font-black uppercase mb-3 text-gray-400">Livraison & Contact</h3>
+                <h3 class="text-xs font-black uppercase mb-3 text-gray-400">Infos de livraison</h3>
                 <div class="space-y-3 mb-6">
                     <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded text-sm outline-none">
                     <input type="text" id="tel-client" oninput="majResume()" placeholder="Ville et Quartier *" class="w-full border p-3 rounded text-sm outline-none">
-                    <input type="email" id="email-client" placeholder="Email pour le reçu (Optionnel)" class="w-full border p-3 rounded text-sm outline-none">
+                    <input type="email" id="email-client" placeholder="Email pour le reçu (Facultatif)" class="w-full border p-3 rounded text-sm outline-none">
                     <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded text-sm bg-gray-50 font-bold">
                         <option value="WAVE">WAVE</option>
                         <option value="ORANGE MONEY">ORANGE MONEY</option>
@@ -89,14 +88,14 @@
                 </div>
 
                 <div class="mb-6 p-4 bg-orange-50 rounded-lg border-2 border-orange-200">
-                    <h3 class="text-[10px] font-black uppercase text-[#ff6600] mb-3 border-b border-orange-200 pb-1 italic">Vérification de vos infos</h3>
+                    <h3 class="text-[10px] font-black uppercase text-[#ff6600] mb-3 border-b border-orange-200 pb-1 italic">Vérification de sécurité</h3>
                     <div id="resume-final" class="space-y-2 text-[11px] text-gray-700"></div>
                 </div>
 
                 <div class="flex items-start gap-3 mb-6 p-3 bg-blue-50 rounded border border-blue-100">
                     <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 w-5 h-5 accent-[#ff6600]">
                     <label for="check-verif" class="text-[10px] font-bold text-blue-900 leading-tight">
-                        Je confirme que mon nom, mon quartier et mes articles sont corrects.
+                        Je confirme que ma commande et mon adresse sont correctes.
                     </label>
                 </div>
 
@@ -104,151 +103,17 @@
                     <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
                 </div>
                 
-                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-bold uppercase shadow-lg" disabled>
-                    Confirmer sur WhatsApp
+                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-bold uppercase shadow-lg transition-all" disabled>
+                    Finaliser via WhatsApp
                 </button>
             </div>
-            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold">Continuer mes achats</button>
+            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold text-center">Continuer les achats</button>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-(function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
-
-const products = [
-    { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", note: 4.8 },
-    { id: 2, cat: "bijoux", name: "Collier Perle d'Or", price: 25000, old: 30000, img: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", note: 5.0 }
-];
-
-let cart = [];
-let remiseCodePromo = 0;
-let couponApplique = false;
-
-// --- GESTION DU NUMÉRO DE COMMANDE ---
-function genererNumeroCommande() {
-    let dernierNumero = localStorage.getItem('last_cmd_id') || 0;
-    let nouveauNumero = parseInt(dernierNumero) + 1;
-    localStorage.setItem('last_cmd_id', nouveauNumero);
-    return "CMD#" + nouveauNumero;
-}
-
-function render(filter = 'tous') {
-    const grid = document.getElementById('product-grid');
-    grid.innerHTML = '';
-    products.forEach(p => {
-        if(filter === 'tous' || p.cat === filter) {
-            grid.innerHTML += `
-                <div class="product-card p-3" onclick="ajouter(${p.id})">
-                    <img src="${p.img}" class="h-40 w-full object-cover rounded mb-2">
-                    <h3 class="text-[11px] font-medium line-clamp-2 h-8 mb-1 uppercase">${p.name}</h3>
-                    <div class="text-[#ff6600] font-bold text-lg">${p.price.toLocaleString()} F</div>
-                    <div class="text-gray-400 line-through text-[10px] mb-2">${p.old.toLocaleString()} F</div>
-                    <div class="mt-auto flex justify-between items-center text-[10px]">
-                        <span class="text-yellow-500">★ ${p.note}</span>
-                        <span class="bg-orange-50 text-[#ff6600] px-2 py-1 rounded font-bold italic">AJOUTER</span>
-                    </div>
-                </div>`;
-        }
-    });
-}
-
-function ajouter(id) {
-    cart.push({...products.find(p => p.id === id), cartId: Date.now()});
-    document.getElementById('cart-count').innerText = cart.length;
-    alert("Ajouté !");
-}
-
-function supprimerDuPanier(cartId) {
-    cart = cart.filter(item => item.cartId !== cartId);
-    document.getElementById('cart-count').innerText = cart.length;
-    ouvrirPanier();
-}
-
-function toggleBouton() {
-    const isChecked = document.getElementById('check-verif').checked;
-    const btn = document.getElementById('btn-final');
-    btn.className = isChecked ? "w-full ali-gradient text-white py-4 rounded-full font-bold uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-bold uppercase shadow-lg";
-    btn.disabled = !isChecked;
-}
-
-function ouvrirPanier() {
-    document.getElementById('cartModal').classList.add('active');
-    const itemsDiv = document.getElementById('cart-items');
-    const form = document.getElementById('checkout-form');
-    if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 text-gray-400'>Panier vide.</p>"; form.style.display = "none"; return; }
-    
-    itemsDiv.innerHTML = cart.map(item => `
-        <div class="flex justify-between items-center border-b pb-2">
-            <div class="text-[11px] uppercase"><p class="font-bold text-gray-700">${item.name}</p><p class="text-orange-500">${item.price.toLocaleString()} F</p></div>
-            <button onclick="supprimerDuPanier(${item.cartId})" class="text-red-400"><i class="fa-solid fa-trash-can"></i></button>
-        </div>`).join('');
-    
-    form.style.display = "block";
-    majResume();
-}
-
-function majResume() {
-    const nom = document.getElementById('nom-client').value || "...";
-    const quartier = document.getElementById('tel-client').value || "...";
-    const pay = document.getElementById('mode-pay').value;
-    let brut = cart.reduce((acc, curr) => acc + curr.price, 0);
-    let total = brut;
-    if (brut >= 20000 && new Date().getTime() >= new Date("2026-02-14").getTime()) total *= 0.8;
-
-    document.getElementById('resume-final').innerHTML = `
-        <div class="bg-white p-2 rounded border border-orange-100">
-            <p class="font-bold text-black uppercase text-[10px]">Client : ${nom}</p>
-            <p class="text-gray-600 italic text-[10px]">Lieu : ${ quartier}</p>
-            <p class="font-bold text-[#ff6600] text-[10px]">Paiement : ${pay}</p>
-        </div>`;
-    document.getElementById('total-display').innerText = Math.max(0, total).toLocaleString();
-}
-
-function validerCommande() {
-    const nom = document.getElementById('nom-client').value;
-    const quartier = document.getElementById('tel-client').value;
-    const email = document.getElementById('email-client').value;
-    const total = document.getElementById('total-display').innerText;
-
-    if(!nom || !quartier) return alert("Nom et quartier obligatoires !");
-
-    // GÉNÉRATION DU NUMÉRO UNIQUE
-    const numCommande = genererNumeroCommande();
-
-    // ENVOI EMAILJS
-    if(email) {
-        const params = {
-            order_id: numCommande, // Nouvelle variable pour ton mail
-            client_name: nom,
-            delivery_address: quartier,
-            order_total: total,
-            payment_method: document.getElementById('mode-pay').value,
-            order_details: cart.map(i => i.name).join(", "),
-            to_email: email
-        };
-        emailjs.send('service_jxh29js', 'Template_wv2gv2s', params);
-    }
-
-    // WHATSAPP AVEC NUMÉRO DE COMMANDE
-    let articlesWA = cart.map(i => `- ${i.name}`).join('%0A');
-    let msgWA = `COMMANDE ${numCommande}%0A--------------------------%0AClient: ${nom}%0ALieu: ${quartier}%0AArticles:%0A${articlesWA}%0ATotal: ${total} F`;
-    
-    alert("Commande " + numCommande + " enregistrée ! Redirection vers WhatsApp...");
-    window.open(`https://wa.me/2250709002881?text=${msgWA}`);
-    
-    // Vider le panier après commande
-    cart = [];
-    document.getElementById('cart-count').innerText = 0;
-    document.getElementById('cartModal').classList.remove('active');
-}
-
-function suivreColis() {
-    let n = prompt("Entrez votre numéro de commande (ex: CMD#1) :");
-    if(n) window.open(`https://wa.me/2250709002881?text=Bonjour, je souhaite suivre l'état de ma commande ${n}`);
-}
-
-render();
+        // 1. Initialisation
+        (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
 
         const products = [
             { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", note: 4.8 },
@@ -260,36 +125,50 @@ render();
         let couponApplique = false;
         const codesValides = { "LATYYA26": 0.10, "PROMO5000": 5000 };
 
+        // 2. Gestion Numéro de Commande
+        function genererNumeroCommande() {
+            let dernier = localStorage.getItem('last_cmd_id') || 0;
+            let nouveau = parseInt(dernier) + 1;
+            localStorage.setItem('last_cmd_id', nouveau);
+            return "CMD#" + nouveau;
+        }
+
+        // 3. Affichage
         function render(filter = 'tous') {
             const grid = document.getElementById('product-grid');
-            grid.innerHTML = '';
-            products.forEach(p => {
-                if(filter === 'tous' || p.cat === filter) {
-                    grid.innerHTML += `
-                        <div class="product-card p-3" onclick="ajouter(${p.id})">
-                            <img src="${p.img}" class="h-40 w-full object-cover rounded mb-2">
-                            <h3 class="text-[11px] font-medium line-clamp-2 h-8 mb-1 uppercase">${p.name}</h3>
-                            <div class="text-[#ff6600] font-bold text-lg">${p.price.toLocaleString()} F</div>
-                            <div class="text-gray-400 line-through text-[10px] mb-2">${p.old.toLocaleString()} F</div>
-                            <div class="mt-auto flex justify-between items-center text-[10px]">
-                                <span class="text-yellow-500">★ ${p.note}</span>
-                                <span class="bg-orange-50 text-[#ff6600] px-2 py-1 rounded font-bold italic">AJOUTER</span>
-                            </div>
-                        </div>`;
-                }
-            });
+            grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
+                <div class="product-card p-3" onclick="ajouter(${p.id})">
+                    <img src="${p.img}" class="h-40 w-full object-cover rounded mb-2">
+                    <h3 class="text-[11px] font-medium line-clamp-2 h-8 mb-1 uppercase">${p.name}</h3>
+                    <div class="text-[#ff6600] font-bold text-lg">${p.price.toLocaleString()} F</div>
+                    <div class="text-gray-400 line-through text-[10px] mb-2">${p.old.toLocaleString()} F</div>
+                    <div class="mt-auto flex justify-between items-center text-[10px]">
+                        <span class="text-yellow-500">★ ${p.note}</span>
+                        <span class="bg-orange-50 text-[#ff6600] px-2 py-1 rounded font-bold italic">AJOUTER</span>
+                    </div>
+                </div>`).join('');
         }
 
         function ajouter(id) {
             cart.push({...products.find(p => p.id === id), cartId: Date.now()});
             document.getElementById('cart-count').innerText = cart.length;
-            alert("Ajouté !");
+            alert("Article ajouté !");
         }
 
         function supprimerDuPanier(cartId) {
             cart = cart.filter(item => item.cartId !== cartId);
             document.getElementById('cart-count').innerText = cart.length;
             ouvrirPanier();
+        }
+
+        function ouvrirPanier() {
+            document.getElementById('cartModal').classList.add('active');
+            const itemsDiv = document.getElementById('cart-items');
+            const form = document.getElementById('checkout-form');
+            if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 text-gray-400'>Votre panier est vide.</p>"; form.style.display = "none"; return; }
+            itemsDiv.innerHTML = cart.map(item => `<div class="flex justify-between items-center border-b pb-2"><div class="text-[11px] uppercase"><p class="font-bold text-gray-700">${item.name}</p><p class="text-orange-500">${item.price.toLocaleString()} F</p></div><button onclick="supprimerDuPanier(${item.cartId})" class="text-red-400"><i class="fa-solid fa-trash-can"></i></button></div>`).join('');
+            form.style.display = "block";
+            majResume();
         }
 
         function appliquerPromo() {
@@ -299,31 +178,8 @@ render();
                 remiseCodePromo = codesValides[input] < 1 ? totalActuel * codesValides[input] : codesValides[input];
                 couponApplique = true;
                 document.getElementById('coupon-msg').innerText = "RÉDUCTION APPLIQUÉE !";
-                ouvrirPanier();
-            } else { alert("Code invalide"); }
-        }
-
-        function toggleBouton() {
-            const isChecked = document.getElementById('check-verif').checked;
-            const btn = document.getElementById('btn-final');
-            btn.className = isChecked ? "w-full ali-gradient text-white py-4 rounded-full font-bold uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-bold uppercase shadow-lg";
-            btn.disabled = !isChecked;
-        }
-
-        function ouvrirPanier() {
-            document.getElementById('cartModal').classList.add('active');
-            const itemsDiv = document.getElementById('cart-items');
-            const form = document.getElementById('checkout-form');
-            if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 text-gray-400'>Panier vide.</p>"; form.style.display = "none"; return; }
-            
-            itemsDiv.innerHTML = cart.map(item => `
-                <div class="flex justify-between items-center border-b pb-2">
-                    <div class="text-[11px] uppercase"><p class="font-bold text-gray-700">${item.name}</p><p class="text-orange-500">${item.price.toLocaleString()} F</p></div>
-                    <button onclick="supprimerDuPanier(${item.cartId})" class="text-red-400"><i class="fa-solid fa-trash-can"></i></button>
-                </div>`).join('');
-            
-            form.style.display = "block";
-            majResume();
+                majResume();
+            } else { alert("Code promo invalide"); }
         }
 
         function majResume() {
@@ -337,12 +193,18 @@ render();
 
             document.getElementById('resume-final').innerHTML = `
                 <div class="bg-white p-2 rounded border border-orange-100">
-                    <p class="font-bold text-black uppercase text-[10px]">Client : ${nom}</p>
-                    <p class="text-gray-600 italic text-[10px]">Lieu : ${quartier}</p>
-                    <p class="font-bold text-[#ff6600] text-[10px]">Paiement : ${pay}</p>
-                    <p class="text-[9px] text-gray-400 mt-1 uppercase italic">${cart.length} article(s) dans le panier</p>
+                    <p class="font-bold text-black uppercase text-[10px]">CLIENT : ${nom}</p>
+                    <p class="text-gray-600 italic text-[10px]">LIEU : ${quartier}</p>
+                    <p class="font-bold text-[#ff6600] text-[10px]">PAIEMENT : ${pay}</p>
                 </div>`;
             document.getElementById('total-display').innerText = Math.max(0, total).toLocaleString();
+        }
+
+        function toggleBouton() {
+            const isChecked = document.getElementById('check-verif').checked;
+            const btn = document.getElementById('btn-final');
+            btn.className = isChecked ? "w-full ali-gradient text-white py-4 rounded-full font-bold uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-bold uppercase shadow-lg";
+            btn.disabled = !isChecked;
         }
 
         function validerCommande() {
@@ -350,76 +212,50 @@ render();
             const quartier = document.getElementById('tel-client').value;
             const email = document.getElementById('email-client').value;
             const total = document.getElementById('total-display').innerText;
+            const pay = document.getElementById('mode-pay').value;
 
-            if(!nom || !quartier) return alert("Nom et quartier obligatoires !");
+            if(!nom || !quartier) return alert("Veuillez remplir les champs obligatoires (*)");
 
-            // ENVOI EMAILJS
+            const numCommande = genererNumeroCommande();
+
             if(email) {
                 const params = {
+                    order_id: numCommande,
                     client_name: nom,
                     delivery_address: quartier,
                     order_total: total,
-                    payment_method: document.getElementById('mode-pay').value,
+                    payment_method: pay,
                     order_details: cart.map(i => i.name).join(", "),
                     to_email: email
                 };
-                emailjs.send('service_jxh29js', 'Template_wv2gv2s', params)
-                .then(() => console.log("Email envoyé !"))
-                .catch(err => console.error("Erreur EmailJS", err));
+                emailjs.send('service_jxh29js', 'Template_wv2gv2s', params);
             }
 
-            // WHATSAPP
             let articlesWA = cart.map(i => `- ${i.name}`).join('%0A');
-            let msgWA = `NOUVELLE COMMANDE LATYYA%0AClient: ${nom}%0ALieu: ${quartier}%0AArticles:%0A${articlesWA}%0ATotal: ${total} F`;
+            let msgWA = `NOUVELLE COMMANDE ${numCommande}%0A--------------------------%0AClient: ${nom}%0ALieu: ${quartier}%0AArticles:%0A${articlesWA}%0A--------------------------%0ATOTAL: ${total} F%0APaiement: ${pay}`;
+            
+            alert("Commande " + numCommande + " envoyée !");
             window.open(`https://wa.me/2250709002881?text=${msgWA}`);
+            
+            // Nettoyage
+            cart = [];
+            document.getElementById('cart-count').innerText = 0;
+            document.getElementById('cartModal').classList.remove('active');
         }
 
         function suivreColis() {
-            let n = prompt("Numéro de commande :");
-            if(n) window.open(`https://wa.me/2250709002881?text=Suivi de colis: ${n}`);
+            let n = prompt("Votre numéro de commande (ex: CMD#1) :");
+            if(n) window.open(`https://wa.me/2250709002881?text=Bonjour, je souhaite suivre l'état de ma commande ${n}`);
         }
 
         setInterval(() => {
             const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
-            if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
+            if(diff <= 0) { document.getElementById('countdown').innerText = "OFFRE ACTIVÉE !"; return; }
             const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
             document.getElementById('countdown').innerText = `${d}j ${h}h ${m}m ${s}s`;
         }, 1000);
 
         render();
     </script>
-        <script>
-        // 1. L'initialisation EmailJS (Toujours en premier)
-        (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
-
-        // 2. Ta base de produits
-        const products = [
-            { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, old: 55000, img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", note: 4.8 },
-            { id: 2, cat: "bijoux", name: "Collier Perle d'Or", price: 25000, old: 30000, img: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", note: 5.0 }
-        ];
-
-        let cart = [];
-
-        // 3. LA NOUVELLE FONCTION DE NUMÉROTATION (À insérer ici)
-        function genererNumeroCommande() {
-            let dernierNumero = localStorage.getItem('last_cmd_id') || 0;
-            let nouveauNumero = parseInt(dernierNumero) + 1;
-            localStorage.setItem('last_cmd_id', nouveauNumero);
-            return "CMD#" + nouveauNumero;
-        }
-
-        // 4. Tes autres fonctions (render, ajouter, majResume...)
-
-        function validerCommande() {
-            // ... (Ici on appelle genererNumeroCommande)
-        }
-
-        // ... Le reste de tes fonctions ...
-
-        render(); // Toujours à la fin pour lancer l'affichage
-    </script>
-</body>
-</html>
-
 </body>
 </html>
