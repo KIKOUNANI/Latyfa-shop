@@ -10,20 +10,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --latyfa-gold: #c5a059;
-            --latyfa-dark: #1a1a1a;
+            --latyfa-gold: #c5a059; /* Doré Luxe */
+            --latyfa-dark: #1a1a1a; /* Noir Profond */
         }
         
-        body { background-color: #fcfcfc; font-family: 'Montserrat', sans-serif; margin: 0; scroll-behavior: smooth; }
-        
-        .category-link {
-            font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #555; transition: all 0.3s ease;
-            border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; cursor: pointer;
+        body { 
+            background-color: #fcfcfc; 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            scroll-behavior: smooth; 
         }
-        .category-link:hover { color: var(--latyfa-gold); padding-left: 5px; border-bottom-color: var(--latyfa-gold); }
 
-        h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
-        .ali-gradient { background: linear-gradient(90deg, #c5a059 0%, #e2c286 100%); }
+        /* Style des liens de catégories */
+        .category-link {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #555;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+
+        .category-link:hover {
+            color: var(--latyfa-gold);
+            padding-left: 5px;
+            border-bottom-color: var(--latyfa-gold);
+        }
+
+        h1, h2, h3, .logo-font { 
+            font-family: 'Playfair Display', serif; 
+        }
+
+        .ali-gradient { 
+            background: linear-gradient(90deg, #c5a059 0%, #e2c286 100%); 
+        }
 
         .product-card { background: white; border-radius: 8px; border: 1px solid transparent; height: 100%; display: flex; flex-direction: column; cursor: pointer; transition: 0.2s; position: relative; }
         .product-card:hover { border-color: var(--latyfa-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
@@ -31,19 +53,22 @@
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: white; overflow-y: auto; padding: 20px; }
         .modal.active { display: block; }
         .btn-disabled { background: #cccccc !important; cursor: not-allowed; opacity: 0.6; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Roue de la Fortune */
+        /* Styles de la Roue */
         .wheel-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .wheel-mask.active { display: flex; }
         .wheel-box { background: white; padding: 30px; border-radius: 30px; text-align: center; position: relative; width: 95%; max-width: 400px; border: 5px solid var(--latyfa-gold); }
-        #canvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; }
-        .spin-trigger { background: #000; color: #fff; padding: 15px 40px; border-radius: 50px; font-weight: 900; width: 100%; }
+        #canvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+        .spin-trigger { background: #000; color: #fff; padding: 15px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; border: none; font-size: 14px; letter-spacing: 2px; width: 100%; }
+        .spin-trigger:disabled { background: #ccc; cursor: not-allowed; }
 
-        /* Animation Toast Option 4 */
+        /* OPTION 4 : TOAST NOTIFICATION STYLE */
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .toast-notification {
-            position: fixed; top: 80px; right: 20px; background: #1a1a1a; color: #c5a059;
-            padding: 15px 20px; border-radius: 10px; border-left: 4px solid #c5a059;
+            position: fixed; top: 85px; right: 20px; background: #1a1a1a; color: #c5a059;
+            padding: 12px 20px; border-radius: 8px; border-left: 4px solid #c5a059;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 9999; display: flex; align-items: center; gap: 10px;
             font-size: 11px; font-weight: 700; text-transform: uppercase; animation: slideIn 0.4s ease-out;
         }
@@ -51,66 +76,99 @@
 </head>
 <body>
 
-    <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2 text-[10px] font-bold border-b border-[#c5a059]/30 uppercase">
-        ✨ PROMO -20% DÈS 20.000F | FIN DANS : <span id="countdown" class="text-white ml-1">--:--:--</span> ✨
+    <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">
+        ✨ Promo Exclusive -20% dès 20.000 F D'achat à partir du 14 fév au 28 fév 2026: <span id="countdown" class="text-white ml-1">--:--:--</span> ✨
     </div>
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
             <div class="flex items-center gap-2">
-                <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full">
-                <span class="text-2xl font-black italic logo-font text-[#c5a059]">LATYFA SHOP</span>
+                <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
+                <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
             </div>
-            <div class="flex gap-5">
-                <div onclick="suivreColis()" class="text-center cursor-pointer"><i class="fa-solid fa-truck text-gray-600"></i><p class="text-[8px] font-bold">SUIVI</p></div>
-                <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative">
+            <div class="flex gap-6">
+                <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#c5a059]">
+                    <i class="fa-solid fa-truck text-gray-600"></i>
+                    <p class="text-[9px] font-bold uppercase">Suivi</p>
+                </div>
+                <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#c5a059]">
                     <i class="fa-solid fa-cart-shopping text-gray-600"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-[9px] rounded-full px-1.5">0</span>
-                    <p class="text-[8px] font-bold">PANIER</p>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
+                    <p class="text-[9px] font-bold uppercase">Panier</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <section class="relative w-full h-[300px] bg-black">
-        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-60">
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-            <h1 class="text-white text-3xl font-black uppercase italic">L'Élégance à votre portée</h1>
-            <a href="#collection" class="mt-5 ali-gradient text-white px-8 py-3 rounded-full font-bold text-[10px] uppercase">Voir la Collection</a>
+    <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+            <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none">La Boutique du 225</h1>
+            <p class="text-[#c5a059] font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]">Bijoux, vêtements, parfum...</p>
+            <a href="#collection" class="mt-8 ali-gradient text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg">Découvrir la Collection</a>
         </div>
     </section>
 
-    <div id="collection" class="container mx-auto px-4 py-10 flex flex-col md:flex-row gap-8">
-        <aside class="w-full md:w-64 space-y-4">
-            <h3 class="logo-font font-black border-b border-[#c5a059] pb-2 text-sm uppercase">Univers</h3>
-            <div class="flex flex-col gap-4">
-                <span class="category-link" onclick="render('tous')">Tout voir</span>
-                <span class="category-link" onclick="render('bijoux')">Bijoux</span>
-                <span class="category-link" onclick="render('vetements')">Vêtements</span>
-                <span class="category-link" onclick="render('hanche')">Perles de hanche</span>
-                <span class="category-link" onclick="render('parfum')">Parfums</span>
+    <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
+        <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border border-gray-100">
+            <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center">Nos Univers</h3>
+            <div class="flex flex-col gap-5">
+                <span class="category-link flex justify-between items-center" onclick="render('tous')">Tout voir <i class="fa-solid fa-crown text-[10px] text-[#c5a059]"></i></span>
+                <span class="category-link flex justify-between items-center" onclick="render('bijoux')">Bijoux <i class="fa-solid fa-gem text-[10px]"></i></span>
+                <span class="category-link flex justify-between items-center" onclick="render('vetements')">Vêtements <i class="fa-solid fa-shirt text-[10px]"></i></span>
+                <span class="category-link flex justify-between items-center" onclick="render('chaussures')">Chaussures <i class="fa-solid fa-shoe-prints text-[10px]"></i></span>
+                <span class="category-link flex justify-between items-center" onclick="render('sac')">Sacs à main <i class="fa-solid fa-bag-shopping text-[10px]"></i></span>
+                <span class="category-link flex justify-between items-center" onclick="render('parfum')">Parfums <i class="fa-solid fa-spray-can-sparkles text-[10px]"></i></span>
+                <span class="category-link flex justify-between items-center" onclick="render('hanche')">Perles de hanche <i class="fa-solid fa-circle-nodes text-[10px]"></i></span>
+                <span class="category-link flex justify-between items-center" onclick="render('autres')">Autres <i class="fa-solid fa-plus text-[10px]"></i></span>
             </div>
         </aside>
 
         <main class="flex-1">
-            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4" id="product-grid"></div>
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
         </main>
     </div>
 
+    <button onclick="document.querySelector('.wheel-mask').classList.add('active')" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#c5a059]">
+        <i class="fa-solid fa-gift text-[#c5a059] text-2xl"></i>
+    </button>
+
+    <div class="wheel-mask">
+        <div class="wheel-box">
+            <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
+            <h3 class="logo-font text-xl font-black italic uppercase text-gray-800">LATYFA LUCKY WHEEL</h3>
+            <p id="wheel-msg" class="text-[11px] font-black uppercase mt-2"></p>
+            <div class="relative">
+                <canvas id="canvas" width="300" height="300"></canvas>
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 text-3xl text-[#c5a059]">▼</div>
+            </div>
+            <button id="spin" class="spin-trigger">TENTER MA CHANCE</button>
+        </div>
+    </div>
+
     <div id="productDetailModal" class="modal">
-        <div class="max-w-xl mx-auto">
-            <button onclick="closeModal('productDetailModal')" class="text-[10px] font-bold uppercase mb-5"><i class="fa-solid fa-arrow-left"></i> Retour</button>
-            <div id="detail-content" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <img id="detail-img" class="w-full h-80 object-cover rounded-xl border">
-                <div>
-                    <h2 id="detail-name" class="text-xl font-black uppercase italic"></h2>
-                    <p id="detail-price" class="text-[#c5a059] text-2xl font-black mt-2"></p>
-                    <p id="detail-desc" class="text-xs text-gray-500 mt-4 leading-relaxed"></p>
-                    <div id="size-box" class="mt-5 hidden">
-                        <label class="text-[10px] font-bold">Taille / Pointure :</label>
-                        <select id="detail-size" class="w-full border p-2 mt-1 rounded"></select>
+        <div class="max-w-2xl mx-auto">
+            <button onclick="document.getElementById('productDetailModal').classList.remove('active')" class="mb-6 text-gray-500 font-bold uppercase text-[10px]"><i class="fa-solid fa-arrow-left"></i> Retour</button>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2">
+                    <img id="main-detail-img" src="" class="w-full h-80 object-cover rounded-xl shadow-md border">
+                    <div id="thumbnails" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
+                </div>
+                <div class="md:w-1/2">
+                    <h2 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800"></h2>
+                    <p id="detail-price" class="text-[#c5a059] font-black text-2xl mt-2"></p>
+                    <div class="my-4 border-t pt-4"><p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p></div>
+                    <div class="space-y-4 my-6">
+                        <div id="size-area" class="hidden">
+                            <label class="text-[10px] font-black uppercase text-gray-400">Taille / Pointure</label>
+                            <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
+                        </div>
+                        <div id="color-area" class="hidden">
+                            <label class="text-[10px] font-black uppercase text-gray-400">Couleur</label>
+                            <select id="select-color" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
+                        </div>
                     </div>
-                    <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-bold uppercase mt-8 text-[11px]">Ajouter au Panier</button>
+                    <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-6">Ajouter au panier</button>
                 </div>
             </div>
         </div>
@@ -118,165 +176,243 @@
 
     <div id="cartModal" class="modal">
         <div class="max-w-md mx-auto">
-            <h2 class="text-center font-black text-xl italic text-[#c5a059] uppercase mb-6">Mon Panier</h2>
-            <div id="cart-items" class="space-y-4 mb-6"></div>
-            <div id="order-form" class="space-y-3">
-                <input type="text" id="client-name" placeholder="Nom Complet" class="w-full border p-3 rounded text-sm">
-                <select id="client-zone" onchange="majTotal()" class="w-full border p-3 rounded text-sm">
-                    <option value="">Choisir la zone de livraison</option>
-                    <option value="1500">Abidjan Nord (1.500 F)</option>
-                    <option value="2000">Abidjan Sud (2.000 F)</option>
-                    <option value="3000">Intérieur (3.000 F)</option>
-                    <option value="0">Boutique (Gratuit)</option>
+            <h2 class="text-xl font-bold mb-6 text-center text-[#c5a059] uppercase italic">Ma Commande</h2>
+            <div id="cart-items" class="space-y-4 mb-6 border-b pb-4"></div>
+            <div id="checkout-form" style="display:none;" class="space-y-4">
+                <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
+                <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
+                    <option value="">-- CHOISIR VOTRE ZONE --</option>
+                    <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+                    <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+                    <option value="interieur">Intérieur pays (3.000 F)</option>
+                    <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
                 </select>
-                <input type="text" id="client-loc" placeholder="Quartier ou Ville" class="w-full border p-3 rounded text-sm">
-                <div class="p-4 bg-gray-50 rounded text-xs font-bold space-y-1">
-                    <div class="flex justify-between"><span>Articles:</span><span id="res-art">0 F</span></div>
-                    <div class="flex justify-between"><span>Livraison:</span><span id="res-liv">0 F</span></div>
-                    <div class="flex justify-between text-red-600 text-sm border-t pt-1"><span>TOTAL:</span><span id="res-total">0 F</span></div>
+                <div id="communes-info" class="text-[9px] text-gray-500 bg-gray-100 p-2 rounded hidden leading-tight"></div>
+                <input type="text" id="tel-client" oninput="majResume()" placeholder="Quartier et Précisions *" class="w-full border p-3 rounded-lg text-sm">
+                <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-gray-50 font-bold">
+                    <option value="TRANSFERT MOBILE">TRANSFERT (WAVE / MOBILE MONEY)</option>
+                    <option value="CASH">CASH (Boutique uniquement)</option>
+                </select>
+                <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
+                <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
+                    <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-5 w-5">
+                    <label for="check-verif" class="text-[9px] font-bold uppercase">Je confirme ma commande et j'accepte le paiement intégral.</label>
                 </div>
-                <button onclick="validerWhatsApp()" class="w-full bg-green-600 text-white py-4 rounded-full font-bold uppercase text-[10px]">Commander sur WhatsApp</button>
+                <div class="flex justify-between font-bold text-lg p-2 border-b-2">
+                    <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
+                </div>
+                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
             </div>
-            <button onclick="closeModal('cartModal')" class="w-full mt-5 text-[9px] font-bold text-gray-400 uppercase underline">Continuer mes achats</button>
+            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
         </div>
     </div>
 
-    <div class="wheel-mask" id="wheel-modal">
-        <div class="wheel-box">
-            <button onclick="closeModal('wheel-modal')" class="absolute top-4 right-4 font-bold">✕</button>
-            <h3 class="font-black italic text-lg uppercase">Lucky Wheel</h3>
-            <p id="wheel-msg" class="text-[9px] font-bold text-blue-600 mt-1">3 TENTATIVES PAR JOUR</p>
-            <canvas id="canvas" width="300" height="300"></canvas>
-            <button id="spin-btn" onclick="spinWheel()" class="spin-trigger">TENTER MA CHANCE</button>
+    <div id="cgvModal" class="modal bg-gray-100">
+        <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-2xl my-6 border border-gray-200">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h2 class="text-xl font-black uppercase text-gray-800 italic">Conditions Générales de Vente</h2>
+                <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="text-2xl font-bold">&times;</button>
+            </div>
+            <div class="text-[11px] space-y-6 text-gray-700 leading-relaxed overflow-y-auto max-h-[60vh] pr-2 uppercase font-semibold">
+                <section><h3 class="text-[#c5a059] font-black mb-2">1. PRIX ET PAIEMENT</h3><p>Les prix sont indiqués en FCFA. Le paiement est exigible via Mobile Money avant expédition.</p></section>
+                <section><h3 class="text-[#c5a059] font-black mb-2">2. LIVRAISONS</h3><p>Abidjan sous 48h. Intérieur sous 72h via transporteurs.</p></section>
+                <section><h3 class="text-[#c5a059] font-black mb-2">3. RETOURS</h3><p>Aucun retour sur bijoux et accessoires pour des raisons d'hygiène.</p></section>
+            </div>
+            <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 ali-gradient text-white py-4 rounded-xl font-black text-xs uppercase">J'accepte</button>
         </div>
     </div>
 
-    <button onclick="document.getElementById('wheel-modal').classList.add('active')" class="fixed bottom-10 right-5 h-12 w-12 bg-black text-[#c5a059] rounded-full shadow-2xl flex items-center justify-center border-2 border-[#c5a059] z-50 animate-bounce">
-        <i class="fa-solid fa-gift text-xl"></i>
-    </button>
-
-    <div id="social-proof" class="fixed bottom-5 left-5 bg-white shadow-xl rounded-lg p-3 flex items-center gap-3 border-l-4 border-[#c5a059] transform translate-y-32 transition-all duration-700 z-50">
-        <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-[#c5a059]"><i class="fa-solid fa-shopping-bag text-xs"></i></div>
-        <p id="proof-text" class="text-[10px] font-bold text-gray-700"></p>
+    <div id="social-proof" class="fixed bottom-5 left-5 bg-white shadow-2xl rounded-lg p-3 flex items-center gap-3 border-l-4 border-[#c5a059] transform translate-y-20 opacity-0 transition-all duration-700 z-[100] max-w-[280px]">
+        <div class="w-10 h-10 bg-gray-100 rounded-full flex-shrink-0 flex items-center justify-center text-[#c5a059]"><i class="fa-solid fa-bag-shopping"></i></div>
+        <div>
+            <p id="proof-text" class="text-[11px] text-gray-800 font-medium leading-tight"></p>
+            <p class="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Il y a quelques instants</p>
+        </div>
     </div>
+
+    <footer class="bg-white border-t pt-12 pb-6">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-8 w-8 rounded-full">
+                <span class="text-xl font-black italic text-[#c5a059]">LATYFA SHOP</span>
+            </div>
+            <div class="flex flex-col items-center justify-center py-4 border-t border-gray-100 mt-6">
+                <div class="flex items-center gap-2 text-[#c5a059] mb-1">
+                    <i class="fa-solid fa-eye text-[10px]"></i>
+                    <span id="visitor-count" class="text-[12px] font-black tracking-widest">0</span>
+                </div>
+                <p class="text-[8px] text-gray-400 uppercase font-bold tracking-[0.2em]">Visiteurs de l'univers Latyfa shop</p>
+            </div>
+            <p class="text-gray-400 text-[9px] font-bold uppercase mt-4">© 2026 LATYFA SHOP | <button onclick="document.getElementById('cgvModal').classList.add('active')" class="underline">Juridique</button></p>
+        </div>
+    </footer>
 
     <script>
-        // --- BASE DE DONNÉES ---
+        (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
+
+        const tarifsLivraison = {
+            "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
+            "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
+            "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
+            "bouake": { nom: "Boutique", prix: 0, detail: "Retrait gratuit en boutique." }
+        };
+
         const products = [
-            { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], description: "Cuir de luxe, finition dorée." },
-            { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Perles sélectionnées à la main." },
-            { id: 3, cat: "hanche", name: "Baya Cristal", price: 5000, images: ["https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500"], description: "Féminité et tradition." }
+            { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=500"], description: "Élégance Signature Latyfa. Cuir Premium." },
+            { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K. Design exclusif." },
+            { id: 3, cat: "hanche", name: "Baya Cristal d'Orient", price: 5000, images: ["https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500"], description: "Perles de hanche artisanales." }
         ];
 
         let cart = [];
-        let currentP = null;
+        let currentProduct = null;
 
-        // --- OPTION 4 : TOAST ---
-        function showToast(msg) {
-            const t = document.createElement('div');
-            t.className = 'toast-notification';
-            t.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>${msg}</span>`;
-            document.body.appendChild(t);
-            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 500); }, 3000);
+        // --- OPTION 4 : TOAST FUNCTION ---
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${message}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.transition = "opacity 0.5s ease";
+                toast.style.opacity = "0";
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
         }
 
-        function render(f = 'tous') {
-            const g = document.getElementById('product-grid');
-            g.innerHTML = products.filter(p => f === 'tous' || p.cat === f).map(p => `
-                <div class="product-card p-3" onclick="voirP(${p.id})">
-                    <img src="${p.images[0]}" class="h-40 w-full object-cover rounded mb-2">
-                    <h4 class="text-[10px] font-bold uppercase truncate">${p.name}</h4>
-                    <p class="text-[#c5a059] font-black text-sm mt-1">${p.price.toLocaleString()} F</p>
-                </div>
-            `).join('');
+        function render(filter = 'tous') {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
+                <div class="product-card p-3" onclick="voirDetails(${p.id})">
+                    <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
+                    <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2">${p.name}</h3>
+                    <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                    <div class="bg-gray-100 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest">Explorer</div>
+                </div>`).join('');
         }
 
-        function voirP(id) {
-            currentP = products.find(x => x.id === id);
-            document.getElementById('detail-name').innerText = currentP.name;
-            document.getElementById('detail-price').innerText = currentP.price.toLocaleString() + " F";
-            document.getElementById('detail-desc').innerText = currentP.description;
-            document.getElementById('detail-img').src = currentP.images[0];
+        function voirDetails(id) {
+            const p = products.find(x => x.id === id);
+            currentProduct = p;
             document.getElementById('productDetailModal').classList.add('active');
+            document.getElementById('main-detail-img').src = p.images[0];
+            document.getElementById('detail-name').innerText = p.name;
+            document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
+            document.getElementById('detail-desc').innerText = p.description;
+            
+            // Thumbnails
+            document.getElementById('thumbnails').innerHTML = p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" class="h-14 w-14 object-cover rounded border cursor-pointer">`).join('');
         }
 
         function ajouterDepuisDetail() {
-            const item = { ...currentP, qty: 1 };
-            cart.push(item);
-            document.getElementById('cart-count').innerText = cart.length;
-            closeModal('productDetailModal');
-            showToast("Ajouté au panier ! ✨");
+            const label = currentProduct.name;
+            const index = cart.findIndex(x => x.label === label);
+            if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
+            
+            document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+            document.getElementById('productDetailModal').classList.remove('active');
+            showToast("Article ajouté au panier ! ✨");
         }
 
         function ouvrirPanier() {
-            const div = document.getElementById('cart-items');
-            if(cart.length === 0) {
-                div.innerHTML = "<p class='text-center text-[10px] text-gray-400 py-10'>VIDE</p>";
-            } else {
-                div.innerHTML = cart.map((x, i) => `
-                    <div class="flex justify-between text-[10px] font-bold border-b pb-2">
-                        <span>${x.name}</span>
-                        <span>${x.price} F</span>
-                    </div>
-                `).join('');
-            }
-            majTotal();
             document.getElementById('cartModal').classList.add('active');
+            const itemsDiv = document.getElementById('cart-items');
+            if(cart.length === 0) {
+                itemsDiv.innerHTML = "<p class='text-center py-10 text-[10px] uppercase text-gray-400'>Panier Vide</p>";
+                document.getElementById('checkout-form').style.display = "none";
+            } else {
+                document.getElementById('checkout-form').style.display = "block";
+                itemsDiv.innerHTML = cart.map(item => `
+                    <div class="flex justify-between items-center text-[10px] font-bold border-b pb-2">
+                        <div class="flex-1">${item.label} (x${item.qty})</div>
+                        <div class="flex gap-2">
+                            <button onclick="modifierQty('${item.label}',-1)" class="bg-gray-100 px-2 rounded">-</button>
+                            <button onclick="modifierQty('${item.label}',1)" class="bg-gray-100 px-2 rounded">+</button>
+                        </div>
+                    </div>`).join('');
+                majResume();
+            }
         }
 
-        function majTotal() {
-            let art = cart.reduce((a, b) => a + b.price, 0);
-            if(art >= 20000) art *= 0.8; // Promo -20%
-            const liv = parseInt(document.getElementById('client-zone').value || 0);
-            document.getElementById('res-art').innerText = art.toLocaleString() + " F";
-            document.getElementById('res-liv').innerText = liv.toLocaleString() + " F";
-            document.getElementById('res-total').innerText = (art + liv).toLocaleString() + " F";
+        function modifierQty(label, d) {
+            const i = cart.find(x => x.label === label);
+            if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
+            document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+            ouvrirPanier();
         }
 
-        function validerWhatsApp() {
-            const nom = document.getElementById('client-name').value;
-            if(!nom) return showToast("Précisez votre nom !");
-            let m = `*COMMANDE LATYFA SHOP*\nClient: ${nom}\nTotal: ${document.getElementById('res-total').innerText}`;
-            window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(m)}`);
+        function majResume() {
+            const zoneKey = document.getElementById('zone-livraison').value;
+            let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+            if(tArt >= 20000) tArt *= 0.8;
+            let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
+            document.getElementById('resume-final').innerHTML = `<p>Articles : ${tArt.toLocaleString()} F</p><p>Livraison : ${tLiv.toLocaleString()} F</p>`;
+            document.getElementById('total-display').innerText = (tArt + tLiv).toLocaleString();
         }
 
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function toggleBouton() {
+            const chk = document.getElementById('check-verif').checked;
+            const btn = document.getElementById('btn-final');
+            btn.disabled = !chk;
+            btn.className = chk ? "w-full ali-gradient text-white py-4 rounded-full font-black uppercase" : "w-full btn-disabled text-white py-4 rounded-full font-black uppercase";
+        }
 
-        // --- ROUE DE LA FORTUNE ---
-        const prizes = ["-5%", "REJOUER", "LIVRAISON", "REJOUER", "-10%", "REJOUER", "CADEAU", "REJOUER"];
+        function validerCommande() {
+            const nom = document.getElementById('nom-client').value;
+            const zone = document.getElementById('zone-livraison').value;
+            const total = document.getElementById('total-display').innerText;
+            const msg = `*COMMANDE LATYFA SHOP*\n👤 Client: ${nom}\n💰 Total: ${total} F\n📍 Livraison: ${zone}`;
+            window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+        }
+
+        // --- ROUE ---
+        const prizes = ["-5%", "REJOUER", "LIVRAISON", "REJOUER", "-10%", "REJOUER", "CADEAU", "REJOUER", "-2%", "REJOUER", "REJOUER", "REJOUER", "REJOUER", "REJOUER", "REJOUER", "REJOUER"];
         const ctx = document.getElementById('canvas').getContext('2d');
-        function drawW() {
+        const arc = Math.PI / (prizes.length / 2);
+
+        function drawWheel() {
             prizes.forEach((p, i) => {
                 ctx.beginPath(); ctx.fillStyle = i % 2 === 0 ? "#c5a059" : "#1a1a1a";
-                ctx.moveTo(150, 150); ctx.arc(150, 150, 150, i * Math.PI/4, (i+1) * Math.PI/4); ctx.fill();
-                ctx.save(); ctx.translate(150, 150); ctx.rotate(i * Math.PI/4 + Math.PI/8);
-                ctx.fillStyle = "#fff"; ctx.font = "bold 10px Arial"; ctx.fillText(p, 70, 5); ctx.restore();
+                ctx.moveTo(150, 150); ctx.arc(150, 150, 150, i * arc, (i + 1) * arc); ctx.fill();
+                ctx.save(); ctx.translate(150, 150); ctx.rotate(i * arc + arc / 2);
+                ctx.fillStyle = "white"; ctx.font = "bold 8px Arial"; ctx.textAlign = "right"; ctx.fillText(p, 140, 5); ctx.restore();
             });
         }
 
-        function spinWheel() {
-            const btn = document.getElementById('spin-btn');
-            btn.disabled = true;
-            const deg = 1800 + Math.random() * 1000;
-            document.getElementById('canvas').style.transform = `rotate(${deg}deg)`;
-            setTimeout(() => {
-                showToast("FÉLICITATIONS ! 🎁");
-                btn.disabled = false;
+        document.getElementById('spin').onclick = function() {
+            const btn = this; btn.disabled = true;
+            const spins = 1800 + Math.random() * 1000;
+            document.getElementById('canvas').style.transform = `rotate(${spins}deg)`;
+            setTimeout(() => { 
+                showToast("Félicitations ! Capture l'écran ! 🎁"); 
+                btn.innerText = "BIEN JOUÉ";
             }, 4000);
-        }
+        };
 
-        // --- DÉMARRAGE ---
-        render(); drawW();
+        // --- DIVERS ---
+        function suivreColis() { showToast("Suivi disponible sur WhatsApp !"); }
+        render(); drawWheel();
         
-        // Social Proof loop
+        // Visitor counter
+        let v = localStorage.getItem('lv') || 1050;
+        v = parseInt(v) + 1; localStorage.setItem('lv', v);
+        document.getElementById('visitor-count').innerText = v;
+
+        // Social Proof
+        const socialMsgs = ["Une cliente vient de commander à Abidjan ✨", "Colis expédié à Yamoussoukro 📦"];
         setInterval(() => {
             const p = document.getElementById('social-proof');
-            document.getElementById('proof-text').innerText = "Une cliente vient de commander un Sac Prestige ✨";
-            p.classList.remove('translate-y-32');
-            setTimeout(() => p.classList.add('translate-y-32'), 5000);
-        }, 12000);
+            document.getElementById('proof-text').innerText = socialMsgs[Math.floor(Math.random()*socialMsgs.length)];
+            p.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => p.classList.add('translate-y-20', 'opacity-0'), 5000);
+        }, 15000);
 
-        function suivreColis() { showToast("Suivi disponible sur WhatsApp !"); }
+        // Countdown
+        setInterval(() => {
+            const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
+            if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVE !"; return; }
+            const h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+            document.getElementById('countdown').innerText = h + "h " + m + "m " + s + "s";
+        }, 1000);
     </script>
 </body>
 </html>
