@@ -80,141 +80,173 @@
 
     <div id="productDetailModal" class="modal">
         <div class="max-w-2xl mx-auto">
-            <button onclick="document.getElementById('productDetailModal').classList.remove('active')" class="mb-6 text-gray-500 font-bold uppercase text-[10px]"><i class="fa-solid fa-arrow-left"></i> Retour</button>
+            <button onclick="document.getElementById('productDetailModal').classList.remove('active')" class="mb-6 text-gray-500 font-bold uppercase text-[10px]"><i class="fa-solid fa-arrow-left"></i> Retour au catalogue</button>
             <div class="flex flex-col md:flex-row gap-8">
                 <div class="md:w-1/2">
                     <img id="main-detail-img" src="" class="w-full h-80 object-cover rounded-xl shadow-md">
                     <div id="thumbnails" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
                 </div>
                 <div class="md:w-1/2">
-                    <h2 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800"></h2>
-                    <p id="detail-price" class="text-[#ff6600] font-black text-xl mt-2"></p>
-                    <p id="detail-desc" class="text-xs text-gray-600 mt-4 leading-relaxed"></p>
+                    <h2 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800 leading-tight"></h2>
+                    <p id="detail-price" class="text-[#ff6600] font-black text-2xl mt-2"></p>
+                    <div class="my-4 border-t pt-4">
+                        <h4 class="text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest">Description</h4>
+                        <p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p>
+                    </div>
                     <div class="space-y-4 my-6">
-                        <div id="size-area" class="hidden text-[10px]">
-                            <label class="font-black uppercase text-gray-400">Taille / Pointure :</label>
-                            <select id="select-size" class="w-full border p-2 rounded mt-1 outline-none bg-gray-50"></select>
+                        <div id="size-area" class="hidden">
+                            <label class="text-[10px] font-black uppercase text-gray-400">Taille / Pointure</label>
+                            <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm outline-none bg-gray-50"></select>
                         </div>
-                        <div id="color-area" class="hidden text-[10px]">
-                            <label class="font-black uppercase text-gray-400">Couleur :</label>
-                            <select id="select-color" class="w-full border p-2 rounded mt-1 outline-none bg-gray-50"></select>
+                        <div id="color-area" class="hidden">
+                            <label class="text-[10px] font-black uppercase text-gray-400">Couleur</label>
+                            <select id="select-color" class="w-full border p-3 rounded-lg mt-1 text-sm outline-none bg-gray-50"></select>
                         </div>
                     </div>
-                    <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[10px] shadow-lg mb-6">Ajouter au panier</button>
-                    <div class="flex items-center gap-4 pt-4 border-t">
-                        <span class="text-[9px] font-black text-gray-400 uppercase">Partager :</span>
-                        <button id="share-wa" class="text-[#25D366] text-xl"><i class="fa-brands fa-whatsapp"></i></button>
-                        <button id="share-fb" class="text-[#1877F2] text-xl"><i class="fa-brands fa-facebook"></i></button>
+                    <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-6">Ajouter au panier</button>
+                    <div class="flex items-center justify-center gap-6 pt-4 border-t">
+                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Partager :</span>
+                        <button id="share-wa" class="text-[#25D366] text-xl hover:scale-110 transition"><i class="fa-brands fa-whatsapp"></i></button>
+                        <button id="share-fb" class="text-[#1877F2] text-xl hover:scale-110 transition"><i class="fa-brands fa-facebook"></i></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <section class="py-16 bg-white border-t">
+    <section id="contact-section" class="py-16 bg-white border-t">
         <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto bg-gray-50 rounded-2xl p-8 border flex flex-col md:flex-row">
-                <div class="md:w-1/3 ali-gradient p-8 text-white rounded-xl">
-                    <h2 class="text-xl font-black uppercase italic mb-4">Contact</h2>
-                    <p class="text-xs opacity-90 mb-4 font-medium">+225 07 09 00 28 81</p>
+            <div class="max-w-4xl mx-auto bg-gray-50 rounded-2xl overflow-hidden shadow-sm border flex flex-col md:flex-row">
+                <div class="md:w-1/3 ali-gradient p-8 text-white">
+                    <h2 class="text-2xl font-black uppercase italic mb-6">Contact</h2>
+                    <p class="text-sm opacity-90 mb-8 font-medium">Une question ? Notre équipe vous répond rapidement sur WhatsApp.</p>
+                    <div class="flex items-center gap-4">
+                        <div class="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center"><i class="fa-solid fa-phone"></i></div>
+                        <span class="text-sm font-bold">+225 07 09 00 28 81</span>
+                    </div>
                 </div>
-                <div class="md:w-2/3 p-4 md:p-8">
+                <div class="md:w-2/3 p-8 bg-white">
                     <form onsubmit="envoyerMessage(event)" class="space-y-4">
-                        <input type="text" id="contact-nom" placeholder="Votre Nom *" required class="w-full p-3 border rounded-lg text-sm outline-none">
-                        <textarea id="contact-msg" rows="3" placeholder="Message..." required class="w-full p-3 border rounded-lg text-sm outline-none"></textarea>
-                        <button type="submit" class="w-full bg-gray-900 text-white py-3 rounded-lg font-black uppercase text-[10px]">Envoyer WhatsApp</button>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="contact-nom" placeholder="Votre Nom *" required class="w-full p-3 border rounded-lg text-sm outline-none">
+                            <input type="text" id="contact-sujet" placeholder="Sujet" required class="w-full p-3 border rounded-lg text-sm outline-none">
+                        </div>
+                        <textarea id="contact-msg" rows="3" placeholder="Votre message..." required class="w-full p-3 border rounded-lg text-sm outline-none"></textarea>
+                        <button type="submit" class="w-full bg-gray-900 text-white py-3 rounded-lg font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
+                            Envoyer sur WhatsApp <i class="fa-brands fa-whatsapp text-lg"></i>
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-white border-t py-12">
-        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <span class="text-xl font-black italic text-[#ff6600]">LATYYA</span>
-                <p class="text-gray-500 text-[10px] font-bold uppercase mt-2">L'élégance à portée de main.</p>
-            </div>
-            <div>
-                <h4 class="text-[10px] font-black uppercase mb-4">Aide</h4>
-                <div class="flex flex-col gap-2 text-[10px] font-bold text-gray-500 uppercase">
-                    <button onclick="ouvrirCGV()" class="text-left hover:text-orange-600">Conditions de Vente</button>
-                    <button onclick="suivreColis()" class="text-left hover:text-orange-600">Suivi Colis</button>
+    <footer class="bg-white border-t pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <img src="https://i.ibb.co/vz6mD2V/1000167529.png" class="h-8 w-8 rounded-full">
+                        <span class="text-xl font-black italic text-[#ff6600]">LATYYA</span>
+                    </div>
+                    <p class="text-gray-500 text-[10px] uppercase font-bold">L'élégance à portée de main.</p>
+                </div>
+                <div>
+                    <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Aide</h4>
+                    <ul class="text-gray-500 text-[10px] space-y-2 uppercase font-bold">
+                        <li class="cursor-pointer hover:text-orange-600" onclick="ouvrirCGV()">Conditions de Vente</li>
+                        <li class="cursor-pointer hover:text-orange-600" onclick="suivreColis()">Suivi Colis</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Boutique</h4>
+                    <p class="text-gray-500 text-[10px] uppercase font-bold">📍 Bouaké, Côte d'Ivoire</p>
+                </div>
+                <div>
+                    <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Suivez-nous</h4>
+                    <div class="flex gap-3">
+                        <a href="https://wa.me/2250709002881" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#25D366] hover:text-white transition"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#1877F2] hover:text-white transition"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#E4405F] hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
                 </div>
             </div>
-            <div>
-                <h4 class="text-[10px] font-black uppercase mb-4">Suivez-nous</h4>
-                <div class="flex gap-4">
-                    <a href="#" class="text-gray-600 hover:text-black"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="#" class="text-gray-600 hover:text-black"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#" class="text-gray-600 hover:text-black"><i class="fa-brands fa-tiktok"></i></a>
-                </div>
-            </div>
-            <div>
-                <h4 class="text-[10px] font-black uppercase mb-4">Boutique</h4>
-                <p class="text-gray-500 text-[10px] font-bold uppercase">📍 Bouaké, Côte d'Ivoire</p>
+            <div class="border-t pt-6 text-center text-gray-400 text-[9px] font-bold uppercase tracking-widest">
+                © 2026 LATYYA BUSINESS. | <button onclick="ouvrirCGV()" class="underline text-orange-600">Juridique</button>
             </div>
         </div>
-        <div class="text-center text-[9px] font-black text-gray-400 uppercase mt-10">© 2026 LATYYA BUSINESS</div>
     </footer>
 
     <div id="cartModal" class="modal">
         <div class="max-w-md mx-auto">
-            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Mon Panier</h2>
+            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Ma Commande</h2>
             <div id="cart-items" class="space-y-4 mb-6 border-b pb-4"></div>
-            <div id="checkout-form" style="display:none;" class="space-y-4">
-                <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded text-sm outline-none">
-                <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded text-sm bg-blue-50 font-bold">
-                    <option value="">-- ZONE LIVRAISON --</option>
-                    <option value="abidjan">Abidjan (1.500 F)</option>
-                    <option value="interieur">Intérieur (3.500 F)</option>
-                    <option value="bouake">Bouaké (Gratuit)</option>
-                </select>
-                <input type="text" id="tel-client" oninput="majResume()" placeholder="Quartier Précis *" class="w-full border p-3 rounded text-sm outline-none">
-                <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded text-sm font-bold border-orange-200">
-                    <option value="TRANSFERT">TRANSFERT (Intégral requis)</option>
-                    <option value="CASH">CASH (Bouaké uniquement)</option>
-                </select>
-                <div id="resume-final" class="p-4 bg-orange-50 rounded text-[10px] font-bold uppercase"></div>
-                <div class="flex items-start gap-3">
-                    <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="w-5 h-5 accent-[#ff6600]">
-                    <label for="check-verif" class="text-[10px] font-bold uppercase">J'accepte le paiement intégral.</label>
+            
+            <div id="checkout-form" style="display:none;">
+                <div class="space-y-3 mb-6">
+                    <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm outline-none">
+                    <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
+                        <option value="">-- CHOISIR VOTRE ZONE --</option>
+                        <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+                        <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+                        <option value="interieur">Intérieur pays (3.500 F)</option>
+                        <option value="bouake">Retrait Boutique Bouaké (Gratuit)</option>
+                    </select>
+                    <div id="communes-info" class="text-[9px] text-gray-500 bg-gray-100 p-2 rounded hidden leading-tight"></div>
+                    <input type="text" id="tel-client" oninput="majResume()" placeholder="Quartier et Précisions *" class="w-full border p-3 rounded-lg text-sm outline-none">
+                    
+                    <label class="block text-[10px] font-bold uppercase text-gray-400 mt-4 tracking-widest">Mode de Paiement</label>
+                    <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-gray-50 font-bold border-orange-200">
+                        <option value="WAVE / MOBILE MONEY">TRANSFERT (WAVE / ORANGE / MTN)</option>
+                        <option value="CASH (Boutique / Bouaké uniquement)">CASH (Boutique ou Bouaké Uniquement)</option>
+                    </select>
+                    <p class="text-[9px] text-red-600 font-bold uppercase italic mt-1">* Paiement intégral exigé à la commande.</p>
                 </div>
-                <div class="flex justify-between font-black text-lg border-b-2 pb-2">
+
+                <div class="mb-6 p-4 bg-orange-50 rounded-lg border-2 border-orange-200 uppercase text-[10px] font-bold">
+                    <div id="resume-final" class="space-y-2 text-gray-700"></div>
+                </div>
+
+                <div class="flex items-start gap-3 mb-6 p-3 bg-blue-50 rounded border border-blue-100">
+                    <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 w-5 h-5 accent-[#ff6600]">
+                    <label for="check-verif" class="text-[10px] font-bold text-blue-900 leading-tight uppercase">Je confirme ma commande et j'accepte le paiement intégral.</label>
+                </div>
+
+                <div class="flex justify-between font-bold text-lg mb-6 p-2 border-b-2">
                     <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
                 </div>
-                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-xl font-black uppercase shadow-lg" disabled>Finaliser sur WhatsApp</button>
+                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase shadow-lg" disabled>Finaliser sur WhatsApp</button>
             </div>
-            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
+            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold text-center underline">Continuer mes achats</button>
         </div>
     </div>
 
-    <div id="cgvModal" class="modal">
-        <div class="max-w-xl mx-auto py-10">
-            <h2 class="text-xl font-black uppercase mb-6 border-b pb-2">Conditions de Vente</h2>
+    <div id="cgvModal" class="modal bg-gray-50">
+        <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg my-10 border">
+            <h2 class="text-xl font-black uppercase mb-6 border-b pb-4 italic">Mentions Légales</h2>
             <div class="text-[11px] space-y-4 text-gray-600 uppercase font-bold">
-                <p>1. Paiement intégral exigé à la commande.</p>
-                <p>2. Cash uniquement pour retrait à Bouaké.</p>
-                <p>3. Articles ni repris ni échangés après livraison.</p>
+                <p>1. PAIEMENT : Intégral à la commande. Pas d'acomptes.</p>
+                <p>2. CASH : Uniquement pour retrait boutique ou Bouaké.</p>
+                <p>3. ÉCHANGES : Possible uniquement si défaut constaté devant le livreur.</p>
             </div>
-            <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="mt-8 bg-black text-white px-8 py-2 text-[10px] font-black uppercase">Fermer</button>
+            <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 bg-black text-white py-3 rounded-lg font-bold text-[10px] uppercase">Fermer</button>
         </div>
     </div>
 
     <script>
         (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
 
+        const tarifsLivraison = {
+            "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
+            "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
+            "interieur": { nom: "Intérieur CI", prix: 3500, detail: "Toutes les villes de l'intérieur." },
+            "bouake": { nom: "Bouaké", prix: 0, detail: "Retrait gratuit en boutique à Bouaké." }
+        };
+
         const products = [
-            { 
-                id: 1, cat: "sac", name: "Sac Prestige Latyya Noir", price: 45000, 
-                images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=500"],
-                couleurs: ["Noir", "Or"], description: "Élégance Signature Latyya."
-            },
-            { 
-                id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, 
-                images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],
-                description: "Finition or 24K."
-            }
+            { id: 1, cat: "sac", name: "Sac Prestige Latyya", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=500"], couleurs: ["Noir", "Or"], description: "Élégance Signature Latyya. Cuir Premium." },
+            { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K." }
         ];
 
         let cart = [];
@@ -236,7 +268,7 @@
             currentProduct = p;
             document.getElementById('productDetailModal').classList.add('active');
             document.getElementById('main-detail-img').src = p.images[0];
-            document.getElementById('thumbnails').innerHTML = p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" class="h-14 w-14 object-cover rounded cursor-pointer">`).join('');
+            document.getElementById('thumbnails').innerHTML = p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-orange-500">`).join('');
             document.getElementById('detail-name').innerText = p.name;
             document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
             document.getElementById('detail-desc').innerText = p.description;
@@ -255,30 +287,31 @@
             } else { cArea.classList.add('hidden'); }
 
             const url = encodeURIComponent(window.location.href);
-            document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=Luxe chez Latyya: ${url}`);
+            document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=Regarde ce magnifique article chez LATYYA: ${url}`);
+            document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
         }
 
         function ajouterDepuisDetail() {
             const size = document.getElementById('select-size').value || "";
             const color = document.getElementById('select-color').value || "";
-            const label = `${currentProduct.name} ${size} ${color}`;
+            const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
             const index = cart.findIndex(x => x.label === label);
             if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
             document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
             document.getElementById('productDetailModal').classList.remove('active');
-            alert("✅ Ajouté");
+            alert("✅ Ajouté au panier !");
         }
 
         function ouvrirPanier() {
             document.getElementById('cartModal').classList.add('active');
             const itemsDiv = document.getElementById('cart-items');
             const form = document.getElementById('checkout-form');
-            if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 font-bold text-[10px] uppercase'>Vide</p>"; form.style.display = "none"; return; }
+            if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 font-bold text-[10px] uppercase'>Panier Vide</p>"; form.style.display = "none"; return; }
             form.style.display = "block";
             itemsDiv.innerHTML = cart.map(item => `
                 <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
-                    <div>${item.label}</div>
-                    <div class="flex gap-2">
+                    <div class="flex-1">${item.label}</div>
+                    <div class="flex gap-2 items-center">
                         <button onclick="modifierQty('${item.label}',-1)" class="bg-gray-100 px-2 rounded">-</button>
                         <span>${item.qty}</span>
                         <button onclick="modifierQty('${item.label}',1)" class="bg-gray-100 px-2 rounded">+</button>
@@ -295,36 +328,42 @@
         }
 
         function majResume() {
-            const zone = document.getElementById('zone-livraison').value;
+            const zoneKey = document.getElementById('zone-livraison').value;
+            const infoBox = document.getElementById('communes-info');
             let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
             if(tArt >= 20000) tArt *= 0.8;
-            let tLiv = zone === "abidjan" ? 1500 : (zone === "interieur" ? 3500 : 0);
+            let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
+            if(zoneKey) { infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; infoBox.classList.remove('hidden'); }
+            else { infoBox.classList.add('hidden'); }
+            document.getElementById('resume-final').innerHTML = `<p>Articles : ${tArt.toLocaleString()} F</p><p>Livraison : ${tLiv.toLocaleString()} F</p>`;
             document.getElementById('total-display').innerText = (tArt + tLiv).toLocaleString();
-            document.getElementById('resume-final').innerText = `TOTAL ARTICLES: ${tArt.toLocaleString()} F | LIVRAISON: ${tLiv} F`;
         }
 
         function toggleBouton() {
             const chk = document.getElementById('check-verif').checked;
-            document.getElementById('btn-final').className = chk ? "w-full ali-gradient text-white py-4 rounded-xl font-black uppercase" : "w-full btn-disabled text-white py-4 rounded-xl font-black uppercase";
-            document.getElementById('btn-final').disabled = !chk;
+            const btn = document.getElementById('btn-final');
+            btn.className = chk ? "w-full ali-gradient text-white py-4 rounded-full font-black uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-black uppercase";
+            btn.disabled = !chk;
         }
 
         function validerCommande() {
             const nom = document.getElementById('nom-client').value;
             const quartier = document.getElementById('tel-client').value;
+            const zoneKey = document.getElementById('zone-livraison').value;
             const mode = document.getElementById('mode-pay').value;
             const total = document.getElementById('total-display').innerText;
             let list = ""; cart.forEach(i => list += `- ${i.label} (x${i.qty})\n`);
-            let msg = `*COMMANDE LATYYA*\n👤 ${nom}\n📍 ${quartier}\n🛍️ ARTICLES:\n${list}\n💰 TOTAL: ${total} F\n💳 MODE: ${mode}`;
+            let msg = `*COMMANDE LATYYA*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n🛍️ ARTICLES:\n${list}\n💰 TOTAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
             window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
         }
 
+        function envoyerMessage(e) { e.preventDefault(); window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(`Contact de ${document.getElementById('contact-nom').value}: ${document.getElementById('contact-msg').value}`)); }
         function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
-        function suivreColis() { alert("Suivi via WhatsApp."); }
+        function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
 
         setInterval(() => {
             const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
-            if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO EN COURS !"; return; }
+            if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
             const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
             document.getElementById('countdown').innerText = d + "j " + h + "h " + m + "m " + s + "s";
         }, 1000);
