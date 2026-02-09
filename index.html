@@ -63,6 +63,18 @@
         #canvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
         .spin-trigger { background: #000; color: #fff; padding: 15px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; border: none; font-size: 14px; letter-spacing: 2px; width: 100%; }
         .spin-trigger:disabled { background: #ccc; cursor: not-allowed; }
+            @keyframes cart-shake {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.3) rotate(15deg); }
+    50% { transform: scale(1.3) rotate(-15deg); }
+    75% { transform: scale(1.3) rotate(15deg); }
+    100% { transform: scale(1); }
+}
+
+.animate-cart {
+    animation: cart-shake 0.5s ease-in-out;
+}
+
     </style>
 </head>
 <body>
@@ -390,18 +402,24 @@
     const index = cart.findIndex(x => x.label === label);
     if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
     
-    // Mise à jour du compteur
-    document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+    // 1. Mise à jour du compteur
+    const cartCount = document.getElementById('cart-count');
+    cartCount.innerText = cart.reduce((a, b) => a + b.qty, 0);
     
-    // Fermeture du modal détail
+    // 2. ANIMATION SECOUSSE DU PANIER (sur l'icône parente)
+    const cartIcon = cartCount.parentElement;
+    cartIcon.classList.add('animate-cart');
+    setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
+
+    // 3. Fermeture du modal détail
     document.getElementById('productDetailModal').classList.remove('active');
 
-    // --- VIBRATION MOBILE ---
+    // 4. VIBRATION MOBILE
     if (navigator.vibrate) {
-        navigator.vibrate(50); // Vibration de 50ms
+        navigator.vibrate(50);
     }
     
-    // --- ANIMATION DU TOAST ---
+    // 5. AFFICHAGE DU TOAST (Notification)
     const toast = document.getElementById('toast');
     toast.classList.remove('opacity-0');
     setTimeout(() => {
@@ -409,8 +427,7 @@
     }, 2000);
 }
 
-
-        function ouvrirPanier() {
+       function ouvrirPanier() {
             document.getElementById('cartModal').classList.add('active');
             const itemsDiv = document.getElementById('cart-items');
             const form = document.getElementById('checkout-form');
@@ -491,13 +508,13 @@
             window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
         }
 
-        // --- ROUE DE LA FORTUNE (16 SEGMENTS, 3 CHANCES/JOUR) ---
+        // --- ROUE DE LA FORTUNE (16 SEGMENTS, 1 CHANCES/SEMAINE) ---
         const prizes = ["-5%", "RÉESSAYER", "LIVRAISON GRATUITE", "RÉESSAYER", "-10%", "RÉESSAYER", "CADEAU SURPRISE", "RÉESSAYER", "-2%", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER"];
         const colors = prizes.map((p, i) => i % 2 === 0 ? (p === "RÉESSAYER" ? "#333333" : "#ff6600") : "#000000");
         const canva = document.getElementById('canvas');
         const ctx = canva.getContext('2d');
         const arc = Math.PI / (prizes.length / 2);
-        const MAX_TENTATIVES = 3;
+        const MAX_TENTATIVES = 1;
 
         function drawWheel() {
             ctx.clearRect(0, 0, 300, 300);
