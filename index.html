@@ -528,43 +528,65 @@
         }
 
         function majAffichageChances() {
-            const aujourdhui = new Date().toLocaleDateString();
-            let stats = JSON.parse(localStorage.getItem('latyya_wheel_stats')) || { date: aujourdhui, count: 0 };
-            if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
-            const reste = MAX_TENTATIVES - stats.count;
-            const msgZone = document.getElementById('wheel-msg');
-            if(reste <= 0) {
-                msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE (REVIENS DEMAIN)</span>`;
-                document.getElementById('spin').disabled = true;
-                document.getElementById('spin').innerText = "LIMITÉE ATTEINTE";
-            } else {
-                msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/3</span>`;
-            }
-            return stats;
-        }
+    const aujourdhui = new Date().toLocaleDateString();
+    // Utilisation de la clé correcte
+    let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: aujourdhui, count: 0 };
+    
+    if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
+    
+    const reste = MAX_TENTATIVES - stats.count;
+    const msgZone = document.getElementById('wheel-msg');
+    
+    if(reste <= 0) {
+        msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE (REVIENS DEMAIN)</span>`;
+        document.getElementById('spin').disabled = true;
+        document.getElementById('spin').innerText = "LIMITE ATTEINTE";
+    } else {
+        msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/${MAX_TENTATIVES}</span>`;
+    }
+    return stats;
+}
+
 
         document.getElementById('spin').onclick = function() {
-            const btn = this;
-            let stats = majAffichageChances();
-            if (stats.count >= MAX_TENTATIVES) return;
-            btn.disabled = true; btn.innerText = "LANCEMENT...";
-            const spins = 1800 + Math.random() * 1800; 
-            canva.style.transform = `rotate(${spins}deg)`;
-            setTimeout(() => {
-                const actualDeg = spins % 360;
-                const win = prizes[Math.floor((360 - actualDeg) / (360 / prizes.length)) % prizes.length];
-                stats.count++;
-                localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
-                majAffichageChances();
-                if(win === "RÉESSAYER") {
-                    alert(stats.count < MAX_TENTATIVES ? "🤫 Retente ta chance !" : "🤫 Plus de chances pour aujourd'hui.");
-                    if(stats.count < MAX_TENTATIVES) { btn.disabled = false; btn.innerText = "RETENTER"; }
-                } else {
-                    alert("🎁 GAGNÉ : " + win + " !):,if (navigator.vibrate) navigator.vibrate([100, 50, 100]); // Vibration en deux temps (Vibre, Pause, Vibre)\nCapture l'écran et envoie-le sur WhatsApp.");
-                    btn.innerText = "BIEN JOUÉ !";
-                }
-            }, 4000);
-        };
+    const btn = this;
+    let stats = majAffichageChances();
+    if (stats.count >= MAX_TENTATIVES) return;
+
+    btn.disabled = true; 
+    btn.innerText = "LANCEMENT...";
+    
+    // Calcul de la rotation
+    const spins = 1800 + Math.random() * 1800; 
+    canva.style.transform = `rotate(${spins}deg)`;
+
+    setTimeout(() => {
+        const actualDeg = spins % 360;
+        const segmentAngle = 360 / prizes.length;
+        // Calcul de l'index gagnant (on part du haut de la roue)
+        const winIndex = Math.floor(((360 - (actualDeg % 360)) % 360) / segmentAngle);
+        const win = prizes[winIndex];
+
+        stats.count++;
+        // Correction du nom de la clé : latyfa_wheel_stats
+        localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
+        majAffichageChances();
+
+        if(win === "RÉESSAYER") {
+            alert(stats.count < MAX_TENTATIVES ? "🤫 Retente ta chance !" : "🤫 Plus de chances pour aujourd'hui.");
+            if(stats.count < MAX_TENTATIVES) { 
+                btn.disabled = false; 
+                btn.innerText = "RETENTER"; 
+            }
+        } else {
+            // Correction de la syntaxe de l'alert
+            alert("🎁 GAGNÉ : " + win + " !\n\nCapture l'écran et envoie-le sur WhatsApp pour réclamer ton cadeau.");
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            btn.innerText = "BIEN JOUÉ !";
+        }
+    }, 4000);
+};
+
 
         // --- DIVERS ---
         function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
