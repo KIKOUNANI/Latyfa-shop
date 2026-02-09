@@ -508,25 +508,6 @@
             window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
         }
 
-        // --- ROUE DE LA FORTUNE (16 SEGMENTS, 1 CHANCES/SEMAINE) ---
-        const prizes = ["-5%", "RÉESSAYER", "LIVRAISON GRATUITE", "RÉESSAYER", "-10%", "RÉESSAYER", "CADEAU SURPRISE", "RÉESSAYER", "-2%", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER"];
-        const colors = prizes.map((p, i) => i % 2 === 0 ? (p === "RÉESSAYER" ? "#333333" : "#ff6600") : "#000000");
-        const canva = document.getElementById('canvas');
-        const ctx = canva.getContext('2d');
-        const arc = Math.PI / (prizes.length / 2);
-        const MAX_TENTATIVES = 1;
-
-        function drawWheel() {
-            ctx.clearRect(0, 0, 300, 300);
-            prizes.forEach((p, i) => {
-                ctx.beginPath(); ctx.fillStyle = colors[i]; ctx.moveTo(150, 150);
-                ctx.arc(150, 150, 150, i * arc, (i + 1) * arc); ctx.fill();
-                ctx.save(); ctx.fillStyle = "white"; ctx.translate(150, 150);
-                ctx.rotate(i * arc + arc / 2); ctx.font = "bold 8px Arial";
-                ctx.textAlign = "right"; ctx.fillText(p, 140, 5); ctx.restore();
-            });
-        }
-
         function majAffichageChances() {
     const aujourdhui = new Date().toLocaleDateString();
     // Utilisation de la clé correcte
@@ -547,45 +528,6 @@
     return stats;
 }
 
-
-        document.getElementById('spin').onclick = function() {
-    const btn = this;
-    let stats = majAffichageChances();
-    if (stats.count >= MAX_TENTATIVES) return;
-
-    btn.disabled = true; 
-    btn.innerText = "LANCEMENT...";
-    
-    // Calcul de la rotation
-    const spins = 1800 + Math.random() * 1800; 
-    canva.style.transform = `rotate(${spins}deg)`;
-
-    setTimeout(() => {
-        const actualDeg = spins % 360;
-        const segmentAngle = 360 / prizes.length;
-        // Calcul de l'index gagnant (on part du haut de la roue)
-        const winIndex = Math.floor(((360 - (actualDeg % 360)) % 360) / segmentAngle);
-        const win = prizes[winIndex];
-
-        stats.count++;
-        // Correction du nom de la clé : latyfa_wheel_stats
-        localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
-        majAffichageChances();
-
-        if(win === "RÉESSAYER") {
-            alert(stats.count < MAX_TENTATIVES ? "🤫 Retente ta chance !" : "🤫 Plus de chances pour aujourd'hui.");
-            if(stats.count < MAX_TENTATIVES) { 
-                btn.disabled = false; 
-                btn.innerText = "RETENTER"; 
-            }
-        } else {
-            // Correction de la syntaxe de l'alert
-            alert("🎁 GAGNÉ : " + win + " !\n\nCapture l'écran et envoie-le sur WhatsApp pour réclamer ton cadeau.");
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            btn.innerText = "BIEN JOUÉ !";
-        }
-    }, 4000);
-};
 
 
         // --- DIVERS ---
