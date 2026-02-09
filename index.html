@@ -6,6 +6,7 @@
     <title>LATYFA BOUTIQUE | Officiel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
@@ -498,15 +499,40 @@
         }
 
         function validerCommande() {
-            const nom = document.getElementById('nom-client').value;
-            const quartier = document.getElementById('tel-client').value;
-            const zoneKey = document.getElementById('zone-livraison').value;
-            const mode = document.getElementById('mode-pay').value;
-            const total = document.getElementById('total-display').innerText;
-            let list = ""; cart.forEach(i => list += `- ${i.label} (x${i.qty})\n`);
-            let msg = `*COMMANDE LATYFA BOUTIQUE*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n🛍️ ARTICLES:\n${list}\n💰 TOTAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
-            window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-        }
+    const nom = document.getElementById('nom-client').value;
+    const quartier = document.getElementById('tel-client').value;
+    const zoneKey = document.getElementById('zone-livraison').value;
+    const mode = document.getElementById('mode-pay').value;
+    const total = document.getElementById('total-display').innerText;
+    
+    let list = ""; 
+    let articlesLuxe = [];
+    cart.forEach(i => {
+        list += `- ${i.label} (x${i.qty})\n`;
+        articlesLuxe.push(`${i.label} (x${i.qty})`);
+    });
+
+    // --- SAUVEGARDE POUR L'ADMIN ---
+    const nouvelleCommande = {
+        id: Date.now(),
+        date: new Date().toLocaleString('fr-FR'),
+        client: nom,
+        lieu: quartier,
+        zone: tarifsLivraison[zoneKey].nom,
+        articles: articlesLuxe,
+        total: total,
+        paiement: mode
+    };
+    
+    let historiques = JSON.parse(localStorage.getItem('latyfa_orders')) || [];
+    historiques.unshift(nouvelleCommande); // Ajoute au début
+    localStorage.setItem('latyfa_orders', JSON.stringify(historiques));
+    // -------------------------------
+
+    let msg = `*COMMANDE LATYFA BOUTIQUE*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n🛍️ ARTICLES:\n${list}\n💰 TOTAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
+    window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+}
+
 
         // --- ROUE DE LA FORTUNE (16 SEGMENTS, 1 CHANCES/SEMAINE) ---
         const prizes = ["-5%", "RÉESSAYER", "LIVRAISON GRATUITE", "RÉESSAYER", "-10%", "RÉESSAYER", "CADEAU SURPRISE", "RÉESSAYER", "-2%", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER", "RÉESSAYER"];
@@ -684,6 +710,60 @@ function refreshAdminList() {
         </div>
     `).join('');
 }
+        function refreshOrdersList() {
+    const list = document.getElementById('admin-orders-list');
+    const commandes = JSON.parse(localStorage.getItem('latyfa_orders')) || [];
+    
+    if(commandes.length === 0) {
+        list.innerHTML = "<p class='text-[9px] text-gray-400'>Aucune commande enregistrée.</p>";
+        return;
+    }
+
+    list.innerHTML = commandes.map(c => `
+        <div class="bg-gray-50 p-3 rounded border text-[9px] relative group">
+            <p class="font-black text-black">DATE: ${c.date}</p>
+            <p>CLIENT: ${c.client} (${c.lieu})</p>
+            <p>ARTICLES: ${c.articles.join(', ')}</p>
+            <p class="font-bold text-orange-600 text-[11px]">TOTAL: ${c.total} F</p>
+            <button onclick="genererPDF(${c.id})" class="mt-2 bg-black text-white px-2 py-1 rounded text-[8px] uppercase">Télécharger PDF</button>
+        </div>
+    `).join('');
+}
+
+// Appel de la liste quand on ouvre l'admin
+function ouvrirAdmin() {
+    const mdp = prompt("Code d'accès Admin :");
+    if(mdp === "2026") {
+        document.getElementById('adminModal').classList.add('active');
+        refreshAdminList();
+        refreshOrdersList(); // On rafraîchit aussi les commandes
+    } else { alert("Accès refusé"); }
+}
+
+async function genererPDF(id) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const cmd = JSON.parse(localStorage.getItem('latyfa_orders')).find(o => o.id === id);
+
+    doc.setFontSize(20);
+    doc.text("BON DE COMMANDE - LATYFA SHOP", 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Date: ${cmd.date}`, 20, 40);
+    doc.text(`Client: ${cmd.client}`, 20, 50);
+    doc.text(`Lieu de livraison: ${cmd.lieu} (${cmd.zone})`, 20, 60);
+    doc.text(`Mode de paiement: ${cmd.paiement}`, 20, 70);
+    
+    doc.text("Articles:", 20, 90);
+    cmd.articles.forEach((art, index) => {
+        doc.text(`- ${art}`, 25, 100 + (index * 10));
+    });
+
+    doc.setFontSize(14);
+    doc.text(`TOTAL A PAYER: ${cmd.total} F CFA`, 20, 150);
+    
+    doc.save(`Commande_${cmd.client}_${id}.pdf`);
+}
+
 
    </script>
     <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
@@ -713,6 +793,12 @@ function refreshAdminList() {
 
         <div class="mt-10">
             <h3 class="text-[10px] font-black uppercase mb-4 text-gray-400 tracking-widest">Articles en ligne</h3>
+            <div class="mt-10 border-t pt-6">
+    <h3 class="text-[10px] font-black uppercase mb-4 text-[#c5a059] tracking-widest">Historique des Commandes</h3>
+    <div id="admin-orders-list" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+        </div>
+</div>
+
             <div id="admin-list" class="space-y-2 max-h-60 overflow-y-auto pr-2 text-[10px] font-bold uppercase"></div>
         </div>
     </div>
