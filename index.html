@@ -218,6 +218,9 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
             Autres <i class="fa-solid fa-plus text-[10px]"></i>
         </span>
     </div>
+          <span class="category-link cursor-pointer flex justify-between items-center text-blue-600" onclick="filtrerNouveautes()">
+    Nouveautés <i class="fa-solid fa-sparkles text-[10px]"></i>
+</span>  
 </aside>
 
         <main class="flex-1">
@@ -576,15 +579,15 @@ function afficherResultatsRecherche(liste) {
     const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
 
     grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
-        // Calcul pour le badge Nouveauté
+        // Calcul du badge Nouveauté
         const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
         
         return `
-${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 PLUS QUE 2 EN STOCK !</span>' : ''}
-
             <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
                 
-                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse border border-white">NOUVEAU</span>' : ''}
+                
+                ${p.stockBas && p.enStock !== false ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 DERNIERS ARTICLES</span>' : ''}
                 
                 ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
                 
@@ -600,8 +603,7 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
             </div>`;
     }).join('');
 }
-
-    function voirDetails(id) {
+  function voirDetails(id) {
         const p = products.find(x => x.id === id);
         currentProduct = p;
         document.getElementById('productDetailModal').classList.add('active');
@@ -1208,6 +1210,19 @@ window.addEventListener('load', () => {
         document.getElementById('loader').classList.add('loader-hidden');
     }, 1500);
 });
+function filtrerNouveautes() {
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
+    const grid = document.getElementById('product-grid');
+    // On ne garde que ceux ajoutés il y a moins de 7 jours
+    const nouveautes = products.filter(p => p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS));
+    
+    if(nouveautes.length === 0) {
+        alert("Pas de nouveaux articles cette semaine, revenez bientôt ! ✨");
+    } else {
+        // On réutilise la logique de render avec les nouveautés uniquement
+        afficherResultatsRecherche(nouveautes); 
+    }
+}
 
 </script>
 
