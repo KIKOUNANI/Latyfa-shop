@@ -184,57 +184,54 @@ nav button:focus {
         ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE — 🚚 EXPÉDITION SOUS 48H DANS TOUTE LA CÔTE D'IVOIRE — ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE —
     </div>
 </div>
+<header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+            <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
+            <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
+        </div>
 
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-    <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
-    <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
-            <div class="container mx-auto px-4 pb-3">
-    <div class="relative">
-        <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
-               class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
-        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-    </div>
-</div>    
-</div>
-            <div class="flex gap-6">
-                <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
-                    <i class="fa-solid fa-truck text-gray-600"></i>
-                    <p class="text-[9px] font-bold uppercase">Suivi</p>
-                </div>
-                <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
-                    <i class="fa-solid fa-cart-shopping text-gray-600"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
-                    <p class="text-[9px] font-bold uppercase">Panier</p>
-                </div>
+        <div class="flex gap-6 items-center">
+            <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#c5a059]">
+                <i class="fa-solid fa-truck text-gray-600"></i>
+                <p class="text-[9px] font-bold uppercase">Suivi</p>
+            </div>
+            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#c5a059]">
+                <i class="fa-solid fa-cart-shopping text-gray-600"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
+                <p class="text-[9px] font-bold uppercase">Panier</p>
             </div>
         </div>
-        <nav class="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
-    <div class="container mx-auto px-4">
-        <div class="flex items-center gap-6 overflow-x-auto no-scrollbar py-4">
-            
-            <button onclick="filtrerNouveautes()" class="flex-shrink-0 bg-[#c5a059] text-white px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md flex items-center gap-2">
-                <i class="fa-solid fa-sparkles"></i> Nouveautés
-            </button>
+    </div>
 
-            <button onclick="filtrerFavoris()" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-red-500 flex items-center gap-1">
-                <i class="fa-solid fa-heart text-red-500"></i> Mes Envies
-            </button>
-
-            <button onclick="render('tous')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-400 hover:text-[#c5a059]">Tout voir</button>
-            <button onclick="render('bijoux')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Bijoux</button>
-            <button onclick="render('sac')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Sacs</button>
-            <button onclick="render('parfum')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Parfums</button>
-            <button onclick="render('hanche')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Hanche</button>
+    <div class="container mx-auto px-4 pb-3">
+        <div class="relative">
+            <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
+                   class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
         </div>
     </div>
-</nav>
-<main id="collection" class="container mx-auto px-4 py-8">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" id="product-grid">
+
+    <div class="border-t border-gray-50 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center gap-6 overflow-x-auto no-scrollbar py-3">
+                <button onclick="filtrerNouveautes()" class="flex-shrink-0 bg-[#c5a059] text-white px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-sparkles"></i> Nouveautés
+                </button>
+
+                <button onclick="filtrerFavoris()" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-red-500 flex items-center gap-1">
+                    <i class="fa-solid fa-heart text-red-500"></i> Mes Envies
+                </button>
+
+                <button onclick="render('tous')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-400 hover:text-[#c5a059]">Tout voir</button>
+                <button onclick="render('bijoux')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Bijoux</button>
+                <button onclick="render('sac')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Sacs</button>
+                <button onclick="render('parfum')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Parfums</button>
+                <button onclick="render('hanche')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Hanche</button>
+            </div>
         </div>
-</main>
-    </header>
+    </div>
+</header>
 
     <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
         <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
