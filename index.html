@@ -1122,48 +1122,68 @@ function chargerHistorique() {
         `;
     }
 }
+    function genererApercuAdmin() {
+    const input = document.getElementById('adm-img').value;
+    const previewZone = document.getElementById('admin-preview-zone');
+    
+    // On transforme le texte en tableau
+    const liens = input.split(',').map(l => l.trim()).filter(l => l !== "");
+    
+    if(liens.length === 0) {
+        previewZone.innerHTML = "";
+        return;
+    }
+
+    // On génère le HTML des miniatures d'aperçu
+    previewZone.innerHTML = liens.map(url => `
+        <div class="relative min-w-[60px] h-[60px]">
+            <img src="${url}" class="w-full h-full object-cover rounded border border-[#c5a059]" onerror="this.src='https://placehold.co/60?text=Erreur'">
+        </div>
+    `).join('');
+}
+
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
-<div id="adminModal" class="modal bg-gray-50">
-    <div class="max-w-xl mx-auto pb-20">
-        <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
-            <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
-            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
+    <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
+    <div class="grid grid-cols-1 gap-4">
+        <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
+        <div class="grid grid-cols-2 gap-4">
+            <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
+            <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
+                <option value="bijoux">Bijoux</option>
+                <option value="vetements">Vêtements</option>
+                <option value="chaussures">Chaussures</option>
+                <option value="sac">Sacs</option>
+                <option value="parfum">Parfums</option>
+                <option value="hanche">Perles de hanche</option>
+                <option value="autres">Autres</option>
+            </select>
+        </div>
+        
+        <div class="space-y-2">
+            <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez par des virgules)</label>
+            <textarea id="adm-img" oninput="genererApercuAdmin()" placeholder="Lien1, Lien2..." class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+            
+            <div id="admin-preview-zone" class="flex gap-2 overflow-x-auto py-2 no-scrollbar">
+                </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
-            <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
-            <div class="grid grid-cols-1 gap-4">
-                <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
-                    <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
-                        <option value="bijoux">Bijoux</option>
-                        <option value="vetements">Vêtements</option>
-                        <option value="chaussures">Chaussures</option>
-                        <option value="sac">Sacs</option>
-                        <option value="parfum">Parfums</option>
-                        <option value="hanche">Perles de hanche</option>
-                        <option value="autres">Autres</option>
-                    </select>
-                </div>
-               <div class="space-y-1">
-    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez les liens par une virgule si plusieurs)</label>
-    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-</div> 
-                <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm mt-2">
-                <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                <div class="flex items-center gap-2 mb-4">
-    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Activer l'alerte "Stock Limité"</label>
-</div>
-                <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
-            </div>
+        <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm">
+        <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+        
+        <div class="flex items-center gap-2 mb-4">
+            <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+            <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Alerte "Stock Limité"</label>
         </div>
+        
+        <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
+    </div>
+</div>
 
         <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
         <div id="admin-list" class="space-y-2 mb-10">
