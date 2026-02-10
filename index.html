@@ -1069,8 +1069,8 @@ function chargerHistorique() {
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
 <div id="adminModal" class="modal bg-gray-50">
-    <div class="max-w-xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
+    <div class="max-w-xl mx-auto pb-20">
+        <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
             <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
             <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
         </div>
@@ -1090,21 +1090,6 @@ function chargerHistorique() {
                         <option value="hanche">Perles de hanche</option>
                         <option value="autres">Autres</option>
                     </select>
-                    <div class="flex justify-between items-center mb-4">
-    <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
-        <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
-    </h3>
-    <button onclick="effacerToutLHistorique()" 
-            class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black hover:bg-red-600 hover:text-white transition-all flex items-center gap-1">
-        <i class="fa-solid fa-trash-can"></i> Tout effacer
-    </button>
-</div>
-
-    <i class="fa-solid fa-clock-rotate-left"></i> Voir l'historique des clics WhatsApp
-</button>
-
-<div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2">
-    </div>
                 </div>
                 <input type="text" id="adm-img" placeholder="Lien de l'image (URL) *" class="w-full border p-3 rounded-lg text-sm">
                 <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
@@ -1113,10 +1098,30 @@ function chargerHistorique() {
         </div>
 
         <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
-        <div id="admin-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+        <div id="admin-list" class="space-y-2 mb-10">
             </div>
+
+        <div class="pt-8 border-t-2 border-dashed border-gray-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
+                    <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
+                </h3>
+                <button onclick="effacerToutLHistorique()" 
+                        class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black hover:bg-red-600 hover:text-white transition-all">
+                    <i class="fa-solid fa-trash-can"></i> Vider
+                </button>
+            </div>
+            
+            <button onclick="toggleHistorique()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
+                <i class="fa-solid fa-clock-rotate-left"></i> Voir l'historique WhatsApp
+            </button>
+
+            <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10">
+                </div>
+        </div>
     </div>
 </div>
+
 <div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
     <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
         <div class="flex justify-between items-center mb-4">
