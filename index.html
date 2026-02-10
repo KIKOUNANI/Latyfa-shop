@@ -982,26 +982,40 @@ function ouvrirAdmin() {
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
-    const img = document.getElementById('adm-img').value;
+    const imgInput = document.getElementById('adm-img').value; // Récupère le texte brut
+    const videoUrl = document.getElementById('adm-video').value;
 
-    if(!name || !price || !img) return alert("Remplis les champs obligatoires !");
+    if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
+
+    // --- LA MAGIE EST ICI ---
+    // On coupe le texte à chaque virgule et on enlève les espaces vides
+    const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
 
     const newP = {
         id: Date.now(),
         name: name,
         price: parseInt(price),
         cat: document.getElementById('adm-cat').value,
-        images: [img],
+        images: imagesArray, // On enregistre le tableau d'images
+        video: videoUrl || null, // La vidéo reste à part
         description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
         enStock: true,
+        stockBas: document.getElementById('adm-stock-bas').checked,
         dateAjout: Date.now() 
     };
 
     products.push(newP);
     localStorage.setItem('latyfa_db', JSON.stringify(products));
+    
+    // Nettoyage des champs
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    
     refreshAdminList();
     render();
-    alert("Produit ajouté !");
+    alert("Produit ajouté avec " + imagesArray.length + " image(s) !");
 }
 
 function toggleStock(id) {
@@ -1137,7 +1151,10 @@ function chargerHistorique() {
                         <option value="autres">Autres</option>
                     </select>
                 </div>
-                <input type="text" id="adm-img" placeholder="Lien de l'image (URL) *" class="w-full border p-3 rounded-lg text-sm">
+               <div class="space-y-1">
+    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez les liens par une virgule si plusieurs)</label>
+    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+</div> 
                 <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm mt-2">
                 <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
                 <div class="flex items-center gap-2 mb-4">
