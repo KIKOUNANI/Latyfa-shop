@@ -102,9 +102,31 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 .animate-marquee:hover {
     animation-play-state: paused;
 }
+            @keyframes loading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Classe pour cacher le loader proprement */
+.loader-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
 </style>
 </head>
 <body>    
+    <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
+    <div class="relative">
+        <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-24 w-24 rounded-full border-2 border-[#c5a059] animate-pulse shadow-[0_0_20px_rgba(197,160,89,0.3)]">
+    </div>
+    <div class="mt-6 flex flex-col items-center">
+        <span class="logo-font text-2xl text-[#c5a059] italic tracking-tighter">LATYFA SHOP</span>
+        <div class="w-32 h-[1px] bg-gray-800 mt-3 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[#c5a059] animate-[loading_1.5s_ease-in-out_infinite]"></div>
+        </div>
+    </div>
+</div>
+
 <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 bg-black/90 text-[#c5a059] px-6 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest z-[2000] opacity-0 transition-opacity duration-300 pointer-events-none">
     ✨ Produit ajouté au panier
 </div>
@@ -974,7 +996,12 @@ function refreshAdminList() {
         </div>
     `).join('');
 }
-
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        loader.classList.add('loader-hidden');
+    }, 1500); // 1.5 seconde pour un effet luxe bien dosé
+});
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
