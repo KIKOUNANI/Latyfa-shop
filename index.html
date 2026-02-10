@@ -866,7 +866,17 @@ if(p.enStock === false) {
         return;
     }
 
-    // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
+  // --- AJOUT : ENVOI EMAIL ---
+const emailClient = "client@exemple.com"; // Tu peux ajouter un input email si tu veux le vrai mail client
+emailjs.send("service_default", "template_latyfa", {
+    to_name: nom,
+    from_name: "Latyfa Shop",
+    message: list,
+    total: total,
+    delivery_zone: tarifsLivraison[zoneKey].nom,
+    reply_to: "ton-email@gmail.com"
+}).then(() => console.log("Email de confirmation envoyé !"));
+  // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
     const nouvelleCommande = {
         date: new Date().toLocaleString('fr-FR'),
         client: nom,
@@ -910,6 +920,7 @@ if(p.enStock === false) {
     msg += `💳 *MODE DE PAIEMENT :* ${mode}\n`;
     msg += `───────────────\n`;
     msg += `_Commande générée depuis la boutique en ligne._`;
+        
 
     // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
@@ -917,7 +928,12 @@ if(p.enStock === false) {
 
 
     // --- DIVERS ---
-    function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
+    function ouvrirGuide() {
+    const guide = document.getElementById('guideModal');
+    if(guide) {
+        guide.classList.add('active');
+        document.getElementById('productDetailModal').classList.remove('active'); }
+    }
     function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
     function updateVisitorCount() {
         let count = localStorage.getItem('latyfa_visitors') || 1250;
@@ -925,7 +941,6 @@ if(p.enStock === false) {
         localStorage.setItem('latyfa_visitors', count);
         if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
     }
-
     setInterval(() => {
         const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
         if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
@@ -983,6 +998,7 @@ function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
     const img = document.getElementById('adm-img').value;
+    const stockBas = document.getElementById('adm-stock-bas').checked; // Récupère la case cochée
 
     if(!name || !price || !img) return alert("Remplis les champs obligatoires !");
 
@@ -992,8 +1008,10 @@ function ajouterProduitAdmin() {
         price: parseInt(price),
         cat: document.getElementById('adm-cat').value,
         images: [img],
+        video: document.getElementById('adm-video').value || null, // Ajout du lien vidéo
         description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
         enStock: true,
+        stockBas: stockBas, // Enregistre l'état du stock bas
         dateAjout: Date.now() 
     };
 
@@ -1001,26 +1019,7 @@ function ajouterProduitAdmin() {
     localStorage.setItem('latyfa_db', JSON.stringify(products));
     refreshAdminList();
     render();
-    alert("Produit ajouté !");
-}
-
-function toggleStock(id) {
-    const p = products.find(x => x.id === id);
-    if(p) {
-        p.enStock = (p.enStock === undefined) ? false : !p.enStock;
-        localStorage.setItem('latyfa_db', JSON.stringify(products));
-        refreshAdminList();
-        render();
-    }
-}
-
-function supprimerProduit(id) {
-    if(confirm("Supprimer définitivement cet article ?")) {
-        products = products.filter(p => p.id !== id);
-        localStorage.setItem('latyfa_db', JSON.stringify(products));
-        refreshAdminList();
-        render();
-    }
+    alert("Produit ajouté avec succès !");}
 }
 
 function refreshAdminList() {
