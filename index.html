@@ -858,7 +858,16 @@ if(p.enStock === false) {
     const zoneKey = document.getElementById('zone-livraison').value;
     const mode = document.getElementById('mode-pay').value;
     const total = document.getElementById('total-display').innerText;
-        const nouvelleCommande = {
+    const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+    const optionCadeau = document.getElementById('check-cadeau').checked;
+    let cadeauMsg = optionCadeau ? "🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n" : "";
+    if(!nom || !quartier || !zoneKey) {
+        alert("⚠️ Remplissez vos infos !");
+        return;
+    }
+
+    // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
+    const nouvelleCommande = {
         date: new Date().toLocaleString('fr-FR'),
         client: nom,
         lieu: quartier + " (" + tarifsLivraison[zoneKey].nom + ")",
@@ -866,49 +875,8 @@ if(p.enStock === false) {
         total: total,
         promo: inputCode || "Aucun"
     };
-    
-    if(!nom || !quartier || !zoneKey) {
-        alert("⚠️ Oups ! Il manque vos informations de livraison.");
-        return;
-    }
 
-    // 1. Préparation de la liste des articles
-    let detailArticles = cart.map(i => `✅ ${i.label} (x${i.qty})`).join('\n');
-
-    // 2. Construction du message WhatsApp "Ultra-Pro"
-    let messageWA = `*NOUVELLE COMMANDE - LATYFA SHOP* 🛍️\n`;
-    messageWA += `------------------------------------------\n\n`;
-    messageWA += `Bonjour Latyfa, je souhaite valider ma commande :\n\n`;
-    messageWA += `👤 *NOM :* ${nom.toUpperCase()}\n`;
-    messageWA += `📍 *LIVRAISON :* ${quartier} (${tarifsLivraison[zoneKey].nom})\n`;
-    messageWA += `💳 *PAIEMENT :* ${mode}\n\n`;
-    messageWA += `📝 *MA SÉLECTION :*\n${detailArticles}\n\n`;
-    messageWA += `💰 *MONTANT TOTAL : ${total} FCFA*\n\n`;
-    messageWA += `------------------------------------------\n`;
-    messageWA += `_Commande passée via la boutique en ligne le ${new Date().toLocaleDateString()}_`;
-
-    // 3. Sauvegarde dans l'historique Admin
-    let hist = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-    hist.unshift({
-        date: new Date().toLocaleString(),
-        client: nom,
-        total: total,
-        articles: detailArticles
-    });
-    localStorage.setItem('latyfa_historique', JSON.stringify(hist));
-
-    // 4. Message de succès sur le site avant redirection
-    alert("✨ Merci " + nom + " ! Votre commande est prête.\n\nVous allez être redirigé vers notre service client WhatsApp pour finaliser l'expédition.");
-
-    // 5. Envoi vers WhatsApp
-    window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(messageWA));
-    
-    // Optionnel : Vider le panier après commande
-    cart = [];
-    majCartUI();
-    document.getElementById('cartModal').classList.remove('active');
-}
-   let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
     historique.unshift(nouvelleCommande); // Ajoute au début de la liste
     localStorage.setItem('latyfa_historique', JSON.stringify(historique));
 
@@ -946,6 +914,7 @@ if(p.enStock === false) {
     // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
 }
+
 
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
@@ -1137,22 +1106,6 @@ function chargerHistorique() {
             <img id="main-detail-img" src="${source}" 
             class="w-full h-80 object-cover rounded-xl shadow-md border">
         `;
-    }
-}
-    function majCartUI() {
-    // 1. Calculer le nombre total d'articles
-    const totalArticles = cart.reduce((total, produit) => total + produit.qty, 0);
-    
-    // 2. Mettre à jour le badge sur l'icône du panier
-    const badge = document.getElementById('cart-count');
-    if (badge) {
-        badge.innerText = totalArticles;
-        
-        // Petit effet d'animation pour montrer que l'ajout a réussi
-        badge.parentElement.classList.add('animate-cart');
-        setTimeout(() => {
-            badge.parentElement.classList.remove('animate-cart');
-        }, 500);
     }
 }
 </script>
