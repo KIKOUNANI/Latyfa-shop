@@ -1297,20 +1297,32 @@ function filtrerFavoris() {
     // Vérifier l'état au démarrage
 const MAINTENANCE_FORCEE = true; 
 
+// --- INTERRUPTEUR GÉNÉRAL ---
+const MAINTENANCE_FORCEE = true; // METTRE SUR TRUE POUR FERMER LA BOUTIQUE
+
 window.onload = function() {
-    // 2. Vérification de la maintenance
-    const maintenanceScreen = document.getElementById('maintenance-screen');
     const isLocalMaintenance = localStorage.getItem('latyfa_maintenance') === 'true';
 
     // Si on force dans le code OU si tu l'as activé via ton bouton ADM
-    if (MAINTENANCE_FORCEE || isLocalMaintenance) {
-        if (maintenanceScreen) {
-            maintenanceScreen.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
+    if (MAINTENANCE_FORCEE === true || isLocalMaintenance === true) {
+        // On crée l'écran de maintenance s'il n'existe pas ou on l'affiche
+        document.body.innerHTML = `
+            <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-family:sans-serif; padding:30px; background-color:#ffffff; position:fixed; inset:0; z-index:9999;">
+                <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; border:3px solid #c5a059; padding:5px;">
+                <h1 style="color:#c5a059; font-size:32px; font-weight:900; margin-bottom:10px;">LATYFA SHOP</h1>
+                <div style="width:50px; height:2px; background:#c5a059; margin:20px 0;"></div>
+                <h2 style="color:#333; font-size:18px; text-transform:uppercase; letter-spacing:2px; font-weight:bold;">Un instant de patience... ✨</h2> 
+                <p style="color:#777; font-size:14px; max-width:300px; margin-top:15px;">Nous préparons de nouvelles pépites pour vous. Revenez très vite !</p>
+                <button onclick="leverMaintenanceSecret()" style="margin-top:100px; opacity:0; cursor:default; border:none; background:none;">Admin</button>
+            </div>`;
+        document.body.style.overflow = 'hidden';
+        return; // ON ARRÊTE TOUT LE RESTE DU CODE ICI
     }
-        document.body.style.overflow = 'hidden'; // Empêche de scroller derrière
-    }
+
+    // Si pas de maintenance, on lance le site normalement
+    render(); 
+    updateVisitorCount();
+    majBadgePanier();
 };
 
 // Fonction pour l'Admin (à mettre dans votre panneau de contrôle)
@@ -1366,15 +1378,6 @@ function leverMaintenanceSecret() {
         alert("Code incorrect");
     }
 }
-    // 1. La fonction (le moteur)
-function majBadgePanier() {
-    if(document.getElementById('cart-count')) {
-        const totalArticles = cart.reduce((a, b) => a + b.qty, 0);
-        document.getElementById('cart-count').innerText = totalArticles;
-    }
-}
-// 2. L'appel (le démarrage) : INDISPENSABLE
-majBadgePanier();
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
