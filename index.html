@@ -832,9 +832,23 @@ if(p.enStock === false) {
     const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
 
     if(!nom || !quartier || !zoneKey) {
-        alert("⚠️ Merci de remplir votre nom, le quartier et la zone de livraison.");
+        alert("⚠️ Remplissez vos infos !");
         return;
     }
+
+    // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
+    const nouvelleCommande = {
+        date: new Date().toLocaleString('fr-FR'),
+        client: nom,
+        lieu: quartier + " (" + tarifsLivraison[zoneKey].nom + ")",
+        articles: cart.map(i => `${i.label} (x${i.qty})`).join(', '),
+        total: total,
+        promo: inputCode || "Aucun"
+    };
+
+    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
+    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
 
     // Sécurité : Marquer le code promo comme utilisé
     if (remiseCodePromo > 0 && inputCode) {
@@ -1002,6 +1016,52 @@ window.addEventListener('load', () => {
         loader.classList.add('loader-hidden');
     }, 1500); // 1.5 seconde pour un effet luxe bien dosé
 });
+    function toggleHistorique() {
+    const zone = document.getElementById('historique-zone');
+    if (zone.classList.contains('hidden')) {
+        zone.classList.remove('hidden');
+        chargerHistorique();
+    } else {
+        zone.classList.add('hidden');
+    }
+}
+
+function chargerHistorique() {
+    const zone = document.getElementById('historique-zone');
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+
+    if (historique.length === 0) {
+        zone.innerHTML = "<p class='text-[10px] text-center text-gray-400 uppercase font-bold'>Aucune commande enregistrée</p>";
+        return;
+    }
+
+    zone.innerHTML = historique.map(cmd => `
+        <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500 shadow-sm text-[10px]">
+            <div class="flex justify-between font-black text-blue-600 mb-1">
+                <span>📅 ${cmd.date}</span>
+                <span>💰 ${cmd.total} F</span>
+            </div>
+            <p><strong>👤 Client:</strong> ${cmd.client}</p>
+            <p><strong>📍 Lieu:</strong> ${cmd.lieu}</p>
+            <p><strong>🛍️ Articles:</strong> ${cmd.articles}</p>
+            <p class="text-[8px] text-gray-400 mt-1 italic">Code utilisé: ${cmd.promo}</p>
+        </div>
+    `).join('');
+}
+    function effacerToutLHistorique() {
+    // Sécurité : on demande confirmation avant de tout supprimer
+    if (confirm("🚨 VOULEZ-VOUS VRAIMENT TOUT EFFACER ?\nCette action est irréversible et supprimera tout l'historique de vos ventes.")) {
+        
+        // Supprime l'entrée de la mémoire
+        localStorage.removeItem('latyfa_historique');
+        
+        // Rafraîchit l'affichage pour montrer que c'est vide
+        chargerHistorique();
+        
+        // Petite alerte de succès
+        alert("✅ Historique vidé avec succès.");
+    }
+}
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
@@ -1030,6 +1090,21 @@ window.addEventListener('load', () => {
                         <option value="hanche">Perles de hanche</option>
                         <option value="autres">Autres</option>
                     </select>
+                    <div class="flex justify-between items-center mb-4">
+    <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
+        <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
+    </h3>
+    <button onclick="effacerToutLHistorique()" 
+            class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black hover:bg-red-600 hover:text-white transition-all flex items-center gap-1">
+        <i class="fa-solid fa-trash-can"></i> Tout effacer
+    </button>
+</div>
+
+    <i class="fa-solid fa-clock-rotate-left"></i> Voir l'historique des clics WhatsApp
+</button>
+
+<div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2">
+    </div>
                 </div>
                 <input type="text" id="adm-img" placeholder="Lien de l'image (URL) *" class="w-full border p-3 rounded-lg text-sm">
                 <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
