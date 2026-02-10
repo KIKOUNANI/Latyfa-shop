@@ -1356,6 +1356,15 @@ function leverMaintenanceSecret() {
         alert("Code incorrect");
     }
 }
+    // 1. La fonction (le moteur)
+function majBadgePanier() {
+    if(document.getElementById('cart-count')) {
+        const totalArticles = cart.reduce((a, b) => a + b.qty, 0);
+        document.getElementById('cart-count').innerText = totalArticles;
+    }
+}
+// 2. L'appel (le démarrage) : INDISPENSABLE
+majBadgePanier();
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
