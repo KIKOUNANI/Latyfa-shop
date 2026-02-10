@@ -586,7 +586,7 @@ function afficherResultatsRecherche(liste) {
         "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
         "bouake": { nom: "Retrait Boutique", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
     };
-
+    const MAINTENANCE_FORCEE = false;
     let products = [
         { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
         { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
@@ -1296,8 +1296,10 @@ function filtrerFavoris() {
 }
     // Vérifier l'état au démarrage
 window.onload = function() {
-    const isMaintenance = localStorage.getItem('latyfa_maintenance') === 'true';
-    if (isMaintenance) {
+    // On regarde si TOI tu as activé le bouton Admin (local)
+    const isMaintenanceLocal = localStorage.getItem('latyfa_maintenance') === 'true';    
+    // Si MAINTENANCE_FORCEE est sur true, tout le monde voit l'écran.
+    if (MAINTENANCE_FORCEE === true || isMaintenanceLocal === true) {
         document.getElementById('maintenance-screen').classList.remove('hidden');
         document.body.style.overflow = 'hidden'; // Empêche de scroller derrière
     }
