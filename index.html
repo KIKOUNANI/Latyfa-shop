@@ -657,9 +657,87 @@
     majAffichageChances(); 
     render(); 
     updateVisitorCount();
-</script>
-    // ... fin de ton script (le dernier bloc que je t'ai donné)
-    updateVisitorCount();
+    
+    // --- LOGIQUE DE PREUVE SOCIALE (Notifications de vente) ---
+const notifications = [
+    "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
+    "Nouveau colis expédié vers Yamoussoukro 📦",
+    "Une commande de Parfum Prestige vient d'être validée 🕯️",
+    "5 personnes consultent actuellement ce produit 🔥",
+    "Un ensemble de bijoux a été ajouté au panier à Bouaké 💎"
+];
+
+function showSocialProof() {
+    const box = document.getElementById('social-proof');
+    const text = document.getElementById('proof-text');
+    if(!box || !text) return;
+
+    text.innerText = notifications[Math.floor(Math.random() * notifications.length)];
+    box.classList.remove('translate-y-20', 'opacity-0');
+    
+    setTimeout(() => {
+        box.classList.add('translate-y-20', 'opacity-0');
+    }, 5000);
+}
+
+// Lancement de la preuve sociale
+setTimeout(() => {
+    showSocialProof();
+    setInterval(showSocialProof, 15000);
+}, 3000);
+
+// --- LOGIQUE ADMIN (Gestion du catalogue) ---
+function ouvrirAdmin() {
+    const mdp = prompt("Code d'accès Admin :");
+    if(mdp === "2026") {
+        document.getElementById('adminModal').classList.add('active');
+        refreshAdminList();
+    } else { alert("Accès refusé"); }
+}
+
+function ajouterProduitAdmin() {
+    const name = document.getElementById('adm-name').value;
+    const price = document.getElementById('adm-price').value;
+    const img = document.getElementById('adm-img').value;
+
+    if(!name || !price || !img) return alert("Remplis les champs obligatoires !");
+
+    const newP = {
+        id: Date.now(),
+        name: name,
+        price: parseInt(price),
+        cat: document.getElementById('adm-cat').value,
+        images: [img],
+        description: document.getElementById('adm-desc').value || "Produit Latyfa Business"
+    };
+
+    products.push(newP);
+    localStorage.setItem('latyfa_db', JSON.stringify(products)); // Sauvegarde locale
+    refreshAdminList();
+    render();
+    alert("Produit ajouté avec succès !");
+}
+
+function supprimerProduit(id) {
+    if(confirm("Supprimer définitivement cet article ?")) {
+        products = products.filter(p => p.id !== id);
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        refreshAdminList();
+        render();
+    }
+}
+
+function refreshAdminList() {
+    const list = document.getElementById('admin-list');
+    if(list) {
+        list.innerHTML = products.map(p => `
+            <div class="flex justify-between items-center bg-gray-100 p-2 rounded border mb-2">
+                <span class="font-bold text-[9px]">${p.name}</span>
+                <button onclick="supprimerProduit(${p.id})" class="text-red-500 font-bold text-[9px]">Supprimer</button>
+            </div>
+        `).join('');
+    }
+}
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
