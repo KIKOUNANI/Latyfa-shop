@@ -858,6 +858,14 @@ if(p.enStock === false) {
     const zoneKey = document.getElementById('zone-livraison').value;
     const mode = document.getElementById('mode-pay').value;
     const total = document.getElementById('total-display').innerText;
+        const nouvelleCommande = {
+        date: new Date().toLocaleString('fr-FR'),
+        client: nom,
+        lieu: quartier + " (" + tarifsLivraison[zoneKey].nom + ")",
+        articles: cart.map(i => `${i.label} (x${i.qty})`).join(', '),
+        total: total,
+        promo: inputCode || "Aucun"
+    };
     
     if(!nom || !quartier || !zoneKey) {
         alert("⚠️ Oups ! Il manque vos informations de livraison.");
@@ -900,17 +908,7 @@ if(p.enStock === false) {
     majCartUI();
     document.getElementById('cartModal').classList.remove('active');
 }
-    // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
-    const nouvelleCommande = {
-        date: new Date().toLocaleString('fr-FR'),
-        client: nom,
-        lieu: quartier + " (" + tarifsLivraison[zoneKey].nom + ")",
-        articles: cart.map(i => `${i.label} (x${i.qty})`).join(', '),
-        total: total,
-        promo: inputCode || "Aucun"
-    };
-
-    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+   let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
     historique.unshift(nouvelleCommande); // Ajoute au début de la liste
     localStorage.setItem('latyfa_historique', JSON.stringify(historique));
 
@@ -1139,6 +1137,22 @@ function chargerHistorique() {
             <img id="main-detail-img" src="${source}" 
             class="w-full h-80 object-cover rounded-xl shadow-md border">
         `;
+    }
+}
+    function majCartUI() {
+    // 1. Calculer le nombre total d'articles
+    const totalArticles = cart.reduce((total, produit) => total + produit.qty, 0);
+    
+    // 2. Mettre à jour le badge sur l'icône du panier
+    const badge = document.getElementById('cart-count');
+    if (badge) {
+        badge.innerText = totalArticles;
+        
+        // Petit effet d'animation pour montrer que l'ajout a réussi
+        badge.parentElement.classList.add('animate-cart');
+        setTimeout(() => {
+            badge.parentElement.classList.remove('animate-cart');
+        }, 500);
     }
 }
 </script>
