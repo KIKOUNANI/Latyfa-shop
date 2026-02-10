@@ -9,18 +9,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
-        :root { 
-            --latyfa-gold: #c5a059; /* Doré Luxe */
-            --latyfa-dark: #1a1a1a; /* Noir Profond */
-        }
-        
-        body { 
-            background-color: #fcfcfc; 
-            font-family: 'Montserrat', sans-serif; 
-            margin: 0; 
-            scroll-behavior: smooth; 
-        }
-            /* Style des liens de catégories */
+:root { 
+    /* MODIFIE CES 3 COULEURS ICI POUR TOUT CHANGER SUR LE SITE */
+    --latyfa-gold: #c5a059;   /* Doré Luxe */
+    --latyfa-dark: #1a1a1a;   /* Noir Profond */
+    --latyfa-accent: #ff6600; /* Couleur d'accent (Orange/Prix) */
+}
+
+body { 
+    background-color: #fcfcfc; 
+    font-family: 'Montserrat', sans-serif; 
+    margin: 0; 
+    scroll-behavior: smooth; 
+}
+
+/* Application des couleurs via variables */
+.logo-font, .text-[#c5a059] { color: var(--latyfa-gold) !important; }
+.text-[#ff6600] { color: var(--latyfa-accent) !important; }
+.bg-[#ff6600], .bg-[#c5a059] { background-color: var(--latyfa-gold) !important; }
+.ali-gradient { 
+    background: linear-gradient(90deg, var(--latyfa-gold) 0%, #e2c286 100%); 
+}
+
+/* Style des liens de catégories */
 .category-link {
     font-family: 'Montserrat', sans-serif;
     font-size: 11px;
@@ -33,49 +44,52 @@
 }
 
 .category-link:hover {
-    color: #c5a059; /* Ton Doré Luxe */
+    color: var(--latyfa-gold);
     padding-left: 5px;
-    border-bottom-color: #c5a059;
+    border-bottom-color: var(--latyfa-gold);
 }
 
+/* Police de luxe */
+h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 
-        /* Police de luxe pour les titres et le Logo */
-        h1, h2, h3, .logo-font { 
-            font-family: 'Playfair Display', serif; 
-        }
+/* Cartes produits */
+.product-card { 
+    background: white; 
+    border-radius: 8px; 
+    border: 1px solid transparent; 
+    height: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    cursor: pointer; 
+    transition: 0.2s; 
+}
+.product-card:hover { 
+    border-color: var(--latyfa-gold); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+}
 
-        .ali-gradient { 
-            background: linear-gradient(90deg, #c5a059 0%, #e2c286 100%); 
-        }
+/* Modales */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: white; overflow-y: auto; padding: 20px; }
+.modal.active { display: block; }
+.btn-disabled { background: #cccccc !important; cursor: not-allowed; opacity: 0.6; }
 
-        .product-card { background: white; border-radius: 8px; border: 1px solid transparent; height: 100%; display: flex; flex-direction: column; cursor: pointer; transition: 0.2s; }
-        .product-card:hover { border-color: var(--ali-orange); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: white; overflow-y: auto; padding: 20px; }
-        .modal.active { display: block; }
-        .btn-disabled { background: #cccccc !important; cursor: not-allowed; opacity: 0.6; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Styles de la Roue */
-        .wheel-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .wheel-mask.active { display: flex; }
-        .wheel-box { background: white; padding: 30px; border-radius: 30px; text-align: center; position: relative; width: 95%; max-width: 400px; border: 5px solid #ff6600;var(--latyfa-gold);}
-        #canvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
-        .spin-trigger { background: #000; color: #fff; padding: 15px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; border: none; font-size: 14px; letter-spacing: 2px; width: 100%; }
-        .spin-trigger:disabled { background: #ccc; cursor: not-allowed; }
-            @keyframes cart-shake {
+/* Roue de la fortune */
+.wheel-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+.wheel-mask.active { display: flex; }
+.wheel-box { background: white; padding: 30px; border-radius: 30px; text-align: center; position: relative; width: 95%; max-width: 400px; border: 5px solid var(--latyfa-gold); }
+#canvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; }
+.spin-trigger { background: #000; color: #fff; padding: 15px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; border: none; font-size: 14px; width: 100%; }
+
+/* Animations */
+@keyframes cart-shake {
     0% { transform: scale(1); }
     25% { transform: scale(1.3) rotate(15deg); }
     50% { transform: scale(1.3) rotate(-15deg); }
-    75% { transform: scale(1.3) rotate(15deg); }
     100% { transform: scale(1); }
 }
-
-.animate-cart {
-    animation: cart-shake 0.5s ease-in-out;
-}
-
-    </style>
+.animate-cart { animation: cart-shake 0.5s ease-in-out; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+</style>
 </head>
 <body>
     
@@ -709,28 +723,52 @@ if(p.enStock === false) {
     }
 
     function validerCommande() {
-        const nom = document.getElementById('nom-client').value;
-        const quartier = document.getElementById('tel-client').value;
-        const zoneKey = document.getElementById('zone-livraison').value;
-        const mode = document.getElementById('mode-pay').value;
-        const total = document.getElementById('total-display').innerText;
-        const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+    const nom = document.getElementById('nom-client').value;
+    const quartier = document.getElementById('tel-client').value;
+    const zoneKey = document.getElementById('zone-livraison').value;
+    const mode = document.getElementById('mode-pay').value;
+    const total = document.getElementById('total-display').innerText;
+    const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
 
-        // Sécurité : Marquer le code comme utilisé
-        if (remiseCodePromo > 0 && inputCode) {
-            let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
-            if (!used.includes(inputCode)) {
-                used.push(inputCode);
-                localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
-            }
-        }
-
-        let list = ""; cart.forEach(i => list += `- ${i.label} (x${i.qty})\n`);
-        let promoText = remiseCodePromo > 0 ? `🎁 CODE PROMO: ${inputCode} (-${remiseCodePromo}%)\n` : "";
-        
-        let msg = `*COMMANDE LATYFA BOUTIQUE*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n${promoText}🛍️ ARTICLES:\n${list}\n💰 TOTAL FINAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
-        window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+    if(!nom || !quartier || !zoneKey) {
+        alert("⚠️ Merci de remplir votre nom, le quartier et la zone de livraison.");
+        return;
     }
+
+    // Sécurité : Marquer le code promo comme utilisé
+    if (remiseCodePromo > 0 && inputCode) {
+        let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
+        if (!used.includes(inputCode)) {
+            used.push(inputCode);
+            localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
+        }
+    }
+
+    // Construction de la liste des articles avec émojis
+    let list = ""; 
+    cart.forEach(i => {
+        list += `🛍️ ${i.label} (x${i.qty})\n`;
+    });
+
+    // Calcul de la promo pour l'affichage WhatsApp
+    let promoText = remiseCodePromo > 0 ? `🎁 *CODE PROMO:* ${inputCode} (-${remiseCodePromo}%)\n` : "";
+    
+    // Structure élégante du message
+    let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP* ✨\n\n`;
+    msg += `👤 *CLIENT:* ${nom.toUpperCase()}\n`;
+    msg += `📞 *QUARTIER:* ${quartier}\n`;
+    msg += `🌍 *ZONE:* ${tarifsLivraison[zoneKey].nom}\n\n`;
+    msg += `📝 *DÉTAILS DU PANIER :*\n${list}\n`;
+    msg += `${promoText}`;
+    msg += `💰 *TOTAL À PAYER : ${total} F*\n\n`;
+    msg += `💳 *MODE DE PAIEMENT :* ${mode}\n`;
+    msg += `───────────────\n`;
+    msg += `_Commande générée depuis la boutique en ligne._`;
+
+    // Envoi vers ton numéro
+    window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+}
+
 
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
