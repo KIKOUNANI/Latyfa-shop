@@ -581,11 +581,9 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
     
     document.getElementById('productDetailModal').classList.add('active');
     
-    // Reset du conteneur média (on remet une image par défaut au début)
     const mediaContainer = document.getElementById('main-detail-img').parentElement;
     mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
 
-    // Génération des miniatures (Images + Bouton Vidéo)
     let htmlMiniatures = p.images.map(img => `
         <img src="${img}" onclick="changerMedia('image', '${img}')" 
         class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-[#c5a059] transition">
@@ -600,46 +598,34 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
             </div>
         `;
     }
-    document.getElementById('thumbnails').innerHTML = htmlMiniatures;
     
-    // Remplissage des textes
+    document.getElementById('thumbnails').innerHTML = htmlMiniatures;
     document.getElementById('detail-name').innerText = p.name;
     document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
     document.getElementById('detail-desc').innerText = p.description;
-    
-    // ... reste de ta logique (tailles, couleurs, partage) ...
-}
-document.getElementById('thumbnails').innerHTML = htmlMiniatures;
-        document.getElementById('detail-name').innerText = p.name;
-        document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
-        document.getElementById('detail-desc').innerText = p.description;
 
-        const sArea = document.getElementById('size-area');
-        const opts = p.tailles || p.pointures || [];
-        if(opts.length > 0) {
-            sArea.classList.remove('hidden');
-            document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
-        } else { sArea.classList.add('hidden'); }
+    const sArea = document.getElementById('size-area');
+    const opts = p.tailles || p.pointures || [];
+    if(opts.length > 0) {
+        sArea.classList.remove('hidden');
+        document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
+    } else { sArea.classList.add('hidden'); }
 
-        const cArea = document.getElementById('color-area');
-        if(p.couleurs) {
-            cArea.classList.remove('hidden');
-            document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
-        } else { cArea.classList.add('hidden'); }
+    const cArea = document.getElementById('color-area');
+    if(p.couleurs) {
+        cArea.classList.remove('hidden');
+        document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
+    } else { cArea.classList.add('hidden'); }
 
-        const urlSite = window.location.href;
-        const msgShare = `Regarde ce magnifique article chez *LATYFA Business* :\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\nLien : ${urlSite}`;
-        document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=${encodeURIComponent(msgShare)}`, "_blank");
-        document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`, "_blank");
-        // À mettre à la fin de ta fonction voirDetails
-const btnAjout = document.querySelector('button[onclick="ajouterDepuisDetail()"]');
-if(p.enStock === false) {
-    btnAjout.style.display = "none";
-} else {
-    btnAjout.style.display = "block";
+    const urlSite = window.location.href;
+    const msgShare = `Regarde ce magnifique article chez *LATYFA Business* :\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\nLien : ${urlSite}`;
+    document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=${encodeURIComponent(msgShare)}`, "_blank");
+    document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`, "_blank");
+
+    const btnAjout = document.querySelector('button[onclick="ajouterDepuisDetail()"]');
+    btnAjout.style.display = (p.enStock === false) ? "none" : "block";
 }
     }
-
     function ajouterDepuisDetail() {
         const size = document.getElementById('select-size').value || "";
         const color = document.getElementById('select-color').value || "";
