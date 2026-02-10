@@ -417,7 +417,15 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-5 w-5 accent-pink-600 cursor-pointer">
 </div>
                 <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
-            </div>
+                <div class="mt-8 p-4 bg-blue-50 rounded-2xl border-2 border-dashed border-blue-200">
+    <p class="text-[10px] font-black uppercase text-blue-600 mb-2">🎁 Gagnez -10% sur votre prochain achat</p>
+    <p class="text-[9px] text-gray-500 leading-tight mb-4 uppercase font-bold">Partagez l'univers Latyfa Shop à une amie sur WhatsApp !</p>
+    
+    <button onclick="partagerParrainage()" class="w-full bg-[#25D366] text-white py-3 rounded-xl font-black uppercase text-[9px] flex items-center justify-center gap-2 shadow-sm active:scale-95 transition">
+        <i class="fa-brands fa-whatsapp text-sm"></i> Partager et gagner
+    </button>
+             </div>
+          </div>
             <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
         </div>
     </div>
@@ -1107,6 +1115,13 @@ function chargerHistorique() {
             class="w-full h-80 object-cover rounded-xl shadow-md border">
         `;
     }
+}
+    function partagerParrainage() {
+    const lienSite = window.location.href;
+    const msg = `Coucou ! Regarde ce que j'ai trouvé chez *LATYFA SHOP* ✨\nIls ont des articles incroyables (bijoux, sacs, parfums...). \n\nDécouvre la collection ici : \n👉 ${lienSite}\n\n_(Utilise mon lien pour découvrir leurs nouveautés !)_`;
+    
+    window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+   alert("Merci pour le partage ! ❤️\nContactez-nous après votre commande sur WhatsApp pour recevoir votre code promo de -10%.");
 }
 </script>
 
