@@ -966,9 +966,9 @@ setTimeout(() => {
     showSocialProof();
     setInterval(showSocialProof, 15000);
 }, 3000);
+// --- LOGIQUE ADMIN (Gestion du catalogue) ---
+let editingId = null; // Pour savoir si on modifie ou si on ajoute
 
-// --- LOGIQUE ADMIN (Gestion du catalogue) ---
-// --- LOGIQUE ADMIN (Gestion du catalogue) ---
 function ouvrirAdmin() {
     const mdp = prompt("Code d'accès Admin :");
     if(mdp === "2026") {
@@ -979,48 +979,126 @@ function ouvrirAdmin() {
     } else { alert("Accès refusé"); }
 }
 
+function genererApercuAdmin() {
+    const input = document.getElementById('adm-img').value;
+    const previewZone = document.getElementById('admin-preview-zone');
+    const liens = input.split(',').map(l => l.trim()).filter(l => l !== "");
+    
+    previewZone.innerHTML = liens.map(url => `
+        <div class="relative min-w-[60px] h-[60px]">
+            <img src="${url}" class="w-full h-full object-cover rounded border border-[#c5a059]" onerror="this.src='https://placehold.co/60?text=Erreur'">
+        </div>
+    `).join('');
+}
+
+function editerProduit(id) {
+    const p = products.find(x => x.id === id);
+    if(!p) return;
+
+    editingId = id;
+    document.getElementById('adm-name').value = p.name;
+    document.getElementById('adm-price').value = p.price;
+    document.getElementById('adm-price-promo').value = p.promoPrice || "";
+    document.getElementById('adm-cat').value = p.cat;
+    document.getElementById('adm-img').value = p.images.join(', ');
+    document.getElementById('adm-video').value = p.video || "";
+    document.getElementById('adm-desc').value = p.description;
+    document.getElementById('adm-stock-bas').checked = p.stockBas || false;
+
+    const btn = document.querySelector('button[onclick="ajouterProduitAdmin()"]');
+    btn.innerText = "Enregistrer les modifications";
+    btn.className = "bg-blue-600 text-white py-4 rounded-xl font-black uppercase text-xs shadow-lg w-full";
+    
+    genererApercuAdmin();
+    document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
-    const pricePromo = document.getElementById('adm-price-promo').value; 
+    const pricePromo = document.getElementById('adm-price-promo').value;
     const imgInput = document.getElementById('adm-img').value;
 
     if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
 
     const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
 
-    const newP = {
-        id: Date.now(),
-        name: name,
-        price: parseInt(price),
-        promoPrice: pricePromo ? parseInt(pricePromo) : null, // On stocke la promo ici
-        cat: document.getElementById('adm-cat').value,
-        images: imagesArray,
-        video: document.getElementById('adm-video').value || null,
-        description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
-        enStock: true,
-        stockBas: document.getElementById('adm-stock-bas').checked,
-        dateAjout: Date.now() 
-    };
+    if (editingId) {
+        // MODE MODIFICATION
+        const index = products.findIndex(p => p.id === editingId);
+        products[index] = {
+            ...products[index],
+            name: name,
+            price: parseInt(price),
+            promoPrice: pricePromo ? parseInt(pricePromo) : null,
+            cat: document.getElementById('adm-cat').value,
+            images: imagesArray,
+            video: document.getElementById('adm-video').value || null,
+            description: document.getElementById('adm-desc').value,
+            stockBas: document.getElementById('adm-stock-bas').checked
+        };
+        editingId = null; // Reset après modification
+        alert("Article mis à jour !");
+    } else {
+        // MODE AJOUT (ton code actuel)
+        const newP = {
+            id: Date.now(),
+            name: name,
+            price: parseInt(price),
+            promoPrice: pricePromo ? parseInt(pricePromo) : null,
+            cat: document.getElementById('adm-cat').value,
+            images: imagesArray,
+            video: document.getElementById('adm-video').value || null,
+            description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
+            enStock: true,
+            stockBas: document.getElementById('adm-stock-bas').checked,
+            dateAjout: Date.now() 
+        };
+        products.push(newP);
+        alert("Nouvel article ajouté !");
+    }
 
-    products.push(newP);
     localStorage.setItem('latyfa_db', JSON.stringify(products));
     
-    // Reset des champs
+    // Reset complet du formulaire
+    resetFormulaireAdmin();
+    refreshAdminList();
+    render();
+}
+
+function resetFormulaireAdmin() {
     document.getElementById('adm-name').value = "";
     document.getElementById('adm-price').value = "";
     document.getElementById('adm-price-promo').value = "";
     document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    document.getElementById('adm-desc').value = "";
+    document.getElementById('adm-stock-bas').checked = false;
     document.getElementById('admin-preview-zone').innerHTML = "";
     
-    refreshAdminList();
-    render();
-    alert("Produit ajouté !");
+    const btn = document.querySelector('button[onclick="ajouterProduitAdmin()"]');
+    btn.innerText = "Mettre en ligne";
+    btn.classList.replace('bg-blue-600', 'bg-black');
 }
+
+function resetFormulaireAdmin() {
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-price-promo').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    document.getElementById('adm-desc').value = "";
+    document.getElementById('adm-stock-bas').checked = false;
+    document.getElementById('admin-preview-zone').innerHTML = "";
+    const btn = document.querySelector('button[onclick="ajouterProduitAdmin()"]');
+    btn.innerText = "Mettre en ligne";
+    btn.className = "bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition w-full";
+}
+
 function toggleStock(id) {
     const p = products.find(x => x.id === id);
     if(p) {
-        p.enStock = (p.enStock === undefined) ? false : !p.enStock;
+        p.enStock = !p.enStock;
         localStorage.setItem('latyfa_db', JSON.stringify(products));
         refreshAdminList();
         render();
@@ -1045,101 +1123,21 @@ function refreshAdminList() {
                 <img src="${p.images[0]}" class="w-8 h-8 object-cover rounded ${p.enStock === false ? 'grayscale' : ''}">
                 <span class="font-bold text-[10px] ${p.enStock === false ? 'text-red-400 line-through' : 'text-gray-700'}">${p.name}</span>
             </div>
-            <div class="flex gap-2">
-                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
-                    ${p.enStock === false ? 'RUPTURE' : 'EN STOCK'}
+            <div class="flex gap-1">
+                <button onclick="toggleStock(${p.id})" class="text-[8px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
+                    ${p.enStock === false ? 'OFF' : 'ON'}
                 </button>
-                <button onclick="supprimerProduit(${p.id})" class="text-red-500 p-1"><i class="fa-solid fa-trash"></i></button>
+                <button onclick="editerProduit(${p.id})" class="text-blue-500 bg-blue-50 p-1.5 rounded-lg"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button onclick="supprimerProduit(${p.id})" class="text-red-500 bg-red-50 p-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
     `).join('');
 }
 window.addEventListener('load', () => {
     setTimeout(() => {
-        const loader = document.getElementById('loader');
-        loader.classList.add('loader-hidden');
-    }, 1500); // 1.5 seconde pour un effet luxe bien dosé
+        document.getElementById('loader').classList.add('loader-hidden');
+    }, 1500);
 });
-    function toggleHistorique() {
-    const zone = document.getElementById('historique-zone');
-    if (zone.classList.contains('hidden')) {
-        zone.classList.remove('hidden');
-        chargerHistorique();
-    } else {
-        zone.classList.add('hidden');
-    }
-}
-
-function chargerHistorique() {
-    const zone = document.getElementById('historique-zone');
-    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-
-    if (historique.length === 0) {
-        zone.innerHTML = "<p class='text-[10px] text-center text-gray-400 uppercase font-bold'>Aucune commande enregistrée</p>";
-        return;
-    }
-
-    zone.innerHTML = historique.map(cmd => `
-        <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500 shadow-sm text-[10px]">
-            <div class="flex justify-between font-black text-blue-600 mb-1">
-                <span>📅 ${cmd.date}</span>
-                <span>💰 ${cmd.total} F</span>
-            </div>
-            <p><strong>👤 Client:</strong> ${cmd.client}</p>
-            <p><strong>📍 Lieu:</strong> ${cmd.lieu}</p>
-            <p><strong>🛍️ Articles:</strong> ${cmd.articles}</p>
-            <p class="text-[8px] text-gray-400 mt-1 italic">Code utilisé: ${cmd.promo}</p>
-        </div>
-    `).join('');
-}
-    function effacerToutLHistorique() {
-    // Sécurité : on demande confirmation avant de tout supprimer
-    if (confirm("🚨 VOULEZ-VOUS VRAIMENT TOUT EFFACER ?\nCette action est irréversible et supprimera tout l'historique de vos ventes.")) {
-        
-        // Supprime l'entrée de la mémoire
-        localStorage.removeItem('latyfa_historique');
-        
-        // Rafraîchit l'affichage pour montrer que c'est vide
-        chargerHistorique();
-        
-        // Petite alerte de succès
-        alert("✅ Historique vidé avec succès.");
-    }
-}
-    function changerMedia(type, source) {
-    const container = document.getElementById('main-detail-img').parentElement;
-    
-    if(type === 'video') {
-        container.innerHTML = `
-            <video id="main-detail-video" src="${source}" controls autoplay loop 
-            class="w-full h-80 object-cover rounded-xl shadow-md border"></video>
-        `;
-    } else {
-        container.innerHTML = `
-            <img id="main-detail-img" src="${source}" 
-            class="w-full h-80 object-cover rounded-xl shadow-md border">
-        `;
-    }
-}
-    function genererApercuAdmin() {
-    const input = document.getElementById('adm-img').value;
-    const previewZone = document.getElementById('admin-preview-zone');
-    
-    // On transforme le texte en tableau
-    const liens = input.split(',').map(l => l.trim()).filter(l => l !== "");
-    
-    if(liens.length === 0) {
-        previewZone.innerHTML = "";
-        return;
-    }
-
-    // On génère le HTML des miniatures d'aperçu
-    previewZone.innerHTML = liens.map(url => `
-        <div class="relative min-w-[60px] h-[60px]">
-            <img src="${url}" class="w-full h-full object-cover rounded border border-[#c5a059]" onerror="this.src='https://placehold.co/60?text=Erreur'">
-        </div>
-    `).join('');
-}
 
 </script>
 
