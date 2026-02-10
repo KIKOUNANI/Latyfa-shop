@@ -1189,49 +1189,110 @@ updateCartCount();
                 <i class="fa-solid fa-clock-rotate-left"></i> Voir l'historique WhatsApp
             </button>
 
-            <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10">
-                </div>
-        </div>
-    </div>
-</div>
+            <script>
+    // --- GESTION DU PANIER (CORRIGÉ) ---
+    
+    // 1. Chargement initial unique
+    let savedCart = localStorage.getItem('latyfa_cart');
+    let cart = savedCart ? JSON.parse(savedCart) : [];
 
-<div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
-    <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-black uppercase text-sm italic">📏 Guide des Tailles</h3>
-            <button onclick="document.getElementById('guideModal').classList.remove('active')" class="text-xl">&times;</button>
-        </div>
+    // 2. Fonction unique de mise à jour
+    function updateCartCount() {
+        const totalQty = cart.reduce((a, b) => a + (b.qty || 0), 0);
+        const badge = document.getElementById('cart-count');
+        if(badge) badge.innerText = totalQty;
+        // Sauvegarde dans la mémoire
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+    }
+
+    // 3. Initialisation au chargement de la page
+    window.addEventListener('DOMContentLoaded', () => {
+        render(); // Affiche les produits
+        drawWheel(); // Prépare la roue
+        majAffichageChances(); // Vérifie les chances de la roue
+        updateVisitorCount(); // Compteur de vues
+        updateCartCount(); // Affiche le panier sauvegardé
+    });
+
+    // --- LOGIQUE DE VALIDATION (Lien avec WhatsApp) ---
+    function validerCommande() {
+        const nom = document.getElementById('nom-client').value;
+        const quartier = document.getElementById('tel-client').value;
+        const zoneKey = document.getElementById('zone-livraison').value;
+        const mode = document.getElementById('mode-pay').value;
+        const total = document.getElementById('total-display').innerText;
+        const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+        const optionCadeau = document.getElementById('check-cadeau').checked;
         
-        <div class="space-y-6">
-            <div>
-                <p class="text-[10px] font-bold text-[#c5a059] uppercase mb-2">Bagues & Bijoux</p>
-                <table class="w-full text-[10px] border-collapse">
-                    <tr class="bg-gray-100 uppercase">
-                        <th class="p-2 border">Taille</th>
-                        <th class="p-2 border">Circonférence</th>
-                    </tr>
-                    <tr><td class="p-2 border text-center">6</td><td class="p-2 border text-center">52 mm</td></tr>
-                    <tr><td class="p-2 border text-center">7</td><td class="p-2 border text-center">54 mm</td></tr>
-                    <tr><td class="p-2 border text-center">8</td><td class="p-2 border text-center">57 mm</td></tr>
-                </table>
-            </div>
+        if(!nom || !quartier || !zoneKey) {
+            alert("⚠️ Remplissez vos infos !");
+            return;
+        }
 
-            <div>
-                <p class="text-[10px] font-bold text-[#c5a059] uppercase mb-2">Vêtements</p>
-                <div class="grid grid-cols-3 gap-2 text-center text-[9px] font-bold uppercase">
-                    <div class="bg-gray-50 p-2 rounded">S<br><span class="text-gray-400">36-38</span></div>
-                    <div class="bg-gray-50 p-2 rounded">M<br><span class="text-gray-400">40-42</span></div>
-                    <div class="bg-gray-50 p-2 rounded">L<br><span class="text-gray-400">44-46</span></div>
-                </div>
-            </div>
-            
-            <p class="text-[8px] text-gray-400 italic">Astuce : Si vous hésitez entre deux tailles, prenez la plus grande pour plus de confort.</p>
-        </div>
-    </div>
-</div>
-    <button id="backToTop" onclick="scrollToTop()" 
-        class="fixed bottom-40 right-6 h-12 w-12 bg-white text-[#c5a059] rounded-full shadow-2xl z-40 translate-y-20 opacity-0 transition-all duration-500 flex items-center justify-center border border-gray-100">
+        let cadeauMsg = optionCadeau ? "🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n" : "";
+        let list = ""; 
+        cart.forEach(i => { list += `🛍️ ${i.label} (x${i.qty})\n`; });
+        let promoText = remiseCodePromo > 0 ? `🎁 *CODE PROMO:* ${inputCode} (-${remiseCodePromo}%)\n` : "";
+        
+        let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP* ✨\n\n`;
+        msg += `👤 *CLIENT:* ${nom.toUpperCase()}\n`;
+        msg += `📞 *QUARTIER:* ${quartier}\n`;
+        msg += `🌍 *ZONE:* ${tarifsLivraison[zoneKey].nom}\n\n`;
+        msg += `📝 *DÉTAILS DU PANIER :*\n${list}\n`;
+        msg += cadeauMsg + promoText;
+        msg += `💰 *TOTAL À PAYER : ${total} F*\n\n`;
+        msg += `💳 *MODE DE PAIEMENT :* ${mode}\n`;
+        msg += `───────────────\n_Commande via boutique en ligne._`;
+
+        // Ouvrir WhatsApp
+        window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+
+        // VIDER LE PANIER UNIQUEMENT ICI
+        cart = [];
+        updateCartCount();
+        
+        document.getElementById('cartModal').classList.remove('active');
+        alert("Commande envoyée ! Votre panier a été vidé.");
+    }
+
+    // Fonctions utilitaires
+    function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
+    function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
+    function updateVisitorCount() {
+        let count = localStorage.getItem('latyfa_visitors') || 1250;
+        count = parseInt(count) + 1;
+        localStorage.setItem('latyfa_visitors', count);
+        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
+    }
+
+    // Compte à rebours Promo
+    setInterval(() => {
+        const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
+        const el = document.getElementById('countdown');
+        if(!el) return;
+        if(diff <= 0) { el.innerText = "PROMO ACTIVÉE !"; return; }
+        const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+        el.innerText = `${d}j ${h}h ${m}m ${s}s`;
+    }, 1000);
+
+    // Retour en haut de page
+    window.onscroll = function() {
+        const btn = document.getElementById("backToTop");
+        if(!btn) return;
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            btn.classList.remove("translate-y-20", "opacity-0");
+        } else {
+            btn.classList.add("translate-y-20", "opacity-0");
+        }
+    };
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+</script>
+
+<button id="backToTop" onclick="scrollToTop()" 
+    class="fixed bottom-40 right-6 h-12 w-12 bg-white text-[#c5a059] rounded-full shadow-2xl z-40 translate-y-20 opacity-0 transition-all duration-500 flex items-center justify-center border border-gray-100">
     <i class="fa-solid fa-arrow-up"></i>
 </button>
+</body>
 </body>
 </html>
