@@ -1295,12 +1295,20 @@ function filtrerFavoris() {
     }
 }
     // Vérifier l'état au démarrage
+const MAINTENANCE_FORCEE = true; 
+
 window.onload = function() {
-    // On regarde si TOI tu as activé le bouton Admin (local)
-    const isMaintenanceLocal = localStorage.getItem('latyfa_maintenance') === 'true';    
-    // Si MAINTENANCE_FORCEE est sur true, tout le monde voit l'écran.
-    if (MAINTENANCE_FORCEE === true || isMaintenanceLocal === true) {
-        document.getElementById('maintenance-screen').classList.remove('hidden');
+    // 2. Vérification de la maintenance
+    const maintenanceScreen = document.getElementById('maintenance-screen');
+    const isLocalMaintenance = localStorage.getItem('latyfa_maintenance') === 'true';
+
+    // Si on force dans le code OU si tu l'as activé via ton bouton ADM
+    if (MAINTENANCE_FORCEE || isLocalMaintenance) {
+        if (maintenanceScreen) {
+            maintenanceScreen.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    }
         document.body.style.overflow = 'hidden'; // Empêche de scroller derrière
     }
 };
