@@ -909,6 +909,11 @@ if(p.enStock === false) {
 
     // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+            // Après l'ouverture de WhatsApp
+    localStorage.removeItem('latyfa_cart');
+    cart = [];
+    renderCart();
+    document.getElementById('cartModal').classList.remove('active');
         
 localStorage.removeItem('latyfa_cart');
     renderCart();
@@ -956,77 +961,84 @@ function showSocialProof() {
         box.classList.add('translate-y-20', 'opacity-0');
     }, 5000);
 }
-    // --- LOGIQUE PANIER ---
+    // -// --- LOGIQUE PANIER ---
 
-// 1. Chargement automatique du panier sauvegardé au démarrage
+// 1. Initialisation unique
 let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
 
 function ajouter(id) {
     const p = products.find(x => x.id === id);
     if (p) {
-        cart.push(p);
-        // Sauvegarde dans le téléphone
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-        renderCart();
+        // On vérifie si l'article existe déjà pour augmenter la quantité
+        const index = cart.findIndex(item => item.id === id);
+        if (index > -1) {
+            cart[index].qty++;
+        } else {
+            cart.push({ ...p, qty: 1, label: p.name });
+        }
+        
+        sauvegarderPanier();
         alert(p.name + " ajouté au panier !");
     }
 }
+
 function supprimerDuPanier(index) {
-    // Supprime l'article à la position 'index'
     cart.splice(index, 1);
-    // Met à jour la sauvegarde
+    sauvegarderPanier();
+}
+
+function sauvegarderPanier() {
     localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-    renderCart();
+    renderCart(); // On met à jour l'affichage partout
+    
+    // Met à jour aussi le petit badge sur l'icône sac
+    const badge = document.getElementById('cart-count');
+    if (badge) {
+        badge.innerText = cart.reduce((a, b) => a + b.qty, 0);
+    }
 }
 
 function renderCart() {
     const cartList = document.getElementById('cart-items');
-    const cartCount = document.getElementById('cart-count');
-    const cartTotal = document.getElementById('cart-total');
+    const cartTotal = document.getElementById('total-display'); // Correspond à ton HTML
     
     if (!cartList) return;
 
-    // Mise à jour du petit badge sur l'icône sac
-    if (cartCount) cartCount.innerText = cart.length;
-
     if (cart.length === 0) {
-        cartList.innerHTML = '<p class="text-center text-gray-400 py-10">Votre panier est vide</p>';
+        cartList.innerHTML = '<p class="text-center text-gray-400 py-10 uppercase text-[10px] font-bold">Votre panier est vide</p>';
         if (cartTotal) cartTotal.innerText = "0";
         return;
     }
 
     let total = 0;
-    cartList.innerHTML = cart.map((p, index) => {
-        const prixFinal = p.promoPrice ? p.promoPrice : p.price;
-        total += prixFinal;
+    cartList.innerHTML = cart.map((item, index) => {
+        const prixFinal = item.promoPrice ? item.promoPrice : item.price;
+        total += (prixFinal * item.qty);
         return `
             <div class="flex items-center justify-between bg-white p-4 rounded-xl mb-3 shadow-sm border-l-4 border-[#c5a059]">
                 <div class="flex items-center gap-3">
-                    <img src="${p.images[0]}" class="w-12 h-12 object-cover rounded-lg">
+                    <img src="${item.images[0]}" class="w-12 h-12 object-cover rounded-lg">
                     <div>
-                        <h4 class="text-[11px] font-bold text-gray-800">${p.name}</h4>
-                        <p class="text-[10px] text-[#c5a059] font-black">${prixFinal.toLocaleString()} F</p>
+                        <h4 class="text-[10px] font-bold text-gray-800 uppercase">${item.label}</h4>
+                        <p class="text-[10px] text-[#c5a059] font-black">${prixFinal.toLocaleString()} F x ${item.qty}</p>
                     </div>
                 </div>
-                <button onclick="supprimerDuPanier(${index})" class="text-red-400 p-2 hover:bg-red-50 rounded-full transition">
+                <button onclick="supprimerDuPanier(${index})" class="text-red-400 p-2">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
             </div>
         `;
     }).join('');
 
-    if (cartTotal) cartTotal.innerText = total.toLocaleString();
+    majResume(); // Appelle ta fonction de calcul de taxes/livraison
 }
 
-// 2. On force l'affichage du panier dès que la page est chargée
+// Charger le panier au démarrage
 window.addEventListener('DOMContentLoaded', () => {
     renderCart();
+    const badge = document.getElementById('cart-count');
+    if (badge) badge.innerText = cart.reduce((a, b) => a + b.qty, 0);
 });
-// Lancement de la preuve sociale
-setTimeout(() => {
-    showSocialProof();
-    setInterval(showSocialProof, 15000);
-}, 3000);
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
 let editingId = null; // Pour savoir si on modifie ou si on ajoute
     // --- SAUVEGARDE ET RESTAURATION ---
