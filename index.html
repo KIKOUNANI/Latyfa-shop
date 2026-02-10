@@ -146,6 +146,16 @@ nav button:focus {
     display: inline-flex;
     border: 1px dashed #feb2b2;
 }
+            /* Style pour le bouton favoris sur la carte produit */
+.fav-btn {
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+}
+.fav-btn.active i {
+    color: #e11d48 !important; /* Rouge rose */
+    font-weight: 900;
+}
 </style>
 </head>
 <body>    
@@ -222,7 +232,9 @@ nav button:focus {
             <button onclick="filtrerNouveautes()" class="flex-shrink-0 bg-[#c5a059] text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md flex items-center gap-2">
                 <i class="fa-solid fa-sparkles"></i> Nouveautés
             </button>
-            
+            <button onclick="filtrerFavoris()" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-red-500 flex items-center gap-1">
+    <i class="fa-solid fa-heart text-red-500"></i> Mes Envies
+</button>
             <button onclick="render('tous')" class="flex-shrink-0 border-r pr-4 text-[10px] font-black uppercase text-gray-400 hover:text-[#c5a059]">Tout voir</button>
             <button onclick="render('bijoux')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Bijoux</button>
             <button onclick="render('vetements')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Vêtements</button>
@@ -594,22 +606,25 @@ function afficherResultatsRecherche(liste) {
     // --- BOUTIQUE ---
     function render(filter = 'tous') {
     const grid = document.getElementById('product-grid');
-    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
+    
+    // On récupère les favoris pour savoir quel cœur colorer
+    const favorisActuels = JSON.parse(localStorage.getItem('latyfa_favs')) || [];
 
     grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
-        // Calcul du badge Nouveauté
         const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
+        const isFav = favorisActuels.includes(p.id);
         
         return `
             <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
                 
-                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse border border-white">NOUVEAU</span>' : ''}
+                <button onclick="toggleFavori(event, ${p.id})" class="fav-btn absolute top-2 left-2 z-30 w-8 h-8 rounded-full flex items-center justify-center shadow-sm bg-white/80 ${isFav ? 'active' : ''}">
+                    <i class="${isFav ? 'fa-solid text-red-500' : 'fa-regular text-gray-400'} fa-heart text-[14px]"></i>
+                </button>
+
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
                 
                 ${p.stockBas && p.enStock !== false ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 DERNIERS ARTICLES</span>' : ''}
-                
-                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
-                
-                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
                 
                 <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
                 <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
@@ -1251,7 +1266,34 @@ function filtrerNouveautes() {
         afficherResultatsRecherche(nouveautes); 
     }
 }
+// Initialisation des favoris au chargement
+let favoris = JSON.parse(localStorage.getItem('latyfa_favs')) || [];
 
+function toggleFavori(event, id) {
+    event.stopPropagation(); // Empêche d'ouvrir la fiche produit en cliquant sur le cœur
+    
+    const index = favoris.indexOf(id);
+    if (index > -1) {
+        favoris.splice(index, 1); // Retirer des favoris
+    } else {
+        favoris.push(id); // Ajouter aux favoris
+    }
+    
+    localStorage.setItem('latyfa_favs', JSON.stringify(favoris));
+    render(); // Actualiser l'affichage
+}
+// Fonction pour afficher uniquement les favoris
+function filtrerFavoris() {
+    const produitsFavoris = products.filter(p => favoris.includes(p.id));
+    
+    if (produitsFavoris.length === 0) {
+        alert("Vous n'avez pas encore de favoris. Cliquez sur le cœur ❤️ pour en ajouter !");
+    } else {
+        const grid = document.getElementById('product-grid');
+        // On réutilise votre logique d'affichage existante
+        afficherResultatsRecherche(produitsFavoris);
+    }
+}
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
@@ -1297,7 +1339,6 @@ function filtrerNouveautes() {
         <i class="fa-solid fa-upload mr-1"></i> Restaurer une sauvegarde
     </button>
 </div>
-
                 
                 <div class="space-y-2">
                     <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Liens séparés par des virgules)</label>
