@@ -159,6 +159,15 @@ nav button:focus {
 </style>
 </head>
 <body>    
+    <div id="maintenance-screen" class="fixed inset-0 z-[1000] bg-white flex flex-col items-center justify-center p-6 text-center hidden">
+    <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-24 w-24 rounded-full mb-6 animate-pulse">
+    <h1 class="logo-font text-3xl font-black text-[#c5a059] mb-4">LATYFA SHOP</h1>
+    <div class="w-16 h-1 bg-[#c5a059] mb-6"></div>
+    <p class="text-gray-600 font-bold uppercase tracking-widest text-sm mb-2">Boutique en maintenance</p>
+    <p class="text-gray-400 text-xs max-w-xs">Nous mettons à jour notre collection pour vous offrir le meilleur. Revenez dans quelques instants ! ✨</p>
+    
+    <button onclick="leverMaintenance()" class="mt-20 opacity-0">Accès Admin</button>
+</div>
     <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
     <div class="relative">
         <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-24 w-24 rounded-full border-2 border-[#c5a059] animate-pulse shadow-[0_0_20px_rgba(197,160,89,0.3)]">
@@ -1315,6 +1324,39 @@ function filtrerFavoris() {
         afficherResultatsRecherche(produitsFavoris);
     }
 }
+    // Vérifier l'état au démarrage
+window.onload = function() {
+    const isMaintenance = localStorage.getItem('latyfa_maintenance') === 'true';
+    if (isMaintenance) {
+        document.getElementById('maintenance-screen').classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Empêche de scroller derrière
+    }
+};
+
+// Fonction pour l'Admin (à mettre dans votre panneau de contrôle)
+function toggleMaintenance() {
+    const currentState = localStorage.getItem('latyfa_maintenance') === 'true';
+    const newState = !currentState;
+    
+    localStorage.setItem('latyfa_maintenance', newState);
+    
+    if (newState) {
+        alert("Boutique mise en maintenance ! 🔒");
+        location.reload();
+    } else {
+        alert("Boutique de nouveau en ligne ! 🔓");
+        document.getElementById('maintenance-screen').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+}
+// Pour vous débloquer si vous êtes sur l'écran de maintenance
+function leverMaintenance() {
+    const code = prompt("Code secret pour débloquer :");
+    if(code === "1234") { // Changez "1234" par votre code
+        localStorage.setItem('latyfa_maintenance', 'false');
+        location.reload();
+    }
+}
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
@@ -1343,7 +1385,13 @@ function filtrerFavoris() {
                         <input type="number" id="adm-price-promo" placeholder="Ex: 12000" class="w-full border p-3 rounded-lg text-sm bg-red-50">
                     </div>
                 </div>
-                <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm font-bold">
+                <div class="mb-6 p-4 bg-red-50 border-2 border-dashed border-red-200 rounded-xl">
+    <p class="text-[10px] font-black text-red-600 mb-2 uppercase tracking-widest text-center">État de la boutique</p>
+    <button onclick="toggleMaintenance()" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold text-[10px] uppercase shadow-md">
+        Activer / Désactiver la Maintenance
+    </button>
+</div>
+               <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm font-bold">
                     <option value="bijoux">Bijoux</option>
                     <option value="vetements">Vêtements</option>
                     <option value="chaussures">Chaussures</option>
