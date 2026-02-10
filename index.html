@@ -1182,7 +1182,27 @@ window.addEventListener('load', () => {
         document.getElementById('loader').classList.add('loader-hidden');
     }, 1500);
 });
+    // --- GESTION DU BOUTON RETOUR EN HAUT ---
+const backToTopBtn = document.getElementById('backToTop');
 
+window.onscroll = function() {
+    if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+        // Affiche le bouton
+        backToTopBtn.classList.remove('opacity-0', 'translate-y-10');
+        backToTopBtn.classList.add('opacity-100', 'translate-y-0');
+    } else {
+        // Cache le bouton
+        backToTopBtn.classList.remove('opacity-100', 'translate-y-0');
+        backToTopBtn.classList.add('opacity-0', 'translate-y-10');
+    }
+};
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Effet de glissement doux
+    });
+}
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
@@ -1295,6 +1315,8 @@ window.addEventListener('load', () => {
         </div>
     </div>
 </div>
-
+<button id="backToTop" onclick="scrollToTop()" class="fixed bottom-6 left-6 h-12 w-12 bg-[#c5a059] text-white rounded-full shadow-2xl z-[60] transition-all duration-300 opacity-0 translate-y-10 flex items-center justify-center hover:scale-110 active:scale-90">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
 </body>
 </html>
