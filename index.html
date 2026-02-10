@@ -9,6 +9,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
+            /* Cache la barre de défilement mais permet le scroll */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    cursor: grab;
+}
+.no-scrollbar:active {
+    cursor: grabbing;
+}
             #backToTop.show {
     transform: translateY(0);
     opacity: 1;
@@ -187,42 +199,29 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
         </div>
     </section>
 
-    <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
-        <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border border-gray-100">
-    <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center">
-        Nos Univers
-    </h3>
-    <div class="flex flex-col gap-5">
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('tous')">
-            Tout voir <i class="fa-solid fa-crown text-[10px] text-[#c5a059]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('bijoux')">
-            Bijoux <i class="fa-solid fa-gem text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('vetements')">
-            Vêtements <i class="fa-solid fa-shirt text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('chaussures')">
-            Chaussures <i class="fa-solid fa-shoe-prints text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('sac')">
-            Sacs à main <i class="fa-solid fa-bag-shopping text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('parfum')">
-            Parfums <i class="fa-solid fa-spray-can-sparkles text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('hanche')">
-            Perles de hanche <i class="fa-solid fa-circle-nodes text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('autres')">
-            Autres <i class="fa-solid fa-plus text-[10px]"></i>
-        </span>
+    <div id="collection" class="container mx-auto px-4 py-8">
+    <main>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" id="product-grid"></div>
+    </main>
+</div>
+        <nav class="bg-white border-b border-gray-100 sticky top-[72px] z-40 shadow-sm">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-4">
+            <button onclick="filtrerNouveautes()" class="flex-shrink-0 bg-[#c5a059] text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md flex items-center gap-2">
+                <i class="fa-solid fa-sparkles"></i> Nouveautés
+            </button>
+            
+            <button onclick="render('tous')" class="flex-shrink-0 border-r pr-4 text-[10px] font-black uppercase text-gray-400 hover:text-[#c5a059]">Tout voir</button>
+            <button onclick="render('bijoux')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Bijoux</button>
+            <button onclick="render('vetements')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Vêtements</button>
+            <button onclick="render('chaussures')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Chaussures</button>
+            <button onclick="render('sac')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Sacs</button>
+            <button onclick="render('parfum')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Parfums</button>
+            <button onclick="render('hanche')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Hanche</button>
+            <button onclick="render('autres')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Autres</button>
+        </div>
     </div>
-          <span class="category-link cursor-pointer flex justify-between items-center text-blue-600" onclick="filtrerNouveautes()">
-    Nouveautés <i class="fa-solid fa-sparkles text-[10px]"></i>
-</span>  
-</aside>
-
+        </nav>
         <main class="flex-1">
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
         </main>
