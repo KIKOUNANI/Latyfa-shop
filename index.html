@@ -9,6 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
+            #backToTop.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+#backToTop:hover {
+    background-color: #1a1a1a;
+    border-color: var(--latyfa-gold);
+    transform: scale(1.1);
+}
 :root { 
     /* MODIFIE CES 3 COULEURS ICI POUR TOUT CHANGER SUR LE SITE */
     --latyfa-gold: #c5a059;   /* Doré Luxe */
@@ -474,6 +484,22 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
+    // Gestion du bouton retour en haut
+window.addEventListener('scroll', function() {
+    const btn = document.getElementById('backToTop');
+    if (window.scrollY > 400) {
+        btn.classList.add('show');
+    } else {
+        btn.classList.remove('show');
+    }
+});
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
@@ -1295,6 +1321,9 @@ window.addEventListener('load', () => {
         </div>
     </div>
 </div>
+<button id="backToTop" onclick="scrollToTop()" class="fixed bottom-40 right-6 h-12 w-12 bg-[#c5a059] text-white rounded-full shadow-2xl z-40 translate-y-20 opacity-0 transition-all duration-500 flex items-center justify-center border-2 border-white">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
 
 </body>
 </html>
