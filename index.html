@@ -92,6 +92,13 @@
             <div class="flex items-center gap-2">
     <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
     <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
+            <div class="container mx-auto px-4 pb-3">
+    <div class="relative">
+        <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
+               class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+    </div>
+</div>    
 </div>
             <div class="flex gap-6">
                 <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
@@ -343,6 +350,51 @@
     </div>
 </div>
 <script>
+    function rechercherProduit() {
+    const terme = document.getElementById('search-input').value.toLowerCase();
+    const grid = document.getElementById('product-grid');
+    
+    // On filtre les produits par nom
+    const produitsFiltrés = products.filter(p => 
+        p.name.toLowerCase().includes(terme) || 
+        p.cat.toLowerCase().includes(terme)
+    );
+
+    if (produitsFiltrés.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full text-center py-20">
+                <i class="fa-solid fa-box-open text-4xl text-gray-200 mb-4"></i>
+                <p class="text-gray-500 text-xs font-bold uppercase">Aucun résultat pour "${terme}"</p>
+            </div>`;
+    } else {
+        // On utilise ta fonction render existante mais avec les produits filtrés
+        // Note: Pour que cela fonctionne, on va légèrement modifier la logique de render
+        afficherResultatsRecherche(produitsFiltrés);
+    }
+}
+
+// Petite fonction helper pour ne pas casser ton système de catégories
+function afficherResultatsRecherche(liste) {
+    const grid = document.getElementById('product-grid');
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
+    
+    grid.innerHTML = liste.map(p => {
+        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
+        return `
+            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
+                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
+                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
+                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
+                </div>
+            </div>`;
+    }).join('');
+}
+
     (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
 
     // --- VARIABLES GLOBALES ---
@@ -367,16 +419,32 @@
 
     // --- BOUTIQUE ---
     function render(filter = 'tous') {
-        const grid = document.getElementById('product-grid');
-        grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
-            <div class="product-card p-3 relative" onclick="voirDetails(${p.id})">
-                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10">Luxe</span>' : ''}
-                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
-                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2">${p.name}</h3>
-                <div class="text-[#ff6600] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-                <div class="bg-gray-100 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest">Détails</div>
-            </div>`).join('');
-    }
+    const grid = document.getElementById('product-grid');
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
+
+    grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
+        // Calcul pour le badge Nouveauté
+        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
+        
+        return `
+            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
+                
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
+                
+                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
+                
+                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
+                
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                
+                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
+                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
+                </div>
+            </div>`;
+    }).join('');
+}
 
     function voirDetails(id) {
         const p = products.find(x => x.id === id);
@@ -405,6 +473,13 @@
         const msgShare = `Regarde ce magnifique article chez *LATYFA Business* :\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\nLien : ${urlSite}`;
         document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=${encodeURIComponent(msgShare)}`, "_blank");
         document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`, "_blank");
+        // À mettre à la fin de ta fonction voirDetails
+const btnAjout = document.querySelector('button[onclick="ajouterDepuisDetail()"]');
+if(p.enStock === false) {
+    btnAjout.style.display = "none";
+} else {
+    btnAjout.style.display = "block";
+}
     }
 
     function ajouterDepuisDetail() {
@@ -728,22 +803,32 @@ function ajouterProduitAdmin() {
 
     if(!name || !price || !img) return alert("Remplis les champs obligatoires !");
 
-    const newP = {
+        const newP = {
         id: Date.now(),
         name: name,
         price: parseInt(price),
         cat: document.getElementById('adm-cat').value,
         images: [img],
-        description: document.getElementById('adm-desc').value || "Produit Latyfa Business"
+        description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
+        enStock: true,
+        dateAjout: Date.now() // Enregistre la date précise de création
     };
 
     products.push(newP);
-    localStorage.setItem('latyfa_db', JSON.stringify(products)); // Sauvegarde locale
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
     refreshAdminList();
     render();
-    alert("Produit ajouté avec succès !");
+    alert("Produit ajouté !");
 }
-
+    function toggleStock(id) {
+    const p = products.find(x => x.id === id);
+    if(p) {
+        p.enStock = !p.enStock;
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        refreshAdminList();
+        render();
+    }
+}
 function supprimerProduit(id) {
     if(confirm("Supprimer définitivement cet article ?")) {
         products = products.filter(p => p.id !== id);
@@ -756,15 +841,21 @@ function supprimerProduit(id) {
 function refreshAdminList() {
     const list = document.getElementById('admin-list');
     if (!list) return;
-
-    // On récupère les produits (soit ceux du script, soit ceux sauvegardés)
-    const savedDb = localStorage.getItem('latyfa_db');
-    const displayProducts = savedDb ? JSON.parse(savedDb) : products;
-
-    if (displayProducts.length === 0) {
-        list.innerHTML = "<p class='text-center text-gray-400 py-4'>Aucun produit en ligne</p>";
-        return;
-    }
+    list.innerHTML = products.map(p => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border mb-2 shadow-sm">
+            <div class="flex items-center gap-2">
+                <img src="${p.images[0]}" class="w-8 h-8 object-cover rounded ${p.enStock ? '' : 'grayscale'}">
+                <span class="font-bold text-[10px] ${p.enStock ? 'text-gray-700' : 'text-red-400 line-through'}">${p.name}</span>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="toggleStock(${p.id})" class="text-[10px] font-bold px-2 py-1 rounded ${p.enStock ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}">
+                    ${p.enStock ? 'EN STOCK' : 'RUPTURE'}
+                </button>
+                <button onclick="supprimerProduit(${p.id})" class="text-red-500 p-1"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
 
     list.innerHTML = displayProducts.map(p => `
         <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border mb-2 shadow-sm">
