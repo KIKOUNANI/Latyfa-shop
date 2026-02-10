@@ -540,7 +540,7 @@ function afficherResultatsRecherche(liste) {
         { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
     ];
 
-    let cart = [];
+    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
     let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
 
@@ -631,6 +631,7 @@ if(p.enStock === false) {
         
         const index = cart.findIndex(x => x.label === label);
         if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
         
         document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         
@@ -728,7 +729,6 @@ if(p.enStock === false) {
         
     }, 4000);
 };
-
 
     function majAffichageChances() {
         const aujourdhui = new Date().toLocaleDateString();
@@ -865,7 +865,6 @@ if(p.enStock === false) {
         alert("⚠️ Remplissez vos infos !");
         return;
     }
-
     // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
     const nouvelleCommande = {
         date: new Date().toLocaleString('fr-FR'),
@@ -875,11 +874,9 @@ if(p.enStock === false) {
         total: total,
         promo: inputCode || "Aucun"
     };
-
     let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
     historique.unshift(nouvelleCommande); // Ajoute au début de la liste
     localStorage.setItem('latyfa_historique', JSON.stringify(historique));
-
     // Sécurité : Marquer le code promo comme utilisé
     if (remiseCodePromo > 0 && inputCode) {
         let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
@@ -888,7 +885,6 @@ if(p.enStock === false) {
             localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
         }
     }
-
     // Construction de la liste des articles avec émojis
     let list = ""; 
     cart.forEach(i => {
@@ -913,9 +909,11 @@ if(p.enStock === false) {
 
     // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+        
+localStorage.removeItem('latyfa_cart');
+    renderCart();
+    toggleCart(); // On ferme la fenêtre du panier
 }
-
-
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
     function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
@@ -925,7 +923,6 @@ if(p.enStock === false) {
         localStorage.setItem('latyfa_visitors', count);
         if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
     }
-
     setInterval(() => {
         const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
         if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
@@ -938,7 +935,7 @@ if(p.enStock === false) {
     majAffichageChances(); 
     render(); 
     updateVisitorCount();
-    
+
     // --- LOGIQUE DE PREUVE SOCIALE (Notifications de vente) ---
 const notifications = [
     "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
@@ -947,7 +944,6 @@ const notifications = [
     "5 personnes consultent actuellement ce produit 🔥",
     "Un ensemble de bijoux a été ajouté au panier à Bouaké 💎"
 ];
-
 function showSocialProof() {
     const box = document.getElementById('social-proof');
     const text = document.getElementById('proof-text');
@@ -960,7 +956,72 @@ function showSocialProof() {
         box.classList.add('translate-y-20', 'opacity-0');
     }, 5000);
 }
+    // --- LOGIQUE PANIER ---
 
+// 1. Chargement automatique du panier sauvegardé au démarrage
+let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+
+function ajouter(id) {
+    const p = products.find(x => x.id === id);
+    if (p) {
+        cart.push(p);
+        // Sauvegarde dans le téléphone
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+        renderCart();
+        alert(p.name + " ajouté au panier !");
+    }
+}
+function supprimerDuPanier(index) {
+    // Supprime l'article à la position 'index'
+    cart.splice(index, 1);
+    // Met à jour la sauvegarde
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+    renderCart();
+}
+
+function renderCart() {
+    const cartList = document.getElementById('cart-items');
+    const cartCount = document.getElementById('cart-count');
+    const cartTotal = document.getElementById('cart-total');
+    
+    if (!cartList) return;
+
+    // Mise à jour du petit badge sur l'icône sac
+    if (cartCount) cartCount.innerText = cart.length;
+
+    if (cart.length === 0) {
+        cartList.innerHTML = '<p class="text-center text-gray-400 py-10">Votre panier est vide</p>';
+        if (cartTotal) cartTotal.innerText = "0";
+        return;
+    }
+
+    let total = 0;
+    cartList.innerHTML = cart.map((p, index) => {
+        const prixFinal = p.promoPrice ? p.promoPrice : p.price;
+        total += prixFinal;
+        return `
+            <div class="flex items-center justify-between bg-white p-4 rounded-xl mb-3 shadow-sm border-l-4 border-[#c5a059]">
+                <div class="flex items-center gap-3">
+                    <img src="${p.images[0]}" class="w-12 h-12 object-cover rounded-lg">
+                    <div>
+                        <h4 class="text-[11px] font-bold text-gray-800">${p.name}</h4>
+                        <p class="text-[10px] text-[#c5a059] font-black">${prixFinal.toLocaleString()} F</p>
+                    </div>
+                </div>
+                <button onclick="supprimerDuPanier(${index})" class="text-red-400 p-2 hover:bg-red-50 rounded-full transition">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        `;
+    }).join('');
+
+    if (cartTotal) cartTotal.innerText = total.toLocaleString();
+}
+
+// 2. On force l'affichage du panier dès que la page est chargée
+window.addEventListener('DOMContentLoaded', () => {
+    renderCart();
+});
 // Lancement de la preuve sociale
 setTimeout(() => {
     showSocialProof();
@@ -984,7 +1045,6 @@ function exporterCatalogue() {
     
     alert("✅ Fichier de sauvegarde téléchargé ! Garde-le précieusement.");
 }
-
 function importerCatalogue() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -1011,8 +1071,6 @@ function importerCatalogue() {
     };
     input.click();
 }
-
-
 function ouvrirAdmin() {
     const mdp = prompt("Code d'accès Admin :");
     if(mdp === "2026") {
@@ -1196,13 +1254,6 @@ window.onscroll = function() {
         backToTopBtn.classList.add('opacity-0', 'translate-y-10');
     }
 };
-
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth' // Effet de glissement doux
-    });
-}
     // --- FORCE LE BOUTON RETOUR EN HAUT ---
 window.addEventListener('scroll', function() {
     const btn = document.getElementById('backToTop');
@@ -1264,9 +1315,7 @@ function scrollToTop() {
     <button onclick="importerCatalogue()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-bold text-[10px] uppercase shadow-sm">
         <i class="fa-solid fa-upload mr-1"></i> Restaurer une sauvegarde
     </button>
-</div>
-
-                
+</div>    
                 <div class="space-y-2">
                     <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Liens séparés par des virgules)</label>
                     <textarea id="adm-img" oninput="genererApercuAdmin()" placeholder="Lien1, Lien2..." class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
