@@ -595,8 +595,9 @@ function afficherResultatsRecherche(liste) {
         { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
     ];
 
-    let cart = [];
-    let currentProduct = null;
+    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+;
+let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
 
     // --- BOUTIQUE ---
@@ -701,6 +702,7 @@ if (p.stockBas && p.enStock) {
         
         document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
         const cartIcon = document.getElementById('cart-count').parentElement;
         cartIcon.classList.add('animate-cart');
         setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
@@ -842,6 +844,7 @@ if (p.stockBas && p.enStock) {
     function modifierQty(label, d) {
         const i = cart.find(x => x.label === label);
         if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
         document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         ouvrirPanier();
     }
@@ -980,8 +983,9 @@ if (p.stockBas && p.enStock) {
 
     // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-}
-
+        localStorage.removeItem('latyfa_cart');
+cart = [];
+        }
 
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
