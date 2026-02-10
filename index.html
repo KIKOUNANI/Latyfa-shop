@@ -1484,85 +1484,64 @@ majBadgePanier();
 </div>
 <button id="backToTop" onclick="scrollToTop()" class="fixed bottom-40 right-6 h-12 w-12 bg-[#c5a059] text-white rounded-full shadow-2xl z-40 translate-y-20 opacity-0 transition-all duration-500 flex items-center justify-center border-2 border-white">
     <i class="fa-solid fa-arrow-up"></i>
-</button>
-<div id="lina-chat" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Poppins', sans-serif;">
+</button><div id="lina-chat" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Poppins', sans-serif;">
     
-    <div id="lina-window" style="display: none; width: 320px; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.25); margin-bottom: 15px; border: 1px solid #c5a059;">
+    <div id="lina-window" style="display: none; width: 300px; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 10px; border: 1px solid #c5a059;">
         
-        <div style="background: #1a1a1a; padding: 18px; color: white; display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" style="width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid #c5a059;">
-                <div>
-                    <p style="margin: 0; font-weight: 600; font-size: 14px;">Lina ✨</p>
-                    <p style="margin: 0; font-size: 10px; color: #c5a059;">CONSEILLÈRE VIP</p>
-                </div>
+        <div style="background: #1a1a1a; padding: 15px; color: white; display: flex; align-items: center; gap: 10px;">
+            <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" style="width: 35px; height: 35px; border-radius: 50%; border: 1px solid #c5a059;">
+            <div style="flex: 1;">
+                <p style="margin: 0; font-size: 13px; font-weight: 600;">Lina ✨</p>
+                <p style="margin: 0; font-size: 9px; color: #c5a059;">Conseillère Latyfa Shop</p>
             </div>
-            <button onclick="toggleLina()" style="background: none; border: none; color: #c5a059; cursor: pointer; font-size: 22px;">&times;</button>
+            <span onclick="toggleLina()" style="cursor: pointer; font-size: 20px;">&times;</span>
         </div>
 
-        <div id="lina-messages" style="padding: 15px; height: 260px; overflow-y: auto; background: #fdfaf4; display: flex; flex-direction: column; gap: 12px;">
-            <p style="background: white; padding: 12px; border-radius: 15px 15px 15px 0; font-size: 12px; color: #333; margin: 0;">
-                Bienvenue chez Latyfa Shop ! Souhaitez-vous être rappelée pour un conseil personnalisé ou voir nos offres ? ✨
-            </p>
-        </div>
-
-        <div id="lina-form" style="padding: 10px 15px; background: #fff; border-top: 1px solid #eee; display: none;">
-            <p style="font-size: 11px; margin-bottom: 8px; font-weight: bold;">Laissez votre numéro (WhatsApp) :</p>
-            <div style="display: flex; gap: 5px;">
-                <input type="text" id="client-phone" placeholder="Ex: 0707..." style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 12px;">
-                <button onclick="validerNumero()" style="background: #c5a059; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 12px;">OK</button>
+        <div id="lina-display" style="padding: 15px; height: 220px; overflow-y: auto; background: #fdfaf4; font-size: 12px; line-height: 1.5;">
+            <div style="background: white; padding: 10px; border-radius: 10px; margin-bottom: 10px; border-left: 3px solid #c5a059;">
+                Bonjour ! Je suis Lina. Posez-moi vos questions sur nos bijoux et services. ✨
             </div>
         </div>
 
-        <div id="lina-options" style="padding: 12px; background: white; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 8px;">
-            <button onclick="afficherFormulaire()" style="background: #fdfaf4; border: 1px solid #c5a059; color: #1a1a1a; padding: 10px; border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer;">📞 Être rappelée par une conseillère</button>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <button onclick="linaRepond('galerie')" style="background: #f9f9f9; border: 1px solid #eee; padding: 10px; border-radius: 10px; font-size: 11px; font-weight: 600; cursor: pointer;">📸 Best-Sellers</button>
-                <button onclick="linaRepond('promo')" style="background: #f9f9f9; border: 1px solid #eee; padding: 10px; border-radius: 10px; font-size: 11px; font-weight: 600; cursor: pointer;">🎁 Cadeau</button>
-            </div>
-            <button onclick="linaRepond('whatsapp')" style="background: #1a1a1a; color: white; padding: 12px; border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase;">Direct WhatsApp</button>
+        <div style="padding: 10px; background: white; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 5px;">
+            <button onclick="reponseRobot('prix')" style="text-align: left; background: #f9f9f9; border: 1px solid #eee; padding: 8px; border-radius: 5px; font-size: 11px; cursor: pointer;">💰 Livraison & Tarifs</button>
+            <button onclick="reponseRobot('qualite')" style="text-align: left; background: #f9f9f9; border: 1px solid #eee; padding: 8px; border-radius: 5px; font-size: 11px; cursor: pointer;">💎 Qualité des bijoux</button>
+            <button onclick="reponseRobot('promo')" style="text-align: left; background: #f9f9f9; border: 1px solid #eee; padding: 8px; border-radius: 5px; font-size: 11px; cursor: pointer;">🎁 Promo du jour</button>
+            
+            <a href="https://wa.me/2250709002881" target="_blank" style="text-decoration: none; text-align: center; background: #1a1a1a; color: white; padding: 10px; border-radius: 5px; font-size: 11px; font-weight: bold; margin-top: 5px; display: block;">FINALISER MA COMMANDE 🛍️</a>
         </div>
     </div>
 
-    <div onclick="toggleLina()" id="lina-button" style="background: #1a1a1a; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #c5a059; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.3); border: 2px solid #c5a059;">
-        <span style="font-size: 24px;">✨</span>
+    <div onclick="toggleLina()" style="background: #1a1a1a; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid #c5a059; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+        <span style="font-size: 20px;">✨</span>
     </div>
 </div>
 
 <script>
     function toggleLina() {
-        const win = document.getElementById('lina-window');
+        var win = document.getElementById('lina-window');
         win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'block' : 'none';
     }
 
-    function afficherFormulaire() {
-        document.getElementById('lina-form').style.display = 'block';
-        const zone = document.getElementById('lina-messages');
-        zone.innerHTML += `<p style="background: white; padding: 10px; border-radius: 12px; font-size: 12px; border-left: 3px solid #c5a059;">C'est noté ! Laissez votre numéro et je vous recontacte très vite. 📞</p>`;
-        zone.scrollTop = zone.scrollHeight;
-    }
+    function reponseRobot(type) {
+        var display = document.getElementById('lina-display');
+        var texte = "";
 
-    function validerNumero() {
-        const num = document.getElementById('client-phone').value;
-        if(num.length > 7) {
-            // Ici, vous pouvez envoyer le numéro à votre WhatsApp
-            window.open("https://wa.me/2250709002881?text=Bonjour, je souhaite être rappelée au : " + num, "_blank");
-            document.getElementById('lina-form').style.display = 'none';
-        } else {
-            alert("Merci d'entrer un numéro valide.");
+        if(type === 'prix') {
+            texte = "🚚 <b>Livraison :</b><br>• Abidjan : 1.500F à 2.000F (24h)<br>• Intérieur : 3.000F (48h).";
+        } else if(type === 'qualite') {
+            texte = "💎 <b>Qualité :</b> Nos bijoux sont en acier inoxydable 316L. Ils résistent à l'eau, à la sueur et ne noircissent pas !";
+        } else if(type === 'promo') {
+            texte = "🎁 <b>Offre :</b> Livraison gratuite aujourd'hui à partir de 30.000F d'achat !";
         }
-    }
 
-    function linaRepond(choix) {
-        const zone = document.getElementById('lina-messages');
-        let rep = "";
-        if(choix === 'galerie') rep = "Voici nos collections Prestige ! Quel style préférez-vous ? ✨";
-        if(choix === 'promo') rep = "Livraison offerte sur votre première commande aujourd'hui ! Code : WELCOME 🎁";
-        if(choix === 'whatsapp') { window.open("https://wa.me/2250709002881", "_blank"); return; }
+        // Ajouter la réponse dans la zone de chat
+        display.innerHTML += `<div style="background: #c5a059; color: white; padding: 10px; border-radius: 10px; margin-top: 10px; align-self: flex-end; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">${texte}</div>`;
         
-        zone.innerHTML += `<p style="background: white; padding: 10px; border-radius: 12px; font-size: 12px; border-left: 3px solid #c5a059;">${rep}</p>`;
-        zone.scrollTop = zone.scrollHeight;
+        // Faire défiler vers le bas
+        display.scrollTop = display.scrollHeight;
     }
 </script>
+
 </body>
 </html>
