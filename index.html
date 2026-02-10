@@ -576,22 +576,38 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
 }
 
     function voirDetails(id) {
-        const p = products.find(x => x.id === id);
-        currentProduct = p;
-        document.getElementById('productDetailModal').classList.add('active');
-        document.getElementById('main-detail-img').src = p.images[0];// 1. On crée d'abord la liste des photos
-let htmlMiniatures = p.images.map(img => `
-    <img src="${img}" onclick="changerMedia('image', '${img}')" 
-    class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-[#c5a059] transition">
-`).join('');
-if(p.video) {
-    htmlMiniatures += `
-        <div onclick="changerMedia('video', '${p.video}')" 
-        class="h-14 w-14 bg-black rounded flex flex-col items-center justify-center cursor-pointer border border-gray-800 text-[#c5a059] transition hover:bg-gray-900">
-            <i class="fa-solid fa-play text-[10px]"></i>
-            <span class="text-[7px] font-black mt-1">VIDEO</span>
-        </div>
-    `;
+    const p = products.find(x => x.id === id);
+    currentProduct = p;
+    
+    document.getElementById('productDetailModal').classList.add('active');
+    
+    // Reset du conteneur média (on remet une image par défaut au début)
+    const mediaContainer = document.getElementById('main-detail-img').parentElement;
+    mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
+
+    // Génération des miniatures (Images + Bouton Vidéo)
+    let htmlMiniatures = p.images.map(img => `
+        <img src="${img}" onclick="changerMedia('image', '${img}')" 
+        class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-[#c5a059] transition">
+    `).join('');
+
+    if(p.video) {
+        htmlMiniatures += `
+            <div onclick="changerMedia('video', '${p.video}')" 
+            class="h-14 w-14 bg-black rounded flex flex-col items-center justify-center cursor-pointer border border-[#c5a059] text-[#c5a059] animate-pulse">
+                <i class="fa-solid fa-play text-[12px]"></i>
+                <span class="text-[7px] font-black mt-1 uppercase">Vidéo</span>
+            </div>
+        `;
+    }
+    document.getElementById('thumbnails').innerHTML = htmlMiniatures;
+    
+    // Remplissage des textes
+    document.getElementById('detail-name').innerText = p.name;
+    document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
+    document.getElementById('detail-desc').innerText = p.description;
+    
+    // ... reste de ta logique (tailles, couleurs, partage) ...
 }
 document.getElementById('thumbnails').innerHTML = htmlMiniatures;
         document.getElementById('detail-name').innerText = p.name;
@@ -983,26 +999,41 @@ function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
     const imgInput = document.getElementById('adm-img').value;
-    const videoLink = document.getElementById('adm-video').value; // Récupère la vidéo
+    const videoLink = document.getElementById('adm-video').value.trim(); // Capture la vidéo
 
     if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires (Nom, Prix, Images) !");
 
-    // Découpe les liens d'images par la virgule
-    const imagesArray = imgInput.split(',').map(link => link.trim());
+    // Nettoyage des liens d'images (séparés par des virgules)
+    const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
 
     const newP = {
         id: Date.now(),
         name: name,
         price: parseInt(price),
         cat: document.getElementById('adm-cat').value,
-        images: imagesArray, // Tableau de plusieurs images
-        video: videoLink || null, // Ajoute la vidéo si elle existe
+        images: imagesArray,
+        video: videoLink || null, // Stocke null si vide
         description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
         enStock: true,
         stockBas: document.getElementById('adm-stock-bas').checked,
         dateAjout: Date.now() 
     };
 
+    products.push(newP);
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    
+    refreshAdminList();
+    render();
+    
+    // Réinitialisation du formulaire
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    document.getElementById('adm-desc').value = "";
+    
+    alert("✅ Produit ajouté avec succès !");
+}
     products.push(newP);
     localStorage.setItem('latyfa_db', JSON.stringify(products));
     
