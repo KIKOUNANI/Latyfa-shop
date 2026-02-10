@@ -982,20 +982,44 @@ function ouvrirAdmin() {
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
-    const img = document.getElementById('adm-img').value;
+    const imgInput = document.getElementById('adm-img').value;
+    const videoLink = document.getElementById('adm-video').value; // Récupère la vidéo
 
-    if(!name || !price || !img) return alert("Remplis les champs obligatoires !");
+    if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires (Nom, Prix, Images) !");
+
+    // Découpe les liens d'images par la virgule
+    const imagesArray = imgInput.split(',').map(link => link.trim());
 
     const newP = {
         id: Date.now(),
         name: name,
         price: parseInt(price),
         cat: document.getElementById('adm-cat').value,
-        images: [img],
+        images: imagesArray, // Tableau de plusieurs images
+        video: videoLink || null, // Ajoute la vidéo si elle existe
         description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
         enStock: true,
+        stockBas: document.getElementById('adm-stock-bas').checked,
         dateAjout: Date.now() 
     };
+
+    products.push(newP);
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    
+    // Rafraîchir l'affichage
+    refreshAdminList();
+    render();
+    
+    // Vider les champs pour le prochain ajout
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    document.getElementById('adm-desc').value = "";
+    
+    alert("✅ Article en ligne avec " + imagesArray.length + " image(s) " + (videoLink ? "et 1 vidéo" : ""));
+}
+
 
     products.push(newP);
     localStorage.setItem('latyfa_db', JSON.stringify(products));
@@ -1066,8 +1090,8 @@ function chargerHistorique() {
         return;
     }
 
-    zone.innerHTML = historique.map(cmd => `
-        <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500 shadow-sm text-[10px]">
+    zone.innerHTML = historique.map((cmd, index) => `
+        <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500 shadow-sm text-[10px] mb-2">
             <div class="flex justify-between font-black text-blue-600 mb-1">
                 <span>📅 ${cmd.date}</span>
                 <span>💰 ${cmd.total} F</span>
@@ -1075,7 +1099,12 @@ function chargerHistorique() {
             <p><strong>👤 Client:</strong> ${cmd.client}</p>
             <p><strong>📍 Lieu:</strong> ${cmd.lieu}</p>
             <p><strong>🛍️ Articles:</strong> ${cmd.articles}</p>
-            <p class="text-[8px] text-gray-400 mt-1 italic">Code utilisé: ${cmd.promo}</p>
+            <div class="flex justify-between items-center mt-2">
+                <span class="text-[8px] text-gray-400 italic">Code: ${cmd.promo}</span>
+                <button onclick="genererPDF(${index})" class="bg-gray-800 text-white px-2 py-1 rounded text-[8px] uppercase font-bold">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
+            </div>
         </div>
     `).join('');
 }
