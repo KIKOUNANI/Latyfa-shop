@@ -342,475 +342,330 @@
         <p class="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Il y a quelques instants</p>
     </div>
 </div>
+<script>
+    (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
 
-    <script>
-        (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
+    // --- VARIABLES GLOBALES ---
+    const tarifsLivraison = {
+        "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
+        "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
+        "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
+        "bouake": { nom: "Retrait Boutique", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
+    };
 
-        const tarifsLivraison = {
-            "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
-            "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
-            "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
-            "Abidjan": { nom: "Abidjan", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
-        };
+    let products = [
+        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
+        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"], description: "Perles de hanche traditionnelles avec une touche de modernité." },
+        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], description: "Une fragrance envoûtante qui tient toute la journée." },
+        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
+    ];
 
-        const products = [
-    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
-    { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
-    { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"], description: "Perles de hanche traditionnelles avec une touche de modernité." },
-    { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], description: "Une fragrance envoûtante qui tient toute la journée." },
-    { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
-];
+    let cart = [];
+    let currentProduct = null;
+    let remiseCodePromo = 0; // Réduction en % via la roue
 
-
-        let cart = [];
-        let currentProduct = null;
-
-        function render(filter = 'tous') {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
-<div class="product-card p-3 relative" onclick="voirDetails(${p.id})">
-    ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10">Luxe</span>' : ''}
-    <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
-                    <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2">${p.name}</h3>
-                    <div class="text-[#ff6600] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-                    <div class="bg-gray-100 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest">Détails</div>
-                </div>`).join('');
-        }
-
-        function voirDetails(id) {
-            const p = products.find(x => x.id === id);
-            currentProduct = p;
-            document.getElementById('productDetailModal').classList.add('active');
-            document.getElementById('main-detail-img').src = p.images[0];
-            document.getElementById('thumbnails').innerHTML = p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-orange-500">`).join('');
-            document.getElementById('detail-name').innerText = p.name;
-            document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
-            document.getElementById('detail-desc').innerText = p.description;
-
-            const sArea = document.getElementById('size-area');
-            const opts = p.tailles || p.pointures || [];
-            if(opts.length > 0) {
-                sArea.classList.remove('hidden');
-                document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
-            } else { sArea.classList.add('hidden'); }
-
-            const cArea = document.getElementById('color-area');
-            if(p.couleurs) {
-                cArea.classList.remove('hidden');
-                document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
-            } else { cArea.classList.add('hidden'); }
-
-            const urlSite = window.location.href;
-            const msgShare = `Regarde ce magnifique article chez *LATYYA Business* :\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\nLien : ${urlSite}`;
-            document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=${encodeURIComponent(msgShare)}`, "_blank");
-            document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`, "_blank");
-        }
-
-        function ajouterDepuisDetail() {
-    const size = document.getElementById('select-size').value || "";
-    const color = document.getElementById('select-color').value || "";
-    const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
-    
-    const index = cart.findIndex(x => x.label === label);
-    if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
-    
-    // 1. Mise à jour du compteur
-    const cartCount = document.getElementById('cart-count');
-    cartCount.innerText = cart.reduce((a, b) => a + b.qty, 0);
-    
-    // 2. ANIMATION SECOUSSE DU PANIER (sur l'icône parente)
-    const cartIcon = cartCount.parentElement;
-    cartIcon.classList.add('animate-cart');
-    setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
-
-    // 3. Fermeture du modal détail
-    document.getElementById('productDetailModal').classList.remove('active');
-
-    // 4. VIBRATION MOBILE
-    if (navigator.vibrate) {
-        navigator.vibrate(50);
+    // --- BOUTIQUE ---
+    function render(filter = 'tous') {
+        const grid = document.getElementById('product-grid');
+        grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
+            <div class="product-card p-3 relative" onclick="voirDetails(${p.id})">
+                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10">Luxe</span>' : ''}
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2">${p.name}</h3>
+                <div class="text-[#ff6600] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                <div class="bg-gray-100 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest">Détails</div>
+            </div>`).join('');
     }
-    
-    // 5. AFFICHAGE DU TOAST (Notification)
-    const toast = document.getElementById('toast');
-    toast.classList.remove('opacity-0');
-    setTimeout(() => {
-        toast.classList.add('opacity-0');
-    }, 2000);
-}
+
+    function voirDetails(id) {
+        const p = products.find(x => x.id === id);
+        currentProduct = p;
+        document.getElementById('productDetailModal').classList.add('active');
+        document.getElementById('main-detail-img').src = p.images[0];
+        document.getElementById('thumbnails').innerHTML = p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-orange-500">`).join('');
+        document.getElementById('detail-name').innerText = p.name;
+        document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
+        document.getElementById('detail-desc').innerText = p.description;
+
+        const sArea = document.getElementById('size-area');
+        const opts = p.tailles || p.pointures || [];
+        if(opts.length > 0) {
+            sArea.classList.remove('hidden');
+            document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
+        } else { sArea.classList.add('hidden'); }
+
+        const cArea = document.getElementById('color-area');
+        if(p.couleurs) {
+            cArea.classList.remove('hidden');
+            document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
+        } else { cArea.classList.add('hidden'); }
+
+        const urlSite = window.location.href;
+        const msgShare = `Regarde ce magnifique article chez *LATYFA Business* :\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\nLien : ${urlSite}`;
+        document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=${encodeURIComponent(msgShare)}`, "_blank");
+        document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`, "_blank");
+    }
+
+    function ajouterDepuisDetail() {
+        const size = document.getElementById('select-size').value || "";
+        const color = document.getElementById('select-color').value || "";
+        const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
         
-// --- CONFIGURATION DE LA ROUE ---
-const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
-const canva = document.getElementById('canvas');
-const ctx = canva.getContext('2d');
-const MAX_TENTATIVES = 1;
+        const index = cart.findIndex(x => x.label === label);
+        if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
+        
+        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+        
+        const cartIcon = document.getElementById('cart-count').parentElement;
+        cartIcon.classList.add('animate-cart');
+        setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
 
-// Dessin automatique au chargement
-function drawWheel() {
-    const arc = 2 * Math.PI / prizes.length;
-    ctx.clearRect(0, 0, 300, 300);
-    for (let i = 0; i < prizes.length; i++) {
-        ctx.beginPath();
-        ctx.fillStyle = i % 2 === 0 ? (prizes[i] === "REESSAYER" ? "#333" : "#c5a059") : "#000";
-        ctx.moveTo(150, 150);
-        ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
-        ctx.fill();
-        ctx.save();
-        ctx.fillStyle = "white";
-        ctx.translate(150, 150);
-        ctx.rotate(i * arc + arc / 2);
-        ctx.font = "bold 9px Montserrat";
-        ctx.textAlign = "right";
-        ctx.fillText(prizes[i], 130, 5);
-        ctx.restore();
+        document.getElementById('productDetailModal').classList.remove('active');
+
+        if (navigator.vibrate) navigator.vibrate(50);
+        
+        const toast = document.getElementById('toast');
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2000);
     }
-}
 
-// Action au clic
-document.getElementById('spin').onclick = function() {
-    let stats = majAffichageChances();
-    if (stats.count >= MAX_TENTATIVES) return;
+    // --- LOGIQUE DE LA ROUE ---
+    const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
+    const canva = document.getElementById('canvas');
+    const ctx = canva.getContext('2d');
+    const MAX_TENTATIVES = 1;
 
-    const btn = this;
-    btn.disabled = true;
-    const rotation = 1800 + Math.floor(Math.random() * 360);
-    canva.style.transform = `rotate(${rotation}deg)`;
+    function drawWheel() {
+        const arc = 2 * Math.PI / prizes.length;
+        ctx.clearRect(0, 0, 300, 300);
+        for (let i = 0; i < prizes.length; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = i % 2 === 0 ? (prizes[i] === "REESSAYER" ? "#333" : "#c5a059") : "#000";
+            ctx.moveTo(150, 150);
+            ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
+            ctx.fill();
+            ctx.save();
+            ctx.fillStyle = "white";
+            ctx.translate(150, 150);
+            ctx.rotate(i * arc + arc / 2);
+            ctx.font = "bold 9px Montserrat";
+            ctx.textAlign = "right";
+            ctx.fillText(prizes[i], 130, 5);
+            ctx.restore();
+        }
+    }
 
-    setTimeout(() => {
-        const finalAngle = (360 - (rotation % 360)) % 360;
-        const winIndex = Math.floor(finalAngle / (360 / prizes.length));
-        const win = prizes[winIndex];
+    document.getElementById('spin').onclick = function() {
+        let stats = majAffichageChances();
+        if (stats.count >= MAX_TENTATIVES) return;
 
-        stats.count++;
-        localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
-        majAffichageChances();
+        const btn = this;
+        btn.disabled = true;
+        const rotation = 1800 + Math.floor(Math.random() * 360);
+        canva.style.transform = `rotate(${rotation}deg)`;
 
-        if (win === "REESSAYER") {
-            alert("Mince ! Retentez demain. 😥");
+        setTimeout(() => {
+            const finalAngle = (360 - (rotation % 360)) % 360;
+            const winIndex = Math.floor(finalAngle / (360 / prizes.length));
+            const win = prizes[winIndex];
+
+            stats.count++;
+            localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
+            majAffichageChances();
+
+            if (win === "REESSAYER") {
+                alert("Mince ! Retentez demain. 😥");
+            } else {
+                const promoAmount = win.replace(/[^0-9]/g, "") || "5";
+                const promoCode = "LATYFA" + promoAmount;
+                const expiration = Date.now() + (24 * 60 * 60 * 1000);
+
+                localStorage.setItem('latyfa_active_promo', JSON.stringify({
+                    code: promoCode,
+                    expires: expiration,
+                    remise: promoAmount
+                }));
+                alert("🎉 BRAVO ! Gain : " + win + "\nCode : " + promoCode + "\nValable 24h !");
+            }
+        }, 4000);
+    };
+
+    function majAffichageChances() {
+        const aujourdhui = new Date().toLocaleDateString();
+        let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: aujourdhui, count: 0 };
+        if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
+        
+        const reste = MAX_TENTATIVES - stats.count;
+        const msgZone = document.getElementById('wheel-msg');
+        if(reste <= 0) {
+            msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE</span>`;
+            document.getElementById('spin').disabled = true;
         } else {
-            // Création du Code Promo et Expiration
-            const promoAmount = win.replace(/[^0-9]/g, "") || "5";
-            const promoCode = "LATYFA" + promoAmount;
-            const expiration = Date.now() + (24 * 60 * 60 * 1000);
-
-            localStorage.setItem('latyfa_active_promo', JSON.stringify({
-                code: promoCode,
-                expires: expiration,
-                remise: promoAmount
-            }));
-
-            alert("🎉 BRAVO ! Gain : " + win + "\nCode : " + promoCode + "\nUtilisez-le dans le panier (Valable 24h) !");
+            msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/${MAX_TENTATIVES}</span>`;
         }
-    }, 4000);
-};
-
-// Initialisation
-drawWheel();
-
-       function ouvrirPanier() {
-            document.getElementById('cartModal').classList.add('active');
-            const itemsDiv = document.getElementById('cart-items');
-            const form = document.getElementById('checkout-form');
-            if(cart.length === 0) { itemsDiv.innerHTML = "<p class='text-center py-10 text-[10px] font-bold uppercase text-gray-400'>Panier Vide</p>"; form.style.display = "none"; return; }
-            form.style.display = "block";
-            itemsDiv.innerHTML = cart.map(item => `
-                <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
-                    <div class="flex-1">${item.label}</div>
-                    <div class="flex gap-2 items-center">
-                        <button onclick="modifierQty('${item.label}',-1)" class="bg-gray-100 px-2 rounded">-</button>
-                        <span>${item.qty}</span>
-                        <button onclick="modifierQty('${item.label}',1)" class="bg-gray-100 px-2 rounded">+</button>
-                    </div>
-                </div>`).join('');
-            majResume();
-           // À ajouter dans la fonction ouvrirPanier()
-const savedPromo = JSON.parse(localStorage.getItem('latyfa_active_promo'));
-if (savedPromo) {
-    const restant = savedPromo.expires - Date.now();
-    if (restant > 0) {
-        const heures = Math.floor(restant / (1000 * 60 * 60));
-        console.log("Il reste " + heures + "h à votre code promo."); }
-    
-        function modifierQty(label, d) {
-            const i = cart.find(x => x.label === label);
-            if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
-            document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
-            ouvrirPanier();
-        }
-
-        // MODIFICATION de la fonction majResume existante
-function majResume() {
-    const zoneKey = document.getElementById('zone-livraison').value;
-    const infoBox = document.getElementById('communes-info');
-    let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    
-    // 1. Promo St Valentin (-20% si le total des articles >= 20.000 F)
-    let remiseValentin = 0;
-    const maintenant = new Date();
-    const debutPromo = new Date("February 14, 2026 00:00:00");
-    const finPromo = new Date("February 28, 2026 23:59:59");
-    
-    if (maintenant >= debutPromo && maintenant <= finPromo && tArt >= 20000) {
-        remiseValentin = tArt * 0.2;
+        return stats;
     }
 
-    // 2. Remise via Code Promo gagné dans la Roue
-    // Elle s'applique sur le montant après la remise Valentin
-    let remiseRoue = 0;
-    if (remiseCodePromo > 0) {
-        remiseRoue = (tArt - remiseValentin) * (remiseCodePromo / 100);
-    }
-
-    // 3. Frais de Livraison
-    let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
-    
-    // 4. Calcul du Total Final
-    let totalFinal = tArt - remiseValentin - remiseRoue + tLiv;
-    
-    // Affichage des informations de zone
-    if(zoneKey) { 
-        infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
-        infoBox.classList.remove('hidden'); 
-    } else {
-        infoBox.classList.add('hidden');
-    }
-
-    // Mise à jour de l'affichage du résumé dans le panier
-    document.getElementById('resume-final').innerHTML = `
-        <div class="flex justify-between"><span>Articles :</span> <span>${tArt.toLocaleString()} F</span></div>
-        ${remiseValentin > 0 ? `<div class="flex justify-between text-pink-600 font-bold"><span>🎁 Promo Valentin (-20%) :</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
-        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600 font-bold"><span>🎰 Code Roue (-${remiseCodePromo}%) :</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
-        <div class="flex justify-between"><span>Livraison :</span> <span>${tLiv.toLocaleString()} F</span></div>
-    `;
-    
-    // Affichage du Total en rouge
-    document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
-}
+    // --- PANIER ET CALCULS ---
+    function ouvrirPanier() {
+        document.getElementById('cartModal').classList.add('active');
+        const itemsDiv = document.getElementById('cart-items');
+        const form = document.getElementById('checkout-form');
         
-        function toggleBouton() {
-            const chk = document.getElementById('check-verif').checked;
-            const btn = document.getElementById('btn-final');
-            btn.className = chk ? "w-full ali-gradient text-white py-4 rounded-full font-black uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-black uppercase";
-            btn.disabled = !chk;
+        if(cart.length === 0) { 
+            itemsDiv.innerHTML = "<p class='text-center py-10 text-[10px] font-bold uppercase text-gray-400'>Panier Vide</p>"; 
+            form.style.display = "none"; 
+            return; 
         }
-
-        function validerCommande() {
-            const nom = document.getElementById('nom-client').value;
-            const quartier = document.getElementById('tel-client').value;
-            const zoneKey = document.getElementById('zone-livraison').value;
-            const mode = document.getElementById('mode-pay').value;
-            const total = document.getElementById('total-display').innerText;
-            let list = ""; cart.forEach(i => list += `- ${i.label} (x${i.qty})\n`);
-            let msg = `*COMMANDE LATYFA BOUTIQUE*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n🛍️ ARTICLES:\n${list}\n💰 TOTAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
-            window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-        }
-
-        function majAffichageChances() {
-    const aujourdhui = new Date().toLocaleDateString();
-    // Utilisation de la clé correcte
-    let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: aujourdhui, count: 0 };
-    
-    if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
-    
-    const reste = MAX_TENTATIVES - stats.count;
-    const msgZone = document.getElementById('wheel-msg');
-    
-    if(reste <= 0) {
-        msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE (REVIENS DEMAIN)</span>`;
-        document.getElementById('spin').disabled = true;
-        document.getElementById('spin').innerText = "LIMITE ATTEINTE";
-    } else {
-        msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/${MAX_TENTATIVES}</span>`;
-    }
-    return stats;
-}
-
-
-
-        // --- DIVERS ---
-        function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
-        function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
         
-        setInterval(() => {
-            const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
-            if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
-            const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-            document.getElementById('countdown').innerText = d + "j " + h + "h " + m + "m " + s + "s";
-        }, 1000);
-
-        drawWheel(); majAffichageChances(); render();
-        // --- LOGIQUE DU COMPTEUR DE VISITEURS ---
-function updateVisitorCount() {
-    // On récupère le nombre actuel ou on commence à un chiffre crédible (ex: 1250)
-    let count = localStorage.getItem('latyfa_visitors');
-    
-    if (!count) {
-        count = 1000; // Ton chiffre de départ marketing
-    } else {
-        count = parseInt(count) + 1;
-    }
-    
-    localStorage.setItem('latyya_visitors', count);
-    
-    // Animation d'affichage
-    const display = document.getElementById('visitor-count');
-    if(display) {
-        display.innerText = count.toLocaleString('fr-FR');
-    }
-}
-
-// Appeler la fonction au chargement
-updateVisitorCount();
-        // --- LOGIQUE DE PREUVE SOCIALE ---
-const notifications = [
-    "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
-    "Nouveau colis expédié vers Yamoussoukro 📦",
-    "Une commande de Parfum Prestige vient d'être validée 🕯️",
-    "5 personnes consultent actuellement ce produit 🔥",
-    "Un ensemble de bijoux a été ajouté au panier à Bouaké 💎",
-    "Dernier stock disponible pour les Perles de hanche 'Baya' ⚠️"
-];
-
-function showSocialProof() {
-    const box = document.getElementById('social-proof');
-    const text = document.getElementById('proof-text');
-    
-    // Choisir un message au hasard
-    const randomMsg = notifications[Math.floor(Math.random() * notifications.length)];
-    text.innerText = randomMsg;
-
-    // Faire apparaître
-    box.classList.remove('translate-y-20', 'opacity-0');
-    
-    // Faire disparaître après 5 secondes
-    setTimeout(() => {
-        box.classList.add('translate-y-20', 'opacity-0');
-    }, 5000);
-}
-
-// Lancer la première après 3 secondes, puis toutes les 15 secondes
-setTimeout(() => {
-    showSocialProof();
-    setInterval(showSocialProof, 15000);
-}, 3000);
-        // --- LOGIQUE ADMIN ---
-function ouvrirAdmin() {
-    const mdp = prompt("Code d'accès Admin :");
-    if(mdp === "2026") { // Ton mot de passe
-        document.getElementById('adminModal').classList.add('active');
-        refreshAdminList();
-    } else { alert("Accès refusé"); }
-}
-
-function ajouterProduitAdmin() {
-    const name = document.getElementById('adm-name').value;
-    const price = document.getElementById('adm-price').value;
-    const img = document.getElementById('adm-img').value;
-
-    if(!name || !price || !img) return alert("Remplis les champs obligatoires !");
-
-    const newP = {
-        id: Date.now(),
-        name: name,
-        price: parseInt(price),
-        cat: document.getElementById('adm-cat').value,
-        images: [img],
-        description: document.getElementById('adm-desc').value || "Produit Latyfa Business"
-    };
-
-    products.push(newP);
-    sauvegarderEtRelancer();
-    alert("Produit ajouté !");
-}
-
-function supprimerProduit(id) {
-    if(confirm("Supprimer définitivement cet article ?")) {
-        products = products.filter(p => p.id !== id);
-        sauvegarderEtRelancer();
-    }
-}
-
-function sauvegarderEtRelancer() {
-    localStorage.setItem('latyfa_db', JSON.stringify(products));
-    refreshAdminList();
-    render(); // Rafraîchit la boutique immédiatement
-}
-
-function refreshAdminList() {
-    const list = document.getElementById('admin-list');
-    list.innerHTML = products.map(p => `
-        <div class="flex justify-between items-center bg-gray-100 p-2 rounded border">
-            <span class="font-bold">${p.name}</span>
-            <button onclick="supprimerProduit(${p.id})" class="text-red-500 font-bold text-xs uppercase">Supprimer</button>
-        </div>
-    `).join('');
-}
-        let remiseCodePromo = 0;
-
-function appliquerPromo() {
-    const code = document.getElementById('input-promo').value.toUpperCase().trim();
-    const msg = document.getElementById('promo-msg');
-    
-    // Vérifier si un code a déjà été utilisé sur cet appareil
-    const codesUtilises = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
-    
-    if (codesUtilises.includes(code)) {
-        msg.innerText = "❌ Ce code a déjà été utilisé.";
-        msg.className = "text-[9px] font-bold uppercase text-red-600 block";
-        remiseCodePromo = 0;
+        form.style.display = "block";
+        itemsDiv.innerHTML = cart.map(item => `
+            <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
+                <div class="flex-1">${item.label}</div>
+                <div class="flex gap-2 items-center">
+                    <button onclick="modifierQty('${item.label}',-1)" class="bg-gray-100 px-2 rounded">-</button>
+                    <span>${item.qty}</span>
+                    <button onclick="modifierQty('${item.label}',1)" class="bg-gray-100 px-2 rounded">+</button>
+                </div>
+            </div>`).join('');
+        
         majResume();
-        return;
     }
 
-    const codesValides = {
-        "LATYFA2": 2,
-        "LATYFA5": 5,
-        "LATYFA10": 10
-    };
-
-    if (codesValides[code]) {
-        remiseCodePromo = codesValides[code];
-        msg.innerText = "✅ Code -" + remiseCodePromo + "% validé !";
-        msg.className = "text-[9px] font-bold uppercase text-green-600 block";
-    } else {
-        remiseCodePromo = 0;
-        msg.innerText = "❌ Code invalide.";
-        msg.className = "text-[9px] font-bold uppercase text-red-600 block";
+    function modifierQty(label, d) {
+        const i = cart.find(x => x.label === label);
+        if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
+        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+        ouvrirPanier();
     }
-    majResume();
-}
 
-   </script>
-    <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
+    function appliquerPromo() {
+        const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+        const msg = document.getElementById('promo-msg');
+        const savedPromo = JSON.parse(localStorage.getItem('latyfa_active_promo'));
+        const usedPromos = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
+
+        msg.classList.remove('hidden');
+
+        if (usedPromos.includes(inputCode)) {
+            msg.innerText = "❌ Ce code a déjà été utilisé.";
+            msg.className = "text-[9px] font-bold text-red-600";
+            remiseCodePromo = 0;
+        } 
+        else if (savedPromo && inputCode === savedPromo.code) {
+            if (Date.now() > savedPromo.expires) {
+                msg.innerText = "⏰ Code expiré (24h).";
+                msg.className = "text-[9px] font-bold text-red-600";
+                remiseCodePromo = 0;
+            } else {
+                remiseCodePromo = parseInt(savedPromo.remise);
+                msg.innerText = "✅ Code -" + remiseCodePromo + "% appliqué !";
+                msg.className = "text-[9px] font-bold text-green-600";
+            }
+        } else {
+            msg.innerText = "❌ Code invalide.";
+            msg.className = "text-[9px] font-bold text-red-600";
+            remiseCodePromo = 0;
+        }
+        majResume();
+    }
+
+    function majResume() {
+        const zoneKey = document.getElementById('zone-livraison').value;
+        const infoBox = document.getElementById('communes-info');
+        let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+        
+        let remiseValentin = 0;
+        const maintenant = new Date();
+        if (maintenant >= new Date("February 14, 2026") && maintenant <= new Date("February 28, 2026") && tArt >= 20000) {
+            remiseValentin = tArt * 0.2;
+        }
+
+        let remiseRoue = 0;
+        if (remiseCodePromo > 0) {
+            remiseRoue = (tArt - remiseValentin) * (remiseCodePromo / 100);
+        }
+
+        let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
+        let totalFinal = tArt - remiseValentin - remiseRoue + tLiv;
+        
+        if(zoneKey) { 
+            infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
+            infoBox.classList.remove('hidden'); 
+        }
+
+        document.getElementById('resume-final').innerHTML = `
+            <div class="flex justify-between"><span>Articles :</span> <span>${tArt.toLocaleString()} F</span></div>
+            ${remiseValentin > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Promo Valentin (-20%) :</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
+            ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600"><span>🎰 Code Roue (-${remiseCodePromo}%) :</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
+            <div class="flex justify-between"><span>Livraison :</span> <span>${tLiv.toLocaleString()} F</span></div>
+        `;
+        document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    }
+
+    function toggleBouton() {
+        const chk = document.getElementById('check-verif').checked;
+        const btn = document.getElementById('btn-final');
+        btn.className = chk ? "w-full ali-gradient text-white py-4 rounded-full font-black uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-black uppercase";
+        btn.disabled = !chk;
+    }
+
+    function validerCommande() {
+        const nom = document.getElementById('nom-client').value;
+        const quartier = document.getElementById('tel-client').value;
+        const zoneKey = document.getElementById('zone-livraison').value;
+        const mode = document.getElementById('mode-pay').value;
+        const total = document.getElementById('total-display').innerText;
+        const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+
+        // Sécurité : Marquer le code comme utilisé
+        if (remiseCodePromo > 0 && inputCode) {
+            let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
+            if (!used.includes(inputCode)) {
+                used.push(inputCode);
+                localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
+            }
+        }
+
+        let list = ""; cart.forEach(i => list += `- ${i.label} (x${i.qty})\n`);
+        let promoText = remiseCodePromo > 0 ? `🎁 CODE PROMO: ${inputCode} (-${remiseCodePromo}%)\n` : "";
+        
+        let msg = `*COMMANDE LATYFA BOUTIQUE*\n👤 CLIENT: ${nom}\n🌍 ZONE: ${tarifsLivraison[zoneKey].nom}\n📍 LIEU: ${quartier}\n${promoText}🛍️ ARTICLES:\n${list}\n💰 TOTAL FINAL: ${total} F\n💳 MODE: ${mode}\n⚠️ _Paiement intégral requis._`;
+        window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+    }
+
+    // --- DIVERS ---
+    function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
+    function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
+    function updateVisitorCount() {
+        let count = localStorage.getItem('latyfa_visitors') || 1250;
+        count = parseInt(count) + 1;
+        localStorage.setItem('latyfa_visitors', count);
+        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
+    }
+
+    setInterval(() => {
+        const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
+        if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
+        const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+        document.getElementById('countdown').innerText = `${d}j ${h}h ${m}m ${s}s`;
+    }, 1000);
+
+    // Initialisation finale
+    drawWheel(); 
+    majAffichageChances(); 
+    render(); 
+    updateVisitorCount();
+</script>
+    // ... fin de ton script (le dernier bloc que je t'ai donné)
+    updateVisitorCount();
+</script>
+
+<div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
 <div id="adminModal" class="modal bg-white">
-    <div class="max-w-md mx-auto py-8">
-        <div class="flex justify-between items-center border-b pb-4 mb-6">
-            <h2 class="text-xl font-black italic uppercase">Gestion du Catalogue</h2>
-            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-2xl">&times;</button>
-        </div>
-        
-        <div class="space-y-4 bg-gray-50 p-4 rounded-xl border">
-            <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full p-3 border rounded">
-            <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full p-3 border rounded">
-            <select id="adm-cat" class="w-full p-3 border rounded bg-white font-bold">
-                <option value="bijoux">Bijoux</option>
-                <option value="sac">Sacs à main</option>
-                <option value="parfum">Parfums</option>
-                <option value="vetements">Vêtements</option>
-                <option value="chaussures">Chaussures</option>
-                <option value="hanche">Perles de hanche</option>
-            </select>
-            <input type="text" id="adm-img" placeholder="Lien de la photo (URL) *" class="w-full p-3 border rounded">
-            <textarea id="adm-desc" placeholder="Description courte" class="w-full p-3 border rounded h-20"></textarea>
-            <button onclick="ajouterProduitAdmin()" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase">Mettre en ligne</button>
-        </div>
-
-        <div class="mt-10">
-            <h3 class="text-[10px] font-black uppercase mb-4 text-gray-400 tracking-widest">Articles en ligne</h3>
-            <div id="admin-list" class="space-y-2 max-h-60 overflow-y-auto pr-2 text-[10px] font-bold uppercase"></div>
-        </div>
     </div>
-</div>
+
 </body>
 </html>
