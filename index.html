@@ -89,16 +89,34 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 }
 .animate-cart { animation: cart-shake 0.5s ease-in-out; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+ @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 25s linear infinite;
+}
+/* Pause au survol pour que le client puisse lire tranquillement */
+.animate-marquee:hover {
+    animation-play-state: paused;
+}
 </style>
 </head>
-<body>
-    
+<body>    
 <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 bg-black/90 text-[#c5a059] px-6 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest z-[2000] opacity-0 transition-opacity duration-300 pointer-events-none">
     ✨ Produit ajouté au panier
 </div>
 
     <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">
     ✨ Promo Exclusive -20% dès 20.000 F D'achat à partir du 14 fév au 28 fév 2026: <span id="countdown" class="text-white ml-1">--:--:--</span> ✨
+</div>
+    
+<div class="bg-white border-b border-gray-100 py-1 overflow-hidden whitespace-nowrap">
+    <div class="inline-block animate-marquee text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400">
+        ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE — 🚚 EXPÉDITION SOUS 48H DANS TOUTE LA CÔTE D'IVOIRE — ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE —
+    </div>
 </div>
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
@@ -245,6 +263,32 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
                 <p class="text-[11px] italic text-gray-600 mb-4">"Qualité incroyable ! J'ai commandé mon sac lundi, reçu mardi à Cocody. Je recommande à 100%."</p>
                 <p class="text-[10px] font-black uppercase tracking-tighter">— Mariam K.</p>
             </div>
+            <section class="container mx-auto px-4 py-10">
+    <div class="grid grid-cols-3 gap-4 text-center">
+        <div class="flex flex-col items-center">
+            <div class="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-[#c5a059] mb-3">
+                <i class="fa-solid fa-shield-heart text-xl"></i>
+            </div>
+            <h4 class="text-[9px] font-bold uppercase tracking-widest">Qualité Premium</h4>
+            <p class="text-[8px] text-gray-400 uppercase mt-1">Sélection Luxe</p>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-[#c5a059] mb-3">
+                <i class="fa-solid fa-bolt-lightning text-xl"></i>
+            </div>
+            <h4 class="text-[9px] font-bold uppercase tracking-widest">Livraison Rapide</h4>
+            <p class="text-[8px] text-gray-400 uppercase mt-1">Abidjan & Intérieur</p>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-[#c5a059] mb-3">
+                <i class="fa-solid fa-headset text-xl"></i>
+            </div>
+            <h4 class="text-[9px] font-bold uppercase tracking-widest">Service Client</h4>
+            <p class="text-[8px] text-gray-400 uppercase mt-1">7j/7 sur WhatsApp</p>
+        </div>
+    </div>
+</section>
+
             <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex text-[#c5a059] mb-3 text-[10px]">
                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
