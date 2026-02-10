@@ -159,15 +159,28 @@ nav button:focus {
 </style>
 </head>
 <body>    
-    <div id="maintenance-screen" class="fixed inset-0 z-[1000] bg-white flex flex-col items-center justify-center p-6 text-center hidden">
-    <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-24 w-24 rounded-full mb-6 animate-pulse">
-    <h1 class="logo-font text-3xl font-black text-[#c5a059] mb-4">LATYFA SHOP</h1>
-    <div class="w-16 h-1 bg-[#c5a059] mb-6"></div>
-    <p class="text-gray-600 font-bold uppercase tracking-widest text-sm mb-2">Boutique en maintenance</p>
-    <p class="text-gray-400 text-xs max-w-xs">Nous mettons à jour notre collection pour vous offrir le meilleur. Revenez dans quelques instants ! ✨</p>
-    
-    <button onclick="leverMaintenance()" class="mt-20 opacity-0">Accès Admin</button>
-</div>
+    // Remplace le bloc HTML à l'intérieur de ta fonction de maintenance :
+document.body.innerHTML = `
+    <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-family:'Helvetica Neue', sans-serif; padding:30px; background-color:#ffffff;">
+        <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" 
+             style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; border:3px solid #c5a059; padding:5px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">
+        <h1 style="color:#c5a059; font-size:32px; font-weight:900; margin-bottom:10px; letter-spacing:-1px;">LATYFA SHOP</h1>
+        <div style="width:50px; height:2px; background:#c5a059; margin:20px 0;"></div>
+        <h2 style="color:#333; font-size:18px; text-transform:uppercase; letter-spacing:2px; margin-bottom:15px; font-weight:bold;">
+            Un instant de patience... ✨
+        </h2> 
+        <p style="color:#777; font-size:14px; line-height:1.6; max-width:300px; margin-bottom:30px;">
+            Nous mettons à jour notre collection pour vous offrir le meilleur du chic et de l'élégance. 
+            <br><span style="color:#c5a059; font-weight:bold;">Revenez d'ici quelques minutes !</span>
+        </p>
+        <div style="display:flex; gap:20px; color:#c5a059; font-size:12px;">
+            <span>✨ Nouveautés</span>
+            <span>💎 Qualité</span>
+            <span>🚚 Livraison</span>
+        </div>
+        <button onclick="leverMaintenanceSecret()" style="margin-top:80px; opacity:0; cursor:default; width:100px; height:40px;">Admin</button>
+    </div>
+`;
     <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
     <div class="relative">
         <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-24 w-24 rounded-full border-2 border-[#c5a059] animate-pulse shadow-[0_0_20px_rgba(197,160,89,0.3)]">
