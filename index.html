@@ -968,6 +968,50 @@ setTimeout(() => {
 }, 3000);
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
 let editingId = null; // Pour savoir si on modifie ou si on ajoute
+    // --- SAUVEGARDE ET RESTAURATION ---
+function exporterCatalogue() {
+    const data = localStorage.getItem('latyfa_db');
+    if (!data || data === "[]") return alert("Aucun produit à sauvegarder.");
+    
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    
+    const date = new Date().toLocaleDateString('fr-FR').replace(/\//g, '-');
+    a.href = url;
+    a.download = `LATYFA_BACKUP_${date}.json`;
+    a.click();
+    
+    alert("✅ Fichier de sauvegarde téléchargé ! Garde-le précieusement.");
+}
+
+function importerCatalogue() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = event => {
+            try {
+                const importedData = JSON.parse(event.target.result);
+                if (confirm("⚠️ Cela va remplacer tes produits actuels. Continuer ?")) {
+                    localStorage.setItem('latyfa_db', JSON.stringify(importedData));
+                    products = importedData;
+                    refreshAdminList();
+                    render();
+                    alert("✅ Catalogue restauré avec succès !");
+                }
+            } catch (err) {
+                alert("❌ Erreur : Le fichier est invalide.");
+            }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
 
 function ouvrirAdmin() {
     const mdp = prompt("Code d'accès Admin :");
@@ -1167,7 +1211,6 @@ window.addEventListener('load', () => {
                         <input type="number" id="adm-price-promo" placeholder="Ex: 12000" class="w-full border p-3 rounded-lg text-sm bg-red-50">
                     </div>
                 </div>
-
                 <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm font-bold">
                     <option value="bijoux">Bijoux</option>
                     <option value="vetements">Vêtements</option>
@@ -1177,6 +1220,15 @@ window.addEventListener('load', () => {
                     <option value="hanche">Perles de hanche</option>
                     <option value="autres">Autres</option>
                 </select>
+                <div class="flex gap-2 mb-6">
+    <button onclick="exporterCatalogue()" class="flex-1 bg-green-600 text-white py-2 rounded-lg font-bold text-[10px] uppercase shadow-sm">
+        <i class="fa-solid fa-download mr-1"></i> Sauvegarder le catalogue
+    </button>
+    <button onclick="importerCatalogue()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-bold text-[10px] uppercase shadow-sm">
+        <i class="fa-solid fa-upload mr-1"></i> Restaurer une sauvegarde
+    </button>
+</div>
+
                 
                 <div class="space-y-2">
                     <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Liens séparés par des virgules)</label>
