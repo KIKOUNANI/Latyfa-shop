@@ -521,11 +521,11 @@ function afficherResultatsRecherche(liste) {
     };
 
     let products = [
-        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
-        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
-        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"], description: "Perles de hanche traditionnelles avec une touche de modernité." },
-        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], description: "Une fragrance envoûtante qui tient toute la journée." },
-        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
+        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
+        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
+        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
+        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
     ];
 
     let cart = [];
@@ -542,6 +542,8 @@ function afficherResultatsRecherche(liste) {
         const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
         
         return `
+${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 PLUS QUE 2 EN STOCK !</span>' : ''}
+
             <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
                 
                 ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
@@ -1093,6 +1095,10 @@ function chargerHistorique() {
                 </div>
                 <input type="text" id="adm-img" placeholder="Lien de l'image (URL) *" class="w-full border p-3 rounded-lg text-sm">
                 <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+                <div class="flex items-center gap-2 mb-4">
+    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Activer l'alerte "Stock Limité"</label>
+</div>
                 <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
             </div>
         </div>
