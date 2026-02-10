@@ -1116,22 +1116,20 @@ function scrollToTop() {
     });
 }
 updateCartCount(); 
-    // FONCTION DE MISE À JOUR DU COMPTEUR (Indispensable)
 function updateCartCount() {
     const count = cart.reduce((a, b) => a + b.qty, 0);
     const badge = document.getElementById('cart-count');
     if(badge) badge.innerText = count;
-    // On sauvegarde à chaque fois que le compteur change
     localStorage.setItem('latyfa_cart', JSON.stringify(cart));
 }
-
-// CHARGEMENT INITIAL DU PANIER
-window.addEventListener('DOMContentLoaded', () => {
-    const savedCart = localStorage.getItem('latyfa_cart');
-    if(savedCart) {
-    }
-});
-
+let savedCart = localStorage.getItem('latyfa_cart');
+let cart = savedCart ? JSON.parse(savedCart) : [];
+function updateCartCount() {
+    const totalQty = cart.reduce((a, b) => a + b.qty, 0);
+    document.getElementById('cart-count').innerText = totalQty;
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+}
+updateCartCount();
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
