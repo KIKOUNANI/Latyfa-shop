@@ -534,10 +534,10 @@ function afficherResultatsRecherche(liste) {
 
     let products = [
         { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
-        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
-        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
-        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
-        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
+        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
+        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
+        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
+        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
     ];
 
     let cart = [];
@@ -579,8 +579,21 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
         const p = products.find(x => x.id === id);
         currentProduct = p;
         document.getElementById('productDetailModal').classList.add('active');
-        document.getElementById('main-detail-img').src = p.images[0];
-        document.getElementById('thumbnails').innerHTML = p.images.map(img => `<img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-orange-500">`).join('');
+        document.getElementById('main-detail-img').src = p.images[0];// 1. On crée d'abord la liste des photos
+let htmlMiniatures = p.images.map(img => `
+    <img src="${img}" onclick="changerMedia('image', '${img}')" 
+    class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-[#c5a059] transition">
+`).join('');
+if(p.video) {
+    htmlMiniatures += `
+        <div onclick="changerMedia('video', '${p.video}')" 
+        class="h-14 w-14 bg-black rounded flex flex-col items-center justify-center cursor-pointer border border-gray-800 text-[#c5a059] transition hover:bg-gray-900">
+            <i class="fa-solid fa-play text-[10px]"></i>
+            <span class="text-[7px] font-black mt-1">VIDEO</span>
+        </div>
+    `;
+}
+document.getElementById('thumbnails').innerHTML = htmlMiniatures;
         document.getElementById('detail-name').innerText = p.name;
         document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
         document.getElementById('detail-desc').innerText = p.description;
@@ -1080,6 +1093,21 @@ function chargerHistorique() {
         alert("✅ Historique vidé avec succès.");
     }
 }
+    function changerMedia(type, source) {
+    const container = document.getElementById('main-detail-img').parentElement;
+    
+    if(type === 'video') {
+        container.innerHTML = `
+            <video id="main-detail-video" src="${source}" controls autoplay loop 
+            class="w-full h-80 object-cover rounded-xl shadow-md border"></video>
+        `;
+    } else {
+        container.innerHTML = `
+            <img id="main-detail-img" src="${source}" 
+            class="w-full h-80 object-cover rounded-xl shadow-md border">
+        `;
+    }
+}
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
@@ -1110,6 +1138,7 @@ function chargerHistorique() {
                     </select>
                 </div>
                 <input type="text" id="adm-img" placeholder="Lien de l'image (URL) *" class="w-full border p-3 rounded-lg text-sm">
+                <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm mt-2">
                 <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
                 <div class="flex items-center gap-2 mb-4">
     <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
