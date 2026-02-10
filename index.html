@@ -540,7 +540,7 @@ function afficherResultatsRecherche(liste) {
         { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
     ];
 
-    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+    let cart = [];
     let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
 
@@ -631,7 +631,6 @@ if(p.enStock === false) {
         
         const index = cart.findIndex(x => x.label === label);
         if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
         
         document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         
@@ -729,6 +728,7 @@ if(p.enStock === false) {
         
     }, 4000);
 };
+
 
     function majAffichageChances() {
         const aujourdhui = new Date().toLocaleDateString();
@@ -865,6 +865,7 @@ if(p.enStock === false) {
         alert("⚠️ Remplissez vos infos !");
         return;
     }
+
     // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
     const nouvelleCommande = {
         date: new Date().toLocaleString('fr-FR'),
@@ -874,9 +875,11 @@ if(p.enStock === false) {
         total: total,
         promo: inputCode || "Aucun"
     };
+
     let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
     historique.unshift(nouvelleCommande); // Ajoute au début de la liste
     localStorage.setItem('latyfa_historique', JSON.stringify(historique));
+
     // Sécurité : Marquer le code promo comme utilisé
     if (remiseCodePromo > 0 && inputCode) {
         let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
@@ -885,6 +888,7 @@ if(p.enStock === false) {
             localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
         }
     }
+
     // Construction de la liste des articles avec émojis
     let list = ""; 
     cart.forEach(i => {
@@ -909,16 +913,9 @@ if(p.enStock === false) {
 
     // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-            // Après l'ouverture de WhatsApp
-    localStorage.removeItem('latyfa_cart');
-    cart = [];
-    renderCart();
-    document.getElementById('cartModal').classList.remove('active');
-        
-localStorage.removeItem('latyfa_cart');
-    renderCart();
-    toggleCart(); // On ferme la fenêtre du panier
 }
+
+
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
     function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
@@ -928,6 +925,7 @@ localStorage.removeItem('latyfa_cart');
         localStorage.setItem('latyfa_visitors', count);
         if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
     }
+
     setInterval(() => {
         const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
         if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
@@ -940,7 +938,7 @@ localStorage.removeItem('latyfa_cart');
     majAffichageChances(); 
     render(); 
     updateVisitorCount();
-
+    
     // --- LOGIQUE DE PREUVE SOCIALE (Notifications de vente) ---
 const notifications = [
     "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
@@ -949,6 +947,7 @@ const notifications = [
     "5 personnes consultent actuellement ce produit 🔥",
     "Un ensemble de bijoux a été ajouté au panier à Bouaké 💎"
 ];
+
 function showSocialProof() {
     const box = document.getElementById('social-proof');
     const text = document.getElementById('proof-text');
@@ -961,84 +960,12 @@ function showSocialProof() {
         box.classList.add('translate-y-20', 'opacity-0');
     }, 5000);
 }
-    // -// --- LOGIQUE PANIER ---
 
-// 1. Initialisation unique
-let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
-
-function ajouter(id) {
-    const p = products.find(x => x.id === id);
-    if (p) {
-        // On vérifie si l'article existe déjà pour augmenter la quantité
-        const index = cart.findIndex(item => item.id === id);
-        if (index > -1) {
-            cart[index].qty++;
-        } else {
-            cart.push({ ...p, qty: 1, label: p.name });
-        }
-        
-        sauvegarderPanier();
-        alert(p.name + " ajouté au panier !");
-    }
-}
-
-function supprimerDuPanier(index) {
-    cart.splice(index, 1);
-    sauvegarderPanier();
-}
-
-function sauvegarderPanier() {
-    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-    renderCart(); // On met à jour l'affichage partout
-    
-    // Met à jour aussi le petit badge sur l'icône sac
-    const badge = document.getElementById('cart-count');
-    if (badge) {
-        badge.innerText = cart.reduce((a, b) => a + b.qty, 0);
-    }
-}
-
-function renderCart() {
-    const cartList = document.getElementById('cart-items');
-    const cartTotal = document.getElementById('total-display'); // Correspond à ton HTML
-    
-    if (!cartList) return;
-
-    if (cart.length === 0) {
-        cartList.innerHTML = '<p class="text-center text-gray-400 py-10 uppercase text-[10px] font-bold">Votre panier est vide</p>';
-        if (cartTotal) cartTotal.innerText = "0";
-        return;
-    }
-
-    let total = 0;
-    cartList.innerHTML = cart.map((item, index) => {
-        const prixFinal = item.promoPrice ? item.promoPrice : item.price;
-        total += (prixFinal * item.qty);
-        return `
-            <div class="flex items-center justify-between bg-white p-4 rounded-xl mb-3 shadow-sm border-l-4 border-[#c5a059]">
-                <div class="flex items-center gap-3">
-                    <img src="${item.images[0]}" class="w-12 h-12 object-cover rounded-lg">
-                    <div>
-                        <h4 class="text-[10px] font-bold text-gray-800 uppercase">${item.label}</h4>
-                        <p class="text-[10px] text-[#c5a059] font-black">${prixFinal.toLocaleString()} F x ${item.qty}</p>
-                    </div>
-                </div>
-                <button onclick="supprimerDuPanier(${index})" class="text-red-400 p-2">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-            </div>
-        `;
-    }).join('');
-
-    majResume(); // Appelle ta fonction de calcul de taxes/livraison
-}
-
-// Charger le panier au démarrage
-window.addEventListener('DOMContentLoaded', () => {
-    renderCart();
-    const badge = document.getElementById('cart-count');
-    if (badge) badge.innerText = cart.reduce((a, b) => a + b.qty, 0);
-});
+// Lancement de la preuve sociale
+setTimeout(() => {
+    showSocialProof();
+    setInterval(showSocialProof, 15000);
+}, 3000);
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
 let editingId = null; // Pour savoir si on modifie ou si on ajoute
     // --- SAUVEGARDE ET RESTAURATION ---
@@ -1057,6 +984,7 @@ function exporterCatalogue() {
     
     alert("✅ Fichier de sauvegarde téléchargé ! Garde-le précieusement.");
 }
+
 function importerCatalogue() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -1083,6 +1011,8 @@ function importerCatalogue() {
     };
     input.click();
 }
+
+
 function ouvrirAdmin() {
     const mdp = prompt("Code d'accès Admin :");
     if(mdp === "2026") {
@@ -1252,36 +1182,6 @@ window.addEventListener('load', () => {
         document.getElementById('loader').classList.add('loader-hidden');
     }, 1500);
 });
-    // --- GESTION DU BOUTON RETOUR EN HAUT ---
-const backToTopBtn = document.getElementById('backToTop');
-
-window.onscroll = function() {
-    if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
-        // Affiche le bouton
-        backToTopBtn.classList.remove('opacity-0', 'translate-y-10');
-        backToTopBtn.classList.add('opacity-100', 'translate-y-0');
-    } else {
-        // Cache le bouton
-        backToTopBtn.classList.remove('opacity-100', 'translate-y-0');
-        backToTopBtn.classList.add('opacity-0', 'translate-y-10');
-    }
-};
-    // --- FORCE LE BOUTON RETOUR EN HAUT ---
-window.addEventListener('scroll', function() {
-    const btn = document.getElementById('backToTop');
-    if (window.scrollY > 400) {
-        btn.style.display = 'flex'; // On force l'affichage
-    } else {
-        btn.style.display = 'none'; // On cache
-    }
-});
-
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
 
 </script>
 
@@ -1327,7 +1227,9 @@ function scrollToTop() {
     <button onclick="importerCatalogue()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-bold text-[10px] uppercase shadow-sm">
         <i class="fa-solid fa-upload mr-1"></i> Restaurer une sauvegarde
     </button>
-</div>    
+</div>
+
+                
                 <div class="space-y-2">
                     <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Liens séparés par des virgules)</label>
                     <textarea id="adm-img" oninput="genererApercuAdmin()" placeholder="Lien1, Lien2..." class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
@@ -1393,8 +1295,6 @@ function scrollToTop() {
         </div>
     </div>
 </div>
-<button id="backToTop" onclick="scrollToTop()" style="position: fixed; bottom: 25px; left: 25px; height: 50px; width: 50px; background-color: #c5a059; color: white; border-radius: 50%; border: none; z-index: 9999; display: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); align-items: center; justify-content: center;">
-    <i class="fa-solid fa-arrow-up"></i>
-</button>
+
 </body>
 </html>
