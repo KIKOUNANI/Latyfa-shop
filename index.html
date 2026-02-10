@@ -404,6 +404,18 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
                 <div class="flex justify-between font-bold text-lg p-2 border-b-2">
                     <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
                 </div>
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+        <div class="h-8 w-8 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-gift"></i>
+        </div>
+        <div>
+            <p class="text-[10px] font-black uppercase tracking-widest">Emballage Cadeau Luxe</p>
+            <p class="text-[8px] text-gray-400 font-bold uppercase">+ 1.000 F CFA</p>
+        </div>
+    </div>
+    <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-5 w-5 accent-pink-600 cursor-pointer">
+</div>
                 <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
             </div>
             <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
@@ -788,6 +800,7 @@ if(p.enStock === false) {
     function majResume() {
         const zoneKey = document.getElementById('zone-livraison').value;
         const infoBox = document.getElementById('communes-info');
+        const optionCadeau = document.getElementById('check-cadeau').checked;
         let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
         
         let remiseValentin = 0;
@@ -802,8 +815,8 @@ if(p.enStock === false) {
         }
 
         let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
-        let totalFinal = tArt - remiseValentin - remiseRoue + tLiv;
-        
+        let tCadeau = optionCadeau ? 1000 : 0;
+        let totalFinal = tArt - remiseValentin - remiseRoue + tLiv + tCadeau;
         if(zoneKey) { 
             infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
             infoBox.classList.remove('hidden'); 
@@ -811,6 +824,7 @@ if(p.enStock === false) {
 
         document.getElementById('resume-final').innerHTML = `
             <div class="flex justify-between"><span>Articles :</span> <span>${tArt.toLocaleString()} F</span></div>
+            ${tCadeau > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Emballage Cadeau :</span> <span>+1.000 F</span></div>` : ''}
             ${remiseValentin > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Promo Valentin (-20%) :</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
             ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600"><span>🎰 Code Roue (-${remiseCodePromo}%) :</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
             <div class="flex justify-between"><span>Livraison :</span> <span>${tLiv.toLocaleString()} F</span></div>
@@ -832,7 +846,8 @@ if(p.enStock === false) {
     const mode = document.getElementById('mode-pay').value;
     const total = document.getElementById('total-display').innerText;
     const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
-
+    const optionCadeau = document.getElementById('check-cadeau').checked;
+    let cadeauMsg = optionCadeau ? "🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n" : "";
     if(!nom || !quartier || !zoneKey) {
         alert("⚠️ Remplissez vos infos !");
         return;
@@ -876,6 +891,7 @@ if(p.enStock === false) {
     msg += `📞 *QUARTIER:* ${quartier}\n`;
     msg += `🌍 *ZONE:* ${tarifsLivraison[zoneKey].nom}\n\n`;
     msg += `📝 *DÉTAILS DU PANIER :*\n${list}\n`;
+    msg += cadeauMsg;
     msg += `${promoText}`;
     msg += `💰 *TOTAL À PAYER : ${total} F*\n\n`;
     msg += `💳 *MODE DE PAIEMENT :* ${mode}\n`;
