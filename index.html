@@ -221,6 +221,9 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
                             <select id="select-color" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
                         </div>
                     </div>
+                    <button onclick="ouvrirGuide()" class="text-[9px] font-bold text-gray-400 uppercase underline mb-2 hover:text-[#c5a059]">
+    <i class="fa-solid fa-ruler-combined"></i> Guide des tailles
+</button>
                     <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-6">Ajouter au panier</button>
                     <div class="flex items-center justify-center gap-6 pt-4 border-t">
                         <button id="share-wa" class="text-[#25D366] text-xl"><i class="fa-brands fa-whatsapp"></i></button>
@@ -230,6 +233,35 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
             </div>
         </div>
     </div>
+    
+<section class="bg-gray-50 py-12 border-t border-b border-gray-100">
+    <div class="container mx-auto px-4">
+        <h3 class="logo-font text-center text-xl font-black mb-8 uppercase italic tracking-widest text-gray-800">Elles adorent Latyfa Shop</h3>
+        <div class="flex overflow-x-auto gap-6 no-scrollbar pb-4">
+            <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex text-[#c5a059] mb-3 text-[10px]">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-[11px] italic text-gray-600 mb-4">"Qualité incroyable ! J'ai commandé mon sac lundi, reçu mardi à Cocody. Je recommande à 100%."</p>
+                <p class="text-[10px] font-black uppercase tracking-tighter">— Mariam K.</p>
+            </div>
+            <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex text-[#c5a059] mb-3 text-[10px]">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-[11px] italic text-gray-600 mb-4">"Les bijoux ne noircissent pas, la finition est vraiment top pour le prix. Très satisfaite."</p>
+                <p class="text-[10px] font-black uppercase tracking-tighter">— Sarah D.</p>
+            </div>
+            <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex text-[#c5a059] mb-3 text-[10px]">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-[11px] italic text-gray-600 mb-4">"Expédition rapide sur Bouaké. Le colis était très bien emballé. Merci Latyfa !"</p>
+                <p class="text-[10px] font-black uppercase tracking-tighter">— Amenan G.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
     <footer class="bg-white border-t pt-12 pb-6">
         <div class="container mx-auto px-4">
@@ -364,6 +396,9 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
+    function ouvrirGuide() {
+    document.getElementById('guideModal').classList.add('active');
+}
     function rechercherProduit() {
     const terme = document.getElementById('search-input').value.toLowerCase();
     const grid = document.getElementById('product-grid');
@@ -936,7 +971,40 @@ function refreshAdminList() {
             </div>
     </div>
 </div>
+<div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
+    <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-black uppercase text-sm italic">📏 Guide des Tailles</h3>
+            <button onclick="document.getElementById('guideModal').classList.remove('active')" class="text-xl">&times;</button>
+        </div>
+        
+        <div class="space-y-6">
+            <div>
+                <p class="text-[10px] font-bold text-[#c5a059] uppercase mb-2">Bagues & Bijoux</p>
+                <table class="w-full text-[10px] border-collapse">
+                    <tr class="bg-gray-100 uppercase">
+                        <th class="p-2 border">Taille</th>
+                        <th class="p-2 border">Circonférence</th>
+                    </tr>
+                    <tr><td class="p-2 border text-center">6</td><td class="p-2 border text-center">52 mm</td></tr>
+                    <tr><td class="p-2 border text-center">7</td><td class="p-2 border text-center">54 mm</td></tr>
+                    <tr><td class="p-2 border text-center">8</td><td class="p-2 border text-center">57 mm</td></tr>
+                </table>
+            </div>
 
+            <div>
+                <p class="text-[10px] font-bold text-[#c5a059] uppercase mb-2">Vêtements</p>
+                <div class="grid grid-cols-3 gap-2 text-center text-[9px] font-bold uppercase">
+                    <div class="bg-gray-50 p-2 rounded">S<br><span class="text-gray-400">36-38</span></div>
+                    <div class="bg-gray-50 p-2 rounded">M<br><span class="text-gray-400">40-42</span></div>
+                    <div class="bg-gray-50 p-2 rounded">L<br><span class="text-gray-400">44-46</span></div>
+                </div>
+            </div>
+            
+            <p class="text-[8px] text-gray-400 italic">Astuce : Si vous hésitez entre deux tailles, prenez la plus grande pour plus de confort.</p>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
