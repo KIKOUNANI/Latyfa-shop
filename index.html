@@ -982,22 +982,21 @@ function ouvrirAdmin() {
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
-    const imgInput = document.getElementById('adm-img').value; // Récupère le texte brut
-    const videoUrl = document.getElementById('adm-video').value;
+    const pricePromo = document.getElementById('adm-price-promo').value; 
+    const imgInput = document.getElementById('adm-img').value;
 
     if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
 
-    // --- LA MAGIE EST ICI ---
-    // On coupe le texte à chaque virgule et on enlève les espaces vides
     const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
 
     const newP = {
         id: Date.now(),
         name: name,
         price: parseInt(price),
+        promoPrice: pricePromo ? parseInt(pricePromo) : null, // On stocke la promo ici
         cat: document.getElementById('adm-cat').value,
-        images: imagesArray, // On enregistre le tableau d'images
-        video: videoUrl || null, // La vidéo reste à part
+        images: imagesArray,
+        video: document.getElementById('adm-video').value || null,
         description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
         enStock: true,
         stockBas: document.getElementById('adm-stock-bas').checked,
@@ -1007,17 +1006,17 @@ function ajouterProduitAdmin() {
     products.push(newP);
     localStorage.setItem('latyfa_db', JSON.stringify(products));
     
-    // Nettoyage des champs
+    // Reset des champs
     document.getElementById('adm-name').value = "";
     document.getElementById('adm-price').value = "";
+    document.getElementById('adm-price-promo').value = "";
     document.getElementById('adm-img').value = "";
-    document.getElementById('adm-video').value = "";
+    document.getElementById('admin-preview-zone').innerHTML = "";
     
     refreshAdminList();
     render();
-    alert("Produit ajouté avec " + imagesArray.length + " image(s) !");
+    alert("Produit ajouté !");
 }
-
 function toggleStock(id) {
     const p = products.find(x => x.id === id);
     if(p) {
@@ -1148,68 +1147,70 @@ function chargerHistorique() {
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
-<div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
-    <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
-    <div class="grid grid-cols-1 gap-4">
-        <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
-        <div class="grid grid-cols-2 gap-4">
-            <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
-            <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
-                <option value="bijoux">Bijoux</option>
-                <option value="vetements">Vêtements</option>
-                <option value="chaussures">Chaussures</option>
-                <option value="sac">Sacs</option>
-                <option value="parfum">Parfums</option>
-                <option value="hanche">Perles de hanche</option>
-                <option value="autres">Autres</option>
-            </select>
-        </div>
-        
-        <div class="space-y-2">
-            <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez par des virgules)</label>
-            <textarea id="adm-img" oninput="genererApercuAdmin()" placeholder="Lien1, Lien2..." class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-            
-            <div id="admin-preview-zone" class="flex gap-2 overflow-x-auto py-2 no-scrollbar">
-                </div>
+<div id="adminModal" class="modal bg-gray-100">
+    <div class="max-w-2xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black uppercase italic text-gray-800">Panneau de Contrôle</h2>
+            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-2xl">&times;</button>
         </div>
 
-        <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm">
-        <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-        
-        <div class="flex items-center gap-2 mb-4">
-            <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-            <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Alerte "Stock Limité"</label>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
+            <div class="grid grid-cols-1 gap-4">
+                <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-gray-400 uppercase">Prix Normal *</label>
+                        <input type="number" id="adm-price" placeholder="Ex: 15000" class="w-full border p-3 rounded-lg text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-red-400 uppercase">Prix Promo (Optionnel)</label>
+                        <input type="number" id="adm-price-promo" placeholder="Ex: 12000" class="w-full border p-3 rounded-lg text-sm bg-red-50">
+                    </div>
+                </div>
+
+                <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm font-bold">
+                    <option value="bijoux">Bijoux</option>
+                    <option value="vetements">Vêtements</option>
+                    <option value="chaussures">Chaussures</option>
+                    <option value="sac">Sacs</option>
+                    <option value="parfum">Parfums</option>
+                    <option value="hanche">Perles de hanche</option>
+                    <option value="autres">Autres</option>
+                </select>
+                
+                <div class="space-y-2">
+                    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Liens séparés par des virgules)</label>
+                    <textarea id="adm-img" oninput="genererApercuAdmin()" placeholder="Lien1, Lien2..." class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+                    <div id="admin-preview-zone" class="flex gap-2 overflow-x-auto py-2 no-scrollbar"></div>
+                </div>
+
+                <input type="text" id="adm-video" placeholder="Lien Vidéo .mp4 (Optionnel)" class="w-full border p-3 rounded-lg text-sm">
+                <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+                
+                <div class="flex items-center gap-2 mb-4">
+                    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+                    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Alerte "Stock Limité"</label>
+                </div>
+                
+                <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
+            </div>
         </div>
-        
-        <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
-    </div>
-</div>
 
         <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
-        <div id="admin-list" class="space-y-2 mb-10">
-            </div>
+        <div id="admin-list" class="space-y-2 mb-10"></div>
 
         <div class="pt-8 border-t-2 border-dashed border-gray-200">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
-                    <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
-                </h3>
-                <button onclick="effacerToutLHistorique()" 
-                        class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black hover:bg-red-600 hover:text-white transition-all">
-                    <i class="fa-solid fa-trash-can"></i> Vider
-                </button>
+                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">Journal des ventes</h3>
+                <button onclick="effacerToutLHistorique()" class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black">Vider</button>
             </div>
-            
-            <button onclick="toggleHistorique()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
-                <i class="fa-solid fa-clock-rotate-left"></i> Voir l'historique WhatsApp
-            </button>
-
-            <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10">
-                </div>
+            <button onclick="toggleHistorique()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black uppercase text-[10px] mb-4 shadow-md">Voir l'historique</button>
+            <div id="historique-zone" class="hidden space-y-3 pb-20"></div>
         </div>
     </div>
 </div>
-
 <div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
     <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
         <div class="flex justify-between items-center mb-4">
