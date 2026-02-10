@@ -1122,6 +1122,20 @@ function chargerHistorique() {
     
     window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
    alert("Merci pour le partage ! ❤️\nContactez-nous après votre commande sur WhatsApp pour recevoir votre code promo de -10%.");
+    }
+window.onscroll = function() {
+    const btn = document.getElementById("backToTop");
+    if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+        btn.classList.remove("translate-y-20", "opacity-0");
+    } else {
+        btn.classList.add("translate-y-20", "opacity-0");
+    }
+};
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 }
 </script>
 
@@ -1222,6 +1236,9 @@ function chargerHistorique() {
         </div>
     </div>
 </div>
-
+    <button id="backToTop" onclick="scrollToTop()" 
+        class="fixed bottom-40 right-6 h-12 w-12 bg-white text-[#c5a059] rounded-full shadow-2xl z-40 translate-y-20 opacity-0 transition-all duration-500 flex items-center justify-center border border-gray-100">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
 </body>
 </html>
