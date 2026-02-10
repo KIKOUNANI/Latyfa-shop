@@ -1485,6 +1485,56 @@ majBadgePanier();
 <button id="backToTop" onclick="scrollToTop()" class="fixed bottom-40 right-6 h-12 w-12 bg-[#c5a059] text-white rounded-full shadow-2xl z-40 translate-y-20 opacity-0 transition-all duration-500 flex items-center justify-center border-2 border-white">
     <i class="fa-solid fa-arrow-up"></i>
 </button>
+<div id="lina-chat" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'Montserrat', sans-serif;">
+    <div onclick="toggleLina()" id="lina-button" style="background: #c5a059; width: 60px; height: 60px; rounded: 50%; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; shadow: 0 4px 15px rgba(0,0,0,0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <i class="fa-solid fa-comment-dots" style="font-size: 24px;"></i>
+    </div>
 
+    <div id="lina-window" style="display: none; width: 320px; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin-bottom: 20px; border: 1px solid #eee;">
+        <div style="background: #1a1a1a; padding: 20px; color: white; display: flex; align-items: center; gap: 10px;">
+            <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #c5a059;">
+            <div>
+                <p style="margin: 0; font-weight: bold; font-size: 14px;">Lina ✨</p>
+                <p style="margin: 0; font-size: 10px; color: #c5a059; text-transform: uppercase; letter-spacing: 1px;">Conseillère Latyfa</p>
+            </div>
+        </div>
+
+        <div id="lina-messages" style="padding: 20px; max-height: 300px; overflow-y: auto; background: #f9f9f9;">
+            <p style="background: white; padding: 10px 15px; border-radius: 15px 15px 15px 0; font-size: 12px; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                Bonjour ! Je suis Lina. Comment puis-je vous aider à briller aujourd'hui ? ✨
+            </p>
+        </div>
+
+        <div id="lina-options" style="padding: 10px; border-top: 1px solid #eee; display: flex; flex-direction: column; gap: 8px;">
+            <button onclick="linaRepond('catalogue')" style="background: white; border: 1px solid #c5a059; color: #c5a059; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s;">🛍️ Voir les nouveautés</button>
+            <button onclick="linaRepond('qualite')" style="background: white; border: 1px solid #c5a059; color: #c5a059; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s;">💎 Qualité des bijoux</button>
+            <button onclick="linaRepond('whatsapp')" style="background: #25D366; border: none; color: white; padding: 8px; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer;">💬 Parler à une conseillère</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleLina() {
+        const win = document.getElementById('lina-window');
+        win.style.display = (win.style.display === 'none') ? 'block' : 'none';
+    }
+
+    function linaRepond(choix) {
+        const zone = document.getElementById('lina-messages');
+        let reponse = "";
+
+        if(choix === 'catalogue') {
+            reponse = "Toutes nos pépites sont juste ici ! Vous cherchez plutôt un bijou, un sac ou un parfum ? ✨";
+        } else if(choix === 'qualite') {
+            reponse = "Nos bijoux sont en acier inoxydable finition Or 24K. Ils sont faits pour résister au quotidien ! 🛡️";
+        } else if(choix === 'whatsapp') {
+            window.open("https://wa.me/2250709002881", "_blank");
+            return;
+        }
+
+        zone.innerHTML += `<p style="background: #c5a059; color: white; padding: 10px 15px; border-radius: 15px 15px 0 15px; font-size: 12px; margin-left: 20px; align-self: flex-end; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">${reponse}</p>`;
+        zone.scrollTop = zone.scrollHeight;
+    }
+</script>
 </body>
 </html>
