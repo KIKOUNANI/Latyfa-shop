@@ -867,63 +867,41 @@ if(p.enStock === false) {
     const total = document.getElementById('total-display').innerText;
     const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
     const optionCadeau = document.getElementById('check-cadeau').checked;
-    let cadeauMsg = optionCadeau ? "🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n" : "";
+    
     if(!nom || !quartier || !zoneKey) {
         alert("⚠️ Remplissez vos infos !");
         return;
     }
 
-    // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
-    const nouvelleCommande = {
-        date: new Date().toLocaleString('fr-FR'),
-        client: nom,
-        lieu: quartier + " (" + tarifsLivraison[zoneKey].nom + ")",
-        articles: cart.map(i => `${i.label} (x${i.qty})`).join(', '),
-        total: total,
-        promo: inputCode || "Aucun"
-    };
-
-    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
-    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
-
-    // Sécurité : Marquer le code promo comme utilisé
-    if (remiseCodePromo > 0 && inputCode) {
-        let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
-        if (!used.includes(inputCode)) {
-            used.push(inputCode);
-            localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
-        }
-    }
-
-    // Construction de la liste des articles avec émojis
+    // Préparation du message WhatsApp
+    let cadeauMsg = optionCadeau ? "🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n" : "";
     let list = ""; 
-    cart.forEach(i => {
-        list += `🛍️ ${i.label} (x${i.qty})\n`;
-    });
-
-    // Calcul de la promo pour l'affichage WhatsApp
+    cart.forEach(i => { list += `🛍️ ${i.label} (x${i.qty})\n`; });
     let promoText = remiseCodePromo > 0 ? `🎁 *CODE PROMO:* ${inputCode} (-${remiseCodePromo}%)\n` : "";
     
-    // Structure élégante du message
     let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP* ✨\n\n`;
     msg += `👤 *CLIENT:* ${nom.toUpperCase()}\n`;
     msg += `📞 *QUARTIER:* ${quartier}\n`;
     msg += `🌍 *ZONE:* ${tarifsLivraison[zoneKey].nom}\n\n`;
     msg += `📝 *DÉTAILS DU PANIER :*\n${list}\n`;
-    msg += cadeauMsg;
-    msg += `${promoText}`;
+    msg += cadeauMsg + promoText;
     msg += `💰 *TOTAL À PAYER : ${total} F*\n\n`;
     msg += `💳 *MODE DE PAIEMENT :* ${mode}\n`;
-    msg += `───────────────\n`;
-    msg += `_Commande générée depuis la boutique en ligne._`;
+    msg += `───────────────\n_Commande via boutique en ligne._`;
 
-    // Envoi vers ton numéro
+    // ACTION 1 : Ouvre WhatsApp
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-}
+
+    // ACTION 2 : Vide le panier (C'est ici qu'on remonte les lignes !)
     localStorage.removeItem('latyfa_cart');
-cart = [];
-updateCartCount();
+    cart = [];
+    
+    // ACTION 3 : Rafraîchit l'affichage
+    document.getElementById('cart-count').innerText = "0";
+    document.getElementById('cartModal').classList.remove('active');
+    alert("Commande envoyée ! Votre panier a été vidé.");
+}
+
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
     function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
     function updateVisitorCount() {
@@ -1151,8 +1129,6 @@ function updateCartCount() {
 window.addEventListener('DOMContentLoaded', () => {
     const savedCart = localStorage.getItem('latyfa_cart');
     if(savedCart) {
-        cart = JSON.parse(savedCart);
-        updateCartCount();
     }
 });
 
