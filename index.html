@@ -547,8 +547,7 @@ function afficherResultatsRecherche(liste) {
         { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
         { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
     ];
-
-    let cart = [];
+let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
     let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
 
@@ -922,9 +921,9 @@ if(p.enStock === false) {
     // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
 }
-
-
-    // --- DIVERS ---
+    localStorage.removeItem('latyfa_cart');
+cart = [];
+updateCartCount();
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
     function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
     function updateVisitorCount() {
@@ -1011,6 +1010,7 @@ function ajouterProduitAdmin() {
     render();
     alert("Produit ajouté !");
 }
+localStorage.setItem('latyfa_cart', JSON.stringify(cart));
 
 function toggleStock(id) {
     const p = products.find(x => x.id === id);
@@ -1030,7 +1030,7 @@ function supprimerProduit(id) {
         render();
     }
 }
-
+localStorage.setItem('latyfa_cart', JSON.stringify(cart));
 function refreshAdminList() {
     const list = document.getElementById('admin-list');
     if (!list) return;
@@ -1136,6 +1136,21 @@ function scrollToTop() {
         top: 0,
         behavior: 'smooth'
     });
+}
+updateCartCount(); 
+    // SAUVEGARDE AUTOMATIQUE (Spécial Mobile)
+// Ce code surveille le panier et le sauvegarde à chaque changement
+const originalPush = cart.push;
+cart.push = function() {
+    originalPush.apply(this, arguments);
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+};
+
+// Charge le panier au démarrage
+if(localStorage.getItem('latyfa_cart')) {
+    cart = JSON.parse(localStorage.getItem('latyfa_cart'));
+    // Attend que la page soit prête pour mettre à jour le compteur
+    window.onload = () => { if(typeof updateCartCount === 'function') updateCartCount(); };
 }
 </script>
 
