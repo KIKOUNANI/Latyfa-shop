@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr" translate="no">
 <head>
-    <meta property="og:title" content="Latyfa Boutique | Le Luxe à Abidjan">
-<meta property="og:description" content="Découvrez notre collection exclusive de bijoux et maroquinerie.">
-<meta property="og:image" content="https://i.postimg.cc/qMqtFGM2/1770342273452.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LATYFA BOUTIQUE | Officiel</title>
@@ -11,17 +8,10 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-        <style>  
+        <style>
          #main-detail-img, #main-detail-video {
     animation: fadeIn 0.4s ease-in-out;
 }
-         @keyframes badge-bounce {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.4); }
-}
-.animate-badge {
-    animation: badge-bounce 0.6s ease-in-out;
-}   
 
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.98); }
@@ -551,106 +541,687 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
-        
-// --- INITIALISATION ---
-(function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
-
-const tarifsLivraison = {
-    "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
-    "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
-    "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
-    "bouake": { nom: "Retrait Boutique", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
-};
-
-// Données par défaut
-let products = [
-    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], enStock: true, description: "Élégance Signature Latyfa." },
-    { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], enStock: true, description: "Finition Or 24K." }
-];
-
-let cart = [];
-let wishlist = []; // Pour éviter l'erreur sur le bouton coeur
-let remiseCodePromo = 0;
-let currentProduct = null;
-
-// --- LE MOTEUR DU SITE (Chargement au démarrage) ---
-window.onload = function() {
-    // 1. Charger la DB Admin
-    const savedDb = localStorage.getItem('latyfa_db');
-    if (savedDb) products = JSON.parse(savedDb);
-
-    // 2. Charger le Panier
-    const savedCart = localStorage.getItem('latyfa_cart');
-    if (savedCart) {
-        cart = JSON.parse(savedCart);
-        const totalQty = cart.reduce((a, b) => a + b.qty, 0);
-        document.getElementById('cart-count').innerText = totalQty;
-        if(totalQty > 0) document.getElementById('cart-count').classList.add('animate-badge');
-    }
-
-    // 3. Lancer les fonctions visuelles
-    render();
-    drawWheel();
-    majAffichageChances();
-    updateVisitorCount();
-
-    // 4. Retirer le loader
-    setTimeout(() => {
-        const loader = document.getElementById('loader');
-        if(loader) loader.classList.add('loader-hidden');
-    }, 1000);
-    
-    // 5. Notifications ventes
-    setInterval(showSocialProof, 15000);
-};
-
-// --- FONCTIONS ESSENTIELLES ---
-
-function render(filter = 'tous') {
+    function ouvrirGuide() {
+    document.getElementById('guideModal').classList.add('active');
+}
+    function rechercherProduit() {
+    const terme = document.getElementById('search-input').value.toLowerCase();
     const grid = document.getElementById('product-grid');
-    if(!grid) return;
     
-    grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
-        <div class="product-card p-3 relative ${!p.enStock ? 'opacity-75' : ''}" onclick="${p.enStock ? 'voirDetails('+p.id+')' : ''}">
-            <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
-            <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2">${p.name}</h3>
-            <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-            <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase">Voir l'article</div>
-        </div>
-    `).join('');
+    // On filtre les produits par nom
+    const produitsFiltrés = products.filter(p => 
+        p.name.toLowerCase().includes(terme) || 
+        p.cat.toLowerCase().includes(terme)
+    );
+
+    if (produitsFiltrés.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full text-center py-20">
+                <i class="fa-solid fa-box-open text-4xl text-gray-200 mb-4"></i>
+                <p class="text-gray-500 text-xs font-bold uppercase">Aucun résultat pour "${terme}"</p>
+            </div>`;
+    } else {
+        // On utilise ta fonction render existante mais avec les produits filtrés
+        // Note: Pour que cela fonctionne, on va légèrement modifier la logique de render
+        afficherResultatsRecherche(produitsFiltrés);
+    }
 }
 
-function voirDetails(id) {
+// Petite fonction helper pour ne pas casser ton système de catégories
+function afficherResultatsRecherche(liste) {
+    const grid = document.getElementById('product-grid');
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
+    
+    grid.innerHTML = liste.map(p => {
+        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
+        return `
+            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
+                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
+                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
+                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
+                </div>
+            </div>`;
+    }).join('');
+}
+
+    (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
+
+    // --- VARIABLES GLOBALES ---
+    const tarifsLivraison = {
+        "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
+        "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
+        "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
+        "bouake": { nom: "Retrait Boutique", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
+    };
+
+    let products = [
+        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
+        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
+        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
+        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
+    ];
+
+    let cart = [];
+    let currentProduct = null;
+    let remiseCodePromo = 0; // Réduction en % via la roue
+
+    // --- BOUTIQUE ---
+    function render(filter = 'tous') {
+    const grid = document.getElementById('product-grid');
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
+
+    grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
+        // Calcul pour le badge Nouveauté
+        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
+        
+        return `
+${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 PLUS QUE 2 EN STOCK !</span>' : ''}
+
+            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
+                
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
+                
+                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
+                
+                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
+                
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                
+                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
+                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
+                </div>
+            </div>`;
+    }).join('');
+}
+    function voirDetails(id) {
     const p = products.find(x => x.id === id);
     currentProduct = p;
     document.getElementById('productDetailModal').classList.add('active');
-    document.getElementById('main-detail-img').src = p.images[0];
+        // À ajouter dans ta fonction voirDetails
+const stockAlea = Math.floor(Math.random() * 5) + 2; 
+document.getElementById('detail-desc').insertAdjacentHTML('beforebegin', `
+    <p class="text-[10px] font-bold text-red-500 mb-2">
+        <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${stockAlea} articles disponibles !
+    </p>
+`);
+    
+    // Reset du média principal
+    const mediaContainer = document.getElementById('main-detail-img').parentElement;
+    mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
+    // Génération des miniatures avec détection d'index
+    let htmlMiniatures = p.images.map((img, index) => `
+        <img src="${img}" onclick="changerMedia('image', '${img}', this)" 
+        class="miniature-item h-16 w-16 object-cover rounded-lg cursor-pointer border-2 border-transparent transition-all ${index === 0 ? 'thumb-active' : ''}">
+    `).join('');
+
+    if(p.video) {
+        htmlMiniatures += `
+            <div onclick="changerMedia('video', '${p.video}', this)" 
+            class="miniature-item h-16 w-16 bg-black rounded-lg flex flex-col items-center justify-center cursor-pointer border-2 border-transparent text-[#c5a059] transition-all">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span class="text-[7px] font-black mt-1 uppercase">Vidéo</span>
+            </div>
+        `;
+    }
+    document.getElementById('thumbnails').innerHTML = htmlMiniatures;
+    // Remplissage des textes (Nom, Prix, Desc)
     document.getElementById('detail-name').innerText = p.name;
     document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
     document.getElementById('detail-desc').innerText = p.description;
+
+    // Gestion des tailles/couleurs
+    gererOptionsProduit(p);
+}
+    function ajouterDepuisDetail() {
+        const size = document.getElementById('select-size').value || "";
+        const color = document.getElementById('select-color').value || "";
+        const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
+        function ajouterDepuisDetail() {
+    // ... ton code existant (récupération taille/couleur) ...
+
+    // AJOUT DU SON
+    const sound = document.getElementById('cart-sound');
+    sound.currentTime = 0; // Réinitialise pour pouvoir cliquer plusieurs fois vite
+    sound.play().catch(e => console.log("L'utilisateur doit interagir d'abord avec le site"));
+
+    // ... le reste de ta fonction ...
+}
+        
+        const index = cart.findIndex(x => x.label === label);
+        if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
+        
+        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+        
+        const cartIcon = document.getElementById('cart-count').parentElement;
+        cartIcon.classList.add('animate-cart');
+        setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
+
+        document.getElementById('productDetailModal').classList.remove('active');
+
+        if (navigator.vibrate) navigator.vibrate(50);
+        
+        const toast = document.getElementById('toast');
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2000);
+    }
+
+    // --- LOGIQUE DE LA ROUE ---
+    const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
+    const canva = document.getElementById('canvas');
+    const ctx = canva.getContext('2d');
+    const MAX_TENTATIVES = 1;
+
+    function drawWheel() {
+        const arc = 2 * Math.PI / prizes.length;
+        ctx.clearRect(0, 0, 300, 300);
+        for (let i = 0; i < prizes.length; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = i % 2 === 0 ? (prizes[i] === "REESSAYER" ? "#333" : "#c5a059") : "#000";
+            ctx.moveTo(150, 150);
+            ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
+            ctx.fill();
+            ctx.save();
+            ctx.fillStyle = "white";
+            ctx.translate(150, 150);
+            ctx.rotate(i * arc + arc / 2);
+            ctx.font = "bold 9px Montserrat";
+            ctx.textAlign = "right";
+            ctx.fillText(prizes[i], 130, 5);
+            ctx.restore();
+        }
+    }
+
+    document.getElementById('spin').onclick = function() {
+    let stats = majAffichageChances();
+    if (stats.count >= MAX_TENTATIVES) return;
+
+    const btn = this;
+    btn.disabled = true;
+
+    // 1. On définit une rotation de base (5 tours complets) + un angle aléatoire
+    const randomExtra = Math.floor(Math.random() * 360);
+    const totalRotation = 1800 + randomExtra; 
+    
+    // 2. On lance l'animation CSS
+    canva.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
+    canva.style.transform = `rotate(${totalRotation}deg)`;
+
+    setTimeout(() => {
+        // 3. CALCUL PRÉCIS DU RÉSULTAT
+        // On récupère l'angle final par rapport au repère 0 (en haut)
+        const actualAngle = randomExtra % 360;
+        
+        // Le calcul inversé pour savoir quel segment est sous le curseur (en haut)
+        // La roue tourne dans le sens horaire, donc on calcule en sens anti-horaire
+        const segmentSize = 360 / prizes.length;
+        const winIndex = Math.floor(((360 - actualAngle) % 360) / segmentSize);
+        const win = prizes[winIndex];
+
+        // 4. Enregistrement du passage
+        stats.count++;
+        localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
+        majAffichageChances();
+
+        // 5. Affichage du résultat
+        if (win === "REESSAYER") {
+            alert("Mince ! Retentez demain. 😥");
+        } else {
+            // Extraction du montant de remise (ex: "-10%" devient "10")
+            const promoAmount = win.replace(/[^0-9]/g, "") || "5";
+            const promoCode = "LATYFA" + promoAmount;
+            const expiration = Date.now() + (24 * 60 * 60 * 1000);
+
+            localStorage.setItem('latyfa_active_promo', JSON.stringify({
+                code: promoCode,
+                expires: expiration,
+                remise: promoAmount
+            }));
+
+            alert("🎉 BRAVO ! Vous avez gagné : " + win + "\nVotre code : " + promoCode + "\n\n⚠️ Utilisable dans le panier pendant 24h !");
+        }
+        
+        // Optionnel : remettre la roue à zéro sans transition pour le prochain coup
+        // canva.style.transition = "none";
+        // canva.style.transform = `rotate(${actualAngle}deg)`;
+        
+    }, 4000);
+};
+
+
+    function majAffichageChances() {
+        const aujourdhui = new Date().toLocaleDateString();
+        let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: aujourdhui, count: 0 };
+        if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
+        
+        const reste = MAX_TENTATIVES - stats.count;
+        const msgZone = document.getElementById('wheel-msg');
+        if(reste <= 0) {
+            msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE</span>`;
+            document.getElementById('spin').disabled = true;
+        } else {
+            msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/${MAX_TENTATIVES}</span>`;
+        }
+        return stats;
+    }
+
+    // --- PANIER ET CALCULS ---
+    function ouvrirPanier() {
+        document.getElementById('cartModal').classList.add('active');
+        const itemsDiv = document.getElementById('cart-items');
+        const form = document.getElementById('checkout-form');
+        
+        if(cart.length === 0) { 
+            itemsDiv.innerHTML = "<p class='text-center py-10 text-[10px] font-bold uppercase text-gray-400'>Panier Vide</p>"; 
+            form.style.display = "none"; 
+            return; 
+        }
+        
+        form.style.display = "block";
+        itemsDiv.innerHTML = cart.map(item => `
+            <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
+                <div class="flex-1">${item.label}</div>
+                <div class="flex gap-2 items-center">
+                    <button onclick="modifierQty('${item.label}',-1)" class="bg-gray-100 px-2 rounded">-</button>
+                    <span>${item.qty}</span>
+                    <button onclick="modifierQty('${item.label}',1)" class="bg-gray-100 px-2 rounded">+</button>
+                </div>
+            </div>`).join('');
+        
+        majResume();
+    }
+
+    function modifierQty(label, d) {
+        const i = cart.find(x => x.label === label);
+        if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
+        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+        ouvrirPanier();
+    }
+
+    function appliquerPromo() {
+        const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+        const msg = document.getElementById('promo-msg');
+        const savedPromo = JSON.parse(localStorage.getItem('latyfa_active_promo'));
+        const usedPromos = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
+
+        msg.classList.remove('hidden');
+
+        if (usedPromos.includes(inputCode)) {
+            msg.innerText = "❌ Ce code a déjà été utilisé.";
+            msg.className = "text-[9px] font-bold text-red-600";
+            remiseCodePromo = 0;
+        } 
+        else if (savedPromo && inputCode === savedPromo.code) {
+            if (Date.now() > savedPromo.expires) {
+                msg.innerText = "⏰ Code expiré (24h).";
+                msg.className = "text-[9px] font-bold text-red-600";
+                remiseCodePromo = 0;
+            } else {
+                remiseCodePromo = parseInt(savedPromo.remise);
+                msg.innerText = "✅ Code -" + remiseCodePromo + "% appliqué !";
+                msg.className = "text-[9px] font-bold text-green-600";
+            }
+        } else {
+            msg.innerText = "❌ Code invalide.";
+            msg.className = "text-[9px] font-bold text-red-600";
+            remiseCodePromo = 0;
+        }
+        majResume();
+    }
+
+    function majResume() {
+        const zoneKey = document.getElementById('zone-livraison').value;
+        const infoBox = document.getElementById('communes-info');
+        const optionCadeau = document.getElementById('check-cadeau').checked;
+        let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+        
+        let remiseValentin = 0;
+        const maintenant = new Date();
+        if (maintenant >= new Date("February 14, 2026") && maintenant <= new Date("February 28, 2026") && tArt >= 20000) {
+            remiseValentin = tArt * 0.2;
+        }
+
+        let remiseRoue = 0;
+        if (remiseCodePromo > 0) {
+            remiseRoue = (tArt - remiseValentin) * (remiseCodePromo / 100);
+        }
+
+        let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
+        let tCadeau = optionCadeau ? 1000 : 0;
+        let totalFinal = tArt - remiseValentin - remiseRoue + tLiv + tCadeau;
+        if(zoneKey) { 
+            infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
+            infoBox.classList.remove('hidden'); 
+        }
+
+        document.getElementById('resume-final').innerHTML = `
+            <div class="flex justify-between"><span>Articles :</span> <span>${tArt.toLocaleString()} F</span></div>
+            ${tCadeau > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Emballage Cadeau :</span> <span>+1.000 F</span></div>` : ''}
+            ${remiseValentin > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Promo Valentin (-20%) :</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
+            ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600"><span>🎰 Code Roue (-${remiseCodePromo}%) :</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
+            <div class="flex justify-between"><span>Livraison :</span> <span>${tLiv.toLocaleString()} F</span></div>
+        `;
+        document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    }
+
+    function toggleBouton() {
+        const chk = document.getElementById('check-verif').checked;
+        const btn = document.getElementById('btn-final');
+        btn.className = chk ? "w-full ali-gradient text-white py-4 rounded-full font-black uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-black uppercase";
+        btn.disabled = !chk;
+    }
+
+    function validerCommande() {
+    const nom = document.getElementById('nom-client').value;
+    const quartier = document.getElementById('tel-client').value;
+    const zoneKey = document.getElementById('zone-livraison').value;
+    const mode = document.getElementById('mode-pay').value;
+    const total = document.getElementById('total-display').innerText;
+    const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+    const optionCadeau = document.getElementById('check-cadeau').checked;
+    let cadeauMsg = optionCadeau ? "🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n" : "";
+    if(!nom || !quartier || !zoneKey) {
+        alert("⚠️ Remplissez vos infos !");
+        return;
+    }
+
+    // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
+    const nouvelleCommande = {
+        date: new Date().toLocaleString('fr-FR'),
+        client: nom,
+        lieu: quartier + " (" + tarifsLivraison[zoneKey].nom + ")",
+        articles: cart.map(i => `${i.label} (x${i.qty})`).join(', '),
+        total: total,
+        promo: inputCode || "Aucun"
+    };
+
+    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
+    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
+
+    // Sécurité : Marquer le code promo comme utilisé
+    if (remiseCodePromo > 0 && inputCode) {
+        let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
+        if (!used.includes(inputCode)) {
+            used.push(inputCode);
+            localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
+        }
+    }
+
+    // Construction de la liste des articles avec émojis
+    let list = ""; 
+    cart.forEach(i => {
+        list += `🛍️ ${i.label} (x${i.qty})\n`;
+    });
+
+    // Calcul de la promo pour l'affichage WhatsApp
+    let promoText = remiseCodePromo > 0 ? `🎁 *CODE PROMO:* ${inputCode} (-${remiseCodePromo}%)\n` : "";
+    
+    // Structure élégante du message
+    let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP* ✨\n\n`;
+    msg += `👤 *CLIENT:* ${nom.toUpperCase()}\n`;
+    msg += `📞 *QUARTIER:* ${quartier}\n`;
+    msg += `🌍 *ZONE:* ${tarifsLivraison[zoneKey].nom}\n\n`;
+    msg += `📝 *DÉTAILS DU PANIER :*\n${list}\n`;
+    msg += cadeauMsg;
+    msg += `${promoText}`;
+    msg += `💰 *TOTAL À PAYER : ${total} F*\n\n`;
+    msg += `💳 *MODE DE PAIEMENT :* ${mode}\n`;
+    msg += `───────────────\n`;
+    msg += `_Commande générée depuis la boutique en ligne._`;
+
+    // Envoi vers ton numéro
+    window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
 }
 
-function ajouterDepuisDetail() {
-    const label = currentProduct.name;
-    const index = cart.findIndex(x => x.label === label);
-    if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
+
+    // --- DIVERS ---
+    function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
+    function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
+    function updateVisitorCount() {
+        let count = localStorage.getItem('latyfa_visitors') || 1250;
+        count = parseInt(count) + 1;
+        localStorage.setItem('latyfa_visitors', count);
+        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
+    }
+
+    setInterval(() => {
+        const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
+        if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
+        const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+        document.getElementById('countdown').innerText = `${d}j ${h}h ${m}m ${s}s`;
+    }, 1000);
+
+    // Initialisation finale
+    drawWheel(); 
+    majAffichageChances(); 
+    render(); 
+    updateVisitorCount();
     
-    // Mise à jour interface
-    document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
-    document.getElementById('productDetailModal').classList.remove('active');
+    // --- LOGIQUE DE PREUVE SOCIALE (Notifications de vente) ---
+const notifications = [
+    "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
+    "Nouveau colis expédié vers Yamoussoukro 📦",
+    "Une commande de Parfum Prestige vient d'être validée 🕯️",
+    "5 personnes consultent actuellement ce produit 🔥",
+    "Un ensemble de bijoux a été ajouté au panier à Bouaké 💎"
+];
+
+function showSocialProof() {
+    const box = document.getElementById('social-proof');
+    const text = document.getElementById('proof-text');
+    if(!box || !text) return;
+
+    text.innerText = notifications[Math.floor(Math.random() * notifications.length)];
+    box.classList.remove('translate-y-20', 'opacity-0');
     
-    // SAUVEGARDE
-    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-    
-    // Toast
-    const toast = document.getElementById('toast');
-    toast.classList.replace('opacity-0', 'opacity-100');
-    setTimeout(() => toast.classList.replace('opacity-100', 'opacity-0'), 2000);
+    setTimeout(() => {
+        box.classList.add('translate-y-20', 'opacity-0');
+    }, 5000);
 }
 
-// Ajoute ici les autres fonctions (drawWheel, majResume, etc.) que tu avais déjà
-// en veillant à ne pas les doubler.
+// Lancement de la preuve sociale
+setTimeout(() => {
+    showSocialProof();
+    setInterval(showSocialProof, 15000);
+}, 3000);
 
+// --- LOGIQUE ADMIN (Gestion du catalogue) ---
+// --- LOGIQUE ADMIN (Gestion du catalogue) ---
+function ouvrirAdmin() {
+    const mdp = prompt("Code d'accès Admin :");
+    if(mdp === "2026") {
+        document.getElementById('adminModal').classList.add('active');
+        const savedDb = localStorage.getItem('latyfa_db');
+        if(savedDb) { products = JSON.parse(savedDb); }
+        refreshAdminList(); 
+    } else { alert("Accès refusé"); }
+}
+
+function ajouterProduitAdmin() {
+    const name = document.getElementById('adm-name').value;
+    const price = document.getElementById('adm-price').value;
+    const imgInput = document.getElementById('adm-img').value; // Récupère le texte brut
+    const videoUrl = document.getElementById('adm-video').value;
+
+    if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
+
+    // --- LA MAGIE EST ICI ---
+    // On coupe le texte à chaque virgule et on enlève les espaces vides
+    const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
+
+    const newP = {
+        id: Date.now(),
+        name: name,
+        price: parseInt(price),
+        cat: document.getElementById('adm-cat').value,
+        images: imagesArray, // On enregistre le tableau d'images
+        video: videoUrl || null, // La vidéo reste à part
+        description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
+        enStock: true,
+        stockBas: document.getElementById('adm-stock-bas').checked,
+        dateAjout: Date.now() 
+    };
+
+    products.push(newP);
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    
+    // Nettoyage des champs
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    
+    refreshAdminList();
+    render();
+    alert("Produit ajouté avec " + imagesArray.length + " image(s) !");
+}
+
+function toggleStock(id) {
+    const p = products.find(x => x.id === id);
+    if(p) {
+        p.enStock = (p.enStock === undefined) ? false : !p.enStock;
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        refreshAdminList();
+        render();
+    }
+}
+
+function supprimerProduit(id) {
+    if(confirm("Supprimer définitivement cet article ?")) {
+        products = products.filter(p => p.id !== id);
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        refreshAdminList();
+        render();
+    }
+}
+
+function refreshAdminList() {
+    const list = document.getElementById('admin-list');
+    if (!list) return;
+    list.innerHTML = products.map(p => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border mb-2 shadow-sm">
+            <div class="flex items-center gap-2">
+                <img src="${p.images[0]}" class="w-8 h-8 object-cover rounded ${p.enStock === false ? 'grayscale' : ''}">
+                <span class="font-bold text-[10px] ${p.enStock === false ? 'text-red-400 line-through' : 'text-gray-700'}">${p.name}</span>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
+                    ${p.enStock === false ? 'RUPTURE' : 'EN STOCK'}
+                </button>
+                <button onclick="supprimerProduit(${p.id})" class="text-red-500 p-1"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        loader.classList.add('loader-hidden');
+    }, 1500); // 1.5 seconde pour un effet luxe bien dosé
+});
+    function toggleHistorique() {
+    const zone = document.getElementById('historique-zone');
+    if (zone.classList.contains('hidden')) {
+        zone.classList.remove('hidden');
+        chargerHistorique();
+    } else {
+        zone.classList.add('hidden');
+    }
+}
+
+function chargerHistorique() {
+    const zone = document.getElementById('historique-zone');
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+
+    if (historique.length === 0) {
+        zone.innerHTML = "<p class='text-[10px] text-center text-gray-400 uppercase font-bold'>Aucune commande enregistrée</p>";
+        return;
+    }
+
+    zone.innerHTML = historique.map(cmd => `
+        <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500 shadow-sm text-[10px]">
+            <div class="flex justify-between font-black text-blue-600 mb-1">
+                <span>📅 ${cmd.date}</span>
+                <span>💰 ${cmd.total} F</span>
+            </div>
+            <p><strong>👤 Client:</strong> ${cmd.client}</p>
+            <p><strong>📍 Lieu:</strong> ${cmd.lieu}</p>
+            <p><strong>🛍️ Articles:</strong> ${cmd.articles}</p>
+            <p class="text-[8px] text-gray-400 mt-1 italic">Code utilisé: ${cmd.promo}</p>
+        </div>
+    `).join('');
+}
+    function effacerToutLHistorique() {
+    // Sécurité : on demande confirmation avant de tout supprimer
+    if (confirm("🚨 VOULEZ-VOUS VRAIMENT TOUT EFFACER ?\nCette action est irréversible et supprimera tout l'historique de vos ventes.")) {
+        
+        // Supprime l'entrée de la mémoire
+        localStorage.removeItem('latyfa_historique');
+        
+        // Rafraîchit l'affichage pour montrer que c'est vide
+        chargerHistorique();
+        
+        // Petite alerte de succès
+        alert("✅ Historique vidé avec succès.");
+    }
+}
+    function changerMedia(type, source, element) {
+    const container = document.getElementById('main-detail-img').parentElement;
+    
+    // 1. Mise à jour visuelle des miniatures
+    document.querySelectorAll('.miniature-item').forEach(el => el.classList.remove('thumb-active'));
+    element.classList.add('thumb-active');
+
+    // 2. Changement du média avec animation
+    if(type === 'video') {
+        container.innerHTML = `
+            <video id="main-detail-video" src="${source}" controls autoplay loop muted
+            class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn"></video>
+        `;
+    } else {
+        container.innerHTML = `
+            <img id="main-detail-img" src="${source}" 
+            class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn">
+        `;
+    }
+}
+function calculerTailleRec() {
+    const poids = parseFloat(document.getElementById('user-weight').value);
+    const resultZone = document.getElementById('size-result');
+    const selectSize = document.getElementById('select-size');
+    
+    if (!poids || poids < 30) {
+        resultZone.innerText = "Veuillez entrer un poids valide.";
+        return;
+    }
+
+    let recommendation = "";
+    if (poids < 55) recommendation = "S";
+    else if (poids >= 55 && poids < 68) recommendation = "M";
+    else if (poids >= 68 && poids < 82) recommendation = "L";
+    else if (poids >= 82 && poids < 95) recommendation = "XL";
+    else recommendation = "XXL";
+
+    resultZone.innerHTML = `✨ Taille conseillée : <span class="text-lg">${recommendation}</span>`;
+    
+    // On sélectionne automatiquement la taille dans le menu si elle existe
+    if (selectSize) {
+        for (let i = 0; i < selectSize.options.length; i++) {
+            if (selectSize.options[i].value === recommendation) {
+                selectSize.selectedIndex = i;
+                break;
+            }
+        }
+    }
+}
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
