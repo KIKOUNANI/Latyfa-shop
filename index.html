@@ -188,11 +188,6 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
                     <i class="fa-solid fa-cart-shopping text-gray-600"></i>
                     <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
                     <p class="text-[9px] font-bold uppercase">Panier</p>
-                    <div onclick="ouvrirWishlist()" class="text-center cursor-pointer relative hover:text-[#c5a059]">
-    <i class="fa-solid fa-heart text-gray-600"></i>
-    <span id="wish-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] rounded-full px-1.5 font-bold hidden">0</span>
-    <p class="text-[9px] font-bold uppercase">Favoris</p>
-</div>
                 </div>
             </div>
         </div>
@@ -546,7 +541,6 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
@@ -637,16 +631,8 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
                 
                 ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
                 
-                <div class="relative group">
-    <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
-    
-    <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" 
-            class="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full shadow-md flex items-center justify-center transition-transform active:scale-90">
-        <i class="${wishlist.includes(p.id) ? 'fa-solid text-red-500' : 'fa-regular text-gray-400'} fa-heart" 
-           id="wish-icon-${p.id}"></i>
-    </button>
-</div>
-             <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
                 <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
                 
                 <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
@@ -693,12 +679,7 @@ document.getElementById('detail-desc').insertAdjacentHTML('beforebegin', `
 
     // Gestion des tailles/couleurs
     gererOptionsProduit(p);
-const helper = document.getElementById('size-helper-container');
-if (p.cat === 'vetements') {
-    helper.classList.remove('hidden'); // On montre si c'est un vêtement
-} else {
-    helper.classList.add('hidden');    // On cache si c'est un sac ou bijoux
-}}
+}
     function ajouterDepuisDetail() {
         const size = document.getElementById('select-size').value || "";
         const color = document.getElementById('select-color').value || "";
@@ -1241,72 +1222,6 @@ function calculerTailleRec() {
         }
     }
 }
-    function toggleWishlist(id) {
-    const index = wishlist.indexOf(id);
-    const icon = document.getElementById(`wish-icon-${id}`);
-    
-    if (index === -1) {
-        // On ajoute aux favoris
-        wishlist.push(id);
-        if(icon) {
-            icon.classList.replace('fa-regular', 'fa-solid');
-            icon.classList.replace('text-gray-400', 'text-red-500');
-        }
-    } else {
-        // On retire des favoris
-        wishlist.splice(index, 1);
-        if(icon) {
-            icon.classList.replace('fa-solid', 'fa-regular');
-            icon.classList.replace('text-red-500', 'text-gray-400');
-        }
-    }
-    
-    // On enregistre dans le téléphone de la cliente
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-}
-    // Fonction pour ouvrir la page des favoris
-function ouvrirWishlist() {
-    const modal = document.getElementById('wishlistModal');
-    const content = document.getElementById('wishlist-content');
-    const emptyMsg = document.getElementById('wishlist-empty');
-    
-    modal.classList.add('active');
-    content.innerHTML = ""; // On vide pour reconstruire proprement
-
-    // On filtre les produits qui sont dans la liste des favoris
-    const favoris = products.filter(p => wishlist.includes(p.id));
-
-    if (favoris.length === 0) {
-        emptyMsg.classList.remove('hidden');
-        content.classList.add('hidden');
-    } else {
-        emptyMsg.classList.add('hidden');
-        content.classList.remove('hidden');
-        
-        content.innerHTML = favoris.map(p => `
-            <div class="product-card p-3 relative border rounded-xl shadow-sm">
-                <button onclick="toggleWishlist(${p.id}); ouvrirWishlist();" class="absolute top-2 right-2 text-red-500 bg-white/80 p-1.5 rounded-full z-10">
-                    <i class="fa-solid fa-trash-can text-[10px]"></i>
-                </button>
-                <img src="${p.images[0]}" class="h-32 w-full object-cover rounded mb-2">
-                <h3 class="text-[10px] font-bold uppercase truncate">${p.name}</h3>
-                <div class="text-[#c5a059] font-black text-sm mt-1">${p.price.toLocaleString()} F</div>
-                <button onclick="voirDetails(${p.id})" class="w-full mt-3 bg-gray-900 text-white py-2 rounded text-[8px] font-black uppercase">Voir l'article</button>
-            </div>
-        `).join('');
-    }
-}
-
-// Petite mise à jour pour que le compteur s'affiche au chargement
-function majCompteurWishlist() {
-    const countElement = document.getElementById('wish-count');
-    if(countElement) {
-        countElement.innerText = wishlist.length;
-        countElement.classList.toggle('hidden', wishlist.length === 0);
-    }
-}
-
-// Appelle majCompteurWishlist() à l'intérieur de ta fonction toggleWishlist existante
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
@@ -1409,22 +1324,6 @@ function majCompteurWishlist() {
         </div>
     </div>
 </div>
-<div id="wishlistModal" class="modal bg-white">
-    <div class="max-w-2xl mx-auto px-4">
-        <div class="flex justify-between items-center py-6 border-b">
-            <h2 class="text-xl font-black uppercase italic logo-font text-gray-800">Mes Coups de Cœur</h2>
-            <button onclick="document.getElementById('wishlistModal').classList.remove('active')" class="text-2xl">&times;</button>
-        </div>
-        
-        <div id="wishlist-content" class="grid grid-cols-2 gap-4 py-8">
-            </div>
 
-        <div id="wishlist-empty" class="hidden text-center py-20">
-            <i class="fa-regular fa-heart text-5xl text-gray-200 mb-4"></i>
-            <p class="text-gray-400 font-bold uppercase text-xs">Aucun article dans vos favoris</p>
-            <button onclick="document.getElementById('wishlistModal').classList.remove('active')" class="mt-6 bg-black text-white px-8 py-3 rounded-full text-[10px] font-black uppercase">Découvrir la collection</button>
-        </div>
-    </div>
-</div>
 </body>
 </html>
