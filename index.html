@@ -129,6 +129,7 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 </style>
 </head>
 <body>    
+    <audio id="cart-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
     <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
     <div class="relative">
         <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-24 w-24 rounded-full border-2 border-[#c5a059] animate-pulse shadow-[0_0_20px_rgba(197,160,89,0.3)]">
@@ -268,7 +269,19 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
                     <div class="space-y-4 my-6">
                         <div id="size-area" class="hidden">
                             <label class="text-[10px] font-black uppercase text-gray-400">Taille / Pointure</label>
-                            <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
+                            <div id="size-helper-ui" class="hidden mb-4 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+    <p class="text-[9px] font-black uppercase mb-2">Calculateur de taille</p>
+    <div class="flex gap-2">
+        <input type="number" id="user-weight" placeholder="Poids (kg)" class="w-1/2 p-2 text-xs border rounded">
+        <button onclick="calculerTailleRec()" class="w-1/2 bg-black text-white text-[10px] font-bold rounded">CALCULER</button>
+    </div>
+    <p id="size-result" class="mt-2 text-[10px] font-bold text-green-600 uppercase"></p>
+</div>
+
+<button onclick="document.getElementById('size-helper-ui').classList.toggle('hidden')" class="text-[9px] font-bold text-[#c5a059] uppercase underline mb-2">
+    <i class="fa-solid fa-wand-magic-sparkles"></i> Aide-moi à choisir ma taille
+</button>
+                    <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
                         </div>
                         <div id="color-area" class="hidden">
                             <label class="text-[10px] font-black uppercase text-gray-400">Couleur</label>
@@ -624,6 +637,16 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
         const size = document.getElementById('select-size').value || "";
         const color = document.getElementById('select-color').value || "";
         const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
+        function ajouterDepuisDetail() {
+    // ... ton code existant (récupération taille/couleur) ...
+
+    // AJOUT DU SON
+    const sound = document.getElementById('cart-sound');
+    sound.currentTime = 0; // Réinitialise pour pouvoir cliquer plusieurs fois vite
+    sound.play().catch(e => console.log("L'utilisateur doit interagir d'abord avec le site"));
+
+    // ... le reste de ta fonction ...
+}
         
         const index = cart.findIndex(x => x.label === label);
         if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
@@ -1123,7 +1146,35 @@ function chargerHistorique() {
         `;
     }
 }
+function calculerTailleRec() {
+    const poids = parseFloat(document.getElementById('user-weight').value);
+    const resultZone = document.getElementById('size-result');
+    const selectSize = document.getElementById('select-size');
+    
+    if (!poids || poids < 30) {
+        resultZone.innerText = "Veuillez entrer un poids valide.";
+        return;
+    }
 
+    let recommendation = "";
+    if (poids < 55) recommendation = "S";
+    else if (poids >= 55 && poids < 68) recommendation = "M";
+    else if (poids >= 68 && poids < 82) recommendation = "L";
+    else if (poids >= 82 && poids < 95) recommendation = "XL";
+    else recommendation = "XXL";
+
+    resultZone.innerHTML = `✨ Taille conseillée : <span class="text-lg">${recommendation}</span>`;
+    
+    // On sélectionne automatiquement la taille dans le menu si elle existe
+    if (selectSize) {
+        for (let i = 0; i < selectSize.options.length; i++) {
+            if (selectSize.options[i].value === recommendation) {
+                selectSize.selectedIndex = i;
+                break;
+            }
+        }
+    }
+}
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
