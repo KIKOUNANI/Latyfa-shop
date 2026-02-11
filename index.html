@@ -9,28 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
-            /* Cache la barre de défilement mais permet le scroll */
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-.no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    cursor: grab;
-}
-.no-scrollbar:active {
-    cursor: grabbing;
-}
-            #backToTop.show {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-#backToTop:hover {
-    background-color: #1a1a1a;
-    border-color: var(--latyfa-gold);
-    transform: scale(1.1);
-}
 :root { 
     /* MODIFIE CES 3 COULEURS ICI POUR TOUT CHANGER SUR LE SITE */
     --latyfa-gold: #c5a059;   /* Doré Luxe */
@@ -134,79 +112,61 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     opacity: 0;
     pointer-events: none;
 }
-            /* Effet au clic sur les boutons de catégorie */
-nav button:focus {
-    color: var(--latyfa-gold);
-    border-bottom: 2px solid var(--latyfa-gold);
-}
-          #stock-alert {
-    background: #fff5f5;
-    padding: 6px 12px;
-    border-radius: 6px;
-    display: inline-flex;
-    border: 1px dashed #feb2b2;
-}
-            /* Style pour le bouton favoris sur la carte produit */
-.fav-btn {
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(4px);
-}
-.fav-btn.active i {
-    color: #e11d48 !important; /* Rouge rose */
-    font-weight: 900;
-}
 </style>
 </head>
 <body>    
-<header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <div class="flex items-center gap-2">
-            <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
-            <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
-        </div>
-
-        <div class="flex gap-6 items-center">
-            <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#c5a059]">
-                <i class="fa-solid fa-truck text-gray-600"></i>
-                <p class="text-[9px] font-bold uppercase">Suivi</p>
-            </div>
-            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#c5a059]">
-                <i class="fa-solid fa-cart-shopping text-gray-600"></i>
-                <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
-                <p class="text-[9px] font-bold uppercase">Panier</p>
-            </div>
+    <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
+    <div class="relative">
+        <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-24 w-24 rounded-full border-2 border-[#c5a059] animate-pulse shadow-[0_0_20px_rgba(197,160,89,0.3)]">
+    </div>
+    <div class="mt-6 flex flex-col items-center">
+        <span class="logo-font text-2xl text-[#c5a059] italic tracking-tighter">LATYFA SHOP</span>
+        <div class="w-32 h-[1px] bg-gray-800 mt-3 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[#c5a059] animate-[loading_1.5s_ease-in-out_infinite]"></div>
         </div>
     </div>
+</div>
 
-    <div class="container mx-auto px-4 pb-3">
-        <div class="relative">
-            <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
-                   class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-        </div>
+<div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 bg-black/90 text-[#c5a059] px-6 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest z-[2000] opacity-0 transition-opacity duration-300 pointer-events-none">
+    ✨ Produit ajouté au panier
+</div>
+
+    <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">
+    ✨ Promo Exclusive -20% dès 20.000 F D'achat à partir du 14 fév au 28 fév 2026: <span id="countdown" class="text-white ml-1">--:--:--</span> ✨
+</div>
+    
+<div class="bg-white border-b border-gray-100 py-1 overflow-hidden whitespace-nowrap">
+    <div class="inline-block animate-marquee text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400">
+        ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE — 🚚 EXPÉDITION SOUS 48H DANS TOUTE LA CÔTE D'IVOIRE — ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE —
     </div>
+</div>
 
-    <div class="border-t border-gray-50 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center gap-6 overflow-x-auto no-scrollbar py-3">
-                <button onclick="filtrerNouveautes()" class="flex-shrink-0 bg-[#c5a059] text-white px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm flex items-center gap-2">
-                    <i class="fa-solid fa-sparkles"></i> Nouveautés
-                </button>
-
-                <button onclick="filtrerFavoris()" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-red-500 flex items-center gap-1">
-                    <i class="fa-solid fa-heart text-red-500"></i> Mes Envies
-                </button>
-
-                <button onclick="render('tous')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-400 hover:text-[#c5a059]">Tout voir</button>
-                <button onclick="render('bijoux')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Bijoux</button>
-                <button onclick="render('sac')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Sacs</button>
-                <button onclick="render('parfum')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Parfums</button>
-                <button onclick="render('hanche')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Hanche</button>
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+    <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
+    <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
+            <div class="container mx-auto px-4 pb-3">
+    <div class="relative">
+        <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
+               class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+    </div>
+</div>    
+</div>
+            <div class="flex gap-6">
+                <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
+                    <i class="fa-solid fa-truck text-gray-600"></i>
+                    <p class="text-[9px] font-bold uppercase">Suivi</p>
+                </div>
+                <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
+                    <i class="fa-solid fa-cart-shopping text-gray-600"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
+                    <p class="text-[9px] font-bold uppercase">Panier</p>
+                </div>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
     <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
         <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
@@ -217,31 +177,39 @@ nav button:focus {
         </div>
     </section>
 
-    <div id="collection" class="container mx-auto px-4 py-8">
-    <main>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" id="product-grid"></div>
-    </main>
-</div>
-        <nav class="bg-white border-b border-gray-100 sticky top-[72px] z-40 shadow-sm">
-    <div class="container mx-auto px-4">
-        <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-4">
-            <button onclick="filtrerNouveautes()" class="flex-shrink-0 bg-[#c5a059] text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md flex items-center gap-2">
-                <i class="fa-solid fa-sparkles"></i> Nouveautés
-            </button>
-            <button onclick="filtrerFavoris()" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-red-500 flex items-center gap-1">
-    <i class="fa-solid fa-heart text-red-500"></i> Mes Envies
-</button>
-            <button onclick="render('tous')" class="flex-shrink-0 border-r pr-4 text-[10px] font-black uppercase text-gray-400 hover:text-[#c5a059]">Tout voir</button>
-            <button onclick="render('bijoux')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Bijoux</button>
-            <button onclick="render('vetements')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Vêtements</button>
-            <button onclick="render('chaussures')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Chaussures</button>
-            <button onclick="render('sac')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Sacs</button>
-            <button onclick="render('parfum')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Parfums</button>
-            <button onclick="render('hanche')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Hanche</button>
-            <button onclick="render('autres')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Autres</button>
-        </div>
+    <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
+        <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border border-gray-100">
+    <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center">
+        Nos Univers
+    </h3>
+    <div class="flex flex-col gap-5">
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('tous')">
+            Tout voir <i class="fa-solid fa-crown text-[10px] text-[#c5a059]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('bijoux')">
+            Bijoux <i class="fa-solid fa-gem text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('vetements')">
+            Vêtements <i class="fa-solid fa-shirt text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('chaussures')">
+            Chaussures <i class="fa-solid fa-shoe-prints text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('sac')">
+            Sacs à main <i class="fa-solid fa-bag-shopping text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('parfum')">
+            Parfums <i class="fa-solid fa-spray-can-sparkles text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('hanche')">
+            Perles de hanche <i class="fa-solid fa-circle-nodes text-[10px]"></i>
+        </span>
+        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('autres')">
+            Autres <i class="fa-solid fa-plus text-[10px]"></i>
+        </span>
     </div>
-        </nav>
+</aside>
+
         <main class="flex-1">
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
         </main>
@@ -282,13 +250,6 @@ nav button:focus {
                 <div class="md:w-1/2">
                     <h2 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800"></h2>
                     <p id="detail-price" class="text-[#ff6600] font-black text-2xl mt-2"></p>
-<div id="stock-alert" class="mt-3 flex items-center gap-2">
-    <span class="relative flex h-2 w-2">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-    </span>
-    <p id="stock-msg" class="text-[10px] font-black uppercase text-red-600 italic"></p>
-</div>
                     <div class="my-4 border-t pt-4"><p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p></div>
                     <div class="space-y-4 my-6">
                         <div id="size-area" class="hidden">
@@ -513,22 +474,6 @@ nav button:focus {
     </div>
 </div>
 <script>
-    // Gestion du bouton retour en haut
-window.addEventListener('scroll', function() {
-    const btn = document.getElementById('backToTop');
-    if (window.scrollY > 400) {
-        btn.classList.add('show');
-    } else {
-        btn.classList.remove('show');
-    }
-});
-
-function scrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
@@ -595,33 +540,29 @@ function afficherResultatsRecherche(liste) {
         { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
     ];
 
-    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
-;
-let currentProduct = null;
+    let cart = [];
+    let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
 
     // --- BOUTIQUE ---
     function render(filter = 'tous') {
     const grid = document.getElementById('product-grid');
-    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
-    
-    // On récupère les favoris pour savoir quel cœur colorer
-    const favorisActuels = JSON.parse(localStorage.getItem('latyfa_favs')) || [];
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
 
     grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
+        // Calcul pour le badge Nouveauté
         const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
-        const isFav = favorisActuels.includes(p.id);
         
         return `
+${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 PLUS QUE 2 EN STOCK !</span>' : ''}
+
             <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
                 
-                <button onclick="toggleFavori(event, ${p.id})" class="fav-btn absolute top-2 left-2 z-30 w-8 h-8 rounded-full flex items-center justify-center shadow-sm bg-white/80 ${isFav ? 'active' : ''}">
-                    <i class="${isFav ? 'fa-solid text-red-500' : 'fa-regular text-gray-400'} fa-heart text-[14px]"></i>
-                </button>
-
                 ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
                 
-                ${p.stockBas && p.enStock !== false ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 DERNIERS ARTICLES</span>' : ''}
+                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
+                
+                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
                 
                 <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
                 <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
@@ -633,7 +574,8 @@ let currentProduct = null;
             </div>`;
     }).join('');
 }
-  function voirDetails(id) {
+
+    function voirDetails(id) {
         const p = products.find(x => x.id === id);
         currentProduct = p;
         document.getElementById('productDetailModal').classList.add('active');
@@ -680,18 +622,8 @@ if(p.enStock === false) {
 } else {
     btnAjout.style.display = "block";
 }
-      const stockMsg = document.getElementById('stock-msg');
-const stockAlert = document.getElementById('stock-alert');
+    }
 
-if (p.stockBas && p.enStock) {
-    stockAlert.classList.remove('hidden');
-    // On génère un petit chiffre aléatoire entre 2 et 5 pour faire vrai
-    const reste = Math.floor(Math.random() * 4) + 2; 
-    stockMsg.innerText = `Vite ! Plus que ${reste} articles disponibles`;
-} else {
-    stockAlert.classList.add('hidden');
-}
-  }
     function ajouterDepuisDetail() {
         const size = document.getElementById('select-size').value || "";
         const color = document.getElementById('select-color').value || "";
@@ -702,7 +634,6 @@ if (p.stockBas && p.enStock) {
         
         document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
         const cartIcon = document.getElementById('cart-count').parentElement;
         cartIcon.classList.add('animate-cart');
         setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
@@ -844,7 +775,6 @@ if (p.stockBas && p.enStock) {
     function modifierQty(label, d) {
         const i = cart.find(x => x.label === label);
         if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
         document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         ouvrirPanier();
     }
@@ -983,9 +913,8 @@ if (p.stockBas && p.enStock) {
 
     // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-        localStorage.removeItem('latyfa_cart');
-cart = [];
-        }
+}
+
 
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
@@ -1037,53 +966,9 @@ setTimeout(() => {
     showSocialProof();
     setInterval(showSocialProof, 15000);
 }, 3000);
+
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
-let editingId = null; // Pour savoir si on modifie ou si on ajoute
-    // --- SAUVEGARDE ET RESTAURATION ---
-function exporterCatalogue() {
-    const data = localStorage.getItem('latyfa_db');
-    if (!data || data === "[]") return alert("Aucun produit à sauvegarder.");
-    
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    
-    const date = new Date().toLocaleDateString('fr-FR').replace(/\//g, '-');
-    a.href = url;
-    a.download = `LATYFA_BACKUP_${date}.json`;
-    a.click();
-    
-    alert("✅ Fichier de sauvegarde téléchargé ! Garde-le précieusement.");
-}
-
-function importerCatalogue() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = e => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = event => {
-            try {
-                const importedData = JSON.parse(event.target.result);
-                if (confirm("⚠️ Cela va remplacer tes produits actuels. Continuer ?")) {
-                    localStorage.setItem('latyfa_db', JSON.stringify(importedData));
-                    products = importedData;
-                    refreshAdminList();
-                    render();
-                    alert("✅ Catalogue restauré avec succès !");
-                }
-            } catch (err) {
-                alert("❌ Erreur : Le fichier est invalide.");
-            }
-        };
-        reader.readAsText(file);
-    };
-    input.click();
-}
-
-
+// --- LOGIQUE ADMIN (Gestion du catalogue) ---
 function ouvrirAdmin() {
     const mdp = prompt("Code d'accès Admin :");
     if(mdp === "2026") {
@@ -1094,126 +979,49 @@ function ouvrirAdmin() {
     } else { alert("Accès refusé"); }
 }
 
-function genererApercuAdmin() {
-    const input = document.getElementById('adm-img').value;
-    const previewZone = document.getElementById('admin-preview-zone');
-    const liens = input.split(',').map(l => l.trim()).filter(l => l !== "");
-    
-    previewZone.innerHTML = liens.map(url => `
-        <div class="relative min-w-[60px] h-[60px]">
-            <img src="${url}" class="w-full h-full object-cover rounded border border-[#c5a059]" onerror="this.src='https://placehold.co/60?text=Erreur'">
-        </div>
-    `).join('');
-}
-
-function editerProduit(id) {
-    const p = products.find(x => x.id === id);
-    if(!p) return;
-
-    editingId = id;
-    document.getElementById('adm-name').value = p.name;
-    document.getElementById('adm-price').value = p.price;
-    document.getElementById('adm-price-promo').value = p.promoPrice || "";
-    document.getElementById('adm-cat').value = p.cat;
-    document.getElementById('adm-img').value = p.images.join(', ');
-    document.getElementById('adm-video').value = p.video || "";
-    document.getElementById('adm-desc').value = p.description;
-    document.getElementById('adm-stock-bas').checked = p.stockBas || false;
-
-    const btn = document.querySelector('button[onclick="ajouterProduitAdmin()"]');
-    btn.innerText = "Enregistrer les modifications";
-    btn.className = "bg-blue-600 text-white py-4 rounded-xl font-black uppercase text-xs shadow-lg w-full";
-    
-    genererApercuAdmin();
-    document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
-    const pricePromo = document.getElementById('adm-price-promo').value;
-    const imgInput = document.getElementById('adm-img').value;
+    const imgInput = document.getElementById('adm-img').value; // Récupère le texte brut
+    const videoUrl = document.getElementById('adm-video').value;
 
     if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
 
+    // --- LA MAGIE EST ICI ---
+    // On coupe le texte à chaque virgule et on enlève les espaces vides
     const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
 
-    if (editingId) {
-        // MODE MODIFICATION
-        const index = products.findIndex(p => p.id === editingId);
-        products[index] = {
-            ...products[index],
-            name: name,
-            price: parseInt(price),
-            promoPrice: pricePromo ? parseInt(pricePromo) : null,
-            cat: document.getElementById('adm-cat').value,
-            images: imagesArray,
-            video: document.getElementById('adm-video').value || null,
-            description: document.getElementById('adm-desc').value,
-            stockBas: document.getElementById('adm-stock-bas').checked
-        };
-        editingId = null; // Reset après modification
-        alert("Article mis à jour !");
-    } else {
-        // MODE AJOUT (ton code actuel)
-        const newP = {
-            id: Date.now(),
-            name: name,
-            price: parseInt(price),
-            promoPrice: pricePromo ? parseInt(pricePromo) : null,
-            cat: document.getElementById('adm-cat').value,
-            images: imagesArray,
-            video: document.getElementById('adm-video').value || null,
-            description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
-            enStock: true,
-            stockBas: document.getElementById('adm-stock-bas').checked,
-            dateAjout: Date.now() 
-        };
-        products.push(newP);
-        alert("Nouvel article ajouté !");
-    }
+    const newP = {
+        id: Date.now(),
+        name: name,
+        price: parseInt(price),
+        cat: document.getElementById('adm-cat').value,
+        images: imagesArray, // On enregistre le tableau d'images
+        video: videoUrl || null, // La vidéo reste à part
+        description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
+        enStock: true,
+        stockBas: document.getElementById('adm-stock-bas').checked,
+        dateAjout: Date.now() 
+    };
 
+    products.push(newP);
     localStorage.setItem('latyfa_db', JSON.stringify(products));
     
-    // Reset complet du formulaire
-    resetFormulaireAdmin();
+    // Nettoyage des champs
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    
     refreshAdminList();
     render();
-}
-
-function resetFormulaireAdmin() {
-    document.getElementById('adm-name').value = "";
-    document.getElementById('adm-price').value = "";
-    document.getElementById('adm-price-promo').value = "";
-    document.getElementById('adm-img').value = "";
-    document.getElementById('adm-video').value = "";
-    document.getElementById('adm-desc').value = "";
-    document.getElementById('adm-stock-bas').checked = false;
-    document.getElementById('admin-preview-zone').innerHTML = "";
-    
-    const btn = document.querySelector('button[onclick="ajouterProduitAdmin()"]');
-    btn.innerText = "Mettre en ligne";
-    btn.classList.replace('bg-blue-600', 'bg-black');
-}
-
-function resetFormulaireAdmin() {
-    document.getElementById('adm-name').value = "";
-    document.getElementById('adm-price').value = "";
-    document.getElementById('adm-price-promo').value = "";
-    document.getElementById('adm-img').value = "";
-    document.getElementById('adm-video').value = "";
-    document.getElementById('adm-desc').value = "";
-    document.getElementById('adm-stock-bas').checked = false;
-    document.getElementById('admin-preview-zone').innerHTML = "";
-    const btn = document.querySelector('button[onclick="ajouterProduitAdmin()"]');
-    btn.innerText = "Mettre en ligne";
-    btn.className = "bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition w-full";
+    alert("Produit ajouté avec " + imagesArray.length + " image(s) !");
 }
 
 function toggleStock(id) {
     const p = products.find(x => x.id === id);
     if(p) {
-        p.enStock = !p.enStock;
+        p.enStock = (p.enStock === undefined) ? false : !p.enStock;
         localStorage.setItem('latyfa_db', JSON.stringify(products));
         refreshAdminList();
         render();
@@ -1238,216 +1046,150 @@ function refreshAdminList() {
                 <img src="${p.images[0]}" class="w-8 h-8 object-cover rounded ${p.enStock === false ? 'grayscale' : ''}">
                 <span class="font-bold text-[10px] ${p.enStock === false ? 'text-red-400 line-through' : 'text-gray-700'}">${p.name}</span>
             </div>
-            <div class="flex gap-1">
-                <button onclick="toggleStock(${p.id})" class="text-[8px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
-                    ${p.enStock === false ? 'OFF' : 'ON'}
+            <div class="flex gap-2">
+                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
+                    ${p.enStock === false ? 'RUPTURE' : 'EN STOCK'}
                 </button>
-                <button onclick="editerProduit(${p.id})" class="text-blue-500 bg-blue-50 p-1.5 rounded-lg"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button onclick="supprimerProduit(${p.id})" class="text-red-500 bg-red-50 p-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                <button onclick="supprimerProduit(${p.id})" class="text-red-500 p-1"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
     `).join('');
 }
 window.addEventListener('load', () => {
     setTimeout(() => {
-        document.getElementById('loader').classList.add('loader-hidden');
-    }, 1500);
+        const loader = document.getElementById('loader');
+        loader.classList.add('loader-hidden');
+    }, 1500); // 1.5 seconde pour un effet luxe bien dosé
 });
-function filtrerNouveautes() {
-    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
-    const grid = document.getElementById('product-grid');
-    // On ne garde que ceux ajoutés il y a moins de 7 jours
-    const nouveautes = products.filter(p => p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS));
-    
-    if(nouveautes.length === 0) {
-        alert("Pas de nouveaux articles cette semaine, revenez bientôt ! ✨");
+    function toggleHistorique() {
+    const zone = document.getElementById('historique-zone');
+    if (zone.classList.contains('hidden')) {
+        zone.classList.remove('hidden');
+        chargerHistorique();
     } else {
-        // On réutilise la logique de render avec les nouveautés uniquement
-        afficherResultatsRecherche(nouveautes); 
+        zone.classList.add('hidden');
     }
 }
-// Initialisation des favoris au chargement
-let favoris = JSON.parse(localStorage.getItem('latyfa_favs')) || [];
 
-function toggleFavori(event, id) {
-    event.stopPropagation(); // Empêche d'ouvrir la fiche produit en cliquant sur le cœur
-    
-    const index = favoris.indexOf(id);
-    if (index > -1) {
-        favoris.splice(index, 1); // Retirer des favoris
-    } else {
-        favoris.push(id); // Ajouter aux favoris
-    }
-    
-    localStorage.setItem('latyfa_favs', JSON.stringify(favoris));
-    render(); // Actualiser l'affichage
-}
-// Fonction pour afficher uniquement les favoris
-function filtrerFavoris() {
-    const produitsFavoris = products.filter(p => favoris.includes(p.id));
-    
-    if (produitsFavoris.length === 0) {
-        alert("Vous n'avez pas encore de favoris. Cliquez sur le cœur ❤️ pour en ajouter !");
-    } else {
-        const grid = document.getElementById('product-grid');
-        // On réutilise votre logique d'affichage existante
-        afficherResultatsRecherche(produitsFavoris);
-    }
-}
-    // Vérifier l'état au démarrage
-window.onload = function() {
-    const isMaintenance = localStorage.getItem('latyfa_maintenance') === 'true';
-    if (isMaintenance) {
-        document.getElementById('maintenance-screen').classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Empêche de scroller derrière
-    }
-};
+function chargerHistorique() {
+    const zone = document.getElementById('historique-zone');
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
 
-// Fonction pour l'Admin (à mettre dans votre panneau de contrôle)
-function toggleMaintenance() {
-    const currentState = localStorage.getItem('latyfa_maintenance') === 'true';
-    const newState = !currentState;
-    
-    localStorage.setItem('latyfa_maintenance', newState);
-    
-    if (newState) {
-        alert("Boutique fermée ! Vos clientes verront l'écran de maintenance. 🔒");
-    } else {
-        alert("Boutique ouverte ! Le site est de nouveau visible. 🔓");
+    if (historique.length === 0) {
+        zone.innerHTML = "<p class='text-[10px] text-center text-gray-400 uppercase font-bold'>Aucune commande enregistrée</p>";
+        return;
     }
-    location.reload(); // Indispensable pour appliquer le changement immédiatement
-}
-// Pour vous débloquer si vous êtes sur l'écran de maintenance
-function leverMaintenance() {
-    const code = prompt("Code secret pour débloquer :");
-    if(code === "1234") { // Changez "1234" par votre code
-        localStorage.setItem('latyfa_maintenance', 'false');
-        location.reload();
-    }
-}
-    // --- SYSTÈME DE MAINTENANCE (À METTRE ICI) ---
 
-// 1. Cette fonction s'exécute toute seule au chargement du site
-(function() {
-    const isMaint = localStorage.getItem('latyfa_maintenance') === 'true';
-    if (isMaint) {
-        // On attend que la page soit prête pour remplacer le contenu
-        window.addEventListener('DOMContentLoaded', () => {
-            document.body.innerHTML = `
-                <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-family:sans-serif; padding:30px; background-color:#ffffff; position:fixed; inset:0; z-index:9999;">
-                    <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; border:3px solid #c5a059; padding:5px;">
-                    <h1 style="color:#c5a059; font-size:32px; font-weight:900; margin-bottom:10px;">LATYFA SHOP</h1>
-                    <div style="width:50px; height:2px; background:#c5a059; margin:20px 0;"></div>
-                    <h2 style="color:#333; font-size:18px; text-transform:uppercase; letter-spacing:2px; font-weight:bold;">Un instant de patience... ✨</h2> 
-                    <p style="color:#777; font-size:14px; max-width:300px; margin-top:15px;">Nous préparons de nouvelles pépites pour vous. Revenez très vite !</p>
-                    <button onclick="leverMaintenanceSecret()" style="margin-top:100px; opacity:0; cursor:default; border:none; background:none;">Admin</button>
-                </div>`;
-        });
+    zone.innerHTML = historique.map(cmd => `
+        <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500 shadow-sm text-[10px]">
+            <div class="flex justify-between font-black text-blue-600 mb-1">
+                <span>📅 ${cmd.date}</span>
+                <span>💰 ${cmd.total} F</span>
+            </div>
+            <p><strong>👤 Client:</strong> ${cmd.client}</p>
+            <p><strong>📍 Lieu:</strong> ${cmd.lieu}</p>
+            <p><strong>🛍️ Articles:</strong> ${cmd.articles}</p>
+            <p class="text-[8px] text-gray-400 mt-1 italic">Code utilisé: ${cmd.promo}</p>
+        </div>
+    `).join('');
+}
+    function effacerToutLHistorique() {
+    // Sécurité : on demande confirmation avant de tout supprimer
+    if (confirm("🚨 VOULEZ-VOUS VRAIMENT TOUT EFFACER ?\nCette action est irréversible et supprimera tout l'historique de vos ventes.")) {
+        
+        // Supprime l'entrée de la mémoire
+        localStorage.removeItem('latyfa_historique');
+        
+        // Rafraîchit l'affichage pour montrer que c'est vide
+        chargerHistorique();
+        
+        // Petite alerte de succès
+        alert("✅ Historique vidé avec succès.");
     }
-})();
-
-// 2. La fonction secrète pour réactiver (Code: 2026)
-function leverMaintenanceSecret() {
-    const code = prompt("Code de déblocage Admin :");
-    if(code === "2026") {
-        localStorage.setItem('latyfa_maintenance', 'false');
-        location.reload();
+}
+    function changerMedia(type, source) {
+    const container = document.getElementById('main-detail-img').parentElement;
+    
+    if(type === 'video') {
+        container.innerHTML = `
+            <video id="main-detail-video" src="${source}" controls autoplay loop 
+            class="w-full h-80 object-cover rounded-xl shadow-md border"></video>
+        `;
     } else {
-        alert("Code incorrect");
+        container.innerHTML = `
+            <img id="main-detail-img" src="${source}" 
+            class="w-full h-80 object-cover rounded-xl shadow-md border">
+        `;
     }
 }
-    // 1. La fonction (le moteur)
-function majBadgePanier() {
-    if(document.getElementById('cart-count')) {
-        const totalArticles = cart.reduce((a, b) => a + b.qty, 0);
-        document.getElementById('cart-count').innerText = totalArticles;
-    }
-}
-// 2. L'appel (le démarrage) : INDISPENSABLE
-majBadgePanier();
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
-<div id="adminModal" class="modal bg-gray-100">
-    <div class="max-w-2xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-black uppercase italic text-gray-800">Panneau de Contrôle</h2>
-            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-2xl">&times;</button>
+<div id="adminModal" class="modal bg-gray-50">
+    <div class="max-w-xl mx-auto pb-20">
+        <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
+            <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
+            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
         </div>
 
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
             <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
             <div class="grid grid-cols-1 gap-4">
                 <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
-                
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <label class="text-[9px] font-bold text-gray-400 uppercase">Prix Normal *</label>
-                        <input type="number" id="adm-price" placeholder="Ex: 15000" class="w-full border p-3 rounded-lg text-sm">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[9px] font-bold text-red-400 uppercase">Prix Promo (Optionnel)</label>
-                        <input type="number" id="adm-price-promo" placeholder="Ex: 12000" class="w-full border p-3 rounded-lg text-sm bg-red-50">
-                    </div>
+                    <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
+                    <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
+                        <option value="bijoux">Bijoux</option>
+                        <option value="vetements">Vêtements</option>
+                        <option value="chaussures">Chaussures</option>
+                        <option value="sac">Sacs</option>
+                        <option value="parfum">Parfums</option>
+                        <option value="hanche">Perles de hanche</option>
+                        <option value="autres">Autres</option>
+                    </select>
                 </div>
-                <div class="mb-6 p-4 bg-red-50 border-2 border-dashed border-red-200 rounded-xl">
-    <p class="text-[10px] font-black text-red-600 mb-2 uppercase tracking-widest text-center">État de la boutique</p>
-    <button onclick="toggleMaintenance()" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold text-[10px] uppercase shadow-md">
-        Activer / Désactiver la Maintenance
-    </button>
-</div>
-               <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm font-bold">
-                    <option value="bijoux">Bijoux</option>
-                    <option value="vetements">Vêtements</option>
-                    <option value="chaussures">Chaussures</option>
-                    <option value="sac">Sacs</option>
-                    <option value="parfum">Parfums</option>
-                    <option value="hanche">Perles de hanche</option>
-                    <option value="autres">Autres</option>
-                </select>
-                <div class="flex gap-2 mb-6">
-    <button onclick="exporterCatalogue()" class="flex-1 bg-green-600 text-white py-2 rounded-lg font-bold text-[10px] uppercase shadow-sm">
-        <i class="fa-solid fa-download mr-1"></i> Sauvegarder le catalogue
-    </button>
-    <button onclick="importerCatalogue()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-bold text-[10px] uppercase shadow-sm">
-        <i class="fa-solid fa-upload mr-1"></i> Restaurer une sauvegarde
-    </button>
-</div>
-                
-                <div class="space-y-2">
-                    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Liens séparés par des virgules)</label>
-                    <textarea id="adm-img" oninput="genererApercuAdmin()" placeholder="Lien1, Lien2..." class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                    <div id="admin-preview-zone" class="flex gap-2 overflow-x-auto py-2 no-scrollbar"></div>
-                </div>
-
-                <input type="text" id="adm-video" placeholder="Lien Vidéo .mp4 (Optionnel)" class="w-full border p-3 rounded-lg text-sm">
+               <div class="space-y-1">
+    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez les liens par une virgule si plusieurs)</label>
+    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+</div> 
+                <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm mt-2">
                 <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                
                 <div class="flex items-center gap-2 mb-4">
-                    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-                    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Alerte "Stock Limité"</label>
-                </div>
-                
+    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Activer l'alerte "Stock Limité"</label>
+</div>
                 <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
             </div>
         </div>
 
         <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
-        <div id="admin-list" class="space-y-2 mb-10"></div>
+        <div id="admin-list" class="space-y-2 mb-10">
+            </div>
 
         <div class="pt-8 border-t-2 border-dashed border-gray-200">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">Journal des ventes</h3>
-                <button onclick="effacerToutLHistorique()" class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black">Vider</button>
+                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
+                    <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
+                </h3>
+                <button onclick="effacerToutLHistorique()" 
+                        class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black hover:bg-red-600 hover:text-white transition-all">
+                    <i class="fa-solid fa-trash-can"></i> Vider
+                </button>
             </div>
-            <button onclick="toggleHistorique()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black uppercase text-[10px] mb-4 shadow-md">Voir l'historique</button>
-            <div id="historique-zone" class="hidden space-y-3 pb-20"></div>
+            
+            <button onclick="toggleHistorique()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
+                <i class="fa-solid fa-clock-rotate-left"></i> Voir l'historique WhatsApp
+            </button>
+
+            <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10">
+                </div>
         </div>
     </div>
 </div>
+
 <div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
     <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
         <div class="flex justify-between items-center mb-4">
@@ -1482,8 +1224,6 @@ majBadgePanier();
         </div>
     </div>
 </div>
-<button id="backToTop" onclick="scrollToTop()" class="fixed bottom-40 right-6 h-12 w-12 bg-[#c5a059] text-white rounded-full shadow-2xl z-40 translate-y-20 opacity-0 transition-all duration-500 flex items-center justify-center border-2 border-white">
-    <i class="fa-solid fa-arrow-up"></i>
-</button>
+
 </body>
 </html>
