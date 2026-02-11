@@ -474,12 +474,31 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
                     <option value="interieur">Intérieur pays (3.000 F)</option>
                     <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
                 </select>
-                <div id="communes-info" class="text-[9px] text-gray-500 bg-gray-100 p-2 rounded hidden leading-tight"></div>
-                <input type="text" id="tel-client" oninput="majResume()" placeholder="Quartier et Précisions *" class="w-full border p-3 rounded-lg text-sm">
-                <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-gray-50 font-bold">
-                    <option value="TRANSFERT MOBILE">TRANSFERT (WAVE / MOBILE MONEY)</option>
-                    <option value="CASH">CASH (Boutique & Bouaké uniquement)</option>
-                </select>
+                <div class="space-y-2">
+    <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
+    <div class="grid grid-cols-2 gap-2">
+        <div onclick="selectPay('TRANSFERT')" id="pay-mobile" class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
+            <div class="flex gap-1 mb-1">
+                <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-4">
+                <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" class="h-4">
+            </div>
+            <span class="text-[8px] font-black uppercase">Mobile Money</span>
+        </div>
+        <div onclick="selectPay('CASH')" id="pay-cash" class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
+            <i class="fa-solid fa-hand-holding-dollar text-[#c5a059] mb-1"></i>
+            <span class="text-[8px] font-black uppercase">Cash à la livraison</span>
+        </div>
+    </div>
+    <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE">
+</div>
+
+<div id="payment-instruction" class="bg-blue-50 border border-blue-100 p-3 rounded-lg mt-2 hidden">
+    <p class="text-[9px] text-blue-800 leading-tight">
+        <i class="fa-solid fa-circle-info"></i> 
+        <strong>INFO :</strong> Les numéros de transfert (Wave/Orange) vous seront envoyés sur WhatsApp après validation.
+    </p>
+</div>
+           </select>
                 <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
                 <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
                     <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-5 w-5">
@@ -1028,6 +1047,13 @@ document.getElementById('spin').onclick = function() {
     }
 
     function validerCommande() {
+const zone = document.getElementById('zone-livraison').value;
+const modePay = document.getElementById('mode-pay').value;
+if (zone !== 'bouake' && modePay === 'CASH À LA LIVRAISON') {
+    alert("⚠️ Le paiement cash est réservé uniquement aux retraits en boutique. Pour une livraison à domicile, veuillez choisir le paiement par Transfert.");
+    return;
+}
+        
     const nom = document.getElementById('nom-client').value;
     const quartier = document.getElementById('tel-client').value;
     const zoneKey = document.getElementById('zone-livraison').value;
