@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+u<!DOCTYPE html>
 <html lang="fr" translate="no">
 <head>
     <meta charset="UTF-8">
@@ -607,7 +607,7 @@ function afficherResultatsRecherche(liste) {
         { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
     ];
 
-    let cart = [];
+    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
     let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
 
@@ -717,6 +717,8 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
         const toast = document.getElementById('toast');
         toast.classList.remove('opacity-0');
         setTimeout(() => toast.classList.add('opacity-0'), 2000);
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+
     }
 
     // --- LOGIQUE DE LA ROUE ---
@@ -849,6 +851,8 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
         if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
         document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         ouvrirPanier();
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+
     }
 
     function appliquerPromo() {
@@ -985,6 +989,10 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
 
     // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+        localStorage.removeItem('latyfa_cart');
+cart = [];
+document.getElementById('cart-count').innerText = 0;
+        
 }
 
 
@@ -1228,6 +1236,12 @@ function calculerTailleRec() {
         }
     }
 }
+    window.addEventListener('DOMContentLoaded', () => {
+    // Met à jour le compteur visuel (le petit rond rouge)
+    const count = cart.reduce((a, b) => a + b.qty, 0);
+    document.getElementById('cart-count').innerText = count;
+});
+
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
