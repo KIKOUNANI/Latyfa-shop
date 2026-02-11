@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr" translate="no">
 <head>
+    <meta property="og:title" content="Latyfa Boutique | Le Luxe à Abidjan">
+<meta property="og:description" content="Découvrez notre collection exclusive de bijoux et maroquinerie.">
+<meta property="og:image" content="https://i.postimg.cc/qMqtFGM2/1770342273452.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LATYFA BOUTIQUE | Officiel</title>
@@ -8,10 +11,17 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-        <style>
+        <style>  
          #main-detail-img, #main-detail-video {
     animation: fadeIn 0.4s ease-in-out;
 }
+         @keyframes badge-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+}
+.animate-badge {
+    animation: badge-bounce 0.6s ease-in-out;
+}   
 
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.98); }
@@ -541,6 +551,32 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
+    function gererOptionsProduit(p) {
+    const sizeArea = document.getElementById('size-area');
+    const colorArea = document.getElementById('color-area');
+    const selectSize = document.getElementById('select-size');
+    const selectColor = document.getElementById('select-color');
+
+    // Gestion des tailles/pointures
+    if (p.pointures || p.cat === 'vetements') {
+        sizeArea.classList.remove('hidden');
+        const options = p.pointures || ["S", "M", "L", "XL", "XXL"];
+        selectSize.innerHTML = options.map(s => `<option value="${s}">${s}</option>`).join('');
+    } else {
+        sizeArea.classList.add('hidden');
+        selectSize.innerHTML = "";
+    }
+
+    // Gestion des couleurs
+    if (p.couleurs && p.couleurs.length > 0) {
+        colorArea.classList.remove('hidden');
+        selectColor.innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
+    } else {
+        colorArea.classList.add('hidden');
+        selectColor.innerHTML = "";
+    }
+}
+
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
@@ -707,13 +743,24 @@ function afficherResultatsRecherche(liste) {
     toast.classList.remove('opacity-0');
     setTimeout(() => toast.classList.add('opacity-0'), 2000);
 }
+const badge = document.getElementById('cart-count');
+badge.innerText = cart.reduce((a, b) => a + b.qty, 0);
 
+// Relancer l'animation
+badge.classList.remove('animate-badge');
+void badge.offsetWidth; // "Magic hack" pour redémarrer une animation CSS
+badge.classList.add('animate-badge');
+
+// Sauvegarde immédiate
+localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+    
 
     // --- LOGIQUE DE LA ROUE ---
     const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
     const canva = document.getElementById('canvas');
     const ctx = canva.getContext('2d');
     const MAX_TENTATIVES = 1;
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
 
     function drawWheel() {
         const arc = 2 * Math.PI / prizes.length;
@@ -1218,6 +1265,40 @@ function calculerTailleRec() {
         }
     }
 }
+    window.onload = function() {
+    // 1. Charger les produits de l'Admin
+    const savedDb = localStorage.getItem('latyfa_db');
+    if (savedDb) products = JSON.parse(savedDb);
+
+    // 2. Charger et animer le panier
+    const savedCart = localStorage.getItem('latyfa_cart');
+    const badge = document.getElementById('cart-count');
+    
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
+        const totalArticles = cart.reduce((a, b) => a + b.qty, 0);
+        
+        if (totalArticles > 0) {
+            badge.innerText = totalArticles;
+            // On ajoute l'animation après un court délai pour qu'elle soit visible
+            setTimeout(() => {
+                badge.classList.add('animate-badge');
+            }, 1500);
+        }
+    }
+
+    // 3. Initialiser le reste
+    render(); 
+    updateVisitorCount();
+    drawWheel();
+    majAffichageChances();
+
+    // 4. Masquer le loader
+    setTimeout(() => {
+        document.getElementById('loader').classList.add('loader-hidden');
+    }, 1000);
+};
+
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
