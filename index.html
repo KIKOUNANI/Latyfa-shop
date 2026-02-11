@@ -541,6 +541,7 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
@@ -631,8 +632,16 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
                 
                 ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
                 
-                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
-                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <div class="relative group">
+    <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
+    
+    <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" 
+            class="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full shadow-md flex items-center justify-center transition-transform active:scale-90">
+        <i class="${wishlist.includes(p.id) ? 'fa-solid text-red-500' : 'fa-regular text-gray-400'} fa-heart" 
+           id="wish-icon-${p.id}"></i>
+    </button>
+</div>
+             <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
                 <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
                 
                 <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
@@ -1221,6 +1230,29 @@ function calculerTailleRec() {
             }
         }
     }
+}
+    function toggleWishlist(id) {
+    const index = wishlist.indexOf(id);
+    const icon = document.getElementById(`wish-icon-${id}`);
+    
+    if (index === -1) {
+        // On ajoute aux favoris
+        wishlist.push(id);
+        if(icon) {
+            icon.classList.replace('fa-regular', 'fa-solid');
+            icon.classList.replace('text-gray-400', 'text-red-500');
+        }
+    } else {
+        // On retire des favoris
+        wishlist.splice(index, 1);
+        if(icon) {
+            icon.classList.replace('fa-solid', 'fa-regular');
+            icon.classList.replace('text-red-500', 'text-gray-400');
+        }
+    }
+    
+    // On enregistre dans le téléphone de la cliente
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
 }
 </script>
 
