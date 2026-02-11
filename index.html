@@ -9,6 +9,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
+         #main-detail-img, #main-detail-video {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.thumb-active {
+    border-color: var(--latyfa-gold) !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}   
 :root { 
     /* MODIFIE CES 3 COULEURS ICI POUR TOUT CHANGER SUR LE SITE */
     --latyfa-gold: #c5a059;   /* Doré Luxe */
@@ -574,56 +588,38 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
             </div>`;
     }).join('');
 }
-
     function voirDetails(id) {
-        const p = products.find(x => x.id === id);
-        currentProduct = p;
-        document.getElementById('productDetailModal').classList.add('active');
-        document.getElementById('main-detail-img').src = p.images[0];// 1. On crée d'abord la liste des photos
-let htmlMiniatures = p.images.map(img => `
-    <img src="${img}" onclick="changerMedia('image', '${img}')" 
-    class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-[#c5a059] transition">
-`).join('');
-if(p.video) {
-    htmlMiniatures += `
-        <div onclick="changerMedia('video', '${p.video}')" 
-        class="h-14 w-14 bg-black rounded flex flex-col items-center justify-center cursor-pointer border border-gray-800 text-[#c5a059] transition hover:bg-gray-900">
-            <i class="fa-solid fa-play text-[10px]"></i>
-            <span class="text-[7px] font-black mt-1">VIDEO</span>
-        </div>
-    `;
-}
-document.getElementById('thumbnails').innerHTML = htmlMiniatures;
-        document.getElementById('detail-name').innerText = p.name;
-        document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
-        document.getElementById('detail-desc').innerText = p.description;
+    const p = products.find(x => x.id === id);
+    currentProduct = p;
+    document.getElementById('productDetailModal').classList.add('active');
+    
+    // Reset du média principal
+    const mediaContainer = document.getElementById('main-detail-img').parentElement;
+    mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
+    // Génération des miniatures avec détection d'index
+    let htmlMiniatures = p.images.map((img, index) => `
+        <img src="${img}" onclick="changerMedia('image', '${img}', this)" 
+        class="miniature-item h-16 w-16 object-cover rounded-lg cursor-pointer border-2 border-transparent transition-all ${index === 0 ? 'thumb-active' : ''}">
+    `).join('');
 
-        const sArea = document.getElementById('size-area');
-        const opts = p.tailles || p.pointures || [];
-        if(opts.length > 0) {
-            sArea.classList.remove('hidden');
-            document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
-        } else { sArea.classList.add('hidden'); }
-
-        const cArea = document.getElementById('color-area');
-        if(p.couleurs) {
-            cArea.classList.remove('hidden');
-            document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
-        } else { cArea.classList.add('hidden'); }
-
-        const urlSite = window.location.href;
-        const msgShare = `Regarde ce magnifique article chez *LATYFA Business* :\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\nLien : ${urlSite}`;
-        document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=${encodeURIComponent(msgShare)}`, "_blank");
-        document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`, "_blank");
-        // À mettre à la fin de ta fonction voirDetails
-const btnAjout = document.querySelector('button[onclick="ajouterDepuisDetail()"]');
-if(p.enStock === false) {
-    btnAjout.style.display = "none";
-} else {
-    btnAjout.style.display = "block";
-}
+    if(p.video) {
+        htmlMiniatures += `
+            <div onclick="changerMedia('video', '${p.video}', this)" 
+            class="miniature-item h-16 w-16 bg-black rounded-lg flex flex-col items-center justify-center cursor-pointer border-2 border-transparent text-[#c5a059] transition-all">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span class="text-[7px] font-black mt-1 uppercase">Vidéo</span>
+            </div>
+        `;
     }
+    document.getElementById('thumbnails').innerHTML = htmlMiniatures;
+    // Remplissage des textes (Nom, Prix, Desc)
+    document.getElementById('detail-name').innerText = p.name;
+    document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
+    document.getElementById('detail-desc').innerText = p.description;
 
+    // Gestion des tailles/couleurs
+    gererOptionsProduit(p);
+}
     function ajouterDepuisDetail() {
         const size = document.getElementById('select-size').value || "";
         const color = document.getElementById('select-color').value || "";
@@ -1107,21 +1103,27 @@ function chargerHistorique() {
         alert("✅ Historique vidé avec succès.");
     }
 }
-    function changerMedia(type, source) {
+    function changerMedia(type, source, element) {
     const container = document.getElementById('main-detail-img').parentElement;
     
+    // 1. Mise à jour visuelle des miniatures
+    document.querySelectorAll('.miniature-item').forEach(el => el.classList.remove('thumb-active'));
+    element.classList.add('thumb-active');
+
+    // 2. Changement du média avec animation
     if(type === 'video') {
         container.innerHTML = `
-            <video id="main-detail-video" src="${source}" controls autoplay loop 
-            class="w-full h-80 object-cover rounded-xl shadow-md border"></video>
+            <video id="main-detail-video" src="${source}" controls autoplay loop muted
+            class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn"></video>
         `;
     } else {
         container.innerHTML = `
             <img id="main-detail-img" src="${source}" 
-            class="w-full h-80 object-cover rounded-xl shadow-md border">
+            class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn">
         `;
     }
 }
+
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
