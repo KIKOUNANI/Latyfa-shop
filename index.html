@@ -481,14 +481,23 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     <div class="grid grid-cols-2 gap-2">
         <div onclick="selectPay('TRANSFERT')" id="pay-mobile" 
      class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
-    <div class="flex gap-2 mb-1 items-center">
-        <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-5 w-5 object-contain" alt="Wave">
-        
-        <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" class="h-5 w-5 object-contain" alt="Orange Money">
-        
-        <img src="https://i.postimg.cc/8P8fJ5jJ/mtn-momo.png" class="h-5 w-5 object-contain" alt="MTN">
+    <div class="flex gap-3 mb-1 items-center">
+        <div class="relative flex gap-2">
+            <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" 
+                 onerror="this.style.display='none'; document.getElementById('fallback-icon').style.display='block'" 
+                 class="h-5 w-5 object-contain">
+            <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" 
+                 onerror="this.style.display='none'" 
+                 class="h-5 w-5 object-contain">
+            <img src="https://i.postimg.cc/8P8fJ5jJ/mtn-momo.png" 
+                 onerror="this.style.display='none'" 
+                 class="h-5 w-5 object-contain">
+            
+            <i id="fallback-icon" class="fa-solid fa-mobile-screen-button text-[#c5a059] text-xl" style="display:none;"></i>
+        </div>
     </div>
     <span class="text-[8px] font-black uppercase">Mobile Money</span>
+    <span class="text-[6px] text-gray-400 font-bold">(Wave / Orange / MTN)</span>
 </div>
       <div onclick="selectPay('CASH')" id="pay-cash" 
              class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
