@@ -693,6 +693,11 @@ document.getElementById('detail-desc').insertAdjacentHTML('beforebegin', `
 
     // Gestion des tailles/couleurs
     gererOptionsProduit(p);
+}const helper = document.getElementById('size-helper-container');
+if (p.cat === 'vetements') {
+    helper.classList.remove('hidden'); // On montre si c'est un vêtement
+} else {
+    helper.classList.add('hidden');    // On cache si c'est un sac ou bijoux
 }
     function ajouterDepuisDetail() {
         const size = document.getElementById('select-size').value || "";
