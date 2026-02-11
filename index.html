@@ -1397,7 +1397,29 @@ setTimeout(() => {
     setInterval(lancerNotificationGain, 35000);
 }, 10000);
 
+function selectPay(mode) {
+    const mobileBtn = document.getElementById('pay-mobile');
+    const cashBtn = document.getElementById('pay-cash');
+    const inputPay = document.getElementById('mode-pay'); // Le champ caché
+    const instruction = document.getElementById('payment-instruction');
 
+    if(mode === 'TRANSFERT') {
+        inputPay.value = "TRANSFERT MOBILE (WAVE/ORANGE)";
+        mobileBtn.style.borderColor = "#c5a059";
+        mobileBtn.style.backgroundColor = "#fffaf0";
+        cashBtn.style.borderColor = "#f3f4f6";
+        cashBtn.style.backgroundColor = "transparent";
+        instruction.classList.remove('hidden');
+    } else {
+        inputPay.value = "CASH À LA LIVRAISON";
+        cashBtn.style.borderColor = "#c5a059";
+        cashBtn.style.backgroundColor = "#fffaf0";
+        mobileBtn.style.borderColor = "#f3f4f6";
+        mobileBtn.style.backgroundColor = "transparent";
+        instruction.classList.add('hidden');
+    }
+    }
+        
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
