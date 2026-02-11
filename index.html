@@ -614,22 +614,22 @@ function afficherResultatsRecherche(liste) {
     // --- BOUTIQUE ---
     function render(filter = 'tous') {
     const grid = document.getElementById('product-grid');
-    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
 
+    // C'EST CETTE BOUCLE .MAP ICI :
     grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
-        // Calcul pour le badge Nouveauté
         const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
         
         return `
-${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 PLUS QUE 2 EN STOCK !</span>' : ''}
-
             <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
                 
-                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
-                
-                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
-                
-                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
+                <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" 
+                        class="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full shadow-md flex items-center justify-center z-20 active:scale-90 transition-transform">
+                    <i class="${wishlist.includes(p.id) ? 'fa-solid text-red-500' : 'fa-regular text-gray-400'} fa-heart" 
+                       id="wish-icon-${p.id}"></i>
+                </button>
+
+                ${estNouveau ? '<span class="absolute top-2 left-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
                 
                 <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
                 <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
@@ -639,79 +639,75 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
                     ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
                 </div>
             </div>`;
-    }).join('');
+    }).join(''); // Fin de la boucle .map
 }
     function voirDetails(id) {
     const p = products.find(x => x.id === id);
     currentProduct = p;
     document.getElementById('productDetailModal').classList.add('active');
-        // À ajouter dans ta fonction voirDetails
-const stockAlea = Math.floor(Math.random() * 5) + 2; 
-document.getElementById('detail-desc').insertAdjacentHTML('beforebegin', `
-    <p class="text-[10px] font-bold text-red-500 mb-2">
-        <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${stockAlea} articles disponibles !
-    </p>
-`);
     
-    // Reset du média principal
+    // 1. GESTION DE L'URGENCE (STOCK)
+    const stockMsg = document.getElementById('urgent-stock-msg');
+    if(stockMsg) stockMsg.remove(); // On nettoie l'ancien
+    
+    const stockAlea = Math.floor(Math.random() * 5) + 2; 
+    document.getElementById('detail-price').insertAdjacentHTML('beforebegin', `
+        <p id="urgent-stock-msg" class="text-[10px] font-bold text-red-500 mb-2 animate-pulse">
+            <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${stockAlea} articles disponibles !
+        </p>
+    `);
+
+    // 2. AFFICHAGE DYNAMIQUE DU CALCULATEUR DE TAILLE
+    const helper = document.getElementById('size-helper-container');
+    if (helper) {
+        // On ne l'affiche que si la catégorie est 'vetements'
+        helper.style.display = (p.cat === 'vetements') ? 'block' : 'none';
+    }
+
+    // ... (Reste de ton code pour les images et textes) ...
     const mediaContainer = document.getElementById('main-detail-img').parentElement;
     mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
-    // Génération des miniatures avec détection d'index
+    
     let htmlMiniatures = p.images.map((img, index) => `
         <img src="${img}" onclick="changerMedia('image', '${img}', this)" 
         class="miniature-item h-16 w-16 object-cover rounded-lg cursor-pointer border-2 border-transparent transition-all ${index === 0 ? 'thumb-active' : ''}">
     `).join('');
 
     if(p.video) {
-        htmlMiniatures += `
-            <div onclick="changerMedia('video', '${p.video}', this)" 
-            class="miniature-item h-16 w-16 bg-black rounded-lg flex flex-col items-center justify-center cursor-pointer border-2 border-transparent text-[#c5a059] transition-all">
-                <i class="fa-solid fa-play text-xs"></i>
-                <span class="text-[7px] font-black mt-1 uppercase">Vidéo</span>
-            </div>
-        `;
+        htmlMiniatures += `<div onclick="changerMedia('video', '${p.video}', this)" class="miniature-item h-16 w-16 bg-black rounded-lg flex flex-col items-center justify-center cursor-pointer border-2 border-transparent text-[#c5a059] transition-all"><i class="fa-solid fa-play text-xs"></i><span class="text-[7px] font-black mt-1 uppercase">Vidéo</span></div>`;
     }
     document.getElementById('thumbnails').innerHTML = htmlMiniatures;
-    // Remplissage des textes (Nom, Prix, Desc)
     document.getElementById('detail-name').innerText = p.name;
     document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
     document.getElementById('detail-desc').innerText = p.description;
 
-    // Gestion des tailles/couleurs
     gererOptionsProduit(p);
 }
+
     function ajouterDepuisDetail() {
-        const size = document.getElementById('select-size').value || "";
-        const color = document.getElementById('select-color').value || "";
-        const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
-        function ajouterDepuisDetail() {
-    // ... ton code existant (récupération taille/couleur) ...
-
-    // AJOUT DU SON
     const sound = document.getElementById('cart-sound');
-    sound.currentTime = 0; // Réinitialise pour pouvoir cliquer plusieurs fois vite
-    sound.play().catch(e => console.log("L'utilisateur doit interagir d'abord avec le site"));
-
-    // ... le reste de ta fonction ...
-}
-        
-        const index = cart.findIndex(x => x.label === label);
-        if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
-        
-        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
-        
-        const cartIcon = document.getElementById('cart-count').parentElement;
-        cartIcon.classList.add('animate-cart');
-        setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
-
-        document.getElementById('productDetailModal').classList.remove('active');
-
-        if (navigator.vibrate) navigator.vibrate(50);
-        
-        const toast = document.getElementById('toast');
-        toast.classList.remove('opacity-0');
-        setTimeout(() => toast.classList.add('opacity-0'), 2000);
+    if(sound) {
+        sound.currentTime = 0;
+        sound.play().catch(() => console.log("Interaction requise pour le son"));
     }
+
+    // Ton code existant de gestion du panier...
+    const size = document.getElementById('select-size').value || "";
+    const color = document.getElementById('select-color').value || "";
+    const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
+    
+    const index = cart.findIndex(x => x.label === label);
+    if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
+    
+    document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+    document.getElementById('productDetailModal').classList.remove('active');
+    
+    // Effet Toast
+    const toast = document.getElementById('toast');
+    toast.classList.remove('opacity-0');
+    setTimeout(() => toast.classList.add('opacity-0'), 2000);
+}
+
 
     // --- LOGIQUE DE LA ROUE ---
     const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
