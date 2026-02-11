@@ -694,34 +694,46 @@ actionArea.insertAdjacentHTML('afterend', `
         <div class="flex items-center justify-between px-2">
             <div class="flex items-center gap-1 text-[8px] font-bold text-gray-400 uppercase">
                 <i class="fa-solid fa-shield-halved text-[#c5a059]"></i> 
-                Paiement 100% Sécurisé
-            </div>
-            <div class="flex gap-2 opacity-50 grayscale hover:grayscale-0 transition-all">
-                <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-3" alt="Wave">
-                <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" class="h-3" alt="Orange Money">
-            </div>
-        </div>
-    </div>
-`);
+function voirDetails(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    currentProduct = p;
+    document.getElementById('productDetailModal').classList.add('active');
 
-            <p id="dynamic-stock-msg" class="text-[10px] font-bold text-red-500 mb-2">
-                <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${p.quantiteRestante} articles en stock !
+    // --- 1. COMPTEUR DE VUES ---
+    const vues = Math.floor(Math.random() * 17) + 8;
+    const oldVues = document.getElementById('view-counter');
+    if(oldVues) oldVues.remove();
+    
+    document.getElementById('detail-name').innerText = p.name;
+    document.getElementById('detail-name').insertAdjacentHTML('afterend', `
+        <div id="view-counter" class="flex items-center gap-2 mt-2 bg-gray-50 w-fit px-3 py-1 rounded-full border border-gray-100">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <p class="text-[9px] font-black uppercase text-gray-500 tracking-tighter">
+                <span id="nb-vues-text" class="text-gray-900">${vues} personnes</span> consultent cet article
+            </p>
+        </div>
+    `);
+
+    // --- 2. GESTION DU STOCK MANUEL ---
+    const oldStockMsg = document.getElementById('dynamic-stock-msg');
+    if(oldStockMsg) oldStockMsg.remove();
+
+    if(p.stockBas) {
+        document.getElementById('detail-price').insertAdjacentHTML('afterend', `
+            <p id="dynamic-stock-msg" class="text-[10px] font-bold text-red-500 mt-2 italic animate-pulse">
+                <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${p.quantiteRestante || 2} articles en stock !
             </p>
         `);
-        setTimeout(() => {
-        const counterSpan = document.getElementById('nb-vues-text');
-        if(counterSpan) {
-            const currentVues = parseInt(counterSpan.innerText);
-            // On ajoute 1 ou 2 personnes de plus après 5 secondes
-            counterSpan.innerText = (currentVues + Math.floor(Math.random() * 2) + 1) + " personnes";
-        }
-    }, 5000); 
     }
-    
-    // Reset du média principal
+
+    // --- 3. IMAGES ET VIDÉOS ---
     const mediaContainer = document.getElementById('main-detail-img').parentElement;
     mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
-    // Génération des miniatures avec détection d'index
+    
     let htmlMiniatures = p.images.map((img, index) => `
         <img src="${img}" onclick="changerMedia('image', '${img}', this)" 
         class="miniature-item h-16 w-16 object-cover rounded-lg cursor-pointer border-2 border-transparent transition-all ${index === 0 ? 'thumb-active' : ''}">
@@ -737,14 +749,72 @@ actionArea.insertAdjacentHTML('afterend', `
         `;
     }
     document.getElementById('thumbnails').innerHTML = htmlMiniatures;
-    // Remplissage des textes (Nom, Prix, Desc)
-    document.getElementById('detail-name').innerText = p.name;
+
+    // --- 4. DESCRIPTION ET BANNIÈRE DE CONFIANCE ---
     document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
     document.getElementById('detail-desc').innerText = p.description;
 
-    // Gestion des tailles/couleurs
+    const actionArea = document.getElementById('detail-desc');
+    const existingBanner = document.getElementById('trust-banner-container');
+    if(existingBanner) existingBanner.remove();
+
+    actionArea.insertAdjacentHTML('afterend', `
+        <div id="trust-banner-container" class="mt-6">
+            <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-4 hover:scale-[1.02] transition-transform">
+                Ajouter au panier
+            </button>
+            <div class="flex items-center gap-3 bg-green-50 p-3 rounded-xl border border-green-100 mb-4">
+                <div class="h-8 w-8 bg-green-500 text-white rounded-full flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black uppercase text-gray-800">Satisfait ou Échangé</p>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase tracking-tighter">Vérifiez votre colis à la livraison</p>
+                </div>
+            </div>
+        </div>
+    `);
+
+    // --- 5. OPTIONS (Tailles/Couleurs) ---
     gererOptionsProduit(p);
+
+    // --- 6. MISE À JOUR LIVE DES VUES ---
+    setTimeout(() => {
+        const counterSpan = document.getElementById('nb-vues-text');
+        if(counterSpan) {
+            const currentVues = parseInt(counterSpan.innerText);
+            counterSpan.innerText = (currentVues + 1) + " personnes";
+        }
+    }, 5000);
 }
+function gererOptionsProduit(p) {
+    const sizeArea = document.getElementById('size-area');
+    const colorArea = document.getElementById('color-area');
+    const selectSize = document.getElementById('select-size');
+    const selectColor = document.getElementById('select-color');
+
+    // Gestion des Tailles / Pointures
+    if (p.pointures && p.pointures.length > 0) {
+        sizeArea.classList.remove('hidden');
+        selectSize.innerHTML = p.pointures.map(s => `<option value="${s}">${s}</option>`).join('');
+    } else if (p.tailles && p.tailles.length > 0) {
+        sizeArea.classList.remove('hidden');
+        selectSize.innerHTML = p.tailles.map(t => `<option value="${t}">${t}</option>`).join('');
+    } else {
+        sizeArea.classList.add('hidden');
+        selectSize.innerHTML = "";
+    }
+
+    // Gestion des Couleurs
+    if (p.couleurs && p.couleurs.length > 0) {
+        colorArea.classList.remove('hidden');
+        selectColor.innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
+    } else {
+        colorArea.classList.add('hidden');
+        selectColor.innerHTML = "";
+    }
+}
+
     function ajouterDepuisDetail() {
         const size = document.getElementById('select-size').value || "";
         const color = document.getElementById('select-color').value || "";
