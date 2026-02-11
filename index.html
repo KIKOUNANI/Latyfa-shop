@@ -477,22 +477,25 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
                 <div class="space-y-2">
     <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
     <div class="grid grid-cols-2 gap-2">
-        <div onclick="selectPay('TRANSFERT')" id="pay-mobile" class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
+        <div onclick="selectPay('TRANSFERT')" id="pay-mobile" 
+             class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all duration-300">
             <div class="flex gap-1 mb-1">
                 <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-4">
                 <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" class="h-4">
             </div>
             <span class="text-[8px] font-black uppercase">Mobile Money</span>
         </div>
-        <div onclick="selectPay('CASH')" id="pay-cash" class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
-            <i class="fa-solid fa-hand-holding-dollar text-[#c5a059] mb-1"></i>
+
+        <div onclick="selectPay('CASH')" id="pay-cash" 
+             class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all duration-300">
+            <i class="fa-solid fa-hand-holding-dollar text-gray-400 mb-1 text-base" id="cash-icon"></i>
             <span class="text-[8px] font-black uppercase">Cash à la livraison</span>
         </div>
     </div>
     <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE">
 </div>
 
-<div id="payment-instruction" class="bg-blue-50 border border-blue-100 p-3 rounded-lg mt-2 hidden">
+<div id="payment-instruction" class="bg-blue-50 border border-blue-100 p-3 rounded-lg mt-2">
     <p class="text-[9px] text-blue-800 leading-tight">
         <i class="fa-solid fa-circle-info"></i> 
         <strong>INFO :</strong> Les numéros de transfert (Wave/Orange) vous seront envoyés sur WhatsApp après validation.
@@ -1400,25 +1403,39 @@ setTimeout(() => {
 function selectPay(mode) {
     const mobileBtn = document.getElementById('pay-mobile');
     const cashBtn = document.getElementById('pay-cash');
-    const inputPay = document.getElementById('mode-pay'); // Le champ caché
+    const cashIcon = document.getElementById('cash-icon');
+    const inputPay = document.getElementById('mode-pay');
     const instruction = document.getElementById('payment-instruction');
 
     if(mode === 'TRANSFERT') {
         inputPay.value = "TRANSFERT MOBILE (WAVE/ORANGE)";
-        mobileBtn.style.borderColor = "#c5a059";
-        mobileBtn.style.backgroundColor = "#fffaf0";
-        cashBtn.style.borderColor = "#f3f4f6";
-        cashBtn.style.backgroundColor = "transparent";
+        
+        // Allumer Mobile
+        mobileBtn.classList.replace('border-gray-100', 'border-[#c5a059]');
+        mobileBtn.classList.add('bg-orange-50');
+        
+        // Éteindre Cash
+        cashBtn.classList.replace('border-[#c5a059]', 'border-gray-100');
+        cashBtn.classList.remove('bg-orange-50');
+        cashIcon.classList.replace('text-[#c5a059]', 'text-gray-400');
+        
         instruction.classList.remove('hidden');
     } else {
         inputPay.value = "CASH À LA LIVRAISON";
-        cashBtn.style.borderColor = "#c5a059";
-        cashBtn.style.backgroundColor = "#fffaf0";
-        mobileBtn.style.borderColor = "#f3f4f6";
-        mobileBtn.style.backgroundColor = "transparent";
+        
+        // Allumer Cash
+        cashBtn.classList.replace('border-gray-100', 'border-[#c5a059]');
+        cashBtn.classList.add('bg-orange-50');
+        cashIcon.classList.replace('text-gray-400', 'text-[#c5a059]');
+        
+        // Éteindre Mobile
+        mobileBtn.classList.replace('border-[#c5a059]', 'border-gray-100');
+        mobileBtn.classList.remove('bg-orange-50');
+        
         instruction.classList.add('hidden');
     }
-    }
+}
+
         
 </script>
 
