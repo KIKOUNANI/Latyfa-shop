@@ -695,12 +695,13 @@ actionArea.insertAdjacentHTML('afterend', `
             <div class="flex items-center gap-1 text-[8px] font-bold text-gray-400 uppercase">
                 <i class="fa-solid fa-shield-halved text-[#c5a059]"></i> 
 function voirDetails(id) {
+function voirDetails(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
     currentProduct = p;
     document.getElementById('productDetailModal').classList.add('active');
 
-    // --- 1. COMPTEUR DE VUES ---
+    // 1. COMPTEUR DE VUES
     const vues = Math.floor(Math.random() * 17) + 8;
     const oldVues = document.getElementById('view-counter');
     if(oldVues) oldVues.remove();
@@ -718,7 +719,7 @@ function voirDetails(id) {
         </div>
     `);
 
-    // --- 2. GESTION DU STOCK MANUEL ---
+    // 2. GESTION DU STOCK MANUEL
     const oldStockMsg = document.getElementById('dynamic-stock-msg');
     if(oldStockMsg) oldStockMsg.remove();
 
@@ -730,7 +731,7 @@ function voirDetails(id) {
         `);
     }
 
-    // --- 3. IMAGES ET VIDÉOS ---
+    // 3. IMAGES ET VIDÉOS
     const mediaContainer = document.getElementById('main-detail-img').parentElement;
     mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
     
@@ -750,15 +751,14 @@ function voirDetails(id) {
     }
     document.getElementById('thumbnails').innerHTML = htmlMiniatures;
 
-    // --- 4. DESCRIPTION ET BANNIÈRE DE CONFIANCE ---
+    // 4. DESCRIPTION ET BANNIÈRE DE CONFIANCE
     document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
     document.getElementById('detail-desc').innerText = p.description;
 
-    const actionArea = document.getElementById('detail-desc');
     const existingBanner = document.getElementById('trust-banner-container');
     if(existingBanner) existingBanner.remove();
 
-    actionArea.insertAdjacentHTML('afterend', `
+    document.getElementById('detail-desc').insertAdjacentHTML('afterend', `
         <div id="trust-banner-container" class="mt-6">
             <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-4 hover:scale-[1.02] transition-transform">
                 Ajouter au panier
@@ -775,18 +775,10 @@ function voirDetails(id) {
         </div>
     `);
 
-    // --- 5. OPTIONS (Tailles/Couleurs) ---
+    // 5. OPTIONS (Garde l'appel vers ta fonction de tailles/couleurs)
     gererOptionsProduit(p);
-
-    // --- 6. MISE À JOUR LIVE DES VUES ---
-    setTimeout(() => {
-        const counterSpan = document.getElementById('nb-vues-text');
-        if(counterSpan) {
-            const currentVues = parseInt(counterSpan.innerText);
-            counterSpan.innerText = (currentVues + 1) + " personnes";
-        }
-    }, 5000);
 }
+
 function gererOptionsProduit(p) {
     const sizeArea = document.getElementById('size-area');
     const colorArea = document.getElementById('color-area');
