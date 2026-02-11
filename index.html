@@ -588,11 +588,14 @@ function afficherResultatsRecherche(liste) {
     };
 
     let products = [
-        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+        Initialisation intelligente : priorité au stockage admin, sinon catalogue par défaut
+const defaultProducts = [
+    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe.", dateAjout: Date.now() },
         { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
         { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
         { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
         { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
+    let products = JSON.parse(localStorage.getItem('latyfa_db')) || defaultProducts;
     ];
 
     let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
@@ -1365,6 +1368,17 @@ function majBadgePanier() {
 }
 // 2. L'appel (le démarrage) : INDISPENSABLE
 majBadgePanier();
+    function changerMedia(type, url) {
+    const mainImg = document.getElementById('main-detail-img');
+    if (type === 'image') {
+        mainImg.src = url;
+        // Si tu avais un conteneur vidéo, il faudrait le cacher ici
+    } else {
+        // Optionnel : ouvrir la vidéo dans un nouvel onglet ou l'injecter dans la modale
+        window.open(url, '_blank');
+    }
+}
+
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
