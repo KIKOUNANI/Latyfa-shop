@@ -29,6 +29,16 @@
     --latyfa-dark: #1a1a1a;   /* Noir Profond */
     --latyfa-accent: #ff6600; /* Couleur d'accent (Orange/Prix) */
 }
+           @keyframes pulse-gold {
+    0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(197, 160, 89, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+}
+
+.ali-gradient {
+    background: linear-gradient(90deg, #c5a059 0%, #e2c286 100%);
+    animation: pulse-gold 2s infinite;
+} 
 
 body { 
     background-color: #fcfcfc; 
@@ -292,6 +302,36 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     <i class="fa-solid fa-ruler-combined"></i> Guide des tailles
 </button>
                     <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-6">Ajouter au panier</button>
+                    <div class="mt-6 grid grid-cols-3 gap-2 border-t pt-4">
+    <div class="text-center">
+        <div class="text-[#c5a059] text-lg mb-1">
+            <i class="fa-solid fa-shield-check"></i>
+        </div>
+        <p class="text-[8px] font-black uppercase leading-tight text-gray-500">Qualité<br>Garantie</p>
+    </div>
+    <div class="text-center border-x border-gray-100">
+        <div class="text-[#c5a059] text-lg mb-1">
+            <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <p class="text-[8px] font-black uppercase leading-tight text-gray-500">Livraison<br>Express</p>
+    </div>
+    <div class="text-center">
+        <div class="text-[#c5a059] text-lg mb-1">
+            <i class="fa-solid fa-headset"></i>
+        </div>
+        <p class="text-[8px] font-black uppercase leading-tight text-gray-500">Support<br>WhatsApp 7j/7</p>
+    </div>
+</div>
+
+<div class="mt-4 flex items-center justify-center gap-3 bg-gray-50 p-2 rounded-lg border border-gray-100">
+    <span class="text-[7px] font-bold uppercase tracking-widest text-gray-400">Paiement sécurisé via</span>
+    <div class="flex gap-2 opacity-60 grayscale hover:grayscale-0 transition-all">
+        <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-4" alt="Wave">
+        <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" class="h-4" alt="Orange Money">
+        <img src="https://i.postimg.cc/8P8fJ5jJ/mtn-momo.png" class="h-4" alt="MTN">
+    </div>
+</div>
+
                     <div class="flex items-center justify-center gap-6 pt-4 border-t">
                         <button id="share-wa" class="text-[#25D366] text-xl"><i class="fa-brands fa-whatsapp"></i></button>
                         <button id="share-fb" class="text-[#1877F2] text-xl"><i class="fa-brands fa-facebook"></i></button>
@@ -605,6 +645,13 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
     const p = products.find(x => x.id === id);
     currentProduct = p;
     document.getElementById('productDetailModal').classList.add('active');
+        // À ajouter dans ta fonction voirDetails
+const stockAlea = Math.floor(Math.random() * 5) + 2; 
+document.getElementById('detail-desc').insertAdjacentHTML('beforebegin', `
+    <p class="text-[10px] font-bold text-red-500 mb-2">
+        <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${stockAlea} articles disponibles !
+    </p>
+`);
     
     // Reset du média principal
     const mediaContainer = document.getElementById('main-detail-img').parentElement;
