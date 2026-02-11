@@ -461,21 +461,24 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
             <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Ma Commande</h2>
             <div id="cart-items" class="space-y-4 mb-6 border-b pb-4"></div>
             <div id="checkout-form" style="display:none;" class="space-y-4">
-                <div class="flex gap-2">
-    <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
-    <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
-</div>
-               <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
+    <div class="flex gap-2">
+        <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
+        <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
+    </div>
+    <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
+
+    <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
     <input type="tel" id="tel-client" placeholder="Numéro WhatsApp ou Quartier *" class="w-full border p-3 rounded-lg text-sm">
-<div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
-                <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
-                <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
-                    <option value="">-- CHOISIR VOTRE ZONE --</option>
-                    <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
-                    <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-                    <option value="interieur">Intérieur pays (3.000 F)</option>
-                    <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
-                </select>
+
+    <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
+        <option value="">-- CHOISIR VOTRE ZONE --</option>
+        <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+        <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+        <option value="interieur">Intérieur pays (3.000 F)</option>
+        <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
+    </select>
+    
+    <p id="communes-info" class="hidden text-[9px] text-blue-600 font-bold italic px-2 uppercase"></p>
                 <div class="space-y-2">
     <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
     <div class="grid grid-cols-2 gap-2">
