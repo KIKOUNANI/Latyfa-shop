@@ -645,6 +645,20 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
     const p = products.find(x => x.id === id);
     currentProduct = p;
     document.getElementById('productDetailModal').classList.add('active');
+        const vues = Math.floor(Math.random() * 17) + 8;
+    const oldVues = document.getElementById('view-counter');
+    if(oldVues) oldVues.remove();
+        document.getElementById('detail-name').insertAdjacentHTML('afterend',
+        <div id="view-counter" class="flex items-center gap-2 mt-2 bg-gray-50 w-fit px-3 py-1 rounded-full border border-gray-100">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <p class="text-[9px] font-black uppercase text-gray-500 tracking-tighter">
+                <span class="text-gray-900">${vues} personnes</span> consultent cet article
+            </p>
+        </div>
+    );
     
     // On nettoie l'ancien message
     const oldStockMsg = document.getElementById('dynamic-stock-msg');
@@ -653,10 +667,55 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
     // On affiche SEULEMENT si tu as coché la case dans l'admin
     if(p.stockBas) {
         document.getElementById('detail-desc').insertAdjacentHTML('beforebegin', `
+        // On sélectionne la zone où on veut mettre le bouton (juste après la description)
+const actionArea = document.getElementById('detail-desc');
+
+// On nettoie ce qui pourrait exister pour éviter les doublons
+const existingBanner = document.getElementById('trust-banner-container');
+if(existingBanner) existingBanner.remove();
+
+// On insère le bouton d'ajout ET la bannière de confiance
+actionArea.insertAdjacentHTML('afterend', `
+    <div id="trust-banner-container" class="mt-6">
+        <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-4 hover:scale-[1.02] transition-transform">
+            Ajouter au panier
+        </button>
+
+        <div class="flex items-center gap-3 bg-green-50 p-3 rounded-xl border border-green-100 mb-4">
+            <div class="h-8 w-8 bg-green-500 text-white rounded-full flex items-center justify-center shadow-sm">
+                <i class="fa-solid fa-arrows-rotate text-xs"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black uppercase text-gray-800">Satisfait ou Échangé</p>
+                <p class="text-[8px] text-gray-500 font-bold uppercase tracking-tighter">Vérifiez votre colis à la livraison</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between px-2">
+            <div class="flex items-center gap-1 text-[8px] font-bold text-gray-400 uppercase">
+                <i class="fa-solid fa-shield-halved text-[#c5a059]"></i> 
+                Paiement 100% Sécurisé
+            </div>
+            <div class="flex gap-2 opacity-50 grayscale hover:grayscale-0 transition-all">
+                <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-3" alt="Wave">
+                <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" class="h-3" alt="Orange Money">
+            </div>
+        </div>
+    </div>
+`);
+
             <p id="dynamic-stock-msg" class="text-[10px] font-bold text-red-500 mb-2">
                 <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${p.quantiteRestante} articles en stock !
             </p>
         `);
+        setTimeout(() => {
+        const counterSpan = document.getElementById('nb-vues-text');
+        if(counterSpan) {
+            const currentVues = parseInt(counterSpan.innerText);
+            // On ajoute 1 ou 2 personnes de plus après 5 secondes
+            counterSpan.innerText = (currentVues + Math.floor(Math.random() * 2) + 1) + " personnes";
+        }
+    }, 5000); 
     }
     
     // Reset du média principal
