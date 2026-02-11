@@ -465,6 +465,8 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
     <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
 </div>
+               <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
+    <input type="tel" id="tel-client" placeholder="Numéro WhatsApp ou Quartier *" class="w-full border p-3 rounded-lg text-sm">
 <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
                 <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
                 <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
@@ -478,28 +480,21 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
     <div class="grid grid-cols-2 gap-2">
         <div onclick="selectPay('TRANSFERT')" id="pay-mobile" 
-             class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all duration-300">
-            <div class="flex gap-1 mb-1">
-                <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-4">
-                <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" class="h-4">
+             class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
+            <div class="flex gap-2 mb-1">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Wave_Logo_Blue.png" class="h-5 w-5 object-contain">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Orange_logo.svg/1024px-Orange_logo.svg.png" class="h-5 w-5 object-contain">
             </div>
             <span class="text-[8px] font-black uppercase">Mobile Money</span>
         </div>
 
         <div onclick="selectPay('CASH')" id="pay-cash" 
-             class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all duration-300">
-            <i class="fa-solid fa-hand-holding-dollar text-gray-400 mb-1 text-base" id="cash-icon"></i>
+             class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
+            <i class="fa-solid fa-hand-holding-dollar text-gray-400 mb-1 text-lg" id="cash-icon"></i>
             <span class="text-[8px] font-black uppercase">Cash à la livraison</span>
         </div>
     </div>
     <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE">
-</div>
-
-<div id="payment-instruction" class="bg-blue-50 border border-blue-100 p-3 rounded-lg mt-2">
-    <p class="text-[9px] text-blue-800 leading-tight">
-        <i class="fa-solid fa-circle-info"></i> 
-        <strong>INFO :</strong> Les numéros de transfert (Wave/Orange) vous seront envoyés sur WhatsApp après validation.
-    </p>
 </div>
            </select>
                 <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
