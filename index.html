@@ -645,13 +645,19 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
     const p = products.find(x => x.id === id);
     currentProduct = p;
     document.getElementById('productDetailModal').classList.add('active');
-        // À ajouter dans ta fonction voirDetails
-const stockAlea = Math.floor(Math.random() * 5) + 2; 
-document.getElementById('detail-desc').insertAdjacentHTML('beforebegin', `
-    <p class="text-[10px] font-bold text-red-500 mb-2">
-        <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${stockAlea} articles disponibles !
-    </p>
-`);
+    
+    // On nettoie l'ancien message
+    const oldStockMsg = document.getElementById('dynamic-stock-msg');
+    if(oldStockMsg) oldStockMsg.remove();
+
+    // On affiche SEULEMENT si tu as coché la case dans l'admin
+    if(p.stockBas) {
+        document.getElementById('detail-desc').insertAdjacentHTML('beforebegin', `
+            <p id="dynamic-stock-msg" class="text-[10px] font-bold text-red-500 mb-2">
+                <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${p.quantiteRestante} articles en stock !
+            </p>
+        `);
+    }
     
     // Reset du média principal
     const mediaContainer = document.getElementById('main-detail-img').parentElement;
@@ -1067,9 +1073,9 @@ function ajouterProduitAdmin() {
         description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
         enStock: true,
         stockBas: document.getElementById('adm-stock-bas').checked,
-        dateAjout: Date.now() 
-    };
-
+    quantiteRestante: document.getElementById('adm-stock-count').value || "2", // On prend le chiffre saisi
+    dateAjout: Date.now() 
+};
     products.push(newP);
     localStorage.setItem('latyfa_db', JSON.stringify(products));
     
@@ -1239,7 +1245,17 @@ function calculerTailleRec() {
             <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
             <div class="grid grid-cols-1 gap-4">
                 <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+    <div class="flex flex-col">
+        <label class="text-[9px] font-bold text-gray-400 uppercase">Alerte Stock (Ex: 2)</label>
+        <input type="number" id="adm-stock-count" placeholder="Ex: 3" class="w-full border p-3 rounded-lg text-sm">
+    </div>
+    <div class="flex items-center gap-2 mt-4">
+        <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+        <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
+    </div>
+</div>
+
                     <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
                     <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
                         <option value="bijoux">Bijoux</option>
