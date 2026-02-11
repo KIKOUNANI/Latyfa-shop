@@ -514,42 +514,81 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 
         <div onclick="selectPay('CASH')" id="pay-cash" 
              class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
-            <i class="fa-solid fa-hand-holding-dollar text-gray-400 mb-1 text-lg" id="cash-icon"></i>
-            <span class="text-[8px] font-black uppercase">Cash (Boutique)</span>
-        </div>
+<div id="checkout-form" style="display:none;" class="space-y-4">
+    <div class="flex gap-2">
+        <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
+        <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
     </div>
+    <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
 
-    <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
-    
-    <p id="payment-instruction" class="text-[8px] text-gray-400 font-bold italic mt-1">
-        * Le paiement se fait par transfert avant l'expédition.
-    </p>
-</div>
+    <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
+    <input type="tel" id="tel-client" placeholder="Numéro WhatsApp ou Quartier *" class="w-full border p-3 rounded-lg text-sm">
 
-}
-           </select>
-                <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
-                <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
-                    <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-5 w-5">
-                    <label for="check-verif" class="text-[9px] font-bold uppercase">Je confirme ma commande et j'accepte le paiement intégral.</label>
+    <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
+        <option value="">-- CHOISIR VOTRE ZONE --</option>
+        <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+        <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+        <option value="interieur">Intérieur pays (3.000 F)</option>
+        <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
+    </select>
+    <p id="communes-info" class="hidden text-[9px] text-blue-600 font-bold italic px-2 uppercase"></p>
+
+    <div class="space-y-2">
+        <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
+        <div class="grid grid-cols-2 gap-2">
+            <div onclick="selectPay('TRANSFERT')" id="pay-mobile" 
+                 class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
+                <div class="flex gap-2 mb-1 items-center">
+                    <svg width="16" height="16" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="50" fill="#1DA1F2"/>
+                        <path d="M70 35L40 65L25 50" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div style="width:14px; height:14px; background:#FF7900; border-radius:2px;"></div>
+                    <div style="width:14px; height:14px; background:#FFCC00; border-radius:50%; border:1px solid #000; display:flex; align-items:center; justify-content:center; font-size:6px; font-weight:900; color:black">M</div>
                 </div>
-                <div class="flex justify-between font-bold text-lg p-2 border-b-2">
-                    <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
-                </div>
-                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 mb-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-        <div class="h-8 w-8 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center">
-            <i class="fa-solid fa-gift"></i>
-        </div>
-        <div>
-            <p class="text-[10px] font-black uppercase tracking-widest">Emballage Cadeau Luxe</p>
-            <p class="text-[8px] text-gray-400 font-bold uppercase">+ 1.000 F CFA</p>
-        </div>
-    </div>
-    <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-5 w-5 accent-pink-600 cursor-pointer">
-</div>
-                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
+                <span class="text-[8px] font-black uppercase">Mobile Money</span>
             </div>
+
+            <div onclick="selectPay('CASH')" id="pay-cash" 
+                 class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
+                <i class="fa-solid fa-hand-holding-dollar text-gray-400 mb-1 text-lg" id="cash-icon"></i>
+                <span class="text-[8px] font-black uppercase">Cash (Boutique)</span>
+            </div>
+        </div>
+
+        <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
+        <p id="payment-instruction" class="text-[8px] text-gray-400 font-bold italic mt-1">
+            * Le paiement se fait par transfert avant l'expédition.
+        </p>
+    </div>
+
+    <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
+    
+    <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="h-8 w-8 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-gift"></i>
+            </div>
+            <div>
+                <p class="text-[10px] font-black uppercase tracking-widest">Emballage Cadeau Luxe</p>
+                <p class="text-[8px] text-gray-400 font-bold uppercase">+ 1.000 F CFA</p>
+            </div>
+        </div>
+        <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-5 w-5 accent-pink-600 cursor-pointer">
+    </div>
+
+    <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
+        <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-5 w-5">
+        <label for="check-verif" class="text-[9px] font-bold uppercase">Je confirme ma commande et j'accepte le paiement intégral.</label>
+    </div>
+
+    <div class="flex justify-between font-bold text-lg p-2 border-b-2">
+        <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
+    </div>
+
+    <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
+</div>
+
             <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
         </div>
     </div>
