@@ -493,14 +493,37 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
     <span class="text-[8px] font-black uppercase">Mobile Money</span>
 </div>
-      <div onclick="selectPay('CASH')" id="pay-cash" 
+      <div class="space-y-2">
+    <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
+    <div class="grid grid-cols-2 gap-2">
+        <div onclick="selectPay('TRANSFERT')" id="pay-mobile" 
+             class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
+            <div class="flex gap-2 mb-1 items-center">
+                <svg width="16" height="16" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="50" fill="#1DA1F2"/>
+                    <path d="M70 35L40 65L25 50" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div style="width:14px; height:14px; background:#FF7900; border-radius:2px;"></div>
+                <div style="width:14px; height:14px; background:#FFCC00; border-radius:50%; border:1px solid #000; display:flex; align-items:center; justify-content:center; font-size:6px; font-weight:900; color:black">M</div>
+            </div>
+            <span class="text-[8px] font-black uppercase">Mobile Money</span>
+        </div>
+
+        <div onclick="selectPay('CASH')" id="pay-cash" 
              class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
             <i class="fa-solid fa-hand-holding-dollar text-gray-400 mb-1 text-lg" id="cash-icon"></i>
-            <span class="text-[8px] font-black uppercase">Cash à la livraison</span>
+            <span class="text-[8px] font-black uppercase">Cash (Boutique)</span>
         </div>
     </div>
-    <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE">
+
+    <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
+    
+    <p id="payment-instruction" class="text-[8px] text-gray-400 font-bold italic mt-1">
+        * Le paiement se fait par transfert avant l'expédition.
+    </p>
 </div>
+
+}
            </select>
                 <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
                 <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
@@ -1393,36 +1416,24 @@ function selectPay(mode) {
     const cashBtn = document.getElementById('pay-cash');
     const cashIcon = document.getElementById('cash-icon');
     const inputPay = document.getElementById('mode-pay');
-    const instruction = document.getElementById('payment-instruction');
 
     if(mode === 'TRANSFERT') {
-        inputPay.value = "TRANSFERT MOBILE (WAVE/ORANGE)";
-        
-        // Allumer Mobile
+        inputPay.value = "TRANSFERT MOBILE (WAVE/ORANGE/MTN)";
         mobileBtn.classList.replace('border-gray-100', 'border-[#c5a059]');
         mobileBtn.classList.add('bg-orange-50');
-        
-        // Éteindre Cash
         cashBtn.classList.replace('border-[#c5a059]', 'border-gray-100');
         cashBtn.classList.remove('bg-orange-50');
-        cashIcon.classList.replace('text-[#c5a059]', 'text-gray-400');
-        
-        instruction.classList.remove('hidden');
+        if(cashIcon) cashIcon.classList.replace('text-[#c5a059]', 'text-gray-400');
     } else {
         inputPay.value = "CASH À LA LIVRAISON";
-        
-        // Allumer Cash
         cashBtn.classList.replace('border-gray-100', 'border-[#c5a059]');
         cashBtn.classList.add('bg-orange-50');
-        cashIcon.classList.replace('text-gray-400', 'text-[#c5a059]');
-        
-        // Éteindre Mobile
+        if(cashIcon) cashIcon.classList.replace('text-gray-400', 'text-[#c5a059]');
         mobileBtn.classList.replace('border-[#c5a059]', 'border-gray-100');
         mobileBtn.classList.remove('bg-orange-50');
-        
-        instruction.classList.add('hidden');
     }
 }
+
 
         
 </script>
