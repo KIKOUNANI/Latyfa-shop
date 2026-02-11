@@ -136,9 +136,26 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     opacity: 0;
     pointer-events: none;
 }
+            #canvas {
+    display: block;
+    margin: 20px auto;
+    border-radius: 50%;
+    border: 8px solid #1a1a1a;
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.5);
+            }
+           .bg-gold-gradient {
+    background: linear-gradient(135deg, #ffffff 0%, #fcf8f0 100%);
+}
+#wheel-notif {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+} 
 </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
+<audio id="victory-sound" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
 </head>
-<body>    
+<body>   
+    <audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
     <audio id="cart-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
     <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
     <div class="relative">
@@ -785,88 +802,106 @@ function gererOptionsProduit(p) {
 
     }
 
-    // --- LOGIQUE DE LA ROUE ---
-    const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
-    const canva = document.getElementById('canvas');
-    const ctx = canva.getContext('2d');
-    const MAX_TENTATIVES = 1;
+    // --- LOGIQUE DE LA ROUE CORRIGÉE ---
+const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
+const canva = document.getElementById('canvas');
+const ctx = canva.getContext('2d');
+const MAX_TENTATIVES = 1;
 
-    function drawWheel() {
-        const arc = 2 * Math.PI / prizes.length;
-        ctx.clearRect(0, 0, 300, 300);
-        for (let i = 0; i < prizes.length; i++) {
-            ctx.beginPath();
-            ctx.fillStyle = i % 2 === 0 ? (prizes[i] === "REESSAYER" ? "#333" : "#c5a059") : "#000";
-            ctx.moveTo(150, 150);
-            ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
-            ctx.fill();
-            ctx.save();
-            ctx.fillStyle = "white";
-            ctx.translate(150, 150);
-            ctx.rotate(i * arc + arc / 2);
-            ctx.font = "bold 9px Montserrat";
-            ctx.textAlign = "right";
-            ctx.fillText(prizes[i], 130, 5);
-            ctx.restore();
-        }
+function drawWheel() {
+    const arc = 2 * Math.PI / prizes.length;
+    ctx.clearRect(0, 0, 300, 300);
+    for (let i = 0; i < prizes.length; i++) {
+        ctx.beginPath();
+        // Alternance de couleurs Noir et Doré
+        ctx.fillStyle = i % 2 === 0 ? (prizes[i] === "REESSAYER" ? "#333" : "#c5a059") : "#000";
+        ctx.moveTo(150, 150);
+        ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
+        ctx.fill();
+        
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.translate(150, 150);
+        ctx.rotate(i * arc + arc / 2);
+        ctx.font = "bold 10px Montserrat";
+        ctx.textAlign = "right";
+        ctx.fillText(prizes[i], 130, 5);
+        ctx.restore();
+    }
+}
+
+// APPEL IMMÉDIAT POUR DESSINER LA ROUE AU CHARGEMENT
+drawWheel();
+
+document.getElementById('spin').onclick = function() {
+    let stats = majAffichageChances();
+    if (stats.count >= MAX_TENTATIVES) {
+        alert("Vous avez déjà utilisé votre chance aujourd'hui !");
+        return;
     }
 
-    document.getElementById('spin').onclick = function() {
-    let stats = majAffichageChances();
-    if (stats.count >= MAX_TENTATIVES) return;
-
     const btn = this;
+    const sound = document.getElementById('wheel-sound');
+    const victorySound = document.getElementById('victory-sound');
     btn.disabled = true;
 
-    // 1. On définit une rotation de base (5 tours complets) + un angle aléatoire
+    // Calcul de la rotation
     const randomExtra = Math.floor(Math.random() * 360);
-    const totalRotation = 1800 + randomExtra; 
+    const totalRotation = 3600 + randomExtra; // 10 tours pour plus de suspense
     
-    // 2. On lance l'animation CSS
+    // --- EFFET SONORE DE ROTATION ---
+    let soundInterval = setInterval(() => {
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+    }, 150);
+
+    // On ralentit le son à la fin
+    setTimeout(() => { clearInterval(soundInterval); }, 3500);
+
     canva.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
     canva.style.transform = `rotate(${totalRotation}deg)`;
 
     setTimeout(() => {
-        // 3. CALCUL PRÉCIS DU RÉSULTAT
-        // On récupère l'angle final par rapport au repère 0 (en haut)
         const actualAngle = randomExtra % 360;
-        
-        // Le calcul inversé pour savoir quel segment est sous le curseur (en haut)
-        // La roue tourne dans le sens horaire, donc on calcule en sens anti-horaire
         const segmentSize = 360 / prizes.length;
-        const winIndex = Math.floor(((360 - actualAngle) % 360) / segmentSize);
-        const win = prizes[winIndex];
+        const resultIndex = Math.floor(((360 - actualAngle + 270) % 360) / segmentSize);
+        const resultat = prizes[resultIndex];
 
-        // 4. Enregistrement du passage
         stats.count++;
         localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
         majAffichageChances();
 
-        // 5. Affichage du résultat
-        if (win === "REESSAYER") {
+        if (resultat === "REESSAYER") {
             alert("Mince ! Retentez demain. 😥");
         } else {
-            // Extraction du montant de remise (ex: "-10%" devient "10")
-            const promoAmount = win.replace(/[^0-9]/g, "") || "5";
-            const promoCode = "LATYFA" + promoAmount;
-            const expiration = Date.now() + (24 * 60 * 60 * 1000);
+            // --- VICTOIRE ! ---
+            // 1. Son de victoire
+            if(victorySound) victorySound.play();
 
+            // 2. Explosion de confettis
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#c5a059', '#000000', '#ffffff'] // Couleurs Latyfa : Or, Noir, Blanc
+            });
+
+            const promoAmount = resultat.replace(/[^0-9]/g, "") || "5";
+            const promoCode = "LATYFA" + promoAmount;
+            
             localStorage.setItem('latyfa_active_promo', JSON.stringify({
                 code: promoCode,
-                expires: expiration,
+                expires: Date.now() + (24 * 60 * 60 * 1000),
                 remise: promoAmount
             }));
 
-            alert("🎉 BRAVO ! Vous avez gagné : " + win + "\nVotre code : " + promoCode + "\n\n⚠️ Utilisable dans le panier pendant 24h !");
+            setTimeout(() => {
+                alert("🎉 MAGNIFIQUE !\nVous avez gagné : " + resultat + "\nVotre code promo : " + promoCode);
+            }, 500);
         }
-        
-        // Optionnel : remettre la roue à zéro sans transition pour le prochain coup
-        // canva.style.transition = "none";
-        // canva.style.transform = `rotate(${actualAngle}deg)`;
-        
+        btn.disabled = false;
     }, 4000);
 };
-
 
     function majAffichageChances() {
         const aujourdhui = new Date().toLocaleDateString();
@@ -1305,6 +1340,37 @@ function calculerTailleRec() {
     const count = cart.reduce((a, b) => a + b.qty, 0);
     document.getElementById('cart-count').innerText = count;
 });
+    // --- SIMULATEUR DE GAINS (PREUVE SOCIALE) ---
+const villesCI = ["Abidjan", "Bouaké", "Yamoussoukro", "San-Pédro", "Korhogo", "Daloa", "Man", "Gagnoa", "Abengourou", "Ferké", "Odiéné", "Touba", "Botro"];
+const gainsPossibles = ["-5%", "-10%", "-15%", "la LIVRAISON GRATUITE", "un CADEAU"];
+
+function lancerNotificationGain() {
+    const notif = document.getElementById('wheel-notif');
+    const texte = document.getElementById('notif-text');
+    
+    // Si la roue est déjà ouverte, on n'affiche pas la notif pour ne pas gêner
+    if (document.querySelector('.wheel-mask').classList.contains('active')) return;
+
+    const ville = villesCI[Math.floor(Math.random() * villesCI.length)];
+    const gain = gainsPossibles[Math.floor(Math.random() * gainsPossibles.length)];
+    
+    texte.innerHTML = `Une cliente de <span class="text-[#c5a059]">${ville}</span> vient de gagner <span class="text-black">${gain}</span> !`;
+    
+    // Apparition
+    notif.classList.remove('translate-x-[-120%]');
+    
+    // Disparition après 6 secondes
+    setTimeout(() => {
+        notif.classList.add('translate-x-[-120%]');
+    }, 6000);
+}
+
+// Lancer la première notif après 10 secondes, puis toutes les 35 secondes
+setTimeout(() => {
+    lancerNotificationGain();
+    setInterval(lancerNotificationGain, 35000);
+}, 10000);
+
 
 </script>
 
@@ -1416,6 +1482,15 @@ function calculerTailleRec() {
             
             <p class="text-[8px] text-gray-400 italic">Astuce : Si vous hésitez entre deux tailles, prenez la plus grande pour plus de confort.</p>
         </div>
+    </div>
+</div>
+    <div id="wheel-notif" class="fixed bottom-28 left-5 bg-white shadow-2xl rounded-lg p-3 flex items-center gap-3 border-l-4 border-black transform translate-x-[-120%] transition-all duration-700 z-[100] max-w-[250px]">
+    <div class="w-10 h-10 bg-gold-gradient rounded-full flex-shrink-0 flex items-center justify-center text-[#c5a059] border border-gray-100">
+        <i class="fa-solid fa-star animate-pulse"></i>
+    </div>
+    <div>
+        <p id="notif-text" class="text-[10px] text-gray-800 font-bold leading-tight uppercase tracking-tighter"></p>
+        <p class="text-[8px] text-gray-400 mt-1 uppercase font-black">Il y a quelques secondes</p>
     </div>
 </div>
 
