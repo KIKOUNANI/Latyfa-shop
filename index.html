@@ -3,680 +3,731 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA SHOP | Boutique Officielle</title>
-    
+    <title>LATYFA BOUTIQUE | Officiel</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+        <style>
+            /* Cache la barre de défilement mais permet le scroll */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    cursor: grab;
+}
+.no-scrollbar:active {
+    cursor: grabbing;
+}
+            #backToTop.show {
+    transform: translateY(0);
+    opacity: 1;
+}
 
-    <style>
-        :root {
-            --gold: #c5a059;
-            --dark: #1a1a1a;
-            --accent: #ff6600;
-        }
+#backToTop:hover {
+    background-color: #1a1a1a;
+    border-color: var(--latyfa-gold);
+    transform: scale(1.1);
+}
+:root { 
+    /* MODIFIE CES 3 COULEURS ICI POUR TOUT CHANGER SUR LE SITE */
+    --latyfa-gold: #c5a059;   /* Doré Luxe */
+    --latyfa-dark: #1a1a1a;   /* Noir Profond */
+    --latyfa-accent: #ff6600; /* Couleur d'accent (Orange/Prix) */
+}
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #fcfcfc;
-            color: var(--dark);
-            margin: 0;
-            scroll-behavior: smooth;
-        }
+body { 
+    background-color: #fcfcfc; 
+    font-family: 'Montserrat', sans-serif; 
+    margin: 0; 
+    scroll-behavior: smooth; 
+}
 
-        .logo-font { font-family: 'Playfair Display', serif; }
+/* Application des couleurs via variables */
+.logo-font, .text-[#c5a059] { color: var(--latyfa-gold) !important; }
+.text-[#ff6600] { color: var(--latyfa-accent) !important; }
+.bg-[#ff6600], .bg-[#c5a059] { background-color: var(--latyfa-gold) !important; }
+.ali-gradient { 
+    background: linear-gradient(90deg, var(--latyfa-gold) 0%, #e2c286 100%); 
+}
 
-        /* SCROLLBARS */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Style des liens de catégories */
+.category-link {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #555;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 8px;
+}
 
-        /* CARTES PRODUITS */
-        .product-card {
-            background: white;
-            border: 1px solid #f0f0f0;
-            border-radius: 12px;
-            transition: 0.3s;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
+.category-link:hover {
+    color: var(--latyfa-gold);
+    padding-left: 5px;
+    border-bottom-color: var(--latyfa-gold);
+}
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--gold);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
+/* Police de luxe */
+h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 
-        /* MODALES */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            inset: 0;
-            background: white;
-            overflow-y: auto;
-            padding: 20px;
-        }
+/* Cartes produits */
+.product-card { 
+    background: white; 
+    border-radius: 8px; 
+    border: 1px solid transparent; 
+    height: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    cursor: pointer; 
+    transition: 0.2s; 
+}
+.product-card:hover { 
+    border-color: var(--latyfa-gold); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+}
 
-        .modal.active { display: block; }
+/* Modales */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: white; overflow-y: auto; padding: 20px; }
+.modal.active { display: block; }
+.btn-disabled { background: #cccccc !important; cursor: not-allowed; opacity: 0.6; }
 
-        /* ROUE DE LA FORTUNE */
-        .wheel-mask {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(8px);
-        }
+/* Roue de la fortune */
+.wheel-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+.wheel-mask.active { display: flex; }
+.wheel-box { background: white; padding: 30px; border-radius: 30px; text-align: center; position: relative; width: 95%; max-width: 400px; border: 5px solid var(--latyfa-gold); }
+#canvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; }
+.spin-trigger { background: #000; color: #fff; padding: 15px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; border: none; font-size: 14px; width: 100%; }
 
-        .wheel-mask.active { display: flex; }
+/* Animations */
+@keyframes cart-shake {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.3) rotate(15deg); }
+    50% { transform: scale(1.3) rotate(-15deg); }
+    100% { transform: scale(1); }
+}
+.animate-cart { animation: cart-shake 0.5s ease-in-out; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+ @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 25s linear infinite;
+}
+/* Pause au survol pour que le client puisse lire tranquillement */
+.animate-marquee:hover {
+    animation-play-state: paused;
+}
+            @keyframes loading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
 
-        .wheel-box {
-            background: white;
-            padding: 30px;
-            border-radius: 30px;
-            text-align: center;
-            width: 95%;
-            max-width: 400px;
-            border: 5px solid var(--gold);
-            position: relative;
-        }
-
-        #canvas {
-            width: 300px;
-            height: 300px;
-            margin: 20px auto;
-            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
-        }
-
-        /* BOUTON ALI GRADIENT */
-        .ali-gradient {
-            background: linear-gradient(90deg, #c5a059 0%, #e2c286 100%);
-        }
-
-        /* FAVORIS */
-        .fav-btn.active i {
-            color: #e11d48 !important;
-            font-weight: 900;
-        }
-
-        /* LOADER */
-        #loader {
-            position: fixed;
-            inset: 0;
-            background: white;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.5s;
-        }
-
-        .loader-hidden { opacity: 0; pointer-events: none; }
-
-        /* PREUVE SOCIALE */
-        #social-proof {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: white;
-            padding: 12px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 100;
-            transform: translateY(150%);
-            transition: 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-left: 4px solid var(--gold);
-        }
-
-        #social-proof.show { transform: translateY(0); }
-    </style>
+/* Classe pour cacher le loader proprement */
+.loader-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+            /* Effet au clic sur les boutons de catégorie */
+nav button:focus {
+    color: var(--latyfa-gold);
+    border-bottom: 2px solid var(--latyfa-gold);
+}
+          #stock-alert {
+    background: #fff5f5;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-flex;
+    border: 1px dashed #feb2b2;
+}
+            /* Style pour le bouton favoris sur la carte produit */
+.fav-btn {
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+}
+.fav-btn.active i {
+    color: #e11d48 !important; /* Rouge rose */
+    font-weight: 900;
+}
+</style>
 </head>
-<body>
-
-<div id="loader">
-    <div class="flex flex-col items-center">
-        <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-20 w-20 animate-pulse rounded-full border-2 border-[#c5a059]">
-        <p class="mt-4 text-[10px] font-black uppercase tracking-[0.3em] text-[#c5a059]">Latyfa Shop Loading...</p>
-    </div>
-</div>
-
+<body>    
 <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-2" onclick="location.reload()">
-            <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border">
-            <span class="text-2xl font-black italic logo-font text-[#c5a059]">LATYFA SHOP</span>
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+            <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
+            <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
         </div>
+
         <div class="flex gap-6 items-center">
-            <div onclick="suivreColis()" class="text-center cursor-pointer">
+            <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#c5a059]">
                 <i class="fa-solid fa-truck text-gray-600"></i>
                 <p class="text-[9px] font-bold uppercase">Suivi</p>
             </div>
-            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative">
+            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#c5a059]">
                 <i class="fa-solid fa-cart-shopping text-gray-600"></i>
                 <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
                 <p class="text-[9px] font-bold uppercase">Panier</p>
             </div>
         </div>
     </div>
-    
+
     <div class="container mx-auto px-4 pb-3">
         <div class="relative">
             <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
-                   class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs outline-none">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                   class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
         </div>
     </div>
 
-    <nav class="border-t border-gray-50 bg-white">
+    <div class="border-t border-gray-50 bg-white">
         <div class="container mx-auto px-4">
             <div class="flex items-center gap-6 overflow-x-auto no-scrollbar py-3">
-                <button onclick="render('tous')" class="flex-shrink-0 bg-[#c5a059] text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase">Tous</button>
-                <button onclick="render('bijoux')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600">Bijoux</button>
-                <button onclick="render('sac')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600">Sacs</button>
-                <button onclick="render('parfum')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600">Parfums</button>
-                <button onclick="render('vetements')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600">Vêtements</button>
-                <button onclick="render('hanche')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600">Hanche</button>
-                <button onclick="filtrerFavoris()" class="flex-shrink-0 text-[10px] font-black uppercase text-red-500">❤️ Mes Envies</button>
+                <button onclick="filtrerNouveautes()" class="flex-shrink-0 bg-[#c5a059] text-white px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-sparkles"></i> Nouveautés
+                </button>
+
+                <button onclick="filtrerFavoris()" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-red-500 flex items-center gap-1">
+                    <i class="fa-solid fa-heart text-red-500"></i> Mes Envies
+                </button>
+
+                <button onclick="render('tous')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-400 hover:text-[#c5a059]">Tout voir</button>
+                <button onclick="render('bijoux')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Bijoux</button>
+                <button onclick="render('sac')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Sacs</button>
+                <button onclick="render('parfum')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Parfums</button>
+                <button onclick="render('hanche')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Hanche</button>
             </div>
         </div>
-    </nav>
+    </div>
 </header>
 
-<section class="relative w-full h-[300px] bg-black overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-60">
-    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-        <h1 class="text-white text-4xl font-black italic uppercase logo-font">La Boutique du 225</h1>
-        <p class="text-orange-400 font-bold mt-2 uppercase text-xs tracking-widest">Bijoux, vêtements, parfum...</p>
-        <a href="#collection" class="mt-6 bg-[#ff6600] text-white px-8 py-3 rounded-full font-black text-xs uppercase shadow-lg">Découvrir</a>
-    </div>
-</section>
-
-<div id="collection" class="container mx-auto px-4 py-8">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" id="product-grid">
+    <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+            <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none">La Boutique du 225</h1>
+            <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]">Bijoux, vêtements, parfum...</p>
+            <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg">Découvrir la Collection</a>
         </div>
-</div>
+    </section>
 
-<div class="wheel-mask" id="wheel-mask">
+    <div id="collection" class="container mx-auto px-4 py-8">
+    <main>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6" id="product-grid"></div>
+    </main>
+</div>
+        <nav class="bg-white border-b border-gray-100 sticky top-[72px] z-40 shadow-sm">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-4">
+            <button onclick="filtrerNouveautes()" class="flex-shrink-0 bg-[#c5a059] text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest shadow-md flex items-center gap-2">
+                <i class="fa-solid fa-sparkles"></i> Nouveautés
+            </button>
+            <button onclick="filtrerFavoris()" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-red-500 flex items-center gap-1">
+    <i class="fa-solid fa-heart text-red-500"></i> Mes Envies
+</button>
+            <button onclick="render('tous')" class="flex-shrink-0 border-r pr-4 text-[10px] font-black uppercase text-gray-400 hover:text-[#c5a059]">Tout voir</button>
+            <button onclick="render('bijoux')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Bijoux</button>
+            <button onclick="render('vetements')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Vêtements</button>
+            <button onclick="render('chaussures')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Chaussures</button>
+            <button onclick="render('sac')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Sacs</button>
+            <button onclick="render('parfum')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Parfums</button>
+            <button onclick="render('hanche')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Hanche</button>
+            <button onclick="render('autres')" class="flex-shrink-0 text-[10px] font-black uppercase text-gray-600 hover:text-[#c5a059]">Autres</button>
+        </div>
+    </div>
+        </nav>
+        <main class="flex-1">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
+        </main>
+    </div>
+
+    <button onclick="document.querySelector('.wheel-mask').classList.add('active')" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#ff6600]">
+        <i class="fa-solid fa-gift text-[#ff6600] text-2xl"></i>
+    </button>
+
+    <div class="wheel-mask">
     <div class="wheel-box">
-        <button onclick="fermerRoue()" class="absolute top-4 right-4 text-2xl font-bold">&times;</button>
-        <h3 class="logo-font text-xl font-black italic uppercase text-[#c5a059]">Lucky Wheel Latyfa</h3>
-        <p id="wheel-msg" class="text-[10px] font-bold uppercase mt-2 text-gray-400">Tentez de gagner une remise !</p>
+        <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
+        
+        <h3 class="logo-font text-xl font-black italic uppercase text-gray-800">LATYFA LUCKY WHEEL</h3>
+        <p id="wheel-msg" class="text-[11px] font-black uppercase mt-2 text-blue-600"></p>
+        
         <div class="relative">
             <canvas id="canvas" width="300" height="300"></canvas>
             <div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 text-3xl text-[#c5a059]">▼</div>
         </div>
-        <button id="spin" onclick="lancerRoue()" class="w-full bg-black text-white py-3 rounded-full font-black mt-4 uppercase text-xs">Lancer la roue</button>
+        
+        <button id="spin" class="spin-trigger mt-4">TENTER MA CHANCE</button>
     </div>
 </div>
 
-<button onclick="ouvrirRoue()" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#c5a059]">
+<button onclick="document.querySelector('.wheel-mask').classList.add('active')" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#c5a059]">
     <i class="fa-solid fa-gift text-[#c5a059] text-2xl"></i>
 </button>
 
-<div id="productDetailModal" class="modal">
-    <div class="max-w-4xl mx-auto">
-        <button onclick="fermerDetail()" class="mb-6 text-gray-500 font-bold text-[10px] uppercase flex items-center gap-2">
-            <i class="fa-solid fa-arrow-left"></i> Retour à la boutique
-        </button>
-        <div class="flex flex-col md:flex-row gap-8">
-            <div class="md:w-1/2">
-                <div class="relative rounded-xl overflow-hidden border bg-gray-50">
-                    <img id="main-detail-img" src="" class="w-full h-[400px] object-cover">
+    <div id="productDetailModal" class="modal">
+        <div class="max-w-2xl mx-auto">
+            <button onclick="document.getElementById('productDetailModal').classList.remove('active')" class="mb-6 text-gray-500 font-bold uppercase text-[10px]"><i class="fa-solid fa-arrow-left"></i> Retour</button>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2">
+                    <img id="main-detail-img" src="" class="w-full h-80 object-cover rounded-xl shadow-md border">
+                    <div id="thumbnails" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
                 </div>
-                <div id="thumbnails" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
-            </div>
-            <div class="md:w-1/2">
-                <h2 id="detail-name" class="text-3xl font-black uppercase italic logo-font"></h2>
-                <div class="flex items-center gap-4 mt-2">
-                    <p id="detail-price" class="text-[#ff6600] font-black text-2xl"></p>
-                    <p id="detail-old-price" class="text-gray-300 line-through font-bold"></p>
-                </div>
-                
-                <div id="stock-alert" class="mt-4 hidden bg-red-50 p-3 rounded-lg border border-red-100 flex items-center gap-3">
-                    <span class="h-2 w-2 rounded-full bg-red-500 animate-ping"></span>
-                    <p id="stock-msg" class="text-[10px] font-black uppercase text-red-600">Derniers articles en stock !</p>
-                </div>
-
-                <div class="my-6 border-t pt-6">
-                    <h4 class="text-[10px] font-black uppercase text-gray-400 mb-2">Description</h4>
-                    <p id="detail-desc" class="text-sm text-gray-600 leading-relaxed"></p>
-                </div>
-
-                <div class="space-y-4 mb-8">
-                    <div id="size-area" class="hidden">
-                        <label class="text-[10px] font-black uppercase text-gray-400">Choisir Taille</label>
-                        <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm font-bold bg-gray-50"></select>
+                <div class="md:w-1/2">
+                    <h2 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800"></h2>
+                    <p id="detail-price" class="text-[#ff6600] font-black text-2xl mt-2"></p>
+<div id="stock-alert" class="mt-3 flex items-center gap-2">
+    <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+    </span>
+    <p id="stock-msg" class="text-[10px] font-black uppercase text-red-600 italic"></p>
+</div>
+                    <div class="my-4 border-t pt-4"><p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p></div>
+                    <div class="space-y-4 my-6">
+                        <div id="size-area" class="hidden">
+                            <label class="text-[10px] font-black uppercase text-gray-400">Taille / Pointure</label>
+                            <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
+                        </div>
+                        <div id="color-area" class="hidden">
+                            <label class="text-[10px] font-black uppercase text-gray-400">Couleur</label>
+                            <select id="select-color" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
+                        </div>
+                    </div>
+                    <button onclick="ouvrirGuide()" class="text-[9px] font-bold text-gray-400 uppercase underline mb-2 hover:text-[#c5a059]">
+    <i class="fa-solid fa-ruler-combined"></i> Guide des tailles
+</button>
+                    <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-6">Ajouter au panier</button>
+                    <div class="flex items-center justify-center gap-6 pt-4 border-t">
+                        <button id="share-wa" class="text-[#25D366] text-xl"><i class="fa-brands fa-whatsapp"></i></button>
+                        <button id="share-fb" class="text-[#1877F2] text-xl"><i class="fa-brands fa-facebook"></i></button>
                     </div>
                 </div>
-
-                <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase shadow-lg flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-cart-plus"></i> Ajouter au panier
-                </button>
             </div>
         </div>
     </div>
-</div>
-
-<div id="cartModal" class="modal">
-    <div class="max-w-md mx-auto">
-        <h2 class="text-2xl font-black mb-8 text-center text-[#ff6600] uppercase italic logo-font">Ma Commande</h2>
-        <div id="cart-items" class="space-y-4 mb-8"></div>
-        
-        <div id="checkout-form" style="display:none;" class="space-y-4 bg-gray-50 p-4 rounded-2xl">
-            <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom complet *" class="w-full border-none p-4 rounded-xl text-sm shadow-sm">
-            <select id="zone-livraison" onchange="majResume()" class="w-full border-none p-4 rounded-xl text-sm font-bold shadow-sm">
-                <option value="">-- Zone de livraison --</option>
-                <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
-                <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-                <option value="interieur">Intérieur pays (3.500 F)</option>
-                <option value="bouake">Retrait Boutique (Gratuit)</option>
-            </select>
-            <input type="text" id="tel-client" oninput="majResume()" placeholder="Téléphone et Quartier *" class="w-full border-none p-4 rounded-xl text-sm shadow-sm">
-            
-            <div class="flex items-center gap-3 p-3 bg-pink-50 rounded-xl border border-pink-100">
-                <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-5 w-5 accent-pink-600">
-                <label for="check-cadeau" class="text-[10px] font-black uppercase text-pink-600">Emballage Cadeau Luxe (+1.000 F)</label>
+    
+<section class="bg-gray-50 py-12 border-t border-b border-gray-100">
+    <div class="container mx-auto px-4">
+        <h3 class="logo-font text-center text-xl font-black mb-8 uppercase italic tracking-widest text-gray-800">Elles adorent Latyfa Shop</h3>
+        <div class="flex overflow-x-auto gap-6 no-scrollbar pb-4">
+            <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex text-[#c5a059] mb-3 text-[10px]">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-[11px] italic text-gray-600 mb-4">"Qualité incroyable ! J'ai commandé mon sac lundi, reçu mardi à Cocody. Je recommande à 100%."</p>
+                <p class="text-[10px] font-black uppercase tracking-tighter">— Mariam K.</p>
             </div>
+            <section class="container mx-auto px-4 py-10">
+    <div class="grid grid-cols-3 gap-4 text-center">
+        <div class="flex flex-col items-center">
+            <div class="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-[#c5a059] mb-3">
+                <i class="fa-solid fa-shield-heart text-xl"></i>
+            </div>
+            <h4 class="text-[9px] font-bold uppercase tracking-widest">Qualité Premium</h4>
+            <p class="text-[8px] text-gray-400 uppercase mt-1">Sélection Luxe</p>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-[#c5a059] mb-3">
+                <i class="fa-solid fa-bolt-lightning text-xl"></i>
+            </div>
+            <h4 class="text-[9px] font-bold uppercase tracking-widest">Livraison Rapide</h4>
+            <p class="text-[8px] text-gray-400 uppercase mt-1">Abidjan & Intérieur</p>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-[#c5a059] mb-3">
+                <i class="fa-solid fa-headset text-xl"></i>
+            </div>
+            <h4 class="text-[9px] font-bold uppercase tracking-widest">Service Client</h4>
+            <p class="text-[8px] text-gray-400 uppercase mt-1">7j/7 sur WhatsApp</p>
+        </div>
+    </div>
+</section>
 
-            <div id="resume-final" class="p-4 bg-white rounded-xl border-2 border-dashed border-orange-200 text-[11px] font-bold uppercase space-y-1"></div>
-            
-            <button id="btn-final" onclick="validerCommande()" class="w-full py-4 rounded-full font-black uppercase text-white shadow-xl" disabled>Commander sur WhatsApp</button>
+            <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex text-[#c5a059] mb-3 text-[10px]">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-[11px] italic text-gray-600 mb-4">"Les bijoux ne noircissent pas, la finition est vraiment top pour le prix. Très satisfaite."</p>
+                <p class="text-[10px] font-black uppercase tracking-tighter">— Sarah D.</p>
+            </div>
+            <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div class="flex text-[#c5a059] mb-3 text-[10px]">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="text-[11px] italic text-gray-600 mb-4">"Expédition rapide sur Bouaké. Le colis était très bien emballé. Merci Latyfa !"</p>
+                <p class="text-[10px] font-black uppercase tracking-tighter">— Amenan G.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <footer class="bg-white border-t pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div class="text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-4">
+                        <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-8 w-8 rounded-full">
+                        <span class="text-xl font-black italic text-[#ff6600]">LATYFA</span>
+                    </div>
+                    <p class="text-gray-500 text-[10px] uppercase font-bold">Votre satisfaction, notre priorité.</p>
+                </div>
+                <div class="text-center md:text-left">
+                    <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Aide</h4>
+                    <ul class="text-gray-500 text-[10px] space-y-2 uppercase font-bold">
+                        <li class="cursor-pointer hover:text-orange-600" onclick="ouvrirCGV()">Conditions de Vente</li>
+                        <li class="cursor-pointer hover:text-orange-600" onclick="suivreColis()">Suivi Colis</li>
+                    </ul>
+                </div>
+                <div class="text-center md:text-left">
+                    <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Boutique</h4>
+                    <p class="text-gray-500 text-[10px] uppercase font-bold">📍 Abidjan, Côte d'Ivoire</p>
+                </div>
+                <div class="text-center md:text-left">
+                    <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Suivez-nous</h4>
+                    <div class="flex justify-center md:justify-start gap-3">
+                        <a href="https://wa.me/2250709002881" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#25D366] hover:text-white transition"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#1877F2] hover:text-white transition"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t pt-6 text-center text-gray-400 text-[9px] font-bold uppercase tracking-widest">
+                <div class="flex flex-col items-center justify-center py-4 border-t border-gray-100 mt-6">
+    <div class="flex items-center gap-2 text-[#c5a059] mb-1">
+        <i class="fa-solid fa-eye text-[10px]"></i>
+        <span id="visitor-count" class="text-[12px] font-black tracking-widest">0000</span>
+    </div>
+    <p class="text-[8px] text-gray-400 uppercase font-bold tracking-[0.2em]">Visiteurs ont exploré l'univers Latyfa shop</p>
+</div>
+                © 2026 LATYFA BUSINESS | <button onclick="ouvrirCGV()" class="underline text-orange-600 uppercase">Juridique</button>
+            </div>
+        </div>
+    </footer>
+
+    <div id="cartModal" class="modal">
+        <div class="max-w-md mx-auto">
+            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Ma Commande</h2>
+            <div id="cart-items" class="space-y-4 mb-6 border-b pb-4"></div>
+            <div id="checkout-form" style="display:none;" class="space-y-4">
+                <div class="flex gap-2">
+    <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
+    <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
+</div>
+<div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
+                <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
+                <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
+                    <option value="">-- CHOISIR VOTRE ZONE --</option>
+                    <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+                    <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+                    <option value="interieur">Intérieur pays (3.000 F)</option>
+                    <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
+                </select>
+                <div id="communes-info" class="text-[9px] text-gray-500 bg-gray-100 p-2 rounded hidden leading-tight"></div>
+                <input type="text" id="tel-client" oninput="majResume()" placeholder="Quartier et Précisions *" class="w-full border p-3 rounded-lg text-sm">
+                <select id="mode-pay" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-gray-50 font-bold">
+                    <option value="TRANSFERT MOBILE">TRANSFERT (WAVE / MOBILE MONEY)</option>
+                    <option value="CASH">CASH (Boutique & Bouaké uniquement)</option>
+                </select>
+                <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
+                <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
+                    <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-5 w-5">
+                    <label for="check-verif" class="text-[9px] font-bold uppercase">Je confirme ma commande et j'accepte le paiement intégral.</label>
+                </div>
+                <div class="flex justify-between font-bold text-lg p-2 border-b-2">
+                    <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
+                </div>
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+        <div class="h-8 w-8 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center">
+            <i class="fa-solid fa-gift"></i>
+        </div>
+        <div>
+            <p class="text-[10px] font-black uppercase tracking-widest">Emballage Cadeau Luxe</p>
+            <p class="text-[8px] text-gray-400 font-bold uppercase">+ 1.000 F CFA</p>
+        </div>
+    </div>
+    <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-5 w-5 accent-pink-600 cursor-pointer">
+</div>
+                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
+            </div>
+            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
+        </div>
+    </div>
+
+    <div id="cgvModal" class="modal bg-gray-100">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-2xl my-6 border border-gray-200">
+        <div class="flex justify-between items-center border-b pb-4 mb-6">
+            <h2 class="text-xl font-black uppercase text-gray-800 italic">Conditions Générales de Vente</h2>
+            <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="text-2xl font-bold">&times;</button>
         </div>
         
-        <button onclick="fermerPanier()" class="w-full mt-6 text-gray-400 text-[10px] font-bold uppercase underline">Continuer mes achats</button>
+        <div class="text-[11px] space-y-6 text-gray-700 leading-relaxed overflow-y-auto max-h-[60vh] pr-2 uppercase font-semibold">
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">1. OBJET ET ACCEPTATION</h3>
+                <p>Les présentes conditions régissent les ventes de la boutique LATYFA BOUTIQUE. Toute validation de commande sur WhatsApp après consultation du site implique l'adhésion totale à ces conditions.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">2. PRIX ET PAIEMENT</h3>
+                <p>Les prix sont indiqués en FCFA. Le paiement est exigible en totalité au moment de la commande via Mobile Money (Wave, Orange Money, MTN). Aucune expédition ne sera effectuée sans confirmation de réception du paiement intégral.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">3. LIVRAISONS ET DÉLAIS</h3>
+                <p>Abidjan : Livraison sous 24h à 48h. Intérieur : Expédition via les services de transport (UTB, AVS, etc.) sous 48h. Les frais de livraison sont à la charge du client et varient selon la zone géographique choisie lors de la commande.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">4. RETRAITS EN BOUTIQUE</h3>
+                <p>Les clients résidant à Bouaké ont la possibilité de recevoir leurs articles physiquement via un représentant sans frais supplémentaires. Le paiement en espèces est accepté uniquement lors du retrait physique par le client lui même.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">5. RETOURS ET ÉCHANGES</h3>
+                <p>Compte tenu de la nature de nos articles (Bijoux et Maroquinerie), aucun retour ou remboursement ne sera accepté après réception du colis. Le client est tenu de vérifier l'état du produit devant le livreur. En cas de défaut majeur constaté immédiatement, un échange par un article de valeur équivalente sera proposé.</p>
+            </section>
+
+            <section>
+                <h3 class="text-[#ff6600] font-black mb-2">6. RESPONSABILITÉ</h3>
+                <p>LATYFA BOUTIQUE ne saurait être tenue pour responsable des retards causés par les services de transport tiers ou des erreurs de coordonnées fournies par le client lors de la validation du panier.</p>
+            </section>
+        </div>
+
+        <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 ali-gradient text-white py-4 rounded-xl font-black text-xs uppercase shadow-md">J'ai compris et j'accepte</button>
     </div>
 </div>
-
-<div id="social-proof">
-    <div class="w-10 h-10 bg-[#c5a059] rounded-full flex items-center justify-center text-white">
+<div id="social-proof" class="fixed bottom-5 left-5 bg-white shadow-2xl rounded-lg p-3 flex items-center gap-3 border-l-4 border-[#c5a059] transform translate-y-20 opacity-0 transition-all duration-700 z-[100] max-w-[280px]">
+    <div class="w-10 h-10 bg-gray-100 rounded-full flex-shrink-0 flex items-center justify-center text-[#c5a059]">
         <i class="fa-solid fa-bag-shopping"></i>
     </div>
     <div>
-        <p id="proof-text" class="text-[11px] font-bold text-gray-800"></p>
-        <p class="text-[9px] text-gray-400 uppercase font-bold">Il y a quelques instants</p>
+        <p id="proof-text" class="text-[11px] text-gray-800 font-medium leading-tight"></p>
+        <p class="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Il y a quelques instants</p>
     </div>
 </div>
-
-<div id="adminModal" class="modal bg-gray-100">
-    <div class="max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-black uppercase italic logo-font">Latyfa Admin</h2>
-            <button onclick="fermerAdmin()" class="text-2xl">&times;</button>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border">
-                <h3 class="text-xs font-black uppercase mb-4 text-[#c5a059]">Ajouter / Modifier</h3>
-                <div class="space-y-3">
-                    <input type="text" id="adm-name" placeholder="Nom du produit" class="w-full border p-3 rounded-lg text-sm">
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="number" id="adm-price" placeholder="Prix" class="border p-3 rounded-lg text-sm">
-                        <input type="number" id="adm-old-price" placeholder="Prix Barré" class="border p-3 rounded-lg text-sm">
-                    </div>
-                    <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm font-bold">
-                        <option value="bijoux">Bijoux</option>
-                        <option value="sac">Sacs</option>
-                        <option value="parfum">Parfums</option>
-                        <option value="vetements">Vêtements</option>
-                        <option value="hanche">Hanche</option>
-                    </select>
-                    <textarea id="adm-img" placeholder="Liens images (un lien par ligne)" class="w-full border p-3 rounded-lg text-sm h-24"></textarea>
-                    <textarea id="adm-desc" placeholder="Description du produit" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                    
-                    <div class="flex items-center gap-4 py-2">
-                        <label class="flex items-center gap-2 text-[10px] font-bold uppercase text-red-600">
-                            <input type="checkbox" id="adm-stock-bas"> Stock Bas
-                        </label>
-                        <label class="flex items-center gap-2 text-[10px] font-bold uppercase text-blue-600">
-                            <input type="checkbox" id="adm-new"> Nouveau
-                        </label>
-                    </div>
-
-                    <button onclick="ajouterProduitAdmin()" id="adm-save-btn" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase text-xs">Mettre en ligne</button>
-                </div>
-            </div>
-
-            <div class="space-y-4">
-                <div class="bg-white p-4 rounded-2xl border flex justify-between items-center">
-                    <span class="text-[10px] font-black uppercase">Mode Maintenance</span>
-                    <button onclick="toggleMaintenance()" id="maint-btn" class="px-4 py-2 rounded-full text-[10px] font-bold uppercase"></button>
-                </div>
-                <div class="bg-white p-4 rounded-2xl border flex justify-between items-center">
-                    <span class="text-[10px] font-black uppercase">Sauvegarde</span>
-                    <div class="flex gap-2">
-                        <button onclick="exporterCatalogue()" class="bg-green-600 text-white px-3 py-1.5 rounded text-[8px] font-bold">EXPORTER</button>
-                        <button onclick="importerCatalogue()" class="bg-gray-600 text-white px-3 py-1.5 rounded text-[8px] font-bold">IMPORTER</button>
-                    </div>
-                </div>
-                <div id="admin-list" class="space-y-2 h-[400px] overflow-y-auto pr-2"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<footer class="bg-white border-t py-12 mt-20 text-center">
-    <div class="flex flex-col items-center mb-4">
-        <span id="visitor-count" class="text-lg font-black text-[#c5a059]">0</span>
-        <span class="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Visiteurs sur le site</span>
-    </div>
-    <p class="text-[9px] font-bold text-gray-300 uppercase tracking-widest">© 2026 LATYFA SHOP | Côte d'Ivoire</p>
-</footer>
-
-<div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-8 h-8 opacity-0 cursor-pointer z-[100]">ADM</div>
-
 <script>
-    // --- VARIABLES ---
-    let products = JSON.parse(localStorage.getItem('latyfa_db')) || [
-        { id: 1, name: "Collier Royal Or", price: 25000, oldPrice: 35000, cat: "bijoux", images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], enStock: true, stockBas: true, isNew: true, description: "Parure en or 24 carats." }
-    ];
-    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
-    let favoris = JSON.parse(localStorage.getItem('latyfa_fav')) || [];
-    let currentProduct = null;
-    let editingId = null;
-    let gainRoue = 0;
-
-    const tarifsLivraison = {
-        "abidjan_nord": { prix: 1500, label: "Abidjan Nord" },
-        "abidjan_sud": { prix: 2000, label: "Abidjan Sud" },
-        "interieur": { prix: 3500, label: "Intérieur Pays" },
-        "bouake": { prix: 0, label: "Retrait Boutique" }
-    };
-
-    // --- INIT ---
-    window.onload = () => {
-        setTimeout(() => document.getElementById('loader').classList.add('loader-hidden'), 1000);
-        checkMaintenance();
-        render('tous');
-        majBadgePanier();
-        initVisitor();
-        dessinerRoue();
-        lancerPreuveSociale();
-    };
-
-    // --- FONCTIONS AFFICHAGE ---
-    function render(filter) {
-        const grid = document.getElementById('product-grid');
-        let list = products;
-        if(filter !== 'tous') list = products.filter(p => p.cat === filter);
-        
-        grid.innerHTML = list.map(p => {
-            const isFav = favoris.includes(p.id);
-            return `
-                <div class="product-card" onclick="ouvrirDetail(${p.id})">
-                    <div class="relative h-48 overflow-hidden bg-gray-50">
-                        <img src="${p.images[0]}" class="w-full h-full object-cover">
-                        <button onclick="event.stopPropagation(); toggleFavori(${p.id})" class="absolute top-2 left-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center ${isFav ? 'text-red-500' : 'text-gray-400'}">
-                            <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
-                        </button>
-                        ${p.isNew ? '<span class="absolute top-2 right-2 bg-black text-white text-[7px] font-black px-2 py-1 rounded">NOUVEAU</span>' : ''}
-                        ${!p.enStock ? '<div class="absolute inset-0 bg-white/60 flex items-center justify-center font-black text-xs uppercase">Épuisé</div>' : ''}
-                    </div>
-                    <div class="p-3">
-                        <h3 class="text-[11px] font-bold uppercase truncate">${p.name}</h3>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-[var(--gold)] font-black text-sm">${p.price.toLocaleString()} F</span>
-                            ${p.oldPrice ? `<span class="text-gray-300 line-through text-[10px] font-bold">${p.oldPrice.toLocaleString()} F</span>` : ''}
-                        </div>
-                        <button class="w-full mt-3 py-2 bg-gray-50 rounded text-[8px] font-black uppercase tracking-widest border border-gray-100 hover:bg-black hover:text-white transition">Voir détails</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
+    // Gestion du bouton retour en haut
+window.addEventListener('scroll', function() {
+    const btn = document.getElementById('backToTop');
+    if (window.scrollY > 400) {
+        btn.classList.add('show');
+    } else {
+        btn.classList.remove('show');
     }
+});
 
-    function ouvrirDetail(id) {
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+    function ouvrirGuide() {
+    document.getElementById('guideModal').classList.add('active');
+}
+    function rechercherProduit() {
+    const terme = document.getElementById('search-input').value.toLowerCase();
+    const grid = document.getElementById('product-grid');
+    
+    // On filtre les produits par nom
+    const produitsFiltrés = products.filter(p => 
+        p.name.toLowerCase().includes(terme) || 
+        p.cat.toLowerCase().includes(terme)
+    );
+
+    if (produitsFiltrés.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full text-center py-20">
+                <i class="fa-solid fa-box-open text-4xl text-gray-200 mb-4"></i>
+                <p class="text-gray-500 text-xs font-bold uppercase">Aucun résultat pour "${terme}"</p>
+            </div>`;
+    } else {
+        // On utilise ta fonction render existante mais avec les produits filtrés
+        // Note: Pour que cela fonctionne, on va légèrement modifier la logique de render
+        afficherResultatsRecherche(produitsFiltrés);
+    }
+}
+
+// Petite fonction helper pour ne pas casser ton système de catégories
+function afficherResultatsRecherche(liste) {
+    const grid = document.getElementById('product-grid');
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
+    
+    grid.innerHTML = liste.map(p => {
+        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
+        return `
+            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
+                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
+                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
+                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
+                </div>
+            </div>`;
+    }).join('');
+}
+
+    (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
+
+    // --- VARIABLES GLOBALES ---
+    const tarifsLivraison = {
+        "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
+        "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
+        "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
+        "bouake": { nom: "Retrait Boutique", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
+    };
+
+    let products = [
+        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
+        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
+        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
+        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
+    ];
+
+    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+;
+let currentProduct = null;
+    let remiseCodePromo = 0; // Réduction en % via la roue
+
+    // --- BOUTIQUE ---
+    function render(filter = 'tous') {
+    const grid = document.getElementById('product-grid');
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
+    
+    // On récupère les favoris pour savoir quel cœur colorer
+    const favorisActuels = JSON.parse(localStorage.getItem('latyfa_favs')) || [];
+
+    grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
+        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
+        const isFav = favorisActuels.includes(p.id);
+        
+        return `
+            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
+                
+                <button onclick="toggleFavori(event, ${p.id})" class="fav-btn absolute top-2 left-2 z-30 w-8 h-8 rounded-full flex items-center justify-center shadow-sm bg-white/80 ${isFav ? 'active' : ''}">
+                    <i class="${isFav ? 'fa-solid text-red-500' : 'fa-regular text-gray-400'} fa-heart text-[14px]"></i>
+                </button>
+
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
+                
+                ${p.stockBas && p.enStock !== false ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 DERNIERS ARTICLES</span>' : ''}
+                
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                
+                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
+                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
+                </div>
+            </div>`;
+    }).join('');
+}
+  function voirDetails(id) {
         const p = products.find(x => x.id === id);
         currentProduct = p;
         document.getElementById('productDetailModal').classList.add('active');
-        document.getElementById('main-detail-img').src = p.images[0];
+        document.getElementById('main-detail-img').src = p.images[0];// 1. On crée d'abord la liste des photos
+let htmlMiniatures = p.images.map(img => `
+    <img src="${img}" onclick="changerMedia('image', '${img}')" 
+    class="h-14 w-14 object-cover rounded cursor-pointer border hover:border-[#c5a059] transition">
+`).join('');
+if(p.video) {
+    htmlMiniatures += `
+        <div onclick="changerMedia('video', '${p.video}')" 
+        class="h-14 w-14 bg-black rounded flex flex-col items-center justify-center cursor-pointer border border-gray-800 text-[#c5a059] transition hover:bg-gray-900">
+            <i class="fa-solid fa-play text-[10px]"></i>
+            <span class="text-[7px] font-black mt-1">VIDEO</span>
+        </div>
+    `;
+}
+document.getElementById('thumbnails').innerHTML = htmlMiniatures;
         document.getElementById('detail-name').innerText = p.name;
         document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
-        document.getElementById('detail-old-price').innerText = p.oldPrice ? p.oldPrice.toLocaleString() + " F" : "";
-        document.getElementById('detail-desc').innerText = p.description || "Élégance et qualité supérieure Latyfa Shop.";
-        
-        const thumbs = document.getElementById('thumbnails');
-        thumbs.innerHTML = p.images.map(img => `
-            <img src="${img}" onclick="document.getElementById('main-detail-img').src='${img}'" class="h-16 w-16 object-cover rounded border cursor-pointer hover:border-[#c5a059]">
-        `).join('');
+        document.getElementById('detail-desc').innerText = p.description;
 
-        if(p.stockBas) document.getElementById('stock-alert').classList.remove('hidden');
-        else document.getElementById('stock-alert').classList.add('hidden');
-    }
+        const sArea = document.getElementById('size-area');
+        const opts = p.tailles || p.pointures || [];
+        if(opts.length > 0) {
+            sArea.classList.remove('hidden');
+            document.getElementById('select-size').innerHTML = opts.map(o => `<option value="${o}">${o}</option>`).join('');
+        } else { sArea.classList.add('hidden'); }
 
-    function fermerDetail() { document.getElementById('productDetailModal').classList.remove('active'); }
+        const cArea = document.getElementById('color-area');
+        if(p.couleurs) {
+            cArea.classList.remove('hidden');
+            document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
+        } else { cArea.classList.add('hidden'); }
 
-    // --- PANIER ---
+        const urlSite = window.location.href;
+        const msgShare = `Regarde ce magnifique article chez *LATYFA Business* :\n🛍️ *${p.name}*\n💰 Prix : ${p.price.toLocaleString()} F\nLien : ${urlSite}`;
+        document.getElementById('share-wa').onclick = () => window.open(`https://wa.me/?text=${encodeURIComponent(msgShare)}`, "_blank");
+        document.getElementById('share-fb').onclick = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlSite)}`, "_blank");
+        // À mettre à la fin de ta fonction voirDetails
+const btnAjout = document.querySelector('button[onclick="ajouterDepuisDetail()"]');
+if(p.enStock === false) {
+    btnAjout.style.display = "none";
+} else {
+    btnAjout.style.display = "block";
+}
+      const stockMsg = document.getElementById('stock-msg');
+const stockAlert = document.getElementById('stock-alert');
+
+if (p.stockBas && p.enStock) {
+    stockAlert.classList.remove('hidden');
+    // On génère un petit chiffre aléatoire entre 2 et 5 pour faire vrai
+    const reste = Math.floor(Math.random() * 4) + 2; 
+    stockMsg.innerText = `Vite ! Plus que ${reste} articles disponibles`;
+} else {
+    stockAlert.classList.add('hidden');
+}
+  }
     function ajouterDepuisDetail() {
-        const item = { ...currentProduct, qty: 1 };
-        const index = cart.findIndex(x => x.id === item.id);
-        if(index > -1) cart[index].qty++;
-        else cart.push(item);
+        const size = document.getElementById('select-size').value || "";
+        const color = document.getElementById('select-color').value || "";
+        const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
         
-        saveCart();
-        fermerDetail();
-        alert("Ajouté au panier ! 🛍️");
-    }
-
-    function ouvrirPanier() {
-        const modal = document.getElementById('cartModal');
-        const list = document.getElementById('cart-items');
-        const form = document.getElementById('checkout-form');
-        modal.classList.add('active');
-
-        if(cart.length === 0) {
-            list.innerHTML = "<p class='text-center py-10 font-bold text-gray-400 text-xs'>PANIER VIDE</p>";
-            form.style.display = "none";
-            return;
-        }
-
-        form.style.display = "block";
-        list.innerHTML = cart.map((item, idx) => `
-            <div class="flex items-center justify-between bg-white p-3 rounded-xl shadow-sm">
-                <div class="flex items-center gap-3">
-                    <img src="${item.images[0]}" class="h-12 w-12 object-cover rounded">
-                    <div>
-                        <p class="text-[10px] font-bold uppercase truncate w-32">${item.name}</p>
-                        <p class="text-orange-500 font-black text-xs">${item.price.toLocaleString()} F</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="updateQty(${idx}, -1)" class="w-6 h-6 bg-gray-100 rounded">-</button>
-                    <span class="text-xs font-bold">${item.qty}</span>
-                    <button onclick="updateQty(${idx}, 1)" class="w-6 h-6 bg-gray-100 rounded">+</button>
-                </div>
-            </div>
-        `).join('');
-        majResume();
-    }
-
-    function updateQty(idx, delta) {
-        cart[idx].qty += delta;
-        if(cart[idx].qty < 1) cart.splice(idx, 1);
-        saveCart();
-        ouvrirPanier();
-    }
-
-    function majResume() {
-        const zone = document.getElementById('zone-livraison').value;
-        const cadeau = document.getElementById('check-cadeau').checked;
-        const subTotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-        let livraison = zone ? tarifsLivraison[zone].prix : 0;
-        let bonus = (subTotal * gainRoue) / 100;
-        let total = subTotal - bonus + livraison + (cadeau ? 1000 : 0);
-
-        document.getElementById('resume-final').innerHTML = `
-            <div class="flex justify-between"><span>Articles:</span> <span>${subTotal.toLocaleString()} F</span></div>
-            ${bonus > 0 ? `<div class="flex justify-between text-green-600"><span>Remise Roue:</span> <span>-${bonus.toLocaleString()} F</span></div>` : ''}
-            <div class="flex justify-between"><span>Livraison:</span> <span>${livraison.toLocaleString()} F</span></div>
-            ${cadeau ? `<div class="flex justify-between text-pink-500"><span>Cadeau:</span> <span>+1.000 F</span></div>` : ''}
-            <div class="flex justify-between text-lg text-red-600 pt-2 border-t"><span>Total:</span> <span>${total.toLocaleString()} F</span></div>
-        `;
-
-        const btn = document.getElementById('btn-final');
-        const valid = document.getElementById('nom-client').value && document.getElementById('tel-client').value && zone;
-        btn.disabled = !valid;
-        btn.className = valid ? "w-full py-4 rounded-full font-black uppercase text-white shadow-xl ali-gradient" : "w-full py-4 rounded-full font-black uppercase text-white shadow-xl bg-gray-300";
-    }
-
-    function validerCommande() {
-        const nom = document.getElementById('nom-client').value;
-        const tel = document.getElementById('tel-client').value;
-        const zone = document.getElementById('zone-livraison').value;
-        const total = document.getElementById('resume-final').querySelector('.text-red-600 span:last-child').innerText;
+        const index = cart.findIndex(x => x.label === label);
+        if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
         
-        let msg = `✨ *COMMANDE LATYFA SHOP* ✨\n\n`;
-        msg += `👤 *CLIENT :* ${nom}\n📞 *CONTACT :* ${tel}\n📍 *LIVRAISON :* ${tarifsLivraison[zone].label}\n\n`;
-        msg += `🛍️ *ARTICLES :*\n` + cart.map(i => `- ${i.name} (x${i.qty})`).join('\n');
-        msg += `\n\n💰 *TOTAL : ${total}*`;
-
-        window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
-        localStorage.removeItem('latyfa_cart');
-        location.reload();
-    }
-
-    function fermerPanier() { document.getElementById('cartModal').classList.remove('active'); }
-
-    // --- ADMIN ---
-    function ouvrirAdmin() {
-        const pass = prompt("Accès Admin :");
-        if(pass === "2026") {
-            document.getElementById('adminModal').classList.add('active');
-            refreshAdminList();
-            updateMaintBtn();
-        }
-    }
-
-    function ajouterProduitAdmin() {
-        const name = document.getElementById('adm-name').value;
-        const price = parseInt(document.getElementById('adm-price').value);
-        const oldPrice = parseInt(document.getElementById('adm-old-price').value) || null;
-        const imgInput = document.getElementById('adm-img').value;
+        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
         
-        if(!name || !price || !imgInput) return alert("Remplissez les champs obligatoires !");
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+        const cartIcon = document.getElementById('cart-count').parentElement;
+        cartIcon.classList.add('animate-cart');
+        setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
 
-        const imgs = imgInput.split('\n').filter(l => l.trim() !== "");
-        const data = {
-            id: editingId || Date.now(),
-            name, price, oldPrice,
-            cat: document.getElementById('adm-cat').value,
-            images: imgs,
-            description: document.getElementById('adm-desc').value,
-            stockBas: document.getElementById('adm-stock-bas').checked,
-            isNew: document.getElementById('adm-new').checked,
-            enStock: true
-        };
+        document.getElementById('productDetailModal').classList.remove('active');
 
-        if(editingId) {
-            const idx = products.findIndex(p => p.id === editingId);
-            products[idx] = data;
-            editingId = null;
-        } else {
-            products.push(data);
-        }
-
-        saveDB();
-        refreshAdminList();
-        render('tous');
-        resetAdmForm();
-        alert("Catalogue mis à jour !");
+        if (navigator.vibrate) navigator.vibrate(50);
+        
+        const toast = document.getElementById('toast');
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2000);
     }
 
-    function refreshAdminList() {
-        const list = document.getElementById('admin-list');
-        list.innerHTML = products.map(p => `
-            <div class="flex items-center justify-between bg-gray-50 p-2 rounded border text-[10px] font-bold">
-                <div class="flex items-center gap-2 truncate w-40">
-                    <img src="${p.images[0]}" class="h-8 w-8 object-cover rounded">
-                    <span>${p.name}</span>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="editProd(${p.id})" class="text-blue-600">EDIT</button>
-                    <button onclick="toggleStockAdmin(${p.id})" class="${p.enStock ? 'text-green-600' : 'text-red-600'}">${p.enStock ? 'STOCK' : 'NO'}</button>
-                    <button onclick="deleteProd(${p.id})" class="text-gray-400">SUPPR</button>
-                </div>
-            </div>
-        `).join('');
-    }
+    // --- LOGIQUE DE LA ROUE ---
+    const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
+    const canva = document.getElementById('canvas');
+    const ctx = canva.getContext('2d');
+    const MAX_TENTATIVES = 1;
 
-    function editProd(id) {
-        const p = products.find(x => x.id === id);
-        editingId = id;
-        document.getElementById('adm-name').value = p.name;
-        document.getElementById('adm-price').value = p.price;
-        document.getElementById('adm-old-price').value = p.oldPrice || "";
-        document.getElementById('adm-cat').value = p.cat;
-        document.getElementById('adm-img').value = p.images.join('\n');
-        document.getElementById('adm-desc').value = p.description;
-        document.getElementById('adm-stock-bas').checked = p.stockBas;
-        document.getElementById('adm-new').checked = p.isNew;
-        document.getElementById('adm-save-btn').innerText = "Enregistrer les modifications";
-    }
-
-    function deleteProd(id) {
-        if(confirm("Supprimer cet article ?")) {
-            products = products.filter(p => p.id !== id);
-            saveDB();
-            refreshAdminList();
-            render('tous');
-        }
-    }
-
-    function toggleStockAdmin(id) {
-        const p = products.find(x => x.id === id);
-        p.enStock = !p.enStock;
-        saveDB();
-        refreshAdminList();
-        render('tous');
-    }
-
-    function toggleMaintenance() {
-        const active = localStorage.getItem('latyfa_maint') === 'true';
-        localStorage.setItem('latyfa_maint', !active);
-        updateMaintBtn();
-        location.reload();
-    }
-
-    function updateMaintBtn() {
-        const active = localStorage.getItem('latyfa_maint') === 'true';
-        const btn = document.getElementById('maint-btn');
-        btn.innerText = active ? "DÉSACTIVER" : "ACTIVER";
-        btn.className = active ? "px-4 py-2 rounded-full text-[10px] font-bold uppercase bg-red-600 text-white" : "px-4 py-2 rounded-full text-[10px] font-bold uppercase bg-gray-200 text-gray-600";
-    }
-
-    function checkMaintenance() {
-        if(localStorage.getItem('latyfa_maint') === 'true') {
-            document.body.innerHTML = `<div class="h-screen flex flex-col items-center justify-center text-center p-10 bg-white"><h1 class="logo-font text-3xl font-black text-[#c5a059]">LATYFA SHOP</h1><p class="mt-4 font-bold text-gray-400 uppercase text-xs">Mise à jour en cours... Revenez plus tard.</p></div>`;
-        }
-    }
-
-    function resetAdmForm() {
-        document.getElementById('adm-name').value = "";
-        document.getElementById('adm-price').value = "";
-        document.getElementById('adm-old-price').value = "";
-        document.getElementById('adm-img').value = "";
-        document.getElementById('adm-desc').value = "";
-        document.getElementById('adm-save-btn').innerText = "Mettre en ligne";
-        editingId = null;
-    }
-
-    function fermerAdmin() { document.getElementById('adminModal').classList.remove('active'); }
-
-    // --- ROUE ---
-    const segments = ["REESSAYER", "-5%", "REESSAYER", "-10%", "LIVRAISON", "REESSAYER", "-2%", "CADEAU"];
-    function dessinerRoue() {
-        const ctx = document.getElementById('canvas').getContext('2d');
-        const arc = (2 * Math.PI) / segments.length;
-        for (let i = 0; i < segments.length; i++) {
+    function drawWheel() {
+        const arc = 2 * Math.PI / prizes.length;
+        ctx.clearRect(0, 0, 300, 300);
+        for (let i = 0; i < prizes.length; i++) {
             ctx.beginPath();
-            ctx.fillStyle = i % 2 === 0 ? "#1a1a1a" : "#c5a059";
+            ctx.fillStyle = i % 2 === 0 ? (prizes[i] === "REESSAYER" ? "#333" : "#c5a059") : "#000";
             ctx.moveTo(150, 150);
             ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
             ctx.fill();
@@ -684,99 +735,755 @@
             ctx.fillStyle = "white";
             ctx.translate(150, 150);
             ctx.rotate(i * arc + arc / 2);
-            ctx.font = "bold 10px Montserrat";
-            ctx.fillText(segments[i], 85, 5);
+            ctx.font = "bold 9px Montserrat";
+            ctx.textAlign = "right";
+            ctx.fillText(prizes[i], 130, 5);
             ctx.restore();
         }
     }
 
-    function lancerRoue() {
-        if(localStorage.getItem('roue_fait')) return alert("Déjà joué ! ✨");
-        const deg = 1800 + Math.random() * 360;
-        document.getElementById('canvas').style.transform = `rotate(${deg}deg)`;
-        document.getElementById('spin').disabled = true;
+    document.getElementById('spin').onclick = function() {
+    let stats = majAffichageChances();
+    if (stats.count >= MAX_TENTATIVES) return;
+
+    const btn = this;
+    btn.disabled = true;
+
+    // 1. On définit une rotation de base (5 tours complets) + un angle aléatoire
+    const randomExtra = Math.floor(Math.random() * 360);
+    const totalRotation = 1800 + randomExtra; 
+    
+    // 2. On lance l'animation CSS
+    canva.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
+    canva.style.transform = `rotate(${totalRotation}deg)`;
+
+    setTimeout(() => {
+        // 3. CALCUL PRÉCIS DU RÉSULTAT
+        // On récupère l'angle final par rapport au repère 0 (en haut)
+        const actualAngle = randomExtra % 360;
         
-        setTimeout(() => {
-            gainRoue = 5; // Simulation d'un gain de 5%
-            alert("Félicitations ! Vous avez gagné 5% de remise !");
-            localStorage.setItem('roue_fait', 'true');
-            fermerRoue();
-        }, 4000);
+        // Le calcul inversé pour savoir quel segment est sous le curseur (en haut)
+        // La roue tourne dans le sens horaire, donc on calcule en sens anti-horaire
+        const segmentSize = 360 / prizes.length;
+        const winIndex = Math.floor(((360 - actualAngle) % 360) / segmentSize);
+        const win = prizes[winIndex];
+
+        // 4. Enregistrement du passage
+        stats.count++;
+        localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
+        majAffichageChances();
+
+        // 5. Affichage du résultat
+        if (win === "REESSAYER") {
+            alert("Mince ! Retentez demain. 😥");
+        } else {
+            // Extraction du montant de remise (ex: "-10%" devient "10")
+            const promoAmount = win.replace(/[^0-9]/g, "") || "5";
+            const promoCode = "LATYFA" + promoAmount;
+            const expiration = Date.now() + (24 * 60 * 60 * 1000);
+
+            localStorage.setItem('latyfa_active_promo', JSON.stringify({
+                code: promoCode,
+                expires: expiration,
+                remise: promoAmount
+            }));
+
+            alert("🎉 BRAVO ! Vous avez gagné : " + win + "\nVotre code : " + promoCode + "\n\n⚠️ Utilisable dans le panier pendant 24h !");
+        }
+        
+        // Optionnel : remettre la roue à zéro sans transition pour le prochain coup
+        // canva.style.transition = "none";
+        // canva.style.transform = `rotate(${actualAngle}deg)`;
+        
+    }, 4000);
+};
+
+
+    function majAffichageChances() {
+        const aujourdhui = new Date().toLocaleDateString();
+        let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: aujourdhui, count: 0 };
+        if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
+        
+        const reste = MAX_TENTATIVES - stats.count;
+        const msgZone = document.getElementById('wheel-msg');
+        if(reste <= 0) {
+            msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE</span>`;
+            document.getElementById('spin').disabled = true;
+        } else {
+            msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/${MAX_TENTATIVES}</span>`;
+        }
+        return stats;
     }
 
-    function ouvrirRoue() { document.getElementById('wheel-mask').classList.add('active'); }
-    function fermerRoue() { document.getElementById('wheel-mask').classList.remove('active'); }
-
-    // --- UTILS ---
-    function saveDB() { localStorage.setItem('latyfa_db', JSON.stringify(products)); }
-    function saveCart() { 
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart)); 
-        majBadgePanier();
+    // --- PANIER ET CALCULS ---
+    function ouvrirPanier() {
+        document.getElementById('cartModal').classList.add('active');
+        const itemsDiv = document.getElementById('cart-items');
+        const form = document.getElementById('checkout-form');
+        
+        if(cart.length === 0) { 
+            itemsDiv.innerHTML = "<p class='text-center py-10 text-[10px] font-bold uppercase text-gray-400'>Panier Vide</p>"; 
+            form.style.display = "none"; 
+            return; 
+        }
+        
+        form.style.display = "block";
+        itemsDiv.innerHTML = cart.map(item => `
+            <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
+                <div class="flex-1">${item.label}</div>
+                <div class="flex gap-2 items-center">
+                    <button onclick="modifierQty('${item.label}',-1)" class="bg-gray-100 px-2 rounded">-</button>
+                    <span>${item.qty}</span>
+                    <button onclick="modifierQty('${item.label}',1)" class="bg-gray-100 px-2 rounded">+</button>
+                </div>
+            </div>`).join('');
+        
+        majResume();
     }
 
-    function majBadgePanier() {
-        const count = cart.reduce((acc, i) => acc + i.qty, 0);
-        document.getElementById('cart-count').innerText = count;
+    function modifierQty(label, d) {
+        const i = cart.find(x => x.label === label);
+        if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+        ouvrirPanier();
     }
 
-    function toggleFavori(id) {
-        const idx = favoris.indexOf(id);
-        if(idx > -1) favoris.splice(idx, 1);
-        else favoris.push(id);
-        localStorage.setItem('latyfa_fav', JSON.stringify(favoris));
-        render('tous');
+    function appliquerPromo() {
+        const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+        const msg = document.getElementById('promo-msg');
+        const savedPromo = JSON.parse(localStorage.getItem('latyfa_active_promo'));
+        const usedPromos = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
+
+        msg.classList.remove('hidden');
+
+        if (usedPromos.includes(inputCode)) {
+            msg.innerText = "❌ Ce code a déjà été utilisé.";
+            msg.className = "text-[9px] font-bold text-red-600";
+            remiseCodePromo = 0;
+        } 
+        else if (savedPromo && inputCode === savedPromo.code) {
+            if (Date.now() > savedPromo.expires) {
+                msg.innerText = "⏰ Code expiré (24h).";
+                msg.className = "text-[9px] font-bold text-red-600";
+                remiseCodePromo = 0;
+            } else {
+                remiseCodePromo = parseInt(savedPromo.remise);
+                msg.innerText = "✅ Code -" + remiseCodePromo + "% appliqué !";
+                msg.className = "text-[9px] font-bold text-green-600";
+            }
+        } else {
+            msg.innerText = "❌ Code invalide.";
+            msg.className = "text-[9px] font-bold text-red-600";
+            remiseCodePromo = 0;
+        }
+        majResume();
     }
 
-    function filtrerFavoris() {
-        const grid = document.getElementById('product-grid');
-        const favs = products.filter(p => favoris.includes(p.id));
-        if(favs.length === 0) return alert("Votre liste est vide ! ❤️");
-        // Affichage filtré
-        grid.innerHTML = "Rendu favoris..."; 
-        render('tous'); // On réutilise render mais filtré ici normalement
+    function majResume() {
+        const zoneKey = document.getElementById('zone-livraison').value;
+        const infoBox = document.getElementById('communes-info');
+        const optionCadeau = document.getElementById('check-cadeau').checked;
+        let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+        
+        let remiseValentin = 0;
+        const maintenant = new Date();
+        if (maintenant >= new Date("February 14, 2026") && maintenant <= new Date("February 28, 2026") && tArt >= 20000) {
+            remiseValentin = tArt * 0.2;
+        }
+
+        let remiseRoue = 0;
+        if (remiseCodePromo > 0) {
+            remiseRoue = (tArt - remiseValentin) * (remiseCodePromo / 100);
+        }
+
+        let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
+        let tCadeau = optionCadeau ? 1000 : 0;
+        let totalFinal = tArt - remiseValentin - remiseRoue + tLiv + tCadeau;
+        if(zoneKey) { 
+            infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
+            infoBox.classList.remove('hidden'); 
+        }
+
+        document.getElementById('resume-final').innerHTML = `
+            <div class="flex justify-between"><span>Articles :</span> <span>${tArt.toLocaleString()} F</span></div>
+            ${tCadeau > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Emballage Cadeau :</span> <span>+1.000 F</span></div>` : ''}
+            ${remiseValentin > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Promo Valentin (-20%) :</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
+            ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600"><span>🎰 Code Roue (-${remiseCodePromo}%) :</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
+            <div class="flex justify-between"><span>Livraison :</span> <span>${tLiv.toLocaleString()} F</span></div>
+        `;
+        document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
     }
 
-    function rechercherProduit() {
-        const txt = document.getElementById('search-input').value.toLowerCase();
-        const grid = document.getElementById('product-grid');
-        const filtered = products.filter(p => p.name.toLowerCase().includes(txt));
-        // Injection rapide
+    function toggleBouton() {
+        const chk = document.getElementById('check-verif').checked;
+        const btn = document.getElementById('btn-final');
+        btn.className = chk ? "w-full ali-gradient text-white py-4 rounded-full font-black uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-black uppercase";
+        btn.disabled = !chk;
     }
 
-    function initVisitor() {
-        let v = parseInt(localStorage.getItem('latyfa_v_count') || "1480");
-        v += 1;
-        localStorage.setItem('latyfa_v_count', v);
-        document.getElementById('visitor-count').innerText = v.toLocaleString();
+    function validerCommande() {
+    const nom = document.getElementById('nom-client').value;
+    const quartier = document.getElementById('tel-client').value;
+    const zoneKey = document.getElementById('zone-livraison').value;
+    const mode = document.getElementById('mode-pay').value;
+    const total = document.getElementById('total-display').innerText;
+    const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+    const optionCadeau = document.getElementById('check-cadeau').checked;
+    let cadeauMsg = optionCadeau ? "🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n" : "";
+    if(!nom || !quartier || !zoneKey) {
+        alert("⚠️ Remplissez vos infos !");
+        return;
     }
 
-    function lancerPreuveSociale() {
-        const textes = ["Kadi de Cocody vient d'acheter un sac Prestige", "Colis expédié vers Yamoussoukro à l'instant", "Une cliente regarde la Parure Royale", "Nouvelle commande depuis Bouaké"];
-        setInterval(() => {
-            const proof = document.getElementById('social-proof');
-            document.getElementById('proof-text').innerText = textes[Math.floor(Math.random()*textes.length)];
-            proof.classList.add('show');
-            setTimeout(() => proof.classList.remove('show'), 5000);
-        }, 20000);
+    // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
+    const nouvelleCommande = {
+        date: new Date().toLocaleString('fr-FR'),
+        client: nom,
+        lieu: quartier + " (" + tarifsLivraison[zoneKey].nom + ")",
+        articles: cart.map(i => `${i.label} (x${i.qty})`).join(', '),
+        total: total,
+        promo: inputCode || "Aucun"
+    };
+
+    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
+    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
+
+    // Sécurité : Marquer le code promo comme utilisé
+    if (remiseCodePromo > 0 && inputCode) {
+        let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
+        if (!used.includes(inputCode)) {
+            used.push(inputCode);
+            localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
+        }
     }
 
-    function exporterCatalogue() {
-        const blob = new Blob([JSON.stringify(products)], {type: 'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = "latyfa_catalogue.json"; a.click();
+    // Construction de la liste des articles avec émojis
+    let list = ""; 
+    cart.forEach(i => {
+        list += `🛍️ ${i.label} (x${i.qty})\n`;
+    });
+
+    // Calcul de la promo pour l'affichage WhatsApp
+    let promoText = remiseCodePromo > 0 ? `🎁 *CODE PROMO:* ${inputCode} (-${remiseCodePromo}%)\n` : "";
+    
+    // Structure élégante du message
+    let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP* ✨\n\n`;
+    msg += `👤 *CLIENT:* ${nom.toUpperCase()}\n`;
+    msg += `📞 *QUARTIER:* ${quartier}\n`;
+    msg += `🌍 *ZONE:* ${tarifsLivraison[zoneKey].nom}\n\n`;
+    msg += `📝 *DÉTAILS DU PANIER :*\n${list}\n`;
+    msg += cadeauMsg;
+    msg += `${promoText}`;
+    msg += `💰 *TOTAL À PAYER : ${total} F*\n\n`;
+    msg += `💳 *MODE DE PAIEMENT :* ${mode}\n`;
+    msg += `───────────────\n`;
+    msg += `_Commande générée depuis la boutique en ligne._`;
+
+    // Envoi vers ton numéro
+    window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+        localStorage.removeItem('latyfa_cart');
+cart = [];
+        }
+
+    // --- DIVERS ---
+    function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
+    function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
+    function updateVisitorCount() {
+        let count = localStorage.getItem('latyfa_visitors') || 1250;
+        count = parseInt(count) + 1;
+        localStorage.setItem('latyfa_visitors', count);
+        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
     }
 
-    function importerCatalogue() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.onchange = e => {
-            const reader = new FileReader();
-            reader.onload = () => { products = JSON.parse(reader.result); saveDB(); render('tous'); };
-            reader.readAsText(e.target.files[0]);
+    setInterval(() => {
+        const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
+        if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
+        const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+        document.getElementById('countdown').innerText = `${d}j ${h}h ${m}m ${s}s`;
+    }, 1000);
+
+    // Initialisation finale
+    drawWheel(); 
+    majAffichageChances(); 
+    render(); 
+    updateVisitorCount();
+    
+    // --- LOGIQUE DE PREUVE SOCIALE (Notifications de vente) ---
+const notifications = [
+    "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
+    "Nouveau colis expédié vers Yamoussoukro 📦",
+    "Une commande de Parfum Prestige vient d'être validée 🕯️",
+    "5 personnes consultent actuellement ce produit 🔥",
+    "Un ensemble de bijoux a été ajouté au panier à Bouaké 💎"
+];
+
+function showSocialProof() {
+    const box = document.getElementById('social-proof');
+    const text = document.getElementById('proof-text');
+    if(!box || !text) return;
+
+    text.innerText = notifications[Math.floor(Math.random() * notifications.length)];
+    box.classList.remove('translate-y-20', 'opacity-0');
+    
+    setTimeout(() => {
+        box.classList.add('translate-y-20', 'opacity-0');
+    }, 5000);
+}
+
+// Lancement de la preuve sociale
+setTimeout(() => {
+    showSocialProof();
+    setInterval(showSocialProof, 15000);
+}, 3000);
+// --- LOGIQUE ADMIN (Gestion du catalogue) ---
+let editingId = null; // Pour savoir si on modifie ou si on ajoute
+    // --- SAUVEGARDE ET RESTAURATION ---
+function exporterCatalogue() {
+    const data = localStorage.getItem('latyfa_db');
+    if (!data || data === "[]") return alert("Aucun produit à sauvegarder.");
+    
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    
+    const date = new Date().toLocaleDateString('fr-FR').replace(/\//g, '-');
+    a.href = url;
+    a.download = `LATYFA_BACKUP_${date}.json`;
+    a.click();
+    
+    alert("✅ Fichier de sauvegarde téléchargé ! Garde-le précieusement.");
+}
+
+function importerCatalogue() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = e => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = event => {
+            try {
+                const importedData = JSON.parse(event.target.result);
+                if (confirm("⚠️ Cela va remplacer tes produits actuels. Continuer ?")) {
+                    localStorage.setItem('latyfa_db', JSON.stringify(importedData));
+                    products = importedData;
+                    refreshAdminList();
+                    render();
+                    alert("✅ Catalogue restauré avec succès !");
+                }
+            } catch (err) {
+                alert("❌ Erreur : Le fichier est invalide.");
+            }
         };
-        input.click();
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
+
+function ouvrirAdmin() {
+    const mdp = prompt("Code d'accès Admin :");
+    if(mdp === "2026") {
+        document.getElementById('adminModal').classList.add('active');
+        const savedDb = localStorage.getItem('latyfa_db');
+        if(savedDb) { products = JSON.parse(savedDb); }
+        refreshAdminList(); 
+    } else { alert("Accès refusé"); }
+}
+
+function genererApercuAdmin() {
+    const input = document.getElementById('adm-img').value;
+    const previewZone = document.getElementById('admin-preview-zone');
+    const liens = input.split(',').map(l => l.trim()).filter(l => l !== "");
+    
+    previewZone.innerHTML = liens.map(url => `
+        <div class="relative min-w-[60px] h-[60px]">
+            <img src="${url}" class="w-full h-full object-cover rounded border border-[#c5a059]" onerror="this.src='https://placehold.co/60?text=Erreur'">
+        </div>
+    `).join('');
+}
+
+function editerProduit(id) {
+    const p = products.find(x => x.id === id);
+    if(!p) return;
+
+    editingId = id;
+    document.getElementById('adm-name').value = p.name;
+    document.getElementById('adm-price').value = p.price;
+    document.getElementById('adm-price-promo').value = p.promoPrice || "";
+    document.getElementById('adm-cat').value = p.cat;
+    document.getElementById('adm-img').value = p.images.join(', ');
+    document.getElementById('adm-video').value = p.video || "";
+    document.getElementById('adm-desc').value = p.description;
+    document.getElementById('adm-stock-bas').checked = p.stockBas || false;
+
+    const btn = document.querySelector('button[onclick="ajouterProduitAdmin()"]');
+    btn.innerText = "Enregistrer les modifications";
+    btn.className = "bg-blue-600 text-white py-4 rounded-xl font-black uppercase text-xs shadow-lg w-full";
+    
+    genererApercuAdmin();
+    document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function ajouterProduitAdmin() {
+    const name = document.getElementById('adm-name').value;
+    const price = document.getElementById('adm-price').value;
+    const pricePromo = document.getElementById('adm-price-promo').value;
+    const imgInput = document.getElementById('adm-img').value;
+
+    if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
+
+    const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
+
+    if (editingId) {
+        // MODE MODIFICATION
+        const index = products.findIndex(p => p.id === editingId);
+        products[index] = {
+            ...products[index],
+            name: name,
+            price: parseInt(price),
+            promoPrice: pricePromo ? parseInt(pricePromo) : null,
+            cat: document.getElementById('adm-cat').value,
+            images: imagesArray,
+            video: document.getElementById('adm-video').value || null,
+            description: document.getElementById('adm-desc').value,
+            stockBas: document.getElementById('adm-stock-bas').checked
+        };
+        editingId = null; // Reset après modification
+        alert("Article mis à jour !");
+    } else {
+        // MODE AJOUT (ton code actuel)
+        const newP = {
+            id: Date.now(),
+            name: name,
+            price: parseInt(price),
+            promoPrice: pricePromo ? parseInt(pricePromo) : null,
+            cat: document.getElementById('adm-cat').value,
+            images: imagesArray,
+            video: document.getElementById('adm-video').value || null,
+            description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
+            enStock: true,
+            stockBas: document.getElementById('adm-stock-bas').checked,
+            dateAjout: Date.now() 
+        };
+        products.push(newP);
+        alert("Nouvel article ajouté !");
     }
 
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    
+    // Reset complet du formulaire
+    resetFormulaireAdmin();
+    refreshAdminList();
+    render();
+}
+
+function resetFormulaireAdmin() {
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-price-promo').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    document.getElementById('adm-desc').value = "";
+    document.getElementById('adm-stock-bas').checked = false;
+    document.getElementById('admin-preview-zone').innerHTML = "";
+    
+    const btn = document.querySelector('button[onclick="ajouterProduitAdmin()"]');
+    btn.innerText = "Mettre en ligne";
+    btn.classList.replace('bg-blue-600', 'bg-black');
+}
+
+function resetFormulaireAdmin() {
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-price-promo').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    document.getElementById('adm-desc').value = "";
+    document.getElementById('adm-stock-bas').checked = false;
+    document.getElementById('admin-preview-zone').innerHTML = "";
+    const btn = document.querySelector('button[onclick="ajouterProduitAdmin()"]');
+    btn.innerText = "Mettre en ligne";
+    btn.className = "bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition w-full";
+}
+
+function toggleStock(id) {
+    const p = products.find(x => x.id === id);
+    if(p) {
+        p.enStock = !p.enStock;
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        refreshAdminList();
+        render();
+    }
+}
+
+function supprimerProduit(id) {
+    if(confirm("Supprimer définitivement cet article ?")) {
+        products = products.filter(p => p.id !== id);
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        refreshAdminList();
+        render();
+    }
+}
+
+function refreshAdminList() {
+    const list = document.getElementById('admin-list');
+    if (!list) return;
+    list.innerHTML = products.map(p => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border mb-2 shadow-sm">
+            <div class="flex items-center gap-2">
+                <img src="${p.images[0]}" class="w-8 h-8 object-cover rounded ${p.enStock === false ? 'grayscale' : ''}">
+                <span class="font-bold text-[10px] ${p.enStock === false ? 'text-red-400 line-through' : 'text-gray-700'}">${p.name}</span>
+            </div>
+            <div class="flex gap-1">
+                <button onclick="toggleStock(${p.id})" class="text-[8px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
+                    ${p.enStock === false ? 'OFF' : 'ON'}
+                </button>
+                <button onclick="editerProduit(${p.id})" class="text-blue-500 bg-blue-50 p-1.5 rounded-lg"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button onclick="supprimerProduit(${p.id})" class="text-red-500 bg-red-50 p-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('loader').classList.add('loader-hidden');
+    }, 1500);
+});
+function filtrerNouveautes() {
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
+    const grid = document.getElementById('product-grid');
+    // On ne garde que ceux ajoutés il y a moins de 7 jours
+    const nouveautes = products.filter(p => p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS));
+    
+    if(nouveautes.length === 0) {
+        alert("Pas de nouveaux articles cette semaine, revenez bientôt ! ✨");
+    } else {
+        // On réutilise la logique de render avec les nouveautés uniquement
+        afficherResultatsRecherche(nouveautes); 
+    }
+}
+// Initialisation des favoris au chargement
+let favoris = JSON.parse(localStorage.getItem('latyfa_favs')) || [];
+
+function toggleFavori(event, id) {
+    event.stopPropagation(); // Empêche d'ouvrir la fiche produit en cliquant sur le cœur
+    
+    const index = favoris.indexOf(id);
+    if (index > -1) {
+        favoris.splice(index, 1); // Retirer des favoris
+    } else {
+        favoris.push(id); // Ajouter aux favoris
+    }
+    
+    localStorage.setItem('latyfa_favs', JSON.stringify(favoris));
+    render(); // Actualiser l'affichage
+}
+// Fonction pour afficher uniquement les favoris
+function filtrerFavoris() {
+    const produitsFavoris = products.filter(p => favoris.includes(p.id));
+    
+    if (produitsFavoris.length === 0) {
+        alert("Vous n'avez pas encore de favoris. Cliquez sur le cœur ❤️ pour en ajouter !");
+    } else {
+        const grid = document.getElementById('product-grid');
+        // On réutilise votre logique d'affichage existante
+        afficherResultatsRecherche(produitsFavoris);
+    }
+}
+    // Vérifier l'état au démarrage
+window.onload = function() {
+    const isMaintenance = localStorage.getItem('latyfa_maintenance') === 'true';
+    if (isMaintenance) {
+        document.getElementById('maintenance-screen').classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Empêche de scroller derrière
+    }
+};
+
+// Fonction pour l'Admin (à mettre dans votre panneau de contrôle)
+function toggleMaintenance() {
+    const currentState = localStorage.getItem('latyfa_maintenance') === 'true';
+    const newState = !currentState;
+    
+    localStorage.setItem('latyfa_maintenance', newState);
+    
+    if (newState) {
+        alert("Boutique fermée ! Vos clientes verront l'écran de maintenance. 🔒");
+    } else {
+        alert("Boutique ouverte ! Le site est de nouveau visible. 🔓");
+    }
+    location.reload(); // Indispensable pour appliquer le changement immédiatement
+}
+// Pour vous débloquer si vous êtes sur l'écran de maintenance
+function leverMaintenance() {
+    const code = prompt("Code secret pour débloquer :");
+    if(code === "1234") { // Changez "1234" par votre code
+        localStorage.setItem('latyfa_maintenance', 'false');
+        location.reload();
+    }
+}
+    // --- SYSTÈME DE MAINTENANCE (À METTRE ICI) ---
+
+// 1. Cette fonction s'exécute toute seule au chargement du site
+(function() {
+    const isMaint = localStorage.getItem('latyfa_maintenance') === 'true';
+    if (isMaint) {
+        // On attend que la page soit prête pour remplacer le contenu
+        window.addEventListener('DOMContentLoaded', () => {
+            document.body.innerHTML = `
+                <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-family:sans-serif; padding:30px; background-color:#ffffff; position:fixed; inset:0; z-index:9999;">
+                    <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" style="width:120px; height:120px; border-radius:50%; margin-bottom:20px; border:3px solid #c5a059; padding:5px;">
+                    <h1 style="color:#c5a059; font-size:32px; font-weight:900; margin-bottom:10px;">LATYFA SHOP</h1>
+                    <div style="width:50px; height:2px; background:#c5a059; margin:20px 0;"></div>
+                    <h2 style="color:#333; font-size:18px; text-transform:uppercase; letter-spacing:2px; font-weight:bold;">Un instant de patience... ✨</h2> 
+                    <p style="color:#777; font-size:14px; max-width:300px; margin-top:15px;">Nous préparons de nouvelles pépites pour vous. Revenez très vite !</p>
+                    <button onclick="leverMaintenanceSecret()" style="margin-top:100px; opacity:0; cursor:default; border:none; background:none;">Admin</button>
+                </div>`;
+        });
+    }
+})();
+
+// 2. La fonction secrète pour réactiver (Code: 2026)
+function leverMaintenanceSecret() {
+    const code = prompt("Code de déblocage Admin :");
+    if(code === "2026") {
+        localStorage.setItem('latyfa_maintenance', 'false');
+        location.reload();
+    } else {
+        alert("Code incorrect");
+    }
+}
+    // 1. La fonction (le moteur)
+function majBadgePanier() {
+    if(document.getElementById('cart-count')) {
+        const totalArticles = cart.reduce((a, b) => a + b.qty, 0);
+        document.getElementById('cart-count').innerText = totalArticles;
+    }
+}
+// 2. L'appel (le démarrage) : INDISPENSABLE
+majBadgePanier();
 </script>
+
+<div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
+
+<div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
+
+<div id="adminModal" class="modal bg-gray-100">
+    <div class="max-w-2xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black uppercase italic text-gray-800">Panneau de Contrôle</h2>
+            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-2xl">&times;</button>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
+            <div class="grid grid-cols-1 gap-4">
+                <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-gray-400 uppercase">Prix Normal *</label>
+                        <input type="number" id="adm-price" placeholder="Ex: 15000" class="w-full border p-3 rounded-lg text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-red-400 uppercase">Prix Promo (Optionnel)</label>
+                        <input type="number" id="adm-price-promo" placeholder="Ex: 12000" class="w-full border p-3 rounded-lg text-sm bg-red-50">
+                    </div>
+                </div>
+                <div class="mb-6 p-4 bg-red-50 border-2 border-dashed border-red-200 rounded-xl">
+    <p class="text-[10px] font-black text-red-600 mb-2 uppercase tracking-widest text-center">État de la boutique</p>
+    <button onclick="toggleMaintenance()" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold text-[10px] uppercase shadow-md">
+        Activer / Désactiver la Maintenance
+    </button>
+</div>
+               <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm font-bold">
+                    <option value="bijoux">Bijoux</option>
+                    <option value="vetements">Vêtements</option>
+                    <option value="chaussures">Chaussures</option>
+                    <option value="sac">Sacs</option>
+                    <option value="parfum">Parfums</option>
+                    <option value="hanche">Perles de hanche</option>
+                    <option value="autres">Autres</option>
+                </select>
+                <div class="flex gap-2 mb-6">
+    <button onclick="exporterCatalogue()" class="flex-1 bg-green-600 text-white py-2 rounded-lg font-bold text-[10px] uppercase shadow-sm">
+        <i class="fa-solid fa-download mr-1"></i> Sauvegarder le catalogue
+    </button>
+    <button onclick="importerCatalogue()" class="flex-1 bg-gray-600 text-white py-2 rounded-lg font-bold text-[10px] uppercase shadow-sm">
+        <i class="fa-solid fa-upload mr-1"></i> Restaurer une sauvegarde
+    </button>
+</div>
+                
+                <div class="space-y-2">
+                    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Liens séparés par des virgules)</label>
+                    <textarea id="adm-img" oninput="genererApercuAdmin()" placeholder="Lien1, Lien2..." class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+                    <div id="admin-preview-zone" class="flex gap-2 overflow-x-auto py-2 no-scrollbar"></div>
+                </div>
+
+                <input type="text" id="adm-video" placeholder="Lien Vidéo .mp4 (Optionnel)" class="w-full border p-3 rounded-lg text-sm">
+                <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+                
+                <div class="flex items-center gap-2 mb-4">
+                    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+                    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Alerte "Stock Limité"</label>
+                </div>
+                
+                <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
+            </div>
+        </div>
+
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
+        <div id="admin-list" class="space-y-2 mb-10"></div>
+
+        <div class="pt-8 border-t-2 border-dashed border-gray-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">Journal des ventes</h3>
+                <button onclick="effacerToutLHistorique()" class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black">Vider</button>
+            </div>
+            <button onclick="toggleHistorique()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black uppercase text-[10px] mb-4 shadow-md">Voir l'historique</button>
+            <div id="historique-zone" class="hidden space-y-3 pb-20"></div>
+        </div>
+    </div>
+</div>
+<div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
+    <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-black uppercase text-sm italic">📏 Guide des Tailles</h3>
+            <button onclick="document.getElementById('guideModal').classList.remove('active')" class="text-xl">&times;</button>
+        </div>
+        
+        <div class="space-y-6">
+            <div>
+                <p class="text-[10px] font-bold text-[#c5a059] uppercase mb-2">Bagues & Bijoux</p>
+                <table class="w-full text-[10px] border-collapse">
+                    <tr class="bg-gray-100 uppercase">
+                        <th class="p-2 border">Taille</th>
+                        <th class="p-2 border">Circonférence</th>
+                    </tr>
+                    <tr><td class="p-2 border text-center">6</td><td class="p-2 border text-center">52 mm</td></tr>
+                    <tr><td class="p-2 border text-center">7</td><td class="p-2 border text-center">54 mm</td></tr>
+                    <tr><td class="p-2 border text-center">8</td><td class="p-2 border text-center">57 mm</td></tr>
+                </table>
+            </div>
+
+            <div>
+                <p class="text-[10px] font-bold text-[#c5a059] uppercase mb-2">Vêtements</p>
+                <div class="grid grid-cols-3 gap-2 text-center text-[9px] font-bold uppercase">
+                    <div class="bg-gray-50 p-2 rounded">S<br><span class="text-gray-400">36-38</span></div>
+                    <div class="bg-gray-50 p-2 rounded">M<br><span class="text-gray-400">40-42</span></div>
+                    <div class="bg-gray-50 p-2 rounded">L<br><span class="text-gray-400">44-46</span></div>
+                </div>
+            </div>
+            
+            <p class="text-[8px] text-gray-400 italic">Astuce : Si vous hésitez entre deux tailles, prenez la plus grande pour plus de confort.</p>
+        </div>
+    </div>
+</div>
+<button id="backToTop" onclick="scrollToTop()" class="fixed bottom-40 right-6 h-12 w-12 bg-[#c5a059] text-white rounded-full shadow-2xl z-40 translate-y-20 opacity-0 transition-all duration-500 flex items-center justify-center border-2 border-white">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
 </body>
 </html>
