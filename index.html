@@ -482,11 +482,11 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
         <div onclick="selectPay('TRANSFERT')" id="pay-mobile" 
      class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
     <div class="flex gap-2 mb-1 items-center">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Wave_Logo_Blue.png" class="h-4 w-4 object-contain" alt="Wave">
+        <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-5 w-5 object-contain" alt="Wave">
         
-        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c8/Orange_logo.svg.png" class="h-4 w-4 object-contain" alt="Orange Money">
+        <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" class="h-5 w-5 object-contain" alt="Orange Money">
         
-        <img src="https://i.postimg.cc/8P8fJ5jJ/mtn-momo.png" class="h-5 w-5 object-contain" alt="MTN MoMo">
+        <img src="https://i.postimg.cc/8P8fJ5jJ/mtn-momo.png" class="h-5 w-5 object-contain" alt="MTN">
     </div>
     <span class="text-[8px] font-black uppercase">Mobile Money</span>
 </div>
@@ -1045,82 +1045,70 @@ document.getElementById('spin').onclick = function() {
         btn.className = chk ? "w-full ali-gradient text-white py-4 rounded-full font-black uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-black uppercase";
         btn.disabled = !chk;
     }
-
     function validerCommande() {
-const zone = document.getElementById('zone-livraison').value;
-const modePay = document.getElementById('mode-pay').value;
-if (zone !== 'bouake' && modePay === 'CASH À LA LIVRAISON') {
-    alert("⚠️ Le paiement cash est réservé uniquement aux retraits en boutique. Pour une livraison à domicile, veuillez choisir le paiement par Transfert.");
-    return;
-}
-        
+    const zone = document.getElementById('zone-livraison').value;
+    const modePay = document.getElementById('mode-pay').value;
     const nom = document.getElementById('nom-client').value;
     const quartier = document.getElementById('tel-client').value;
-    const zoneKey = document.getElementById('zone-livraison').value;
-    const mode = document.getElementById('mode-pay').value;
     const total = document.getElementById('total-display').innerText;
     const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
     const optionCadeau = document.getElementById('check-cadeau').checked;
-    let cadeauMsg = optionCadeau ? "🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n" : "";
-    if(!nom || !quartier || !zoneKey) {
-        alert("⚠️ Remplissez vos infos !");
+
+    if (!nom || !quartier || !zone) {
+        alert("⚠️ Oups ! Merci de remplir votre nom, votre quartier et la zone de livraison.");
         return;
     }
 
-    // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
+    // Sécurité Paiement Cash (Réservé à Bouaké/Boutique)
+    if (zone !== 'bouake' && modePay === 'CASH À LA LIVRAISON') {
+        alert("⚠️ Le paiement cash est réservé uniquement aux retraits en boutique. Pour une livraison à domicile, veuillez choisir le paiement par Transfert.");
+        return;
+    }
+
+    // --- PERSONNALISATION DU RÉSEAU MOBILE ---
+    let precisionPay = modePay;
+    if (modePay.includes("TRANSFERT MOBILE")) {
+        const reseau = prompt("Quel réseau utilisez-vous ? (Wave, Orange ou MTN)");
+        precisionPay = reseau ? `MOBILE MONEY (${reseau.toUpperCase()})` : "MOBILE MONEY (WAVE/ORANGE/MTN)";
+    }
+
+    // Historique
     const nouvelleCommande = {
         date: new Date().toLocaleString('fr-FR'),
         client: nom,
-        lieu: quartier + " (" + tarifsLivraison[zoneKey].nom + ")",
+        lieu: quartier + " (" + tarifsLivraison[zone].nom + ")",
         articles: cart.map(i => `${i.label} (x${i.qty})`).join(', '),
         total: total,
         promo: inputCode || "Aucun"
     };
-
     let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
+    historique.unshift(nouvelleCommande);
     localStorage.setItem('latyfa_historique', JSON.stringify(historique));
 
-    // Sécurité : Marquer le code promo comme utilisé
-    if (remiseCodePromo > 0 && inputCode) {
-        let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
-        if (!used.includes(inputCode)) {
-            used.push(inputCode);
-            localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
-        }
-    }
-
-    // Construction de la liste des articles avec émojis
+    // Message WhatsApp
     let list = ""; 
-    cart.forEach(i => {
-        list += `🛍️ ${i.label} (x${i.qty})\n`;
-    });
+    cart.forEach(i => { list += `🛍️ ${i.label} (x${i.qty})\n`; });
 
-    // Calcul de la promo pour l'affichage WhatsApp
-    let promoText = remiseCodePromo > 0 ? `🎁 *CODE PROMO:* ${inputCode} (-${remiseCodePromo}%)\n` : "";
-    
-    // Structure élégante du message
     let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP* ✨\n\n`;
     msg += `👤 *CLIENT:* ${nom.toUpperCase()}\n`;
-    msg += `📞 *QUARTIER:* ${quartier}\n`;
-    msg += `🌍 *ZONE:* ${tarifsLivraison[zoneKey].nom}\n\n`;
+    msg += `📞 *QUARTIER/TÉL:* ${quartier}\n`;
+    msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
     msg += `📝 *DÉTAILS DU PANIER :*\n${list}\n`;
-    msg += cadeauMsg;
-    msg += `${promoText}`;
+    if(optionCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
+    if(remiseCodePromo > 0) msg += `🎰 *CODE PROMO:* ${inputCode} (-${remiseCodePromo}%)\n`;
     msg += `💰 *TOTAL À PAYER : ${total} F*\n\n`;
-    msg += `💳 *MODE DE PAIEMENT :* ${mode}\n`;
+    msg += `💳 *MODE DE PAIEMENT :* ${precisionPay}\n`;
     msg += `───────────────\n`;
-    msg += `_Commande générée depuis la boutique en ligne._`;
+    msg += `_Commande validée sur la boutique en ligne._`;
 
-    // Envoi vers ton numéro
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-        localStorage.removeItem('latyfa_cart');
-cart = [];
-document.getElementById('cart-count').innerText = 0;
-        
+    
+    // Vider le panier après envoi
+    localStorage.removeItem('latyfa_cart');
+    cart = [];
+    document.getElementById('cart-count').innerText = 0;
+    document.getElementById('cartModal').classList.remove('active');
 }
-
-
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
     function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
