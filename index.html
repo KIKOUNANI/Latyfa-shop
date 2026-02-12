@@ -1216,45 +1216,56 @@ function ouvrirAdmin() {
         alert("❌ Code incorrect. Accès refusé.");
     }
 }
+
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
-    const imgInput = document.getElementById('adm-img').value; // Récupère le texte brut
-    const videoUrl = document.getElementById('adm-video').value;
+    const imgInput = document.getElementById('adm-img').value;
 
     if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
 
-    // --- LA MAGIE EST ICI ---
-    // On coupe le texte à chaque virgule et on enlève les espaces vides
     const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
 
-    const newP = {
-        id: Date.now(),
+    const donneesProduit = {
         name: name,
         price: parseInt(price),
         cat: document.getElementById('adm-cat').value,
-        images: imagesArray, // On enregistre le tableau d'images
-        video: videoUrl || null, // La vidéo reste à part
+        images: imagesArray,
+        video: document.getElementById('adm-video').value || null,
         description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
-        enStock: true,
         stockBas: document.getElementById('adm-stock-bas').checked,
-    quantiteRestante: document.getElementById('adm-stock-count').value || "2", // On prend le chiffre saisi
-    dateAjout: Date.now() 
-};
-    products.push(newP);
+        quantiteRestante: document.getElementById('adm-stock-count').value || "2",
+        dateAjout: Date.now()
+    };
+
+    if (idEnCoursDeModification) {
+        // MODE MODIFICATION
+        const index = products.findIndex(p => p.id === idEnCoursDeModification);
+        products[index] = { ...products[index], ...donneesProduit };
+        idEnCoursDeModification = null; // Reset
+        alert("Produit mis à jour !");
+    } else {
+        // MODE CRÉATION
+        const newP = { id: Date.now(), enStock: true, ...donneesProduit };
+        products.push(newP);
+        alert("Produit ajouté !");
+    }
+
+    // Sauvegarde et Reset Interface
     localStorage.setItem('latyfa_db', JSON.stringify(products));
+    const btn = document.querySelector("button[onclick='ajouterProduitAdmin()']");
+    btn.innerText = "METTRE EN LIGNE";
+    btn.classList.replace('bg-blue-600', 'bg-black');
     
-    // Nettoyage des champs
-    document.getElementById('adm-name').value = "";
-    document.getElementById('adm-price').value = "";
-    document.getElementById('adm-img').value = "";
-    document.getElementById('adm-video').value = "";
-    
+    // Nettoyage complet
+    ['adm-name', 'adm-price', 'adm-img', 'adm-video', 'adm-desc', 'adm-stock-count'].forEach(id => {
+        document.getElementById(id).value = "";
+    });
+    document.getElementById('adm-stock-bas').checked = false;
+
     refreshAdminList();
     render();
-    alert("Produit ajouté avec " + imagesArray.length + " image(s) !");
 }
-
 function toggleStock(id) {
     const p = products.find(x => x.id === id);
     if(p) {
@@ -1284,6 +1295,7 @@ function refreshAdminList() {
                 <span class="font-bold text-[10px] ${p.enStock === false ? 'text-red-400 line-through' : 'text-gray-700'}">${p.name}</span>
             </div>
             <div class="flex gap-2">
+                <button onclick="preparerModification(${p.id})" class="text-blue-500 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
                 <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
                     ${p.enStock === false ? 'RUPTURE' : 'EN STOCK'}
                 </button>
@@ -1291,13 +1303,33 @@ function refreshAdminList() {
             </div>
         </div>
     `).join('');
-}
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const loader = document.getElementById('loader');
-        loader.classList.add('loader-hidden');
-    }, 1500); // 1.5 seconde pour un effet luxe bien dosé
-});
+    }
+    let idEnCoursDeModification = null;
+
+function preparerModification(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+
+    idEnCoursDeModification = id;
+    
+    // On remplit le formulaire
+    document.getElementById('adm-name').value = p.name;
+    document.getElementById('adm-price').value = p.price;
+    document.getElementById('adm-cat').value = p.cat;
+    document.getElementById('adm-img').value = p.images.join(', ');
+    document.getElementById('adm-video').value = p.video || "";
+    document.getElementById('adm-desc').value = p.description || "";
+    document.getElementById('adm-stock-bas').checked = p.stockBas || false;
+    document.getElementById('adm-stock-count').value = p.quantiteRestante || "2";
+
+    // On change le texte du bouton pour montrer qu'on modifie
+    const btn = document.querySelector("button[onclick='ajouterProduitAdmin()']");
+    btn.innerText = "ENREGISTRER LES MODIFICATIONS";
+    btn.classList.replace('bg-black', 'bg-blue-600');
+    
+    // Remonter en haut du formulaire
+    document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
+    }
     function toggleHistorique() {
     const zone = document.getElementById('historique-zone');
     if (zone.classList.contains('hidden')) {
