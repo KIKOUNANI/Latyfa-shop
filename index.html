@@ -529,74 +529,65 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </select>
     <p id="communes-info" class="hidden text-[9px] text-blue-600 font-bold italic px-2 uppercase"></p>
 
-    <div class="space-y-2">
-    <label class="text-[9px] font-black uppercase text-gray-400">Mode de paiement</label>
+<div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
+    </div>
+
+<div class="wheel-mask">
+    <div class="wheel-box">
+        <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
+        <h3 class="logo-font text-xl font-black italic uppercase text-gray-800">LATYFA LUCKY WHEEL</h3>
+        <p id="wheel-msg" class="text-[11px] font-black uppercase mt-2 text-blue-600"></p>
+        <div class="relative">
+            <canvas id="canvas" width="300" height="300"></canvas>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 text-3xl text-[#c5a059]">▼</div>
+        </div>
+        <button id="spin" class="spin-trigger mt-4">TENTER MA CHANCE</button>
+    </div>
+</div>
+
+<button onclick="document.querySelector('.wheel-mask').classList.add('active')" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#c5a059]">
+    <i class="fa-solid fa-gift text-[#c5a059] text-2xl"></i>
+</button>
+
+<div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
+    <div class="flex gap-2">
+        <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
+        <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">OK</button>
+    </div>
+    <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
+
+    <input type="text" id="nom-client" placeholder="NOM COMPLET *" class="w-full border p-3 rounded-lg text-sm uppercase">
     <div class="grid grid-cols-2 gap-2">
-        <div onclick="selectPay('TRANSFERT')" id="pay-mobile" class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
-            <div class="flex gap-1 mb-1">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Orange_logo.svg/1200px-Orange_logo.svg.png" class="w-4 h-4 object-contain">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/MTN_Logo.svg" class="w-4 h-4 object-contain">
-                <img src="https://vps.latyfa.shop/icons/wave.png" class="w-4 h-4 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1019/1019607.png'">
-            </div>
+        <input type="tel" id="tel-client" placeholder="WHATSAPP *" class="w-full border p-3 rounded-lg text-sm">
+        <input type="text" id="quartier-client" placeholder="QUARTIER *" class="w-full border p-3 rounded-lg text-sm">
+    </div>
+
+    <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm font-bold bg-blue-50 border-blue-200">
+        <option value="">-- CHOISIR ZONE LIVRAISON --</option>
+        <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+        <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+        <option value="interieur">Intérieur pays (3.000 F)</option>
+        <option value="bouake">Retrait Boutique (Gratuit)</option>
+    </select>
+    
+    <div class="grid grid-cols-2 gap-2 mt-2">
+        <div onclick="selectPay('TRANSFERT')" id="pay-mobile" class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center">
             <span class="text-[8px] font-black uppercase">Mobile Money</span>
         </div>
-
-        <div onclick="selectPay('CASH')" id="pay-cash" class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all opacity-60">
-            <i class="fa-solid fa-shop text-[#c5a059] mb-1"></i>
+        <div onclick="selectPay('CASH')" id="pay-cash" class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center opacity-60">
             <span class="text-[8px] font-black uppercase">Cash (Boutique)</span>
         </div>
     </div>
-    <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
-</div>
-        <div id="cart-items" class="space-y-4 mb-6 max-h-[30vh] overflow-y-auto"></div>
+    <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE">
 
-        <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
-            <div class="flex gap-2">
-                <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
-                <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">OK</button>
-            </div>
-            <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
-
-            <input type="text" id="nom-client" placeholder="NOM COMPLET *" class="w-full border p-3 rounded-lg text-sm uppercase">
-            <div class="grid grid-cols-2 gap-2">
-                <input type="tel" id="tel-client" placeholder="WHATSAPP *" class="w-full border p-3 rounded-lg text-sm">
-                <input type="text" id="quartier-client" placeholder="QUARTIER *" class="w-full border p-3 rounded-lg text-sm">
-            </div>
-
-            <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm font-bold bg-blue-50 border-blue-200">
-                <option value="">-- CHOISIR ZONE LIVRAISON --</option>
-                <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
-                <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-                <option value="interieur">Intérieur pays (3.000 F)</option>
-                <option value="bouake">Retrait Boutique (Gratuit)</option>
-            </select>
-            
-            <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-gift text-pink-500"></i>
-                    <span class="text-[9px] font-black uppercase">Emballage Cadeau (+1.000 F)</span>
-                </div>
-                <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-4 w-4">
-            </div>
-
-            <div id="resume-final" class="p-3 bg-gray-50 rounded-lg text-[10px] font-bold uppercase space-y-1"></div>
-            
-            <div class="text-xl font-black flex justify-between p-2 border-b-2 border-black">
-                <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
-            </div>
-
-            <div class="flex items-start gap-2 py-2">
-                <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1">
-                <label for="check-verif" class="text-[8px] font-bold uppercase text-gray-500">Je confirme ma commande et j'accepte les conditions.</label>
-            </div>
-
-            <button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 text-white py-4 rounded-full font-black uppercase shadow-xl pointer-events-none" disabled>
-                Commander via WhatsApp
-            </button>
-        </div>
-        
-        <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-4 text-[9px] font-bold uppercase text-gray-400 underline">Continuer mes achats</button>
+    <div id="resume-final" class="p-3 bg-gray-50 rounded-lg text-[10px] font-bold uppercase space-y-1"></div>
+    <div class="text-xl font-black flex justify-between p-2 border-b-2 border-black">
+        <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
     </div>
+    <button id="btn-final" onclick="validerCommande()" class="w-full ali-gradient text-white py-4 rounded-full font-black uppercase shadow-xl">
+        Commander via WhatsApp
+    </button>
+</div>
 </div>
     <div id="cgvModal" class="modal bg-gray-100">
     <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-2xl my-6 border border-gray-200">
@@ -1073,51 +1064,36 @@ document.getElementById('spin').onclick = function() {
 
     function majResume() {
     const zoneKey = document.getElementById('zone-livraison').value;
-    const isCadeau = document.getElementById('check-cadeau').checked;
+    const isCadeau = document.getElementById('check-cadeau')?.checked || false;
     const containerResume = document.getElementById('resume-final');
     const alertePromo = document.getElementById('promo-congrats');
 
-    // 1. Sous-total articles
     let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    
-    // 2. Frais livraison
-    let tLiv = 0;
-    if (zoneKey && tarifsLivraison[zoneKey]) {
-        tLiv = tarifsLivraison[zoneKey].prix;
-    }
-
-    // 3. Option Cadeau
+    let tLiv = (zoneKey && tarifsLivraison[zoneKey]) ? tarifsLivraison[zoneKey].prix : 0;
     let tCadeau = isCadeau ? 1000 : 0;
 
-    // 4. Promo St Valentin (-20% si > 20.000 F)
+    // Promo St Valentin
     let remiseValentin = 0;
     const maintenant = new Date();
-    const debutPromo = new Date(2026, 1, 14); // 14 Fev
-    const finPromo = new Date(2026, 1, 28);   // 28 Fev
-
-    if (maintenant >= debutPromo && maintenant <= finPromo && tArt >= 20000) {
+    if (maintenant >= new Date(2026, 1, 14) && maintenant <= new Date(2026, 1, 28) && tArt >= 20000) {
         remiseValentin = tArt * 0.20;
-        alertePromo.classList.remove('hidden');
+        if(alertePromo) alertePromo.classList.remove('hidden');
     } else {
-        alertePromo.classList.add('hidden');
+        if(alertePromo) alertePromo.classList.add('hidden');
     }
 
-    // 5. Remise Code Promo (Roue)
+    // Remise Roue
     let remiseRoue = (remiseCodePromo > 0) ? (tArt * (remiseCodePromo / 100)) : 0;
-
     let totalFinal = tArt + tLiv + tCadeau - remiseValentin - remiseRoue;
 
-    // Affichage
     containerResume.innerHTML = `
         <div class="flex justify-between"><span>Articles:</span> <span>${tArt.toLocaleString()} F</span></div>
         ${tLiv > 0 ? `<div class="flex justify-between"><span>Livraison:</span> <span>${tLiv.toLocaleString()} F</span></div>` : ''}
-        ${tCadeau > 0 ? `<div class="flex justify-between text-pink-500"><span>Option Cadeau:</span> <span>+1.000 F</span></div>` : ''}
-        ${remiseValentin > 0 ? `<div class="flex justify-between text-green-600 font-bold"><span>Remise Valentin (-20%):</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
-        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600 font-bold"><span>Remise Code (-${remiseCodePromo}%):</span> <span>-${remiseRoue.toLocaleString()} F</span></div>` : ''}
+        ${remiseValentin > 0 ? `<div class="flex justify-between text-green-600"><span>Promo Valentin (-20%):</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
+        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600"><span>Code Promo:</span> <span>-${remiseRoue.toLocaleString()} F</span></div>` : ''}
     `;
     
     document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
-    toggleBouton(); // Vérifie si on peut activer le bouton final
 }
 
     function toggleBouton() {
