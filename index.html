@@ -1280,6 +1280,7 @@ function ouvrirAdmin() {
         
         chargerHistorique();
         mettreAJourStats();
+        rafraichirListeCommandes();
     } else {
         alert("❌ Code incorrect. Accès refusé.");
     }
@@ -1569,18 +1570,65 @@ function notifierAjout(nom) {
     const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
     const zoneCA = document.getElementById('stat-ca');
     const zoneNB = document.getElementById('stat-nb');
+    const barre = document.getElementById('objectif-barre');
+    const objText = document.getElementById('objectif-text');
+    const objPourcent = document.getElementById('objectif-pourcent');
 
+    // 1. Calcul du CA total
     let totalCA = 0;
     historique.forEach(cmd => {
         let prixNettoyé = cmd.total.toString().replace(/\s/g, '').replace(/,/g, '');
         totalCA += parseInt(prixNettoyé) || 0;
     });
+    // 2. Gestion de l'Objectif
+    let monObjectif = localStorage.getItem('latyfa_objectif_ca') || 500000; // 500k par défaut
+    let pourcentage = (totalCA / monObjectif) * 100;
+// GESTION DES COULEURS
+if (pourcentage >= 100) {
+    pourcentage = 100; // On bloque à 100%
+    barre.classList.remove('ali-gradient'); // On enlève le doré
+    barre.classList.add('bg-emerald-500');  // On met un beau vert succès
+    objPourcent.innerText = "OBJECTIF ATTEINT ! 🎉";
+    if (totalCA >= monObjectif && !localStorage.getItem('alerte_bravo')) {
+    alert("Félicitations Latyfa ! L'objectif du mois est atteint ! 🥂");
+    localStorage.setItem('alerte_bravo', 'true'); // Pour ne pas l'afficher à chaque fois
+}
+    objPourcent.classList.replace('text-[#c5a059]', 'text-emerald-500');
+} else {
+    barre.classList.add('ali-gradient');
+    barre.classList.remove('bg-emerald-500');
+    objPourcent.innerText = Math.round(pourcentage) + "%";
+    objPourcent.classList.replace('text-emerald-500', 'text-[#c5a059]');
+}
+barre.style.width = pourcentage + "%";
+    objText.innerText = `${totalCA.toLocaleString()} F / ${parseInt(monObjectif).toLocaleString()} F`;
+    objPourcent.innerText = Math.round((totalCA / monObjectif) * 100) + "%";
 
-    // --- LOGIQUE DE L'ANIMATION DU COMPTEUR ---
+    // 3. Animation du compteur CA (ton code existant)
     let depart = 0;
     let fin = totalCA;
-    let duree = 1000; // L'animation dure 1 seconde
+    let duree = 1000;
     let debutTemps = null;
+    function animation(tempsActuel) {
+        if (!debutTemps) debutTemps = tempsActuel;
+        let progression = tempsActuel - debutTemps;
+        let valeurActuelle = Math.min(Math.floor((progression / duree) * (fin - depart) + depart), fin);
+        zoneCA.innerText = valeurActuelle.toLocaleString('fr-FR') + " F";
+        if (progression < duree) requestAnimationFrame(animation);
+    }
+    requestAnimationFrame(animation);
+    zoneNB.innerText = historique.length;
+}
+
+// Nouvelle fonction pour changer l'objectif à la main
+function definirObjectif() {
+    let nouveau = prompt("Fixez votre objectif de CA mensuel (en FCFA) :", "500000");
+    if (nouveau && !isNaN(nouveau)) {
+        localStorage.setItem('latyfa_objectif_ca', nouveau);
+        mettreAJourStats();
+    }
+}
+
 
     function animation(tempsActuel) {
         if (!debutTemps) debutTemps = tempsActuel;
@@ -1640,30 +1688,79 @@ function notifierAjout(nom) {
     link.click();
     document.body.removeChild(link);
         }
+    function reinitialiserMois() {
+    const confirmation = prompt("Attention ! Cela va effacer toutes les ventes et remettre l'objectif à zéro. Tapez 'SUPPRIMER' pour confirmer :");
+    
+    if (confirmation === "SUPPRIMER") {
+        // 1. On vide l'historique dans le localStorage
+        localStorage.removeItem('latyfa_historique');
+        
+        // 2. On retire le marqueur de l'alerte de succès pour le mois prochain
+        localStorage.removeItem('alerte_bravo');
+        
+        // 3. On rafraîchit la page pour tout remettre à zéro visuellement
+        alert("Le nouveau mois est prêt ! Bonne chance pour vos ventes. 🚀");
+        window.location.reload();
+    } else {
+        alert("Action annulée.");
+    }
+}
+    function rafraichirListeCommandes() {
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    const listeElement = document.getElementById('admin-liste-commandes');
+    
+    if (!listeElement) return; // Sécurité si l'élément n'existe pas encore
+
+    if (historique.length === 0) {
+        listeElement.innerHTML = `
+            <div class="flex flex-col items-center justify-center py-12 opacity-40">
+                <div class="text-4xl mb-3">📦</div>
+                <p class="text-[10px] font-black uppercase tracking-widest text-gray-500">Aucune commande pour le moment</p>
+                <p class="text-[9px] font-medium text-gray-400 mt-1 italic">Vos futures ventes s'afficheront ici</p>
+            </div>
+        `;
+    } else {
+        listeElement.innerHTML = historique.slice().reverse().map((cmd) => `
+            <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex justify-between items-center mb-3">
+                <div>
+                    <p class="text-xs font-black text-gray-800">${cmd.nom}</p>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase italic">${cmd.date || 'Date inconnue'}</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs font-black text-[#c5a059]">${cmd.total}</p>
+                    <button onclick="supprimerUneCommande('${cmd.id}')" class="text-[8px] text-red-300 hover:text-red-500 uppercase font-black tracking-widest transition-colors">Supprimer</button>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+    function supprimerUneCommande(idCommande) {
+    if(confirm("Supprimer cette vente de l'historique ?")) {
+        let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+        // On garde tout sauf celle qui a cet ID (ou ce nom/index)
+        historique = historique.filter(cmd => cmd.id !== idCommande); 
+        localStorage.setItem('latyfa_historique', JSON.stringify(historique));
+        
+        // On rafraîchit tout l'affichage
+        mettreAJourStats();
+        rafraichirListeCommandes();
+    }
+    }
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
-
 <div id="adminModal" class="modal bg-gray-50">
     <div class="max-w-xl mx-auto pb-20">
-        <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
+        <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10 border-b">
             <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
             <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
         </div>
 
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
             <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
-            <div class="grid grid-cols-1 gap-4">
+            <div class="space-y-4">
                 <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
-                <div class="grid grid-cols-2 gap-4 mb-4">
-    <div class="flex flex-col">
-        <label class="text-[9px] font-bold text-gray-400 uppercase">Alerte Stock (Ex: 2)</label>
-        <input type="number" id="adm-stock-count" placeholder="Ex: 3" class="w-full border p-3 rounded-lg text-sm">
-    </div>
-    <div class="flex items-center gap-2 mt-4">
-        <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-        <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
-    </div>
-</div>
+                
+                <div class="grid grid-cols-2 gap-4">
                     <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
                     <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
                         <option value="bijoux">Bijoux</option>
@@ -1675,70 +1772,99 @@ function notifierAjout(nom) {
                         <option value="autres">Autres</option>
                     </select>
                 </div>
-               <div class="space-y-1">
-    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez les liens par une virgule si plusieurs)</label>
-    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-</div> 
-                <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm mt-2">
-                <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                <div class="flex items-center gap-2 mb-4">
-    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Activer l'alerte "Stock Limité"</label>
-</div>
-                <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
+
+                <div class="bg-gray-50 p-3 rounded-xl border border-dashed border-gray-300">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-[9px] font-bold text-gray-400 uppercase">Gestion du stock</label>
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+                            <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Alerte "Stock Limité"</label>
+                        </div>
+                    </div>
+                    <input type="number" id="adm-stock-count" placeholder="Quantité restante (ex: 2)" class="w-full border p-2 rounded-lg text-xs">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Lien 1, Lien 2, ...)</label>
+                    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+                </div> 
+
+                <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm">
+                <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-16"></textarea>
+                
+                <button onclick="ajouterProduitAdmin()" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition shadow-lg">
+                    Mettre en ligne l'article
+                </button>
             </div>
         </div>
 
-        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
-        <div id="admin-list" class="space-y-2 mb-10">
-            </div>
-    
-<div class="grid grid-cols-2 gap-4 mb-8">
-    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
-        <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Chiffre d'Affaires</p>
-        <div id="stat-ca" class="text-xl font-black text-blue-700">0 F</div>
-    </div>
-    <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
-        <p class="text-[9px] font-black uppercase text-green-400 mb-1">Commandes</p>
-        <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
-    </div>
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 px-2">Articles actuellement en ligne</h3>
+        <div id="admin-list" class="space-y-2 mb-10 px-2"></div>
+        <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+    <button onclick="reinitialiserMois()" class="text-[10px] font-black text-red-400 uppercase tracking-widest hover:text-red-600 transition-colors">
+        🗑️ Réinitialiser les données du mois
+    </button>
 </div>
-        <div class="pt-8 border-t-2 border-dashed border-gray-200">
-    <div class="flex flex-col gap-4 mb-4">
-        <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
-            <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
-        </h3>
-        
-        <div class="flex gap-2">
-            <button onclick="sauvegarderHistorique()" 
-                    class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md active:scale-95 transition-all">
-                <i class="fa-solid fa-file-export mr-2"></i> Sauvegarder (Excel)
-            </button>
+    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 mb-6">
+    <div class="flex justify-between items-end mb-2">
+        <div>
+            <h4 class="text-[10px] font-black uppercase tracking-widest text-gray-400">Objectif du Mois</h4>
+            <p id="objectif-text" class="text-xs font-bold text-gray-800">Chargement...</p>
+        </div>
+        <button onclick="definirObjectif()" class="text-[9px] font-black text-[#c5a059] uppercase hover:underline">Modifier</button>
+    </div>
+    
+    <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden border border-gray-50">
+        <div id="objectif-barre" class="h-full ali-gradient transition-all duration-1000 shadow-[0_0_10px_rgba(197,160,89,0.5)]" style="width: 0%"></div>
+    </div>
+    
+    <div class="flex justify-between mt-2">
+        <span id="objectif-pourcent" class="text-[10px] font-black text-[#c5a059]">0%</span>
+        <span class="text-[9px] font-bold text-gray-300 uppercase">Progression</span>
+    </div>
+    </div>
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center shadow-sm">
+                <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Chiffre d'Affaires</p>
+                <div id="stat-ca" class="text-xl font-black text-blue-700">0 F</div>
+            </div>
+            <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center shadow-sm">
+                <p class="text-[9px] font-black uppercase text-green-400 mb-1">Commandes</p>
+                <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
+            </div>
+        </div>
+
+        <div class="pt-8 border-t-2 border-dashed border-gray-200 px-2">
+            <div class="flex flex-col gap-4 mb-4">
+                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
+                    <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
+                </h3>
+                
+                <div class="flex gap-2">
+                    <button onclick="sauvegarderHistorique()" class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md">
+                        <i class="fa-solid fa-file-export mr-2"></i> Sauvegarder (Excel)
+                    </button>
+                    <button onclick="effacerToutLHistorique()" class="bg-red-100 text-red-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-red-600 hover:text-white transition-all">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
             
-            <button onclick="effacerToutLHistorique()" 
-                    class="bg-red-100 text-red-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-red-600 hover:text-white transition-all">
-                <i class="fa-solid fa-trash-can"></i>
+            <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
+                <i class="fa-solid fa-clock-rotate-left mr-2"></i> Voir l'historique complet
+            </button>
+
+            <div id="historique-zone" class="hidden space-y-3 pb-10"></div>
+        </div>
+
+        <div class="text-center mt-6 flex flex-col gap-4">
+            <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest">
+                <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
+            </button>
+            <button onclick="document.getElementById('adminModal').classList.add('hidden')" class="w-full bg-gray-100 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px]">
+                <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
             </button>
         </div>
-    </div>
-    
-    <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
-        <i class="fa-solid fa-clock-rotate-left mr-2"></i> Voir l'historique complet
-    </button>
-
-    <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10">
-        </div>
-</div>
-    <div class="text-center mt-6">
-    <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest">
-        <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
-    </button>
-    </div>
-    <div class="mt-6 border-t border-gray-100 pt-4">
-    <button onclick="document.getElementById('adminModal').classList.add('hidden')" 
-            class="w-full bg-gray-50 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px] hover:bg-gray-100 active:scale-95 transition-all">
-        <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
-    </button>
     </div>
 </div>
 <div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
