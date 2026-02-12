@@ -1743,8 +1743,10 @@ function mettreAJourStats() {
     }
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
+
 <div id="adminModal" class="modal bg-gray-50">
-    <div class="max-w-xl mx-auto pb-20">
+    <div class="max-w-xl mx-auto pb-20 px-4">
+        
         <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
             <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
             <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
@@ -1752,96 +1754,36 @@ function mettreAJourStats() {
 
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
             <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
-            <div class="grid grid-cols-1 gap-4">
+            <div class="space-y-4">
                 <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
-                <div class="grid grid-cols-2 gap-4 mb-4">
-    <div class="flex flex-col">
-        <label class="text-[9px] font-bold text-gray-400 uppercase">Alerte Stock (Ex: 2)</label>
-        <input type="number" id="adm-stock-count" placeholder="Ex: 3" class="w-full border p-3 rounded-lg text-sm">
-    </div>
-    <div class="flex items-center gap-2 mt-4">
-        <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-        <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
-    </div>
-</div>
-                    <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
-                    <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
-                        <option value="bijoux">Bijoux</option>
-                        <option value="vetements">Vêtements</option>
-                        <option value="chaussures">Chaussures</option>
-                        <option value="sac">Sacs</option>
-                        <option value="parfum">Parfums</option>
-                        <option value="hanche">Perles de hanche</option>
-                        <option value="autres">Autres</option>
-                    </select>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col">
+                        <label class="text-[9px] font-bold text-gray-400 uppercase">Alerte Stock (Chiffre)</label>
+                        <input type="number" id="adm-stock-count" placeholder="Ex: 2" class="border p-3 rounded-lg text-sm">
+                    </div>
+                    <div class="flex items-center gap-2 pt-4">
+                        <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+                        <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
+                    </div>
                 </div>
-               <div class="space-y-1">
-    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez les liens par une virgule si plusieurs)</label>
-    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-</div> 
-                <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm mt-2">
-                <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                <div class="flex items-center gap-2 mb-4">
-    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Activer l'alerte "Stock Limité"</label>
-</div>
-                <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
-            </div>
-        </div>
 
-        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
-        <div id="admin-list" class="space-y-2 mb-10">
-            </div>
-    
-<div class="grid grid-cols-2 gap-4 mb-4">
-    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
-        <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Chiffre d'Affaires</p>
-        <div id="stat-ca" class="text-xl font-black text-blue-700">0 F</div>
-    </div>
-    
-    <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
-        <p class="text-[9px] font-black uppercase text-green-400 mb-1">Commandes</p>
-        <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
-    </div>
-</div>
+                <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
+                
+                <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
+                    <option value="bijoux">Bijoux</option>
+                    <option value="vetements">Vêtements</option>
+                    <option value="chaussures">Chaussures</option>
+                    <option value="sac">Sacs</option>
+                    <option value="parfum">Parfums</option>
+                    <option value="hanche">Perles de hanche</option>
+                    <option value="autres">Autres</option>
+                </select>
 
-<div class="grid grid-cols-2 gap-4 mb-2">
-    <div class="bg-gray-50 p-3 rounded-xl border text-center">
-        <p class="text-[8px] font-black uppercase text-gray-400">Total Tours Roue</p>
-        <div id="stat-total-spins" class="text-lg font-black text-gray-800">0</div>
-    </div>
-    <div class="bg-gray-50 p-3 rounded-xl border text-center">
-        <p class="text-[8px] font-black uppercase text-gray-400">Gains Clients</p>
-        <div id="stat-total-wins" class="text-lg font-black text-[#c5a059]">0</div>
-    </div>
-</div>
-
-<button onclick="resetStatsRoue()" class="w-full mb-6 text-[8px] font-bold text-red-400 uppercase hover:text-red-600 transition tracking-widest">
-    <i class="fa-solid fa-trash-can mr-1"></i> Réinitialiser les compteurs de la roue
-</button>
-<div id="stat-nb" class="text-xl font-black text-green-700">0</div>
-    </div>
-</div>
-        <div class="pt-8 border-t-2 border-dashed border-gray-200">
-    <div class="flex flex-col gap-4 mb-4">
-        <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
-            <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
-        </h3>
-        
-        <div class="flex gap-2">
-            <button onclick="sauvegarderHistorique()" 
-                    class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md active:scale-95 transition-all">
-                <i class="fa-solid fa-file-export mr-2"></i> Sauvegarder (Excel)
-            </button>
-            
-            <button onclick="effacerToutLHistorique()" 
-                    class="bg-red-100 text-red-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-red-600 hover:text-white transition-all">
-                <i class="fa-solid fa-trash-can"></i>
-            </button>
-        </div>
-    </div>
-    
-    <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
+                <div class="space-y-1">
+                    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez par une virgule)</label>
+                    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+                </div>
 
                 <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm">
                 <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
@@ -1863,6 +1805,77 @@ function mettreAJourStats() {
                 <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
             </div>
         </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-2">
+            <div class="bg-gray-50 p-3 rounded-xl border text-center">
+                <p class="text-[8px] font-black uppercase text-gray-400">Total Tours Roue</p>
+                <div id="stat-total-spins" class="text-lg font-black text-gray-800">0</div>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-xl border text-center">
+                <p class="text-[8px] font-black uppercase text-gray-400">Gains Clients</p>
+                <div id="stat-total-wins" class="text-lg font-black text-[#c5a059]">0</div>
+            </div>
+        </div>
+
+        <button onclick="resetStatsRoue()" class="w-full mb-6 text-[8px] font-bold text-red-400 uppercase hover:text-red-600 transition tracking-widest">
+            <i class="fa-solid fa-trash-can mr-1"></i> Réinitialiser les compteurs de la roue
+        </button>
+
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
+        <div id="admin-list" class="space-y-2 mb-10"></div>
+
+        <div class="pt-8 border-t-2 border-dashed border-gray-200">
+            <div class="flex flex-col gap-4 mb-4">
+                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
+                    <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
+                </h3>
+                <div class="flex gap-2">
+                    <button onclick="sauvegarderHistorique()" class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md">
+                        <i class="fa-solid fa-file-export mr-2"></i> Sauvegarder (Excel)
+                    </button>
+                    <button onclick="effacerToutLHistorique()" class="bg-red-100 text-red-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-red-600 hover:text-white transition-all">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4">
+                <i class="fa-solid fa-clock-rotate-left mr-2"></i> Voir l'historique complet
+            </button>
+            <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10"></div>
+        </div>
+
+        <div class="mt-6 border-t border-gray-100 pt-4 space-y-4">
+            <div class="p-4 bg-orange-50 border border-orange-200 rounded-2xl">
+                <p class="text-[9px] font-black uppercase text-orange-400 mb-2">Zone de Test Roue</p>
+                <button onclick="resetRoueAdmin()" class="w-full bg-orange-500 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest">
+                    <i class="fa-solid fa-rotate-left mr-2"></i> Réinitialiser mon Chrono Roue
+                </button>
+            </div>
+
+            <div class="p-4 bg-gray-50 border border-gray-200 rounded-2xl">
+                <p class="text-[9px] font-black uppercase text-gray-400 mb-3">Configuration des Gains</p>
+                <div id="admin-prizes-list" class="space-y-2"></div>
+                <button onclick="sauvegarderGains()" class="w-full mt-4 bg-black text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest">
+                    Mettre à jour les gains
+                </button>
+            </div>
+
+            <div class="text-center">
+                <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest">
+                    <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
+                </button>
+            </div>
+        </div>
+
+        <button onclick="document.getElementById('adminModal').classList.remove('active')" class="w-full mt-8 bg-gray-100 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px]">
+            <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
+        </button>
+    </div>
+</div>
+
+
+        
 
         <div class="grid grid-cols-2 gap-4 mb-2">
             <div class="bg-gray-50 p-3 rounded-xl border text-center">
