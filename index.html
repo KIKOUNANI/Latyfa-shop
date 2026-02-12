@@ -640,6 +640,18 @@ body.dark-theme {
     </div>
 </div>
 <script>
+    function filtrerCoupsDeCoeur() {
+    const produitsFavoris = products.filter(p => wishlist.includes(p.id));
+    
+    if (produitsFavoris.length === 0) {
+        alert("Votre liste de souhaits est vide pour le moment ! ✨");
+        return;
+    }
+    
+    // On réutilise ta logique d'affichage mais uniquement avec les favoris
+    const container = document.getElementById('products-grid');
+    // ... code pour afficher 'produitsFavoris' ici ...
+    }
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
@@ -840,6 +852,14 @@ const badge = document.getElementById('cart-count'); // l'ID de ton petit rond r
 if(badge) {
     badge.innerText = totalArticles;
     badge.style.display = totalArticles > 0 ? 'flex' : 'none';}
+        const isLiked = wishlist.includes(p.id);
+
+// Insérer ceci dans le HTML de ta carte produit
+`
+<button onclick="toggleWishlist(${p.id})" class="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center transition-transform active:scale-125">
+    <i class="${isLiked ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart text-gray-400'} text-sm"></i>
+</button>
+`
 }
     function voirDetails(id) {
     const p = products.find(x => x.id === id);
@@ -1392,7 +1412,23 @@ function ajouterProduitAdmin() {
     }
 
     localStorage.setItem('latyfa_db', JSON.stringify(products));
-    location.reload(); // Plus simple pour tout rafraîchir d'un coup
+    location.reload();
+    let wishlist = JSON.parse(localStorage.getItem('latyfa_wishlist')) || [];
+
+function toggleWishlist(id) {
+    const index = wishlist.indexOf(id);
+    if (index === -1) {
+        wishlist.push(id);
+        // Petit effet de vibration sur mobile si disponible
+        if(navigator.vibrate) navigator.vibrate(50);
+    } else {
+        wishlist.splice(index, 1);
+    }
+    
+    localStorage.setItem('latyfa_wishlist', JSON.stringify(wishlist));
+    render(); // Pour mettre à jour l'icône cœur
+    }
+// Plus simple pour tout rafraîchir d'un coup
 }
 
 function toggleStock(id) {
