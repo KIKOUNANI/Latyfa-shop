@@ -50,8 +50,16 @@ body {
     font-family: 'Montserrat', sans-serif; 
     margin: 0; 
     scroll-behavior: smooth; 
+    /* Transition douce pour tous les changements de couleur */
+body {
+    transition: background-color 0.5s ease, color 0.5s ease !important;
 }
 
+/* On applique la transition aussi aux cartes et au header */
+header, aside, .product-card, .modal > div, button, div {
+    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+}
+}
 /* Application des couleurs via variables */
 .logo-font, .text-[#c5a059] { color: var(--latyfa-gold) !important; }
 .text-[#ff6600] { color: var(--latyfa-accent) !important; }
@@ -186,6 +194,14 @@ body.dark-theme {
 
 .dark-theme .product-card {
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+            @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.mode-icon-spin {
+    animation: spin-slow 0.5s ease-in-out;
 }
 </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -1737,29 +1753,26 @@ render();
 drawWheel();
 refreshCategoriesUI(); // <--- C'est cette ligne qui lancera tes catégories au chargement
     function toggleDarkMode() {
-    const isDark = document.body.classList.toggle('dark-theme');
+    const body = document.body;
     const btn = document.getElementById('dark-mode-btn');
+    const icon = btn.querySelector('i');
+    
+    // Ajouter l'animation de rotation à l'icône
+    icon.classList.add('mode-icon-spin');
+    setTimeout(() => icon.classList.remove('mode-icon-spin'), 500);
+
+    const isDark = body.classList.toggle('dark-theme');
     
     if (isDark) {
-        btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
-        btn.classList.replace('bg-gray-100', 'bg-yellow-400');
-        btn.classList.replace('text-gray-600', 'text-black');
+        btn.innerHTML = '<i class="fa-solid fa-sun mode-icon-spin"></i>';
+        btn.style.backgroundColor = "#fbbf24"; // Jaune soleil
+        btn.style.color = "#000";
         localStorage.setItem('latyfa_theme', 'dark');
     } else {
-        btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
-        btn.classList.replace('bg-yellow-400', 'bg-gray-100');
-        btn.classList.replace('text-black', 'text-gray-600');
+        btn.innerHTML = '<i class="fa-solid fa-moon mode-icon-spin"></i>';
+        btn.style.backgroundColor = "#f3f4f6"; // Gris clair
+        btn.style.color = "#4b5563";
         localStorage.setItem('latyfa_theme', 'light');
-    }
-}
-
-// À mettre dans ta section d'initialisation (au chargement)
-if (localStorage.getItem('latyfa_theme') === 'dark') {
-    document.body.classList.add('dark-theme');
-    const btn = document.getElementById('dark-mode-btn');
-    if(btn) {
-        btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
-        btn.classList.add('bg-yellow-400', 'text-black');
     }
 }
 </script>
