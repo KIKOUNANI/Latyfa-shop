@@ -736,15 +736,13 @@ function refreshCategoriesUI() {
     }
     }
 
-    let products = [
-        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
-        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
-        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
-        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
-        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
-    ];
+    let products = JSON.parse(localStorage.getItem('latyfa_db')) || [
+    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+    // ... tes autres produits de base
+];
 
-    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+let idEnCoursDeModification = null;
     let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
     const MAX_TENTATIVES = 1; // 1 essai par jour
@@ -1354,33 +1352,61 @@ function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
     const imgInput = document.getElementById('adm-img').value;
-    if(!name || !price || !imgInput) return alert("Remplis les champs !");
+
+    if(!name || !price || !imgInput) return alert("Veuillez remplir les champs obligatoires (*)");
 
     const imagesArray = imgInput.split(',').map(link => link.trim()).filter(l => l !== "");
+    
     const donnees = {
-        name, price: parseInt(price), cat: document.getElementById('adm-cat').value,
-        images: imagesArray, description: document.getElementById('adm-desc').value,
-        quantiteRestante: document.getElementById('adm-stock-count').value,
+        name,
+        price: parseInt(price),
+        cat: document.getElementById('adm-cat').value,
+        images: imagesArray,
+        description: document.getElementById('adm-desc').value,
+        quantiteRestante: document.getElementById('adm-stock-count').value || 2,
         stockBas: document.getElementById('adm-stock-bas').checked,
         dateAjout: Date.now()
     };
+
+    if (idEnCoursDeModification) {
+        const idx = products.findIndex(p => p.id === idEnCoursDeModification);
+        products[idx] = { ...products[idx], ...donnees, enStock: true };
+        idEnCoursDeModification = null;
+        alert("Produit mis à jour !");
+    } else {
+        products.push({ id: Date.now(), enStock: true, ...donnees });
+        alert("Produit ajouté !");
+    }
+
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    location.reload(); 
+}
+
+// Correction du bouton final de commande
+function toggleBouton() {
+    const chk = document.getElementById('check-verif').checked;
+    const nom = document.getElementById('nom-client').value.trim();
+    const tel = document.getElementById('tel-client').value.trim();
+    const zone = document.getElementById('zone-livraison').value;
+    const btn = document.getElementById('btn-final');
+
+    if (chk && nom !== "" && tel !== "" && zone !== "") {
+        btn.classList.remove('bg-gray-300', 'pointer-events-none');
+        btn.classList.add('ali-gradient', 'cursor-pointer');
+        btn.disabled = false;
+    } else {
+        btn.classList.add('bg-gray-300', 'pointer-events-none');
+        btn.classList.remove('ali-gradient');
+        btn.disabled = true;
+    }
+}
     function modifPrixRapide(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
-
-    const nouveauPrix = prompt(`Modifier le prix de "${p.name}" (Prix actuel : ${p.price} F) :`, p.price);
-    
-    if (nouveauPrix !== null && !isNaN(nouveauPrix) && nouveauPrix.trim() !== "") {
+    const nouveauPrix = prompt(`Nouveau prix pour "${p.name}" :`, p.price);
+    if (nouveauPrix && !isNaN(nouveauPrix)) {
         p.price = parseInt(nouveauPrix);
-        
-        // Sauvegarde dans la base de données locale
-        localStorage.setItem('latyfa_db', JSON.stringify(products));
-        
-        // Mise à jour visuelle immédiate
-        refreshAdminList();
-        render(); // Met à jour la boutique en arrière-plan
-        
-        alert("💰 Prix mis à jour ! Nouveau prix : " + p.price + " F");
+        sauvegarderEtRefresh();
     }
 }
     if (idEnCoursDeModification) {
@@ -1775,6 +1801,11 @@ refreshCategoriesUI(); // <--- C'est cette ligne qui lancera tes catégories au 
         localStorage.setItem('latyfa_theme', 'light');
     }
 }
+    function sauvegarderEtRefresh() {
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    render();
+    refreshAdminList();
+    }
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
