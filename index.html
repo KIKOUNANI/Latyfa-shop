@@ -478,17 +478,6 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
         </p>
     </div>
         </div>
-        <div id="cartModal" class="modal">
-    <div class="max-w-md mx-auto bg-white rounded-t-3xl p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-black uppercase italic tracking-widest text-[#c5a059]">Mon Panier</h2>
-            <button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-100 px-2 py-1 rounded">Vider</button>
-        </div>
-
-        <div id="promo-congrats" class="hidden mb-4 p-3 bg-pink-500 text-white rounded-xl text-[10px] font-black uppercase text-center">
-            ✨ -20% de réduction appliqués !
-        </div>
-
         <div id="cart-items" class="space-y-4 mb-6 max-h-[40vh] overflow-y-auto"></div>
 
         <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
@@ -559,19 +548,6 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
     <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
 </div>
-<div id="cartModal" class="modal">
-    <div class="max-w-md mx-auto bg-white rounded-t-3xl p-6 min-h-[80vh] mt-10 shadow-2xl">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-black uppercase italic tracking-widest text-[#c5a059]">Mon Panier</h2>
-            <button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-100 px-2 py-1 rounded">
-                <i class="fa-solid fa-trash"></i> Vider
-            </button>
-        </div>
-
-        <div id="promo-congrats" class="hidden mb-4 p-3 bg-pink-500 text-white rounded-xl text-[10px] font-black uppercase text-center animate-bounce">
-            ✨ -20% DE RÉDUCTION ST VALENTIN APPLIQUÉS !
-        </div>
-
         <div id="cart-items" class="space-y-4 mb-6 max-h-[30vh] overflow-y-auto"></div>
 
         <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
@@ -674,6 +650,9 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
+    const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const canva = canvas; // Pour compatibilité avec votre code de rotation
     const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "LIVRAISON"];
 const MAX_TENTATIVES = 1;
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
@@ -758,37 +737,17 @@ function afficherResultatsRecherche(liste) {
     // --- BOUTIQUE ---
     function render(filter = 'tous') {
     const grid = document.getElementById('product-grid');
-    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
+    const localDb = JSON.parse(localStorage.getItem('latyfa_db')) || [];
+    const allProducts = [...products, ...localDb]; // Combine produits par défaut et admin
 
-    grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
-        // Calcul pour le badge Nouveauté
-        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
-        
+    grid.innerHTML = allProducts.filter(p => filter === 'tous' || p.cat === filter).map(p => {
         return `
-${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 PLUS QUE 2 EN STOCK !</span>' : ''}
-
-            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
-                
-                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
-                
-                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
-                
-                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
-                
-                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
-                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
-                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-                
-                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
-                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
-                </div>
+            <div class="product-card p-3 relative" onclick="voirDetails(${p.id})">
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
+                <h3 class="text-[11px] font-bold uppercase">${p.name}</h3>
+                <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
             </div>`;
     }).join('');
-        const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
-const badge = document.getElementById('cart-count'); // l'ID de ton petit rond rouge sur l'icône
-if(badge) {
-    badge.innerText = totalArticles;
-    badge.style.display = totalArticles > 0 ? 'flex' : 'none';}
 }
     function voirDetails(id) {
     const p = products.find(x => x.id === id);
@@ -823,7 +782,6 @@ if(badge) {
             </p>
         `);
     }
-
     const mediaContainer = document.getElementById('main-detail-img').parentElement;
     mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
     
