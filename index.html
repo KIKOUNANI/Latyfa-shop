@@ -185,32 +185,31 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 </div>
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-    <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
-    <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
-            <div class="container mx-auto px-4 pb-3">
-    <div class="relative">
-        <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
-               class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
-        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-    </div>
-</div>    
-</div>
-            <div class="flex gap-6">
-                <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
-                    <i class="fa-solid fa-truck text-gray-600"></i>
-                    <p class="text-[9px] font-bold uppercase">Suivi</p>
-                </div>
-                <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
-                    <i class="fa-solid fa-cart-shopping text-gray-600"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
-                    <p class="text-[9px] font-bold uppercase">Panier</p>
-                </div>
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+            <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
+            <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
+        </div>
+        <div class="flex-1 max-w-md hidden md:block">
+            <div class="relative">
+                <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
+                       class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
             </div>
         </div>
-    </header>
-
+        <div class="flex gap-6">
+            <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
+                <i class="fa-solid fa-truck text-gray-600"></i>
+                <p class="text-[9px] font-bold uppercase">Suivi</p>
+            </div>
+            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
+                <i class="fa-solid fa-cart-shopping text-gray-600"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
+                <p class="text-[9px] font-bold uppercase">Panier</p>
+            </div>
+        </div>
+    </div>
+</header>
     <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
         <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
@@ -475,73 +474,47 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
         </p>
     </div>
         </div>
-        <div id="cart-items" class="space-y-4 mb-6 border-b pb-4"></div>
+        <div id="cartModal" class="modal">
+    <div class="max-w-md mx-auto bg-white rounded-t-3xl p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-black uppercase italic tracking-widest text-[#c5a059]">Mon Panier</h2>
+            <button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-100 px-2 py-1 rounded">Vider</button>
+        </div>
 
-        <div id="checkout-form" style="display:none;" class="space-y-4">
-            <div class="flex gap-2">
-                <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold focus:ring-1 focus:ring-[#c5a059] outline-none">
-                <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
-            </div>
-            <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
+        <div id="promo-congrats" class="hidden mb-4 p-3 bg-pink-500 text-white rounded-xl text-[10px] font-black uppercase text-center">
+            ✨ -20% de réduction appliqués !
+        </div>
 
-            <input type="text" id="nom-client" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
+        <div id="cart-items" class="space-y-4 mb-6 max-h-[40vh] overflow-y-auto"></div>
+
+        <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
+            <input type="text" id="nom-client" placeholder="NOM COMPLET *" class="w-full border p-3 rounded-lg text-sm uppercase">
             <div class="grid grid-cols-2 gap-2">
-                <input type="tel" id="tel-client" placeholder="N° WhatsApp *" class="w-full border p-3 rounded-lg text-sm">
-                <input type="text" id="quartier-client" placeholder="Quartier *" class="w-full border p-3 rounded-lg text-sm">
+                <input type="tel" id="tel-client" placeholder="WHATSAPP *" class="w-full border p-3 rounded-lg text-sm">
+                <input type="text" id="quartier-client" placeholder="QUARTIER *" class="w-full border p-3 rounded-lg text-sm">
             </div>
-
-            <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
-                <option value="">-- CHOISIR VOTRE ZONE --</option>
+            <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm font-bold bg-blue-50">
+                <option value="">-- CHOISIR ZONE LIVRAISON --</option>
                 <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
                 <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
                 <option value="interieur">Intérieur pays (3.000 F)</option>
                 <option value="bouake">Retrait Boutique (Gratuit)</option>
             </select>
-            <p id="communes-info" class="hidden text-[9px] text-blue-600 font-bold italic px-2 uppercase"></p>
-
-            <div class="space-y-2">
-                <label class="text-[9px] font-black uppercase text-gray-400">Mode de paiement</label>
-                <div class="grid grid-cols-2 gap-2">
-                    <div onclick="selectPay('TRANSFERT')" id="pay-mobile" class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
-                        <span class="text-[8px] font-black uppercase">Mobile Money</span>
-                    </div>
-                    <div onclick="selectPay('CASH')" id="pay-cash" class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
-                        <span class="text-[8px] font-black uppercase">Cash (Boutique)</span>
-                    </div>
-                </div>
-                <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
-            </div>
-          <div class="bg-pink-50 p-3 rounded-xl border border-pink-100 flex items-center justify-between mb-4">
-    <div class="flex items-center gap-3">
-        <div class="h-8 w-8 bg-white text-pink-600 rounded-full flex items-center justify-center shadow-sm">
-            <i class="fa-solid fa-gift"></i>
-        </div>
-        <div>
-            <p class="text-[10px] font-black uppercase tracking-widest text-pink-800">Emballage Cadeau Luxe</p>
-            <p class="text-[8px] text-pink-400 font-bold uppercase">+ 1.000 F CFA</p>
-        </div>
-    </div>
-    <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-5 w-5 accent-pink-600 cursor-pointer">
-</div>
-           <div id="resume-final" class="p-4 bg-gray-50 rounded-lg border border-gray-200 text-[10px] font-bold uppercase space-y-1"></div>
             
-            <div class="flex justify-between font-bold text-lg p-2 border-b-2 border-black">
-                <span>TOTAL À PAYER :</span> <span id="total-display" class="text-red-600">0</span> F
+            <div id="resume-final" class="p-3 bg-gray-50 rounded-lg text-[10px] font-bold uppercase space-y-1"></div>
+            
+            <div class="text-lg font-black flex justify-between p-2 border-b-2 border-black">
+                <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
             </div>
 
-            <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
-                <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-5 w-5 accent-[#c5a059]">
-                <label for="check-verif" class="text-[9px] font-bold uppercase">Je confirme ma commande sur WhatsApp</label>
-            </div>
-
-            <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>
-                Finaliser sur WhatsApp
+            <button id="btn-final" onclick="validerCommande()" class="w-full bg-black text-white py-4 rounded-full font-black uppercase shadow-xl">
+                Commander via WhatsApp
             </button>
         </div>
-
-        <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
+        <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-4 text-[9px] font-bold uppercase text-gray-400">Continuer mes achats</button>
     </div>
 </div>
+
         <div onclick="selectPay('CASH')" id="pay-cash" 
              class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
 <div id="checkout-form" style="display:none;" class="space-y-4">
