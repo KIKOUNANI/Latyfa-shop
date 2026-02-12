@@ -1687,6 +1687,53 @@ function notifierAjout(nom) {
     // Relance la vérification dès que l'utilisateur écrit dans les champs
 document.getElementById('nom-client').addEventListener('input', toggleBouton);
 document.getElementById('tel-client').addEventListener('input', toggleBouton);
+   // 1. Fonction pour enregistrer chaque tour de roue
+function enregistrerSpin(estGagnant) {
+    let statsGlobales = JSON.parse(localStorage.getItem('latyfa_global_stats')) || { totalSpins: 0, totalWins: 0 };
+    
+    statsGlobales.totalSpins += 1;
+    if (estGagnant) {
+        statsGlobales.totalWins += 1;
+    }
+    
+    localStorage.setItem('latyfa_global_stats', JSON.stringify(statsGlobales));
+}
+
+// 1. Fonction pour enregistrer chaque tour de roue
+function enregistrerSpin(estGagnant) {
+    let statsGlobales = JSON.parse(localStorage.getItem('latyfa_global_stats')) || { totalSpins: 0, totalWins: 0 };
+    
+    statsGlobales.totalSpins += 1;
+    if (estGagnant) {
+        statsGlobales.totalWins += 1;
+    }
+    
+    localStorage.setItem('latyfa_global_stats', JSON.stringify(statsGlobales));
+}
+
+// 2. Mise à jour de ta fonction de stats existante pour inclure la roue
+function mettreAJourStats() {
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    const zoneCA = document.getElementById('stat-ca');
+    const zoneNB = document.getElementById('stat-nb');
+    
+    // Stats de la roue
+    const statsRoue = JSON.parse(localStorage.getItem('latyfa_global_stats')) || { totalSpins: 0, totalWins: 0 };
+    if(document.getElementById('stat-total-spins')) document.getElementById('stat-total-spins').innerText = statsRoue.totalSpins;
+    if(document.getElementById('stat-total-wins')) document.getElementById('stat-total-wins').innerText = statsRoue.totalWins;
+
+    let totalCA = 0;
+    historique.forEach(cmd => {
+        let prixNettoyé = cmd.total.toString().replace(/\s/g, '').replace(/,/g, '');
+        totalCA += parseInt(prixNettoyé) || 0;
+    });
+
+    // Animation du CA
+    let fin = totalCA;
+    let valeurActuelle = 0;
+    zoneCA.innerText = fin.toLocaleString('fr-FR') + " F"; 
+    zoneNB.innerText = historique.length;
+}
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
