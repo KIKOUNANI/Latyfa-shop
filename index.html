@@ -154,6 +154,39 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 #wheel-notif {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 } 
+            /* Styles pour le Mode Sombre */
+body.dark-theme {
+    background-color: #121212 !important;
+    color: #e0e0e0;
+}
+
+.dark-theme header, 
+.dark-theme aside, 
+.dark-theme .product-card,
+.dark-theme .modal > div {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
+}
+
+.dark-theme .text-gray-800, 
+.dark-theme .text-gray-600,
+.dark-theme h1, .dark-theme h2, .dark-theme h3 {
+    color: #ffffff !important;
+}
+
+.dark-theme .bg-gray-50, 
+.dark-theme .bg-gray-100 {
+    background-color: #2a2a2a !important;
+}
+
+.dark-theme .category-link {
+    color: #bbb;
+    border-bottom-color: #333;
+}
+
+.dark-theme .product-card {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
 </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
@@ -202,6 +235,9 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
             </div>
         </div>
         <div class="flex gap-6">
+            <button onclick="toggleDarkMode()" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition-all ml-2" id="dark-mode-btn">
+    <i class="fa-solid fa-moon"></i>
+</button>
             <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
                 <i class="fa-solid fa-truck text-gray-600"></i>
                 <p class="text-[9px] font-bold uppercase">Suivi</p>
@@ -1700,6 +1736,32 @@ updateVisitorCount();
 render();
 drawWheel();
 refreshCategoriesUI(); // <--- C'est cette ligne qui lancera tes catégories au chargement
+    function toggleDarkMode() {
+    const isDark = document.body.classList.toggle('dark-theme');
+    const btn = document.getElementById('dark-mode-btn');
+    
+    if (isDark) {
+        btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        btn.classList.replace('bg-gray-100', 'bg-yellow-400');
+        btn.classList.replace('text-gray-600', 'text-black');
+        localStorage.setItem('latyfa_theme', 'dark');
+    } else {
+        btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        btn.classList.replace('bg-yellow-400', 'bg-gray-100');
+        btn.classList.replace('text-black', 'text-gray-600');
+        localStorage.setItem('latyfa_theme', 'light');
+    }
+}
+
+// À mettre dans ta section d'initialisation (au chargement)
+if (localStorage.getItem('latyfa_theme') === 'dark') {
+    document.body.classList.add('dark-theme');
+    const btn = document.getElementById('dark-mode-btn');
+    if(btn) {
+        btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        btn.classList.add('bg-yellow-400', 'text-black');
+    }
+}
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
