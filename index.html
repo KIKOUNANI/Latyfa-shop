@@ -640,25 +640,15 @@ body.dark-theme {
     </div>
 </div>
 <script>
-    // On charge ce qui existe, sinon on crée un tableau vide
-let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
-        cart = []; // Vide la variable de travail
-        localStorage.removeItem('latyfa_cart'); // SUPPRIME la sauvegarde locale
-        
-        // On met à jour l'affichage
-        document.getElementById('cart-count').innerText = "0";
-        ouvrirPanier(); 
-        
-        // Optionnel : on ferme le panier s'il est vide
-        setTimeout(() => {
-            document.getElementById('cartModal').classList.remove('active');
-        }, 500);
+        cart = []; // On vide le tableau
+        ouvrirPanier(); // On rafraîchit l'affichage
+        // Optionnel : fermer le modal si le panier est vide
+        // document.getElementById('cartModal').classList.remove('active');
     }
-}
-
+    }
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
@@ -1173,83 +1163,60 @@ document.getElementById('spin').onclick = function() {
         }
         majResume();
     }
-function majResume() {
+
+    function majResume() {
     const zoneKey = document.getElementById('zone-livraison').value;
     const isCadeau = document.getElementById('check-cadeau').checked;
     const containerResume = document.getElementById('resume-final');
     const alertePromoValentin = document.getElementById('promo-congrats');
-
-    // 1. Calcul du Sous-total (Conversion forcée en Number)
-    let totalArticles = cart.reduce((sum, item) => sum + (Number(item.price) * item.qty), 0);
-
+    
+    // 1. Calcul du Sous-total des articles
+    let totalArticles = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    
     // 2. Frais de livraison
     let fraisLivraison = 0;
     if (zoneKey && tarifsLivraison[zoneKey]) {
         fraisLivraison = tarifsLivraison[zoneKey].prix;
     }
 
-    // 3. Option Emballage
+    // 3. Option Emballage Cadeau
     let fraisCadeau = isCadeau ? 1000 : 0;
 
-    // 4. Remise Valentin
+    // 4. Remise St Valentin (-20% si achat > 20.000 F entre le 14 et 28 fév)
     let remiseValentin = 0;
     const maintenant = new Date();
-    if (maintenant >= new Date(2026, 1, 14) && maintenant <= new Date(2026, 1, 28) && totalArticles >= 20000) {
+    const debutPromo = new Date(2026, 1, 14); // 14 Février
+    const finPromo = new Date(2026, 1, 28);   // 28 Février
+
+    if (maintenant >= debutPromo && maintenant <= finPromo && totalArticles >= 20000) {
         remiseValentin = totalArticles * 0.20;
         alertePromoValentin.classList.remove('hidden');
     } else {
         alertePromoValentin.classList.add('hidden');
     }
 
-    // 5. Remise Roue
+    // 5. Remise Code Promo de la Roue (remiseCodePromo est une variable globale)
     let remiseRoue = (remiseCodePromo > 0) ? (totalArticles * (remiseCodePromo / 100)) : 0;
 
-    // 6. TOTAL FINAL
+    // 6. CALCUL TOTAL FINAL
     let totalFinal = totalArticles + fraisLivraison + fraisCadeau - remiseValentin - remiseRoue;
-    
-    // Affichage
+    if (totalFinal < 0) totalFinal = 0; // Sécurité
+
+    // 7. AFFICHAGE DANS LE RÉSUMÉ
     containerResume.innerHTML = `
         <div class="flex justify-between"><span>Articles:</span> <span>${totalArticles.toLocaleString()} F</span></div>
-        ${fraisLivraison > 0 ? `<div class="flex justify-between"><span>Livraison:</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>` : ''}
-        ${remiseValentin > 0 ? `<div class="flex justify-between text-green-600 font-bold"><span>Promo Valentin:</span> <span>-${Math.round(remiseValentin).toLocaleString()} F</span></div>` : ''}
+        ${fraisLivraison > 0 ? `<div class="flex justify-between"><span>Livraison (${tarifsLivraison[zoneKey].nom}):</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>` : ''}
+        ${fraisCadeau > 0 ? `<div class="flex justify-between text-pink-500 italic"><span>Option Cadeau Luxe:</span> <span>+1.000 F</span></div>` : ''}
+        ${remiseValentin > 0 ? `<div class="flex justify-between text-green-600 font-bold"><span>Remise Valentin (-20%):</span> <span>-${Math.round(remiseValentin).toLocaleString()} F</span></div>` : ''}
+        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600 font-bold"><span>Remise Code Lucky (-${remiseCodePromo}%):</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
     `;
 
+    // Mise à jour du gros chiffre rouge
     document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    
+    // On vérifie si le bouton de commande doit être activé
     toggleBouton();
 }
-
-// MODIFICATION : Amélioration de l'affichage du panier
-function ouvrirPanier() {
-    document.getElementById('cartModal').classList.add('active');
-    const itemsDiv = document.getElementById('cart-items');
-    const form = document.getElementById('checkout-form');
-
-    if(cart.length === 0) {
-        itemsDiv.innerHTML = "<div class='text-center py-10'><i class='fa-solid fa-cart-arrow-down text-3xl text-gray-200 mb-2'></i><p class='text-[10px] font-bold uppercase text-gray-400'>Votre panier est vide</p></div>";
-        form.style.display = "none";
-        document.getElementById('total-display').innerText = "0";
-        return;
-    }
-
-    form.style.display = "block";
-    itemsDiv.innerHTML = cart.map(item => `
-        <div class="flex items-center gap-3 bg-gray-50 p-2 rounded-xl border border-gray-100">
-            <img src="${item.images ? item.images[0] : ''}" class="w-12 h-12 object-cover rounded-lg">
-            <div class="flex-1">
-                <p class="text-[9px] font-black uppercase leading-tight">${item.label}</p>
-                <p class="text-[10px] text-[#c5a059] font-black">${Number(item.price).toLocaleString()} F</p>
-            </div>
-            <div class="flex items-center gap-2 bg-white border rounded-lg p-1">
-                <button onclick="modifierQty('${item.label}', -1)" class="w-6 h-6 text-xs">-</button>
-                <span class="text-xs font-bold">${item.qty}</span>
-                <button onclick="modifierQty('${item.label}', 1)" class="w-6 h-6 text-xs">+</button>
-            </div>
-        </div>
-    `).join('');
-    
-    majResume();
-    }
-    
     function toggleBouton() {
     const chk = document.getElementById('check-verif').checked;
     const nom = document.getElementById('nom-client').value.trim();
