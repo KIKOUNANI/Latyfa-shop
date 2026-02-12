@@ -1,4 +1,5 @@
-u<!DOCTYPE html>
+🌟CE SITE EST EN PLEINE CRÉATION🌟
+<!DOCTYPE html>
 <html lang="fr" translate="no">
 <head>
     <meta charset="UTF-8">
@@ -9,6 +10,10 @@ u<!DOCTYPE html>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
+            #stat-ca {
+    transition: color 0.3s ease;
+    text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+            }
          #main-detail-img, #main-detail-video {
     animation: fadeIn 0.4s ease-in-out;
 }
@@ -184,32 +189,31 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 </div>
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-    <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
-    <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
-            <div class="container mx-auto px-4 pb-3">
-    <div class="relative">
-        <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
-               class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
-        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-    </div>
-</div>    
-</div>
-            <div class="flex gap-6">
-                <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
-                    <i class="fa-solid fa-truck text-gray-600"></i>
-                    <p class="text-[9px] font-bold uppercase">Suivi</p>
-                </div>
-                <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
-                    <i class="fa-solid fa-cart-shopping text-gray-600"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
-                    <p class="text-[9px] font-bold uppercase">Panier</p>
-                </div>
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+            <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
+            <span class="text-2xl font-black italic logo-font text-[#c5a059] tracking-tighter">LATYFA SHOP</span>
+        </div>
+        <div class="flex-1 max-w-md hidden md:block">
+            <div class="relative">
+                <input type="text" id="search-input" oninput="rechercherProduit()" placeholder="Rechercher un article..." 
+                       class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
             </div>
         </div>
-    </header>
-
+        <div class="flex gap-6">
+            <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
+                <i class="fa-solid fa-truck text-gray-600"></i>
+                <p class="text-[9px] font-bold uppercase">Suivi</p>
+            </div>
+            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
+                <i class="fa-solid fa-cart-shopping text-gray-600"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold">0</span>
+                <p class="text-[9px] font-bold uppercase">Panier</p>
+            </div>
+        </div>
+    </div>
+</header>
     <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
         <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
@@ -343,9 +347,9 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
 <div class="mt-4 flex items-center justify-center gap-3 bg-gray-50 p-2 rounded-lg border border-gray-100">
     <span class="text-[7px] font-bold uppercase tracking-widest text-gray-400">Paiement sécurisé via</span>
     <div class="flex gap-2 opacity-60 grayscale hover:grayscale-0 transition-all">
-        <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-4" alt="Wave">
-        <img src="https://i.postimg.cc/SK81pV7q/orange-money.jpg" class="h-4" alt="Orange Money">
-        <img src="https://i.postimg.cc/LsR6zQsy/mtn-mobile-money-logo.jpg" class="h-4" alt="MTN">
+        <img src="https://goamobile.com/logosent/wave@221@-P-2021-06-30_00-18-27wave_logo_2.png" class="h-4" alt="Wave">
+        <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/orange-money-logo.png" class="h-4" alt="Orange Money">
+        <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/mtn-mobile-money-logo.jpg" class="h-4" alt="MTN">
     </div>
 </div>
 
@@ -457,74 +461,167 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </footer>
 
     <div id="cartModal" class="modal">
-        <div class="max-w-md mx-auto">
-            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Ma Commande</h2>
-            <div id="cart-items" class="space-y-4 mb-6 border-b pb-4"></div>
-            <div id="checkout-form" style="display:none;" class="space-y-4">
-                <div class="flex gap-2">
-    <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
-    <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
+        <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-black uppercase italic tracking-widest text-[#c5a059]">Mon Panier</h2>
+    <button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-200 px-2 py-1 rounded hover:bg-red-50 transition-all">
+        <i class="fa-solid fa-trash-can mr-1"></i> Vider
+    </button>
+        </div>
+    <div class="max-w-md mx-auto">
+        <h2 class="text-xl font-bold mb-6 text-center text-[#c5a059] uppercase italic tracking-widest">Ma Commande</h2>
+        <div id="promo-congrats" class="hidden mb-4 p-3 bg-gradient-to-r from-pink-500 to-pink-400 text-white rounded-xl shadow-lg animate-bounce">
+    <div class="flex items-center gap-2">
+        <span class="text-xl">✨</span>
+        <p class="text-[10px] font-black uppercase italic leading-tight">
+            Félicitations ! Votre élégance est récompensée : <br>
+            <span class="text-xs">-20% DE RÉDUCTION APPLIQUÉS !</span>
+        </p>
+    </div>
+        </div>
+        <div id="cartModal" class="modal">
+    <div class="max-w-md mx-auto bg-white rounded-t-3xl p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-black uppercase italic tracking-widest text-[#c5a059]">Mon Panier</h2>
+            <button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-100 px-2 py-1 rounded">Vider</button>
+        </div>
+
+        <div id="promo-congrats" class="hidden mb-4 p-3 bg-pink-500 text-white rounded-xl text-[10px] font-black uppercase text-center">
+            ✨ -20% de réduction appliqués !
+        </div>
+
+        <div id="cart-items" class="space-y-4 mb-6 max-h-[40vh] overflow-y-auto"></div>
+
+        <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
+            <input type="text" id="nom-client" placeholder="NOM COMPLET *" class="w-full border p-3 rounded-lg text-sm uppercase">
+            <div class="grid grid-cols-2 gap-2">
+                <input type="tel" id="tel-client" placeholder="WHATSAPP *" class="w-full border p-3 rounded-lg text-sm">
+                <input type="text" id="quartier-client" placeholder="QUARTIER *" class="w-full border p-3 rounded-lg text-sm">
+            </div>
+            <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm font-bold bg-blue-50">
+                <option value="">-- CHOISIR ZONE LIVRAISON --</option>
+                <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+                <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+                <option value="interieur">Intérieur pays (3.000 F)</option>
+                <option value="bouake">Retrait Boutique (Gratuit)</option>
+            </select>
+            
+            <div id="resume-final" class="p-3 bg-gray-50 rounded-lg text-[10px] font-bold uppercase space-y-1"></div>
+            
+            <div class="text-lg font-black flex justify-between p-2 border-b-2 border-black">
+                <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
+            </div>
+
+            <button id="btn-final" onclick="validerCommande()" class="w-full bg-black text-white py-4 rounded-full font-black uppercase shadow-xl">
+                Commander via WhatsApp
+            </button>
+        </div>
+        <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-4 text-[9px] font-bold uppercase text-gray-400">Continuer mes achats</button>
+    </div>
 </div>
-<div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
-                <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
-                <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
-                    <option value="">-- CHOISIR VOTRE ZONE --</option>
-                    <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
-                    <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-                    <option value="interieur">Intérieur pays (3.000 F)</option>
-                    <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
-                </select>
-                <div class="space-y-2">
-    <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
+
+        <div onclick="selectPay('CASH')" id="pay-cash" 
+             class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
+<div id="checkout-form" style="display:none;" class="space-y-4">
+    <div class="flex gap-2">
+        <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
+        <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
+    </div>
+    <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
+
+    <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
+    <input type="tel" id="tel-client" placeholder="Numéro WhatsApp ou Quartier *" class="w-full border p-3 rounded-lg text-sm">
+
+    <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
+        <option value="">-- CHOISIR VOTRE ZONE --</option>
+        <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+        <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+        <option value="interieur">Intérieur pays (3.000 F)</option>
+        <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
+    </select>
+    <p id="communes-info" class="hidden text-[9px] text-blue-600 font-bold italic px-2 uppercase"></p>
+
+    <div class="space-y-2">
+    <label class="text-[9px] font-black uppercase text-gray-400">Mode de paiement</label>
     <div class="grid grid-cols-2 gap-2">
         <div onclick="selectPay('TRANSFERT')" id="pay-mobile" class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
             <div class="flex gap-1 mb-1">
-                <img src="https://i.postimg.cc/mD3fM9M2/wave-logo.png" class="h-4">
-                <img src="https://i.postimg.cc/gjNfV9jJ/orange-money.png" class="h-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Orange_logo.svg/1200px-Orange_logo.svg.png" class="w-4 h-4 object-contain">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/MTN_Logo.svg" class="w-4 h-4 object-contain">
+                <img src="https://vps.latyfa.shop/icons/wave.png" class="w-4 h-4 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1019/1019607.png'">
             </div>
             <span class="text-[8px] font-black uppercase">Mobile Money</span>
         </div>
-        <div onclick="selectPay('CASH')" id="pay-cash" class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
-            <i class="fa-solid fa-hand-holding-dollar text-[#c5a059] mb-1"></i>
-            <span class="text-[8px] font-black uppercase">Cash à la livraison</span>
-        </div>
-    </div>
-    <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE">
-</div>
 
-<div id="payment-instruction" class="bg-blue-50 border border-blue-100 p-3 rounded-lg mt-2 hidden">
-    <p class="text-[9px] text-blue-800 leading-tight">
-        <i class="fa-solid fa-circle-info"></i> 
-        <strong>INFO :</strong> Les numéros de transfert (Wave/Orange) vous seront envoyés sur WhatsApp après validation.
-    </p>
-</div>
-           </select>
-                <div id="resume-final" class="p-4 bg-orange-50 rounded-lg border border-orange-200 text-[10px] font-bold uppercase"></div>
-                <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
-                    <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-5 w-5">
-                    <label for="check-verif" class="text-[9px] font-bold uppercase">Je confirme ma commande et j'accepte le paiement intégral.</label>
-                </div>
-                <div class="flex justify-between font-bold text-lg p-2 border-b-2">
-                    <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
-                </div>
-                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 mb-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-        <div class="h-8 w-8 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center">
-            <i class="fa-solid fa-gift"></i>
-        </div>
-        <div>
-            <p class="text-[10px] font-black uppercase tracking-widest">Emballage Cadeau Luxe</p>
-            <p class="text-[8px] text-gray-400 font-bold uppercase">+ 1.000 F CFA</p>
+        <div onclick="selectPay('CASH')" id="pay-cash" class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all opacity-60">
+            <i class="fa-solid fa-shop text-[#c5a059] mb-1"></i>
+            <span class="text-[8px] font-black uppercase">Cash (Boutique)</span>
         </div>
     </div>
-    <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-5 w-5 accent-pink-600 cursor-pointer">
+    <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
 </div>
-                <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>Finaliser sur WhatsApp</button>
+<div id="cartModal" class="modal">
+    <div class="max-w-md mx-auto bg-white rounded-t-3xl p-6 min-h-[80vh] mt-10 shadow-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-black uppercase italic tracking-widest text-[#c5a059]">Mon Panier</h2>
+            <button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-100 px-2 py-1 rounded">
+                <i class="fa-solid fa-trash"></i> Vider
+            </button>
+        </div>
+
+        <div id="promo-congrats" class="hidden mb-4 p-3 bg-pink-500 text-white rounded-xl text-[10px] font-black uppercase text-center animate-bounce">
+            ✨ -20% DE RÉDUCTION ST VALENTIN APPLIQUÉS !
+        </div>
+
+        <div id="cart-items" class="space-y-4 mb-6 max-h-[30vh] overflow-y-auto"></div>
+
+        <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
+            <div class="flex gap-2">
+                <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
+                <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">OK</button>
             </div>
-            <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
-        </div>
-    </div>
+            <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
 
+            <input type="text" id="nom-client" placeholder="NOM COMPLET *" class="w-full border p-3 rounded-lg text-sm uppercase">
+            <div class="grid grid-cols-2 gap-2">
+                <input type="tel" id="tel-client" placeholder="WHATSAPP *" class="w-full border p-3 rounded-lg text-sm">
+                <input type="text" id="quartier-client" placeholder="QUARTIER *" class="w-full border p-3 rounded-lg text-sm">
+            </div>
+
+            <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm font-bold bg-blue-50 border-blue-200">
+                <option value="">-- CHOISIR ZONE LIVRAISON --</option>
+                <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+                <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+                <option value="interieur">Intérieur pays (3.000 F)</option>
+                <option value="bouake">Retrait Boutique (Gratuit)</option>
+            </select>
+            
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-gift text-pink-500"></i>
+                    <span class="text-[9px] font-black uppercase">Emballage Cadeau (+1.000 F)</span>
+                </div>
+                <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-4 w-4">
+            </div>
+
+            <div id="resume-final" class="p-3 bg-gray-50 rounded-lg text-[10px] font-bold uppercase space-y-1"></div>
+            
+            <div class="text-xl font-black flex justify-between p-2 border-b-2 border-black">
+                <span>TOTAL :</span> <span id="total-display" class="text-red-600">0</span> F
+            </div>
+
+            <div class="flex items-start gap-2 py-2">
+                <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1">
+                <label for="check-verif" class="text-[8px] font-bold uppercase text-gray-500">Je confirme ma commande et j'accepte les conditions.</label>
+            </div>
+
+            <button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 text-white py-4 rounded-full font-black uppercase shadow-xl pointer-events-none" disabled>
+                Commander via WhatsApp
+            </button>
+        </div>
+        
+        <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-4 text-[9px] font-bold uppercase text-gray-400 underline">Continuer mes achats</button>
+    </div>
+</div>
     <div id="cgvModal" class="modal bg-gray-100">
     <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-2xl my-6 border border-gray-200">
         <div class="flex justify-between items-center border-b pb-4 mb-6">
@@ -577,6 +674,15 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
+    let promoSonJoué = false; // Pour éviter que le son tourne en boucle
+    function viderPanier() {
+    if (confirm("Voulez-vous vraiment vider votre panier ?")) {
+        cart = []; // On vide le tableau
+        renderCart(); // On rafraîchit l'affichage
+        // Optionnel : fermer le modal si le panier est vide
+        // document.getElementById('cartModal').classList.remove('active');
+    }
+    }
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
@@ -676,8 +782,12 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
                 </div>
             </div>`;
     }).join('');
+        const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
+const badge = document.getElementById('cart-count'); // l'ID de ton petit rond rouge sur l'icône
+if(badge) {
+    badge.innerText = totalArticles;
+    badge.style.display = totalArticles > 0 ? 'flex' : 'none';}
 }
-    
     function voirDetails(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
@@ -755,9 +865,6 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
     `);
     gererOptionsProduit(p);
 }
-
-
-
 function gererOptionsProduit(p) {
     const sizeArea = document.getElementById('size-area');
     const colorArea = document.getElementById('color-area');
@@ -785,47 +892,48 @@ function gererOptionsProduit(p) {
         selectColor.innerHTML = "";
     }
 }
-
     function ajouterDepuisDetail() {
-        const size = document.getElementById('select-size').value || "";
-        const color = document.getElementById('select-color').value || "";
-        const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
-        function ajouterDepuisDetail() {
-    // ... ton code existant (récupération taille/couleur) ...
-
-    // AJOUT DU SON
+    const size = document.getElementById('select-size').value || "";
+    const color = document.getElementById('select-color').value || "";
+    const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
+    
+    // Jouer le son
     const sound = document.getElementById('cart-sound');
-    sound.currentTime = 0; // Réinitialise pour pouvoir cliquer plusieurs fois vite
-    sound.play().catch(e => console.log("L'utilisateur doit interagir d'abord avec le site"));
-
-    // ... le reste de ta fonction ...
-}
-        
-        const index = cart.findIndex(x => x.label === label);
-        if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
-        
-        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
-        
-        const cartIcon = document.getElementById('cart-count').parentElement;
-        cartIcon.classList.add('animate-cart');
-        setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
-
-        document.getElementById('productDetailModal').classList.remove('active');
-
-        if (navigator.vibrate) navigator.vibrate(50);
-        
-        const toast = document.getElementById('toast');
-        toast.classList.remove('opacity-0');
-        setTimeout(() => toast.classList.add('opacity-0'), 2000);
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-
+    if(sound) {
+        sound.currentTime = 0;
+        sound.play().catch(e => console.log("Interaction requise pour le son"));
     }
 
-    // --- LOGIQUE DE LA ROUE CORRIGÉE ---
-const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
-const canva = document.getElementById('canvas');
-const ctx = canva.getContext('2d');
-const MAX_TENTATIVES = 1;
+    const index = cart.findIndex(x => x.label === label);
+    if(index > -1) {
+        cart[index].qty++;
+    } else {
+        cart.push({
+            ...currentProduct, 
+            label: label, 
+            qty: 1,
+            price: currentProduct.price // Assure-toi que le prix est bien passé
+        });
+    }
+    
+    // Mise à jour du compteur visuel
+    const count = cart.reduce((a, b) => a + b.qty, 0);
+    document.getElementById('cart-count').innerText = count;
+    
+    // Animation du panier
+    const cartIcon = document.getElementById('cart-count').parentElement;
+    cartIcon.classList.add('animate-cart');
+    setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
+
+    // Fermer la modale et sauvegarder
+    document.getElementById('productDetailModal').classList.remove('active');
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+
+    // Toast de confirmation
+    const toast = document.getElementById('toast');
+    toast.classList.remove('opacity-0');
+    setTimeout(() => toast.classList.add('opacity-0'), 2000);
+}
 
 function drawWheel() {
     const arc = 2 * Math.PI / prizes.length;
@@ -848,7 +956,6 @@ function drawWheel() {
         ctx.restore();
     }
 }
-
 // APPEL IMMÉDIAT POUR DESSINER LA ROUE AU CHARGEMENT
 drawWheel();
 
@@ -1005,39 +1112,53 @@ document.getElementById('spin').onclick = function() {
     }
 
     function majResume() {
-        const zoneKey = document.getElementById('zone-livraison').value;
-        const infoBox = document.getElementById('communes-info');
-        const optionCadeau = document.getElementById('check-cadeau').checked;
-        let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-        
-        let remiseValentin = 0;
-        const maintenant = new Date();
-        if (maintenant >= new Date("February 14, 2026") && maintenant <= new Date("February 28, 2026") && tArt >= 20000) {
-            remiseValentin = tArt * 0.2;
-        }
+    const zoneKey = document.getElementById('zone-livraison').value;
+    const isCadeau = document.getElementById('check-cadeau').checked;
+    const containerResume = document.getElementById('resume-final');
+    const alertePromo = document.getElementById('promo-congrats');
 
-        let remiseRoue = 0;
-        if (remiseCodePromo > 0) {
-            remiseRoue = (tArt - remiseValentin) * (remiseCodePromo / 100);
-        }
-
-        let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
-        let tCadeau = optionCadeau ? 1000 : 0;
-        let totalFinal = tArt - remiseValentin - remiseRoue + tLiv + tCadeau;
-        if(zoneKey) { 
-            infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
-            infoBox.classList.remove('hidden'); 
-        }
-
-        document.getElementById('resume-final').innerHTML = `
-            <div class="flex justify-between"><span>Articles :</span> <span>${tArt.toLocaleString()} F</span></div>
-            ${tCadeau > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Emballage Cadeau :</span> <span>+1.000 F</span></div>` : ''}
-            ${remiseValentin > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Promo Valentin (-20%) :</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
-            ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600"><span>🎰 Code Roue (-${remiseCodePromo}%) :</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
-            <div class="flex justify-between"><span>Livraison :</span> <span>${tLiv.toLocaleString()} F</span></div>
-        `;
-        document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    // 1. Sous-total articles
+    let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    
+    // 2. Frais livraison
+    let tLiv = 0;
+    if (zoneKey && tarifsLivraison[zoneKey]) {
+        tLiv = tarifsLivraison[zoneKey].prix;
     }
+
+    // 3. Option Cadeau
+    let tCadeau = isCadeau ? 1000 : 0;
+
+    // 4. Promo St Valentin (-20% si > 20.000 F)
+    let remiseValentin = 0;
+    const maintenant = new Date();
+    const debutPromo = new Date(2026, 1, 14); // 14 Fev
+    const finPromo = new Date(2026, 1, 28);   // 28 Fev
+
+    if (maintenant >= debutPromo && maintenant <= finPromo && tArt >= 20000) {
+        remiseValentin = tArt * 0.20;
+        alertePromo.classList.remove('hidden');
+    } else {
+        alertePromo.classList.add('hidden');
+    }
+
+    // 5. Remise Code Promo (Roue)
+    let remiseRoue = (remiseCodePromo > 0) ? (tArt * (remiseCodePromo / 100)) : 0;
+
+    let totalFinal = tArt + tLiv + tCadeau - remiseValentin - remiseRoue;
+
+    // Affichage
+    containerResume.innerHTML = `
+        <div class="flex justify-between"><span>Articles:</span> <span>${tArt.toLocaleString()} F</span></div>
+        ${tLiv > 0 ? `<div class="flex justify-between"><span>Livraison:</span> <span>${tLiv.toLocaleString()} F</span></div>` : ''}
+        ${tCadeau > 0 ? `<div class="flex justify-between text-pink-500"><span>Option Cadeau:</span> <span>+1.000 F</span></div>` : ''}
+        ${remiseValentin > 0 ? `<div class="flex justify-between text-green-600 font-bold"><span>Remise Valentin (-20%):</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
+        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600 font-bold"><span>Remise Code (-${remiseCodePromo}%):</span> <span>-${remiseRoue.toLocaleString()} F</span></div>` : ''}
+    `;
+    
+    document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    toggleBouton(); // Vérifie si on peut activer le bouton final
+}
 
     function toggleBouton() {
         const chk = document.getElementById('check-verif').checked;
@@ -1045,82 +1166,55 @@ document.getElementById('spin').onclick = function() {
         btn.className = chk ? "w-full ali-gradient text-white py-4 rounded-full font-black uppercase shadow-lg" : "w-full btn-disabled text-white py-4 rounded-full font-black uppercase";
         btn.disabled = !chk;
     }
-
     function validerCommande() {
-const zone = document.getElementById('zone-livraison').value;
-const modePay = document.getElementById('mode-pay').value;
-if (zone !== 'bouake' && modePay === 'CASH À LA LIVRAISON') {
-    alert("⚠️ Le paiement cash est réservé uniquement aux retraits en boutique. Pour une livraison à domicile, veuillez choisir le paiement par Transfert.");
-    return;
-}
-        
     const nom = document.getElementById('nom-client').value;
-    const quartier = document.getElementById('tel-client').value;
-    const zoneKey = document.getElementById('zone-livraison').value;
-    const mode = document.getElementById('mode-pay').value;
+    const tel = document.getElementById('tel-client').value;
+    const quartier = document.getElementById('quartier-client').value;
+    const zone = document.getElementById('zone-livraison').value;
     const total = document.getElementById('total-display').innerText;
-    const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
-    const optionCadeau = document.getElementById('check-cadeau').checked;
-    let cadeauMsg = optionCadeau ? "🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n" : "";
-    if(!nom || !quartier || !zoneKey) {
-        alert("⚠️ Remplissez vos infos !");
+    const isCadeau = document.getElementById('check-cadeau').checked;
+    const codeUtilise = document.getElementById('input-promo').value || "Aucun";
+
+    if(!nom || !tel || !quartier || !zone) {
+        alert("⚠️ Merci de remplir tous les champs obligatoires.");
         return;
     }
 
-    // --- NOUVEAU : ENREGISTREMENT DANS L'HISTORIQUE ---
+    // 1. Préparation de la liste des articles pour WhatsApp et l'historique
+    let listArticles = cart.map(i => `${i.label} (x${i.qty})`).join(', ');
+    
+    // 2. Création de l'objet commande pour l'historique
     const nouvelleCommande = {
         date: new Date().toLocaleString('fr-FR'),
-        client: nom,
-        lieu: quartier + " (" + tarifsLivraison[zoneKey].nom + ")",
-        articles: cart.map(i => `${i.label} (x${i.qty})`).join(', '),
+        client: nom.toUpperCase(),
+        tel: tel,
+        lieu: `${quartier} (${tarifsLivraison[zone].nom})`,
+        articles: listArticles,
         total: total,
-        promo: inputCode || "Aucun"
+        promo: codeUtilise,
+        cadeau: isCadeau ? "OUI" : "NON"
     };
 
+    // 3. Sauvegarde dans l'historique (localStorage)
     let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+     mettreAJourStats();
     historique.unshift(nouvelleCommande); // Ajoute au début de la liste
     localStorage.setItem('latyfa_historique', JSON.stringify(historique));
 
-    // Sécurité : Marquer le code promo comme utilisé
-    if (remiseCodePromo > 0 && inputCode) {
-        let used = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
-        if (!used.includes(inputCode)) {
-            used.push(inputCode);
-            localStorage.setItem('latyfa_used_promos', JSON.stringify(used));
-        }
-    }
+    // 4. Construction du message WhatsApp
+    let listWA = cart.map(i => `• ${i.label} (x${i.qty})`).join('\n');
+    let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP*\n\n`;
+    msg += `👤 *CLIENT:* ${nom}\n`;
+    msg += `📞 *TEL:* ${tel}\n`;
+    msg += `📍 *QUARTIER:* ${quartier}\n`;
+    msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
+    msg += `📝 *ARTICLES:*\n${listWA}\n`;
+    if(isCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
+    msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
 
-    // Construction de la liste des articles avec émojis
-    let list = ""; 
-    cart.forEach(i => {
-        list += `🛍️ ${i.label} (x${i.qty})\n`;
-    });
-
-    // Calcul de la promo pour l'affichage WhatsApp
-    let promoText = remiseCodePromo > 0 ? `🎁 *CODE PROMO:* ${inputCode} (-${remiseCodePromo}%)\n` : "";
-    
-    // Structure élégante du message
-    let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP* ✨\n\n`;
-    msg += `👤 *CLIENT:* ${nom.toUpperCase()}\n`;
-    msg += `📞 *QUARTIER:* ${quartier}\n`;
-    msg += `🌍 *ZONE:* ${tarifsLivraison[zoneKey].nom}\n\n`;
-    msg += `📝 *DÉTAILS DU PANIER :*\n${list}\n`;
-    msg += cadeauMsg;
-    msg += `${promoText}`;
-    msg += `💰 *TOTAL À PAYER : ${total} F*\n\n`;
-    msg += `💳 *MODE DE PAIEMENT :* ${mode}\n`;
-    msg += `───────────────\n`;
-    msg += `_Commande générée depuis la boutique en ligne._`;
-
-    // Envoi vers ton numéro
+    // 5. Envoi
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-        localStorage.removeItem('latyfa_cart');
-cart = [];
-document.getElementById('cart-count').innerText = 0;
-        
 }
-
-
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
     function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
@@ -1175,15 +1269,21 @@ setTimeout(() => {
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
 function ouvrirAdmin() {
-    const mdp = prompt("Code d'accès Admin :");
-    if(mdp === "2026") {
-        document.getElementById('adminModal').classList.add('active');
-        const savedDb = localStorage.getItem('latyfa_db');
-        if(savedDb) { products = JSON.parse(savedDb); }
-        refreshAdminList(); 
-    } else { alert("Accès refusé"); }
-}
+    // On récupère le code enregistré ou on utilise "2026" par défaut
+    const codeAttendu = localStorage.getItem('latyfa_admin_code') || "2026";
+    
+    const codeSaisi = prompt("Veuillez entrer le code d'accès :");
 
+    if (codeSaisi === codeAttendu) {
+        document.getElementById('adminModal').classList.remove('hidden');
+        document.getElementById('adminModal').classList.add('flex');
+        
+        chargerHistorique();
+        mettreAJourStats();
+    } else {
+        alert("❌ Code incorrect. Accès refusé.");
+    }
+}
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
@@ -1281,35 +1381,47 @@ function chargerHistorique() {
     const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
 
     if (historique.length === 0) {
-        zone.innerHTML = "<p class='text-[10px] text-center text-gray-400 uppercase font-bold'>Aucune commande enregistrée</p>";
+        zone.innerHTML = `
+            <div class="text-center py-10 opacity-50">
+                <i class="fa-solid fa-box-archive text-3xl mb-2"></i>
+                <p class="text-[10px] uppercase font-bold">Aucune vente enregistrée</p>
+            </div>`;
         return;
     }
-
     zone.innerHTML = historique.map(cmd => `
-        <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500 shadow-sm text-[10px]">
-            <div class="flex justify-between font-black text-blue-600 mb-1">
-                <span>📅 ${cmd.date}</span>
-                <span>💰 ${cmd.total} F</span>
+        <div class="bg-white p-4 rounded-xl border-l-4 border-[#c5a059] shadow-sm text-[10px] mb-3">
+            <div class="flex justify-between items-start mb-2">
+                <span class="font-black text-gray-400">📅 ${cmd.date}</span>
+                <span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold">${cmd.total} F</span>
             </div>
-            <p><strong>👤 Client:</strong> ${cmd.client}</p>
-            <p><strong>📍 Lieu:</strong> ${cmd.lieu}</p>
-            <p><strong>🛍️ Articles:</strong> ${cmd.articles}</p>
-            <p class="text-[8px] text-gray-400 mt-1 italic">Code utilisé: ${cmd.promo}</p>
+            <p class="mb-1"><strong>👤 CLIENT :</strong> ${cmd.client} (${cmd.tel})</p>
+            <p class="mb-1"><strong>📍 DESTINATION :</strong> ${cmd.lieu}</p>
+            <p class="mb-1"><strong>🛍️ PANIER :</strong> ${cmd.articles}</p>
+            <div class="flex gap-2 mt-2 pt-2 border-t border-gray-50 text-[8px] font-bold uppercase">
+                <span class="${cmd.promo !== 'Aucun' ? 'text-blue-500' : 'text-gray-300'}">🎟️ Code: ${cmd.promo}</span>
+                <span class="${cmd.cadeau === 'OUI' ? 'text-pink-500' : 'text-gray-300'}">🎁 Cadeau: ${cmd.cadeau}</span>
+            </div>
         </div>
     `).join('');
 }
     function effacerToutLHistorique() {
-    // Sécurité : on demande confirmation avant de tout supprimer
-    if (confirm("🚨 VOULEZ-VOUS VRAIMENT TOUT EFFACER ?\nCette action est irréversible et supprimera tout l'historique de vos ventes.")) {
+    // Premier avertissement
+    if (confirm("🚨 ATTENTION : Vous allez supprimer TOUTES les ventes de l'historique.")) {
         
-        // Supprime l'entrée de la mémoire
-        localStorage.removeItem('latyfa_historique');
-        
-        // Rafraîchit l'affichage pour montrer que c'est vide
-        chargerHistorique();
-        
-        // Petite alerte de succès
-        alert("✅ Historique vidé avec succès.");
+        // Deuxième vérification de sécurité (le rappel de sauvegarde)
+        if (confirm("❓ Avez-vous bien téléchargé votre sauvegarde Excel (Fichier CSV) avant de continuer ?")) {
+            
+            // Si l'utilisateur confirme les deux, on efface
+            localStorage.removeItem('latyfa_historique');
+            
+            chargerHistorique();
+            mettreAJourStats();
+            
+            alert("✅ Historique réinitialisé avec succès.");
+        } else {
+            // Si l'utilisateur dit "Non" à la sauvegarde, on lui propose de le faire
+            alert("Sauvegarde annulée. Pensez à cliquer sur 'Sauvegarder (Excel)' avant d'effacer.");
+        }
     }
 }
     function changerMedia(type, source, element) {
@@ -1397,11 +1509,138 @@ setTimeout(() => {
     setInterval(lancerNotificationGain, 35000);
 }, 10000);
 
+function selectPay(mode) {
+    const btnMobile = document.getElementById('pay-mobile');
+    const btnCash = document.getElementById('pay-cash');
+    const inputHidden = document.getElementById('mode-pay');
 
+    if (mode === 'TRANSFERT') {
+        inputHidden.value = "TRANSFERT MOBILE (WAVE/ORANGE/MTN)";
+        // Style Actif
+        btnMobile.classList.replace('border-gray-100', 'border-[#c5a059]');
+        btnMobile.classList.add('bg-orange-50');
+        btnMobile.style.opacity = "1";
+        // Style Inactif
+        btnCash.classList.replace('border-[#c5a059]', 'border-gray-100');
+        btnCash.classList.remove('bg-orange-50');
+        btnCash.style.opacity = "0.5";
+    } else {
+        inputHidden.value = "CASH / RETRAIT EN BOUTIQUE";
+        // Style Actif
+        btnCash.classList.replace('border-gray-100', 'border-[#c5a059]');
+        btnCash.classList.add('bg-orange-50');
+        btnCash.style.opacity = "1";
+        // Style Inactif
+        btnMobile.classList.replace('border-[#c5a059]', 'border-gray-100');
+        btnMobile.classList.remove('bg-orange-50');
+        btnMobile.style.opacity = "0.5";
+    }
+}
+    function ajouterAuPanier(id, label, price, img) {
+    // 1. Chercher si l'article est déjà là
+    const itemExistant = cart.find(item => item.id === id);
+
+    if (itemExistant) {
+        // 2. Si oui, on augmente juste la quantité
+        itemExistant.qty += 1;
+    } else {
+        // 3. Si non, on l'ajoute comme nouveau
+        cart.push({
+            id: id,
+            label: label,
+            price: price,
+            img: img,
+            qty: 1
+        });
+    }
+
+    // 4. Petit effet visuel pour confirmer l'ajout
+    notifierAjout(label);
+    
+    // 5. Mettre à jour l'affichage
+    renderCart();
+}
+
+function notifierAjout(nom) {
+    // Tu peux créer une petite notification temporaire ici
+    console.log(nom + " ajouté au panier !");
+}
+        function mettreAJourStats() {
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    const zoneCA = document.getElementById('stat-ca');
+    const zoneNB = document.getElementById('stat-nb');
+
+    let totalCA = 0;
+    historique.forEach(cmd => {
+        let prixNettoyé = cmd.total.toString().replace(/\s/g, '').replace(/,/g, '');
+        totalCA += parseInt(prixNettoyé) || 0;
+    });
+
+    // --- LOGIQUE DE L'ANIMATION DU COMPTEUR ---
+    let depart = 0;
+    let fin = totalCA;
+    let duree = 1000; // L'animation dure 1 seconde
+    let debutTemps = null;
+
+    function animation(tempsActuel) {
+        if (!debutTemps) debutTemps = tempsActuel;
+        let progression = tempsActuel - debutTemps;
+        
+        // Calcul du chiffre actuel en fonction du temps écoulé
+        let valeurActuelle = Math.min(Math.floor((progression / duree) * (fin - depart) + depart), fin);
+        
+        zoneCA.innerText = valeurActuelle.toLocaleString('fr-FR') + " F";
+
+        if (progression < duree) {
+            requestAnimationFrame(animation);
+        }
+    }
+    // On lance l'animation
+    requestAnimationFrame(animation);   
+    // Mise à jour directe du nombre de commandes
+    zoneNB.innerText = historique.length;
+}
+    function changerMotDePasse() {
+    const nouveauCode = prompt("Entrez votre nouveau code secret :");
+    
+    if (nouveauCode && nouveauCode.trim() !== "") {
+        localStorage.setItem('latyfa_admin_code', nouveauCode);
+        alert("✅ Nouveau code enregistré avec succès !");
+    } else {
+        alert("⚠️ Le code ne peut pas être vide.");
+    }
+    }
+    function sauvegarderHistorique() {
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+
+    if (historique.length === 0) {
+        alert("Rien à sauvegarder pour le moment.");
+        return;
+    }
+
+    // Création de l'en-tête du fichier CSV
+    let csvContent = "Date;Client;Telephone;Lieu;Articles;Total;Promo;Cadeau\n";
+
+    // Ajout des lignes
+    historique.forEach(cmd => {
+        let ligne = `${cmd.date};${cmd.client};${cmd.tel};${cmd.lieu};${cmd.articles};${cmd.total};${cmd.promo};${cmd.cadeau}`;
+        csvContent += ligne + "\n";
+    });
+
+    // Création du fichier et téléchargement
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Ventes_LatyfaShop_${new Date().toLocaleDateString()}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+        }
 </script>
-
-<div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
-
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
 <div id="adminModal" class="modal bg-gray-50">
@@ -1425,7 +1664,6 @@ setTimeout(() => {
         <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
     </div>
 </div>
-
                     <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
                     <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
                         <option value="bijoux">Bijoux</option>
@@ -1454,28 +1692,55 @@ setTimeout(() => {
         <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
         <div id="admin-list" class="space-y-2 mb-10">
             </div>
-
-        <div class="pt-8 border-t-2 border-dashed border-gray-200">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
-                    <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
-                </h3>
-                <button onclick="effacerToutLHistorique()" 
-                        class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black hover:bg-red-600 hover:text-white transition-all">
-                    <i class="fa-solid fa-trash-can"></i> Vider
-                </button>
-            </div>
-            
-            <button onclick="toggleHistorique()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
-                <i class="fa-solid fa-clock-rotate-left"></i> Voir l'historique WhatsApp
-            </button>
-
-            <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10">
-                </div>
-        </div>
+    
+<div class="grid grid-cols-2 gap-4 mb-8">
+    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
+        <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Chiffre d'Affaires</p>
+        <div id="stat-ca" class="text-xl font-black text-blue-700">0 F</div>
+    </div>
+    <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
+        <p class="text-[9px] font-black uppercase text-green-400 mb-1">Commandes</p>
+        <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
     </div>
 </div>
+        <div class="pt-8 border-t-2 border-dashed border-gray-200">
+    <div class="flex flex-col gap-4 mb-4">
+        <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
+            <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
+        </h3>
+        
+        <div class="flex gap-2">
+            <button onclick="sauvegarderHistorique()" 
+                    class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md active:scale-95 transition-all">
+                <i class="fa-solid fa-file-export mr-2"></i> Sauvegarder (Excel)
+            </button>
+            
+            <button onclick="effacerToutLHistorique()" 
+                    class="bg-red-100 text-red-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-red-600 hover:text-white transition-all">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </div>
+    </div>
+    
+    <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
+        <i class="fa-solid fa-clock-rotate-left mr-2"></i> Voir l'historique complet
+    </button>
 
+    <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10">
+        </div>
+</div>
+    <div class="text-center mt-6">
+    <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest">
+        <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
+    </button>
+    </div>
+    <div class="mt-6 border-t border-gray-100 pt-4">
+    <button onclick="document.getElementById('adminModal').classList.add('hidden')" 
+            class="w-full bg-gray-50 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px] hover:bg-gray-100 active:scale-95 transition-all">
+        <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
+    </button>
+    </div>
+</div>
 <div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
     <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
         <div class="flex justify-between items-center mb-4">
@@ -1519,6 +1784,6 @@ setTimeout(() => {
         <p class="text-[8px] text-gray-400 mt-1 uppercase font-black">Il y a quelques secondes</p>
     </div>
 </div>
-
-</body>
-</html>
+<audio id="sound-promo" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+        </body>
+        </html>
