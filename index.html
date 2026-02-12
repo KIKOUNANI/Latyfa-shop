@@ -1734,6 +1734,13 @@ function mettreAJourStats() {
     zoneCA.innerText = fin.toLocaleString('fr-FR') + " F"; 
     zoneNB.innerText = historique.length;
 }
+    function resetStatsRoue() {
+    if(confirm("Voulez-vous remettre à zéro les compteurs de tours et de gains ?")) {
+        localStorage.removeItem('latyfa_global_stats');
+        mettreAJourStats(); // Pour rafraîchir l'affichage immédiatement
+        alert("Compteurs réinitialisés !");
+    }
+    }
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
@@ -1787,14 +1794,33 @@ function mettreAJourStats() {
         <div id="admin-list" class="space-y-2 mb-10">
             </div>
     
-<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="grid grid-cols-2 gap-4 mb-4">
     <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
         <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Chiffre d'Affaires</p>
         <div id="stat-ca" class="text-xl font-black text-blue-700">0 F</div>
     </div>
+    
     <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
         <p class="text-[9px] font-black uppercase text-green-400 mb-1">Commandes</p>
         <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
+    </div>
+</div>
+
+<div class="grid grid-cols-2 gap-4 mb-2">
+    <div class="bg-gray-50 p-3 rounded-xl border text-center">
+        <p class="text-[8px] font-black uppercase text-gray-400">Total Tours Roue</p>
+        <div id="stat-total-spins" class="text-lg font-black text-gray-800">0</div>
+    </div>
+    <div class="bg-gray-50 p-3 rounded-xl border text-center">
+        <p class="text-[8px] font-black uppercase text-gray-400">Gains Clients</p>
+        <div id="stat-total-wins" class="text-lg font-black text-[#c5a059]">0</div>
+    </div>
+</div>
+
+<button onclick="resetStatsRoue()" class="w-full mb-6 text-[8px] font-bold text-red-400 uppercase hover:text-red-600 transition tracking-widest">
+    <i class="fa-solid fa-trash-can mr-1"></i> Réinitialiser les compteurs de la roue
+</button>
+<div id="stat-nb" class="text-xl font-black text-green-700">0</div>
     </div>
 </div>
         <div class="pt-8 border-t-2 border-dashed border-gray-200">
