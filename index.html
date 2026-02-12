@@ -890,43 +890,48 @@ function gererOptionsProduit(p) {
 }
 
     function ajouterDepuisDetail() {
-        const size = document.getElementById('select-size').value || "";
-        const color = document.getElementById('select-color').value || "";
-        const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
-        function ajouterDepuisDetail() {
-    // ... ton code existant (récupération taille/couleur) ...
-
-    // AJOUT DU SON
+    function ajouterDepuisDetail() {
+    const size = document.getElementById('select-size').value || "";
+    const color = document.getElementById('select-color').value || "";
+    const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
+    
+    // Jouer le son
     const sound = document.getElementById('cart-sound');
-    sound.currentTime = 0; // Réinitialise pour pouvoir cliquer plusieurs fois vite
-    sound.play().catch(e => console.log("L'utilisateur doit interagir d'abord avec le site"));
-
-    // ... le reste de ta fonction ...
-}
-        
-        const index = cart.findIndex(x => x.label === label);
-        if(index > -1) cart[index].qty++; else cart.push({...currentProduct, label, qty: 1});
-        
-        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
-        
-        const cartIcon = document.getElementById('cart-count').parentElement;
-        cartIcon.classList.add('animate-cart');
-        setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
-
-        document.getElementById('productDetailModal').classList.remove('active');
-
-        if (navigator.vibrate) navigator.vibrate(50);
-        
-        const toast = document.getElementById('toast');
-        toast.classList.remove('opacity-0');
-        setTimeout(() => toast.classList.add('opacity-0'), 2000);
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+    if(sound) {
+        sound.currentTime = 0;
+        sound.play().catch(e => console.log("Interaction requise pour le son"));
     }
-    // --- LOGIQUE DE LA ROUE CORRIGÉE ---
-const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
-const canva = document.getElementById('canvas');
-const ctx = canva.getContext('2d');
-const MAX_TENTATIVES = 1;
+
+    const index = cart.findIndex(x => x.label === label);
+    if(index > -1) {
+        cart[index].qty++;
+    } else {
+        cart.push({
+            ...currentProduct, 
+            label: label, 
+            qty: 1,
+            price: currentProduct.price // Assure-toi que le prix est bien passé
+        });
+    }
+    
+    // Mise à jour du compteur visuel
+    const count = cart.reduce((a, b) => a + b.qty, 0);
+    document.getElementById('cart-count').innerText = count;
+    
+    // Animation du panier
+    const cartIcon = document.getElementById('cart-count').parentElement;
+    cartIcon.classList.add('animate-cart');
+    setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
+
+    // Fermer la modale et sauvegarder
+    document.getElementById('productDetailModal').classList.remove('active');
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+
+    // Toast de confirmation
+    const toast = document.getElementById('toast');
+    toast.classList.remove('opacity-0');
+    setTimeout(() => toast.classList.add('opacity-0'), 2000);
+}
 
 function drawWheel() {
     const arc = 2 * Math.PI / prizes.length;
@@ -1161,11 +1166,13 @@ document.getElementById('spin').onclick = function() {
         btn.disabled = !chk;
     }
     function validerCommande() {
+    function validerCommande() {
     const nom = document.getElementById('nom-client').value;
     const tel = document.getElementById('tel-client').value;
     const quartier = document.getElementById('quartier-client').value;
     const zone = document.getElementById('zone-livraison').value;
     const total = document.getElementById('total-display').innerText;
+    const optionCadeau = document.getElementById('check-cadeau').checked; // Récupération ici
 
     if(!nom || !tel || !quartier || !zone) {
         alert("⚠️ Merci de remplir tous les champs (Nom, Tel, Quartier et Zone).");
@@ -1180,7 +1187,6 @@ document.getElementById('spin').onclick = function() {
     msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
     msg += `📝 *ARTICLES:*\n${list}\n`;
     
-    // On ajoute l'info cadeau si cochée
     if(optionCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
     
     msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
