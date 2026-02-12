@@ -1312,7 +1312,25 @@ function ajouterProduitAdmin() {
         stockBas: document.getElementById('adm-stock-bas').checked,
         dateAjout: Date.now()
     };
+    function modifPrixRapide(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
 
+    const nouveauPrix = prompt(`Modifier le prix de "${p.name}" (Prix actuel : ${p.price} F) :`, p.price);
+    
+    if (nouveauPrix !== null && !isNaN(nouveauPrix) && nouveauPrix.trim() !== "") {
+        p.price = parseInt(nouveauPrix);
+        
+        // Sauvegarde dans la base de données locale
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        
+        // Mise à jour visuelle immédiate
+        refreshAdminList();
+        render(); // Met à jour la boutique en arrière-plan
+        
+        alert("💰 Prix mis à jour ! Nouveau prix : " + p.price + " F");
+    }
+}
     if (idEnCoursDeModification) {
         const idx = products.findIndex(p => p.id === idEnCoursDeModification);
         products[idx] = { ...products[idx], ...donnees };
@@ -1345,26 +1363,39 @@ function supprimerProduit(id) {
 }
 
 let idEnCoursDeModification = null;
-
 function refreshAdminList() {
     const list = document.getElementById('admin-list');
     if (!list) return;
     list.innerHTML = products.map(p => `
-        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border mb-2 shadow-sm">
-            <div class="flex items-center gap-2">
-                <img src="${p.images[0]}" class="w-8 h-8 object-cover rounded ${p.enStock === false ? 'grayscale' : ''}">
-                <span class="font-bold text-[10px] ${p.enStock === false ? 'text-red-400 line-through' : 'text-gray-700'}">${p.name}</span>
+        <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 mb-2 shadow-sm">
+            <div class="flex items-center gap-3">
+                <img src="${p.images[0]}" class="w-10 h-10 object-cover rounded-lg ${p.enStock === false ? 'grayscale' : ''}">
+                <div class="flex flex-col">
+                    <span class="font-black text-[10px] uppercase ${p.enStock === false ? 'text-red-300 line-through' : 'text-gray-800'}">${p.name}</span>
+                    <span class="text-[10px] font-bold text-[#c5a059]">${p.price.toLocaleString()} F</span>
+                </div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="preparerModification(${p.id})" class="text-blue-500 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
-                    ${p.enStock === false ? 'RUPTURE' : 'EN STOCK'}
+            <div class="flex gap-1">
+                <button onclick="modifPrixRapide(${p.id})" class="bg-orange-50 text-orange-500 p-2 rounded-lg hover:bg-orange-500 hover:text-white transition-all">
+                    <i class="fa-solid fa-tags text-[10px]"></i>
                 </button>
-                <button onclick="supprimerProduit(${p.id})" class="text-red-500 p-1"><i class="fa-solid fa-trash"></i></button>
+                
+                <button onclick="preparerModification(${p.id})" class="bg-blue-50 text-blue-500 p-2 rounded-lg hover:bg-blue-500 hover:text-white transition-all">
+                    <i class="fa-solid fa-pen-to-square text-[10px]"></i>
+                </button>
+                
+                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded-lg ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
+                    ${p.enStock === false ? 'OFF' : 'ON'}
+                </button>
+                
+                <button onclick="supprimerProduit(${p.id})" class="text-gray-300 hover:text-red-500 p-2">
+                    <i class="fa-solid fa-trash-can text-[10px]"></i>
+                </button>
             </div>
         </div>
     `).join('');
 }
+
     function preparerModification(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
