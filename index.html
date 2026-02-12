@@ -458,6 +458,12 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </footer>
 
     <div id="cartModal" class="modal">
+        <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-black uppercase italic tracking-widest text-[#c5a059]">Mon Panier</h2>
+    <button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-200 px-2 py-1 rounded hover:bg-red-50 transition-all">
+        <i class="fa-solid fa-trash-can mr-1"></i> Vider
+    </button>
+        </div>
     <div class="max-w-md mx-auto">
         <h2 class="text-xl font-bold mb-6 text-center text-[#c5a059] uppercase italic tracking-widest">Ma Commande</h2>
         <div id="promo-congrats" class="hidden mb-4 p-3 bg-gradient-to-r from-pink-500 to-pink-400 text-white rounded-xl shadow-lg animate-bounce">
@@ -558,29 +564,24 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     <p id="communes-info" class="hidden text-[9px] text-blue-600 font-bold italic px-2 uppercase"></p>
 
     <div class="space-y-2">
-        <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
-        <div class="grid grid-cols-2 gap-2">
-            <div onclick="selectPay('TRANSFERT')" id="pay-mobile" 
-                 class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
-                <div class="flex gap-2 mb-1 items-center">
-                    <svg width="16" height="16" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="50" fill="#1DA1F2"/>
-                        <path d="M70 35L40 65L25 50" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <div style="width:14px; height:14px; background:#FF7900; border-radius:2px;"></div>
-                    <div style="width:14px; height:14px; background:#FFCC00; border-radius:50%; border:1px solid #000; display:flex; align-items:center; justify-content:center; font-size:6px; font-weight:900; color:black">M</div>
-                </div>
-                <span class="text-[8px] font-black uppercase">Mobile Money</span>
+    <label class="text-[9px] font-black uppercase text-gray-400">Mode de paiement</label>
+    <div class="grid grid-cols-2 gap-2">
+        <div onclick="selectPay('TRANSFERT')" id="pay-mobile" class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
+            <div class="flex gap-1 mb-1">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Orange_logo.svg/1200px-Orange_logo.svg.png" class="w-4 h-4 object-contain">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/MTN_Logo.svg" class="w-4 h-4 object-contain">
+                <img src="https://vps.latyfa.shop/icons/wave.png" class="w-4 h-4 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1019/1019607.png'">
             </div>
-
-            <div onclick="selectPay('CASH')" id="pay-cash" 
-                 class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
-                <i class="fa-solid fa-hand-holding-dollar text-gray-400 mb-1 text-lg" id="cash-icon"></i>
-                <span class="text-[8px] font-black uppercase">Cash (Boutique)</span>
-            </div>
+            <span class="text-[8px] font-black uppercase">Mobile Money</span>
         </div>
 
-        <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
+        <div onclick="selectPay('CASH')" id="pay-cash" class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all opacity-60">
+            <i class="fa-solid fa-shop text-[#c5a059] mb-1"></i>
+            <span class="text-[8px] font-black uppercase">Cash (Boutique)</span>
+        </div>
+    </div>
+    <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
+</div>
         <p id="payment-instruction" class="text-[8px] text-gray-400 font-bold italic mt-1">
             * Le paiement se fait par transfert avant l'expédition.
         </p>
@@ -669,6 +670,14 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
+    function viderPanier() {
+    if (confirm("Voulez-vous vraiment vider votre panier ?")) {
+        cart = []; // On vide le tableau
+        renderCart(); // On rafraîchit l'affichage
+        // Optionnel : fermer le modal si le panier est vide
+        // document.getElementById('cartModal').classList.remove('active');
+    }
+    }
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
@@ -768,8 +777,12 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
                 </div>
             </div>`;
     }).join('');
+        const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
+const badge = document.getElementById('cart-count'); // l'ID de ton petit rond rouge sur l'icône
+if(badge) {
+    badge.innerText = totalArticles;
+    badge.style.display = totalArticles > 0 ? 'flex' : 'none';}
 }
-    
     function voirDetails(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
@@ -847,9 +860,6 @@ ${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-
     `);
     gererOptionsProduit(p);
 }
-
-
-
 function gererOptionsProduit(p) {
     const sizeArea = document.getElementById('size-area');
     const colorArea = document.getElementById('color-area');
@@ -910,9 +920,7 @@ function gererOptionsProduit(p) {
         toast.classList.remove('opacity-0');
         setTimeout(() => toast.classList.add('opacity-0'), 2000);
         localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-
     }
-
     // --- LOGIQUE DE LA ROUE CORRIGÉE ---
 const prizes = ["-5%", "REESSAYER", "LIVRAISON", "REESSAYER", "-10%", "REESSAYER", "CADEAU", "REESSAYER", "-2%", "REESSAYER", "-15%", "REESSAYER"];
 const canva = document.getElementById('canvas');
@@ -1444,30 +1452,61 @@ setTimeout(() => {
 }, 10000);
 
 function selectPay(mode) {
-    const mobileBtn = document.getElementById('pay-mobile');
-    const cashBtn = document.getElementById('pay-cash');
-    const cashIcon = document.getElementById('cash-icon');
-    const inputPay = document.getElementById('mode-pay');
+    const btnMobile = document.getElementById('pay-mobile');
+    const btnCash = document.getElementById('pay-cash');
+    const inputHidden = document.getElementById('mode-pay');
 
-    if(mode === 'TRANSFERT') {
-        inputPay.value = "TRANSFERT MOBILE (WAVE/ORANGE/MTN)";
-        mobileBtn.classList.replace('border-gray-100', 'border-[#c5a059]');
-        mobileBtn.classList.add('bg-orange-50');
-        cashBtn.classList.replace('border-[#c5a059]', 'border-gray-100');
-        cashBtn.classList.remove('bg-orange-50');
-        if(cashIcon) cashIcon.classList.replace('text-[#c5a059]', 'text-gray-400');
+    if (mode === 'TRANSFERT') {
+        inputHidden.value = "TRANSFERT MOBILE (WAVE/ORANGE/MTN)";
+        // Style Actif
+        btnMobile.classList.replace('border-gray-100', 'border-[#c5a059]');
+        btnMobile.classList.add('bg-orange-50');
+        btnMobile.style.opacity = "1";
+        // Style Inactif
+        btnCash.classList.replace('border-[#c5a059]', 'border-gray-100');
+        btnCash.classList.remove('bg-orange-50');
+        btnCash.style.opacity = "0.5";
     } else {
-        inputPay.value = "CASH À LA LIVRAISON";
-        cashBtn.classList.replace('border-gray-100', 'border-[#c5a059]');
-        cashBtn.classList.add('bg-orange-50');
-        if(cashIcon) cashIcon.classList.replace('text-gray-400', 'text-[#c5a059]');
-        mobileBtn.classList.replace('border-[#c5a059]', 'border-gray-100');
-        mobileBtn.classList.remove('bg-orange-50');
+        inputHidden.value = "CASH / RETRAIT EN BOUTIQUE";
+        // Style Actif
+        btnCash.classList.replace('border-gray-100', 'border-[#c5a059]');
+        btnCash.classList.add('bg-orange-50');
+        btnCash.style.opacity = "1";
+        // Style Inactif
+        btnMobile.classList.replace('border-[#c5a059]', 'border-gray-100');
+        btnMobile.classList.remove('bg-orange-50');
+        btnMobile.style.opacity = "0.5";
     }
 }
+    function ajouterAuPanier(id, label, price, img) {
+    // 1. Chercher si l'article est déjà là
+    const itemExistant = cart.find(item => item.id === id);
 
+    if (itemExistant) {
+        // 2. Si oui, on augmente juste la quantité
+        itemExistant.qty += 1;
+    } else {
+        // 3. Si non, on l'ajoute comme nouveau
+        cart.push({
+            id: id,
+            label: label,
+            price: price,
+            img: img,
+            qty: 1
+        });
+    }
 
-        
+    // 4. Petit effet visuel pour confirmer l'ajout
+    notifierAjout(label);
+    
+    // 5. Mettre à jour l'affichage
+    renderCart();
+}
+
+function notifierAjout(nom) {
+    // Tu peux créer une petite notification temporaire ici
+    console.log(nom + " ajouté au panier !");
+}
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
