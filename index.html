@@ -654,6 +654,35 @@ function afficherResultatsRecherche(liste) {
         "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
         "bouake": { nom: "Retrait Boutique", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
     };
+// --- GESTION DES CATÉGORIES ---
+let categories = JSON.parse(localStorage.getItem('latyfa_categories')) || [
+    { id: 'bijoux', nom: 'Bijoux', icone: 'fa-gem' },
+    { id: 'vetements', nom: 'Vêtements', icone: 'fa-shirt' },
+    { id: 'chaussures', nom: 'Chaussures', icone: 'fa-shoe-prints' },
+    { id: 'sac', nom: 'Sacs à main', icone: 'fa-bag-shopping' },
+    { id: 'parfum', nom: 'Parfums', icone: 'fa-spray-can-sparkles' },
+    { id: 'hanche', nom: 'Perles de hanche', icone: 'fa-circle-nodes' },
+    { id: 'autres', nom: 'Autres', icone: 'fa-plus' }
+];
+
+function refreshCategoriesUI() {
+    // 1. Mise à jour de la barre latérale (Sidebar)
+    const sidebar = document.querySelector('aside .flex-col');
+    if (sidebar) {
+        let html = `<span class="category-link cursor-pointer flex justify-between items-center" onclick="render('tous')"> Tout voir <i class="fa-solid fa-crown text-[10px] text-[#c5a059]"></i> </span>`;
+        html += categories.map(cat => `
+            <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('${cat.id}')">
+                ${cat.nom} <i class="fa-solid ${cat.icone} text-[10px]"></i>
+            </span>
+        `).join('');
+        sidebar.innerHTML = html;
+    }
+    // 2. Mise à jour du menu déroulant dans l'Admin
+    const selectAdmin = document.getElementById('adm-cat');
+    if (selectAdmin) {
+        selectAdmin.innerHTML = categories.map(cat => `<option value="${cat.id}">${cat.nom}</option>`).join('');
+    }
+    }
 
     let products = [
         { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
@@ -671,7 +700,60 @@ const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVR
 const canva = document.getElementById('canvas');
 const ctx = canva.getContext('2d');
 
+// Fonction pour créer une catégorie (ex: "Saint Valentin")
+function ajouterNouvelleCategorie() {
+    const nom = prompt("Nom de la nouvelle catégorie (ex: Promo Valentin) :");
+    if (!nom || nom.trim() === "") return;
 
+    // On transforme le nom en ID (ex: "Promo Valentin" devient "promo_valentin")
+    const id = nom.toLowerCase().trim().replace(/\s+/g, '_');
+
+    // Vérifier si l'ID existe déjà
+    if (categories.find(c => c.id === id)) {
+        return alert("Cette catégorie existe déjà !");
+    }
+
+    const icone = prompt("Icône FontAwesome (ex: fa-heart, fa-star, fa-fire) :") || "fa-tag";
+
+    // Ajouter à la liste
+    categories.push({ id, nom, icone });
+    
+    // Sauvegarder
+    localStorage.setItem('latyfa_categories', JSON.stringify(categories));
+    
+    // Mettre à jour l'affichage
+    refreshCategoriesUI();
+    alert("Catégorie '" + nom + "' créée avec succès !");
+}
+
+// Fonction pour supprimer une catégorie
+function supprimerCategorie() {
+    const listeNoms = categories.map((c, index) => `${index + 1}. ${c.nom}`).join('\n');
+    const choix = prompt("Entrez le numéro de la catégorie à supprimer :\n" + listeNoms);
+    
+    if (choix) {
+        const index = parseInt(choix) - 1;
+        if (categories[index]) {
+            const catId = categories[index].id;
+            
+            // Sécurité : on vérifie si des produits sont encore dedans
+            const produitsLies = products.filter(p => p.cat === catId);
+            
+            if (produitsLies.length > 0) {
+                alert(`🚫 Erreur : Cette catégorie contient ${produitsLies.length} produit(s). Changez leur catégorie avant de supprimer.`);
+            } else {
+                if (confirm(`Voulez-vous vraiment supprimer "${categories[index].nom}" ?`)) {
+                    categories.splice(index, 1);
+                    localStorage.setItem('latyfa_categories', JSON.stringify(categories));
+                    refreshCategoriesUI();
+                    alert("Catégorie supprimée.");
+                }
+            }
+        } else {
+            alert("Numéro invalide.");
+        }
+    }
+    }
     // --- BOUTIQUE ---
     function render(filter = 'tous') {
     const grid = document.getElementById('product-grid');
@@ -1219,40 +1301,28 @@ function ouvrirAdmin() {
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
-    const imgInput = document.getElementById('adm-img').value; // Récupère le texte brut
-    const videoUrl = document.getElementById('adm-video').value;
+    const imgInput = document.getElementById('adm-img').value;
+    if(!name || !price || !imgInput) return alert("Remplis les champs !");
 
-    if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
-
-    // --- LA MAGIE EST ICI ---
-    // On coupe le texte à chaque virgule et on enlève les espaces vides
-    const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
-
-    const newP = {
-        id: Date.now(),
-        name: name,
-        price: parseInt(price),
-        cat: document.getElementById('adm-cat').value,
-        images: imagesArray, // On enregistre le tableau d'images
-        video: videoUrl || null, // La vidéo reste à part
-        description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
-        enStock: true,
+    const imagesArray = imgInput.split(',').map(link => link.trim()).filter(l => l !== "");
+    const donnees = {
+        name, price: parseInt(price), cat: document.getElementById('adm-cat').value,
+        images: imagesArray, description: document.getElementById('adm-desc').value,
+        quantiteRestante: document.getElementById('adm-stock-count').value,
         stockBas: document.getElementById('adm-stock-bas').checked,
-    quantiteRestante: document.getElementById('adm-stock-count').value || "2", // On prend le chiffre saisi
-    dateAjout: Date.now() 
-};
-    products.push(newP);
+        dateAjout: Date.now()
+    };
+
+    if (idEnCoursDeModification) {
+        const idx = products.findIndex(p => p.id === idEnCoursDeModification);
+        products[idx] = { ...products[idx], ...donnees };
+        idEnCoursDeModification = null;
+    } else {
+        products.push({ id: Date.now(), enStock: true, ...donnees });
+    }
+
     localStorage.setItem('latyfa_db', JSON.stringify(products));
-    
-    // Nettoyage des champs
-    document.getElementById('adm-name').value = "";
-    document.getElementById('adm-price').value = "";
-    document.getElementById('adm-img').value = "";
-    document.getElementById('adm-video').value = "";
-    
-    refreshAdminList();
-    render();
-    alert("Produit ajouté avec " + imagesArray.length + " image(s) !");
+    location.reload(); // Plus simple pour tout rafraîchir d'un coup
 }
 
 function toggleStock(id) {
@@ -1274,6 +1344,8 @@ function supprimerProduit(id) {
     }
 }
 
+let idEnCoursDeModification = null;
+
 function refreshAdminList() {
     const list = document.getElementById('admin-list');
     if (!list) return;
@@ -1284,6 +1356,7 @@ function refreshAdminList() {
                 <span class="font-bold text-[10px] ${p.enStock === false ? 'text-red-400 line-through' : 'text-gray-700'}">${p.name}</span>
             </div>
             <div class="flex gap-2">
+                <button onclick="preparerModification(${p.id})" class="text-blue-500 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
                 <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
                     ${p.enStock === false ? 'RUPTURE' : 'EN STOCK'}
                 </button>
@@ -1292,6 +1365,21 @@ function refreshAdminList() {
         </div>
     `).join('');
 }
+    function preparerModification(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    idEnCoursDeModification = id;
+    document.getElementById('adm-name').value = p.name;
+    document.getElementById('adm-price').value = p.price;
+    document.getElementById('adm-cat').value = p.cat;
+    document.getElementById('adm-img').value = p.images.join(', ');
+    document.getElementById('adm-desc').value = p.description || "";
+    document.getElementById('adm-stock-count').value = p.quantiteRestante || "2";
+    
+    const btn = document.querySelector("button[onclick='ajouterProduitAdmin()']");
+    btn.innerText = "ENREGISTRER LES MODIFICATIONS";
+    btn.classList.replace('bg-black', 'bg-blue-600');
+    }
 window.addEventListener('load', () => {
     setTimeout(() => {
         const loader = document.getElementById('loader');
@@ -1575,6 +1663,12 @@ function notifierAjout(nom) {
     // Relance la vérification dès que l'utilisateur écrit dans les champs
 document.getElementById('nom-client').addEventListener('input', toggleBouton);
 document.getElementById('tel-client').addEventListener('input', toggleBouton);
+    refreshCategoriesUI();
+    // À mettre tout en bas de ton code JS
+updateVisitorCount();
+render();
+drawWheel();
+refreshCategoriesUI(); // <--- C'est cette ligne qui lancera tes catégories au chargement
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
@@ -1584,7 +1678,14 @@ document.getElementById('tel-client').addEventListener('input', toggleBouton);
             <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
             <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
         </div>
-
+<div class="flex gap-2 mb-4">
+    <button onclick="ajouterNouvelleCategorie()" class="flex-1 bg-orange-100 text-orange-600 py-2 rounded-xl text-[10px] font-black uppercase">
+        <i class="fa-solid fa-folder-plus mr-1"></i> Créer Catégorie
+    </button>
+    <button onclick="supprimerCategorie()" class="bg-red-50 text-red-500 px-3 py-2 rounded-xl text-[10px]">
+        <i class="fa-solid fa-trash"></i>
+    </button>
+</div>
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
             <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
             <div class="grid grid-cols-1 gap-4">
