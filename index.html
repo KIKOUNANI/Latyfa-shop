@@ -674,6 +674,8 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
+    const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "LIVRAISON"];
+const MAX_TENTATIVES = 1;
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
@@ -1911,5 +1913,16 @@ function definirObjectif() {
     </div>
 </div>
 <audio id="sound-promo" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+    window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    if(loader) {
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        }, 1000);
+    }
+});
         </body>
         </html>
