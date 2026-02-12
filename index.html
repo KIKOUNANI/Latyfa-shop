@@ -1743,7 +1743,6 @@ function mettreAJourStats() {
     }
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
-
 <div id="adminModal" class="modal bg-gray-50">
     <div class="max-w-xl mx-auto pb-20">
         <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
@@ -1843,48 +1842,6 @@ function mettreAJourStats() {
     </div>
     
     <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
-<div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
-
-<div id="adminModal" class="modal bg-gray-50">
-    <div class="max-w-xl mx-auto pb-20 px-4">
-        
-        <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
-            <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
-            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
-            <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
-            <div class="space-y-4">
-                <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-col">
-                        <label class="text-[9px] font-bold text-gray-400 uppercase">Alerte Stock (Chiffre)</label>
-                        <input type="number" id="adm-stock-count" placeholder="Ex: 2" class="border p-3 rounded-lg text-sm">
-                    </div>
-                    <div class="flex items-center gap-2 pt-4">
-                        <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-                        <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
-                    </div>
-                </div>
-
-                <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
-                
-                <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
-                    <option value="bijoux">Bijoux</option>
-                    <option value="vetements">Vêtements</option>
-                    <option value="chaussures">Chaussures</option>
-                    <option value="sac">Sacs</option>
-                    <option value="parfum">Parfums</option>
-                    <option value="hanche">Perles de hanche</option>
-                    <option value="autres">Autres</option>
-                </select>
-
-                <div class="space-y-1">
-                    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez par une virgule)</label>
-                    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                </div>
 
                 <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm">
                 <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
