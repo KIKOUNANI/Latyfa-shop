@@ -1204,16 +1204,13 @@ setTimeout(() => {
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
 function ouvrirAdmin() {
-    // On récupère le code enregistré ou on utilise "2026" par défaut
     const codeAttendu = localStorage.getItem('latyfa_admin_code') || "2026";
-    
     const codeSaisi = prompt("Veuillez entrer le code d'accès :");
-
+    
     if (codeSaisi === codeAttendu) {
-        document.getElementById('adminModal').classList.remove('hidden');
-        document.getElementById('adminModal').classList.add('flex');
-        
-        chargerHistorique();
+        const modal = document.getElementById('adminModal');
+        modal.classList.add('active'); // Utilise la logique de vos autres modales
+        refreshAdminList();
         mettreAJourStats();
     } else {
         alert("❌ Code incorrect. Accès refusé.");
@@ -1673,12 +1670,9 @@ document.getElementById('tel-client').addEventListener('input', toggleBouton);
     </button>
     </div>
     <div class="mt-6 border-t border-gray-100 pt-4">
-    <button onclick="document.getElementById('adminModal').classList.add('hidden')" 
-            class="w-full bg-gray-50 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px] hover:bg-gray-100 active:scale-95 transition-all">
-        <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
+    <button onclick="document.getElementById('adminModal').classList.remove('active')" class="w-full bg-gray-50 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px] hover:bg-gray-100 active:scale-95 transition-all">
+    <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
     </button>
-    </div>
-</div>
 <div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
     <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
         <div class="flex justify-between items-center mb-4">
