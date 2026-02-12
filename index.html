@@ -1641,9 +1641,6 @@ function notifierAjout(nom) {
     document.body.removeChild(link);
         }
 </script>
-
-<div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
-
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
 <div id="adminModal" class="modal bg-gray-50">
@@ -1695,7 +1692,17 @@ function notifierAjout(nom) {
         <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
         <div id="admin-list" class="space-y-2 mb-10">
             </div>
-
+    
+<div class="grid grid-cols-2 gap-4 mb-8">
+    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
+        <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Chiffre d'Affaires</p>
+        <div id="stat-ca" class="text-xl font-black text-blue-700">0 F</div>
+    </div>
+    <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
+        <p class="text-[9px] font-black uppercase text-green-400 mb-1">Commandes</p>
+        <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
+    </div>
+</div>
         <div class="pt-8 border-t-2 border-dashed border-gray-200">
     <div class="flex flex-col gap-4 mb-4">
         <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
