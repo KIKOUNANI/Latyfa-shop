@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
+            .loader-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.5s ease;
+    pointer-events: none;
+            }
+            
             #stat-ca {
     transition: color 0.3s ease;
     text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
@@ -1404,12 +1411,19 @@ function refreshAdminList() {
         </div>
     `).join('');
 }
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const loader = document.getElementById('loader');
-        loader.classList.add('loader-hidden');
-    }, 1500); // 1.5 seconde pour un effet luxe bien dosé
-});
+function masquerLoader() {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 500);
+    }
+}
+
+// Sécurité : masquer le loader après 3 secondes maximum même si la page charge mal
+window.addEventListener('load', masquerLoader);
+setTimeout(masquerLoader, 3000); 
     function toggleHistorique() {
     const zone = document.getElementById('historique-zone');
     if (zone.classList.contains('hidden')) {
