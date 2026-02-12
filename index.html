@@ -457,61 +457,76 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </footer>
 
     <div id="cartModal" class="modal">
-        <div class="max-w-md mx-auto">
-            <h2 class="text-xl font-bold mb-6 text-center text-[#ff6600] uppercase italic">Ma Commande</h2>
-            <div id="cart-items" class="space-y-4 mb-6 border-b pb-4"></div>
-            <div id="checkout-form" style="display:none;" class="space-y-4">
-    <div class="flex gap-2">
-        <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold">
-        <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
-    </div>
-    <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
-
-    <input type="text" id="nom-client" oninput="majResume()" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
-    <input type="tel" id="tel-client" placeholder="Numéro WhatsApp ou Quartier *" class="w-full border p-3 rounded-lg text-sm">
-
-    <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
-        <option value="">-- CHOISIR VOTRE ZONE --</option>
-        <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
-        <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-        <option value="interieur">Intérieur pays (3.000 F)</option>
-        <option value="bouake">Retrait Boutique Abidjan (Gratuit)</option>
-    </select>
-    
-    <p id="communes-info" class="hidden text-[9px] text-blue-600 font-bold italic px-2 uppercase"></p>
-                <div class="space-y-2">
-    <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
-    <div class="grid grid-cols-2 gap-2">
-        <div onclick="selectPay('TRANSFERT')" id="pay-mobile" 
-     class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
-    <div class="flex gap-2 mb-1 items-center">
-        <svg width="18" height="18" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="50" fill="#1DA1F2"/>
-            <path d="M70 35L40 65L25 50" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+    <div class="max-w-md mx-auto">
+        <h2 class="text-xl font-bold mb-6 text-center text-[#c5a059] uppercase italic tracking-widest">Ma Commande</h2>
         
-        <div style="width:16px; height:16px; background:#FF7900; border-radius:2px;"></div>
-        
-        <div style="width:18px; height:18px; background:#FFCC00; border-radius:50%; border:1.5px solid #000; display:flex; align-items:center; justify-center; font-size:6px; font-weight:900; color:black">M</div>
-    </div>
-    <span class="text-[8px] font-black uppercase">Mobile Money</span>
-</div>
-      <div class="space-y-2">
-    <label class="text-[9px] font-black uppercase text-gray-400">Choisir le mode de paiement</label>
-    <div class="grid grid-cols-2 gap-2">
-        <div onclick="selectPay('TRANSFERT')" id="pay-mobile" 
-             class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
-            <div class="flex gap-2 mb-1 items-center">
-                <svg width="16" height="16" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="50" fill="#1DA1F2"/>
-                    <path d="M70 35L40 65L25 50" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <div style="width:14px; height:14px; background:#FF7900; border-radius:2px;"></div>
-                <div style="width:14px; height:14px; background:#FFCC00; border-radius:50%; border:1px solid #000; display:flex; align-items:center; justify-content:center; font-size:6px; font-weight:900; color:black">M</div>
+        <div id="cart-items" class="space-y-4 mb-6 border-b pb-4"></div>
+
+        <div id="checkout-form" style="display:none;" class="space-y-4">
+            <div class="flex gap-2">
+                <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border p-3 rounded-lg text-sm uppercase font-bold focus:ring-1 focus:ring-[#c5a059] outline-none">
+                <button onclick="appliquerPromo()" class="bg-black text-white px-4 rounded-lg text-[10px] font-bold">APPLIQUER</button>
             </div>
-            <span class="text-[8px] font-black uppercase">Mobile Money</span>
+            <div id="promo-msg" class="text-[9px] font-bold uppercase hidden"></div>
+
+            <input type="text" id="nom-client" placeholder="Nom Complet *" class="w-full border p-3 rounded-lg text-sm">
+            <div class="grid grid-cols-2 gap-2">
+                <input type="tel" id="tel-client" placeholder="N° WhatsApp *" class="w-full border p-3 rounded-lg text-sm">
+                <input type="text" id="quartier-client" placeholder="Quartier *" class="w-full border p-3 rounded-lg text-sm">
+            </div>
+
+            <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm bg-blue-50 font-bold border-blue-200">
+                <option value="">-- CHOISIR VOTRE ZONE --</option>
+                <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+                <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+                <option value="interieur">Intérieur pays (3.000 F)</option>
+                <option value="bouake">Retrait Boutique (Gratuit)</option>
+            </select>
+            <p id="communes-info" class="hidden text-[9px] text-blue-600 font-bold italic px-2 uppercase"></p>
+
+            <div class="space-y-2">
+                <label class="text-[9px] font-black uppercase text-gray-400">Mode de paiement</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <div onclick="selectPay('TRANSFERT')" id="pay-mobile" class="border-2 border-[#c5a059] p-2 rounded-xl cursor-pointer bg-orange-50 flex flex-col items-center justify-center transition-all">
+                        <span class="text-[8px] font-black uppercase">Mobile Money</span>
+                    </div>
+                    <div onclick="selectPay('CASH')" id="pay-cash" class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
+                        <span class="text-[8px] font-black uppercase">Cash (Boutique)</span>
+                    </div>
+                </div>
+                <input type="hidden" id="mode-pay" value="TRANSFERT MOBILE (WAVE/ORANGE/MTN)">
+            </div>
+          <div class="bg-pink-50 p-3 rounded-xl border border-pink-100 flex items-center justify-between mb-4">
+    <div class="flex items-center gap-3">
+        <div class="h-8 w-8 bg-white text-pink-600 rounded-full flex items-center justify-center shadow-sm">
+            <i class="fa-solid fa-gift"></i>
+        </div>
+        <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-pink-800">Emballage Cadeau Luxe</p>
+            <p class="text-[8px] text-pink-400 font-bold uppercase">+ 1.000 F CFA</p>
+        </div>
+    </div>
+    <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-5 w-5 accent-pink-600 cursor-pointer">
+</div>
+           <div id="resume-final" class="p-4 bg-gray-50 rounded-lg border border-gray-200 text-[10px] font-bold uppercase space-y-1"></div>
+            
+            <div class="flex justify-between font-bold text-lg p-2 border-b-2 border-black">
+                <span>TOTAL À PAYER :</span> <span id="total-display" class="text-red-600">0</span> F
+            </div>
+
+            <div class="flex items-start gap-2 p-3 bg-gray-50 rounded border">
+                <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-5 w-5 accent-[#c5a059]">
+                <label for="check-verif" class="text-[9px] font-bold uppercase">Je confirme ma commande sur WhatsApp</label>
+            </div>
+
+            <button id="btn-final" onclick="validerCommande()" class="w-full btn-disabled text-white py-4 rounded-full font-black uppercase" disabled>
+                Finaliser sur WhatsApp
+            </button>
         </div>
 
+        <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-gray-400 text-[10px] uppercase font-bold underline">Continuer mes achats</button>
+    </div>
+</div>
         <div onclick="selectPay('CASH')" id="pay-cash" 
              class="border-2 border-gray-100 p-2 rounded-xl cursor-pointer flex flex-col items-center justify-center transition-all">
 <div id="checkout-form" style="display:none;" class="space-y-4">
@@ -1073,39 +1088,39 @@ document.getElementById('spin').onclick = function() {
     }
 
     function majResume() {
-        const zoneKey = document.getElementById('zone-livraison').value;
-        const infoBox = document.getElementById('communes-info');
-        const optionCadeau = document.getElementById('check-cadeau').checked;
-        let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-        
-        let remiseValentin = 0;
-        const maintenant = new Date();
-        if (maintenant >= new Date("February 14, 2026") && maintenant <= new Date("February 28, 2026") && tArt >= 20000) {
-            remiseValentin = tArt * 0.2;
-        }
+    const zoneKey = document.getElementById('zone-livraison').value;
+    const infoBox = document.getElementById('communes-info');
+    const optionCadeau = document.getElementById('check-cadeau').checked; // On vérifie si c'est coché
+    
+    let tArt = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    let remiseValentin = 0;
 
-        let remiseRoue = 0;
-        if (remiseCodePromo > 0) {
-            remiseRoue = (tArt - remiseValentin) * (remiseCodePromo / 100);
-        }
-
-        let tLiv = zoneKey ? tarifsLivraison[zoneKey].prix : 0;
-        let tCadeau = optionCadeau ? 1000 : 0;
-        let totalFinal = tArt - remiseValentin - remiseRoue + tLiv + tCadeau;
-        if(zoneKey) { 
-            infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
-            infoBox.classList.remove('hidden'); 
-        }
-
-        document.getElementById('resume-final').innerHTML = `
-            <div class="flex justify-between"><span>Articles :</span> <span>${tArt.toLocaleString()} F</span></div>
-            ${tCadeau > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Emballage Cadeau :</span> <span>+1.000 F</span></div>` : ''}
-            ${remiseValentin > 0 ? `<div class="flex justify-between text-pink-600"><span>🎁 Promo Valentin (-20%) :</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
-            ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600"><span>🎰 Code Roue (-${remiseCodePromo}%) :</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
-            <div class="flex justify-between"><span>Livraison :</span> <span>${tLiv.toLocaleString()} F</span></div>
-        `;
-        document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    // Promo Valentin (-20% dès 20.000 F)
+    if (tArt >= 20000) {
+        remiseValentin = tArt * 0.2;
     }
+
+    let remiseRoue = (remiseCodePromo > 0) ? (tArt * (remiseCodePromo / 100)) : 0;
+    let tLiv = zoneKey ? (tarifsLivraison[zoneKey].prix) : 0;
+    let tCadeau = optionCadeau ? 1000 : 0; // Ajout des 1000 F
+    
+    let totalFinal = tArt - remiseValentin - remiseRoue + tLiv + tCadeau;
+
+    if(zoneKey) { 
+        infoBox.innerText = "📍 " + tarifsLivraison[zoneKey].detail; 
+        infoBox.classList.remove('hidden'); 
+    }
+
+    document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    
+    document.getElementById('resume-final').innerHTML = `
+        <div class="flex justify-between"><span>Sous-total:</span> <span>${tArt.toLocaleString()} F</span></div>
+        ${optionCadeau ? `<div class="flex justify-between text-pink-600"><span>🎁 Emballage Luxe:</span> <span>+1.000 F</span></div>` : ''}
+        ${remiseValentin > 0 ? `<div class="flex justify-between text-pink-600"><span>💖 Promo Valentin:</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
+        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600"><span>🎰 Remise Roue:</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
+        <div class="flex justify-between"><span>Livraison:</span> <span>${tLiv.toLocaleString()} F</span></div>
+    `;
+}
 
     function toggleBouton() {
         const chk = document.getElementById('check-verif').checked;
@@ -1114,68 +1129,31 @@ document.getElementById('spin').onclick = function() {
         btn.disabled = !chk;
     }
     function validerCommande() {
-    const zone = document.getElementById('zone-livraison').value;
-    const modePay = document.getElementById('mode-pay').value;
     const nom = document.getElementById('nom-client').value;
-    const quartier = document.getElementById('tel-client').value;
+    const tel = document.getElementById('tel-client').value;
+    const quartier = document.getElementById('quartier-client').value;
+    const zone = document.getElementById('zone-livraison').value;
     const total = document.getElementById('total-display').innerText;
-    const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
-    const optionCadeau = document.getElementById('check-cadeau').checked;
 
-    if (!nom || !quartier || !zone) {
-        alert("⚠️ Oups ! Merci de remplir votre nom, votre quartier et la zone de livraison.");
+    if(!nom || !tel || !quartier || !zone) {
+        alert("⚠️ Merci de remplir tous les champs (Nom, Tel, Quartier et Zone).");
         return;
     }
 
-    // Sécurité Paiement Cash (Réservé à Bouaké/Boutique)
-    if (zone !== 'bouake' && modePay === 'CASH À LA LIVRAISON') {
-        alert("⚠️ Le paiement cash est réservé uniquement aux retraits en boutique. Pour une livraison à domicile, veuillez choisir le paiement par Transfert.");
-        return;
-    }
-
-    // --- PERSONNALISATION DU RÉSEAU MOBILE ---
-    let precisionPay = modePay;
-    if (modePay.includes("TRANSFERT MOBILE")) {
-        const reseau = prompt("Quel réseau utilisez-vous ? (Wave, Orange ou MTN)");
-        precisionPay = reseau ? `MOBILE MONEY (${reseau.toUpperCase()})` : "MOBILE MONEY (WAVE/ORANGE/MTN)";
-    }
-
-    // Historique
-    const nouvelleCommande = {
-        date: new Date().toLocaleString('fr-FR'),
-        client: nom,
-        lieu: quartier + " (" + tarifsLivraison[zone].nom + ")",
-        articles: cart.map(i => `${i.label} (x${i.qty})`).join(', '),
-        total: total,
-        promo: inputCode || "Aucun"
-    };
-    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-    historique.unshift(nouvelleCommande);
-    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
-
-    // Message WhatsApp
-    let list = ""; 
-    cart.forEach(i => { list += `🛍️ ${i.label} (x${i.qty})\n`; });
-
-    let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP* ✨\n\n`;
-    msg += `👤 *CLIENT:* ${nom.toUpperCase()}\n`;
-    msg += `📞 *QUARTIER/TÉL:* ${quartier}\n`;
+    let list = cart.map(i => `• ${i.label} (x${i.qty})`).join('\n');
+    let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP*\n\n`;
+    msg += `👤 *CLIENT:* ${nom}\n`;
+    msg += `📞 *TEL:* ${tel}\n`;
+    msg += `📍 *QUARTIER:* ${quartier}\n`;
     msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
-    msg += `📝 *DÉTAILS DU PANIER :*\n${list}\n`;
+    msg += `📝 *ARTICLES:*\n${list}\n`;
+    
+    // On ajoute l'info cadeau si cochée
     if(optionCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
-    if(remiseCodePromo > 0) msg += `🎰 *CODE PROMO:* ${inputCode} (-${remiseCodePromo}%)\n`;
-    msg += `💰 *TOTAL À PAYER : ${total} F*\n\n`;
-    msg += `💳 *MODE DE PAIEMENT :* ${precisionPay}\n`;
-    msg += `───────────────\n`;
-    msg += `_Commande validée sur la boutique en ligne._`;
+    
+    msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
 
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-    
-    // Vider le panier après envoi
-    localStorage.removeItem('latyfa_cart');
-    cart = [];
-    document.getElementById('cart-count').innerText = 0;
-    document.getElementById('cartModal').classList.remove('active');
 }
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
