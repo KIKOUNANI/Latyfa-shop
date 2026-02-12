@@ -260,11 +260,6 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
         </main>
     </div>
-
-    <button onclick="document.querySelector('.wheel-mask').classList.add('active')" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#ff6600]">
-        <i class="fa-solid fa-gift text-[#ff6600] text-2xl"></i>
-    </button>
-
     <div class="wheel-mask">
     <div class="wheel-box">
         <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
@@ -880,8 +875,12 @@ drawWheel();
 
 document.getElementById('spin').onclick = function() {
     let stats = majAffichageChances();
-    if (stats.count >= MAX_TENTATIVES) {
-        alert("Vous avez déjà utilisé votre chance aujourd'hui !");
+    const maintenant = Date.now();
+    const uneJournee = 24 * 60 * 60 * 1000;
+
+    // Vérification de sécurité avant de lancer
+    if (stats.lastSpin && (maintenant - stats.lastSpin < uneJournee)) {
+        alert("Patience... votre prochaine chance arrive bientôt !");
         return;
     }
 
@@ -890,19 +889,17 @@ document.getElementById('spin').onclick = function() {
     const victorySound = document.getElementById('victory-sound');
     btn.disabled = true;
 
-    // Calcul de la rotation
     const randomExtra = Math.floor(Math.random() * 360);
-    const totalRotation = 3600 + randomExtra; // 10 tours pour plus de suspense
+    const totalRotation = 3600 + randomExtra; 
     
-    // --- EFFET SONORE DE ROTATION ---
     let soundInterval = setInterval(() => {
         sound.currentTime = 0;
         sound.play().catch(() => {});
     }, 150);
 
-    // On ralentit le son à la fin
     setTimeout(() => { clearInterval(soundInterval); }, 3500);
 
+    const canva = document.getElementById('canvas'); // On s'assure que canva est défini
     canva.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
     canva.style.transform = `rotate(${totalRotation}deg)`;
 
@@ -912,23 +909,22 @@ document.getElementById('spin').onclick = function() {
         const resultIndex = Math.floor(((360 - actualAngle + 270) % 360) / segmentSize);
         const resultat = prizes[resultIndex];
 
-        stats.count++;
+        // --- LA PARTIE QUE TU CHERCHAIS : ENREGISTREMENT DU TEMPS ---
+        stats.lastSpin = Date.now(); 
         localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
-        majAffichageChances();
+        
+        // On met à jour l'affichage immédiatement pour lancer le chrono
+        majAffichageChances(); 
 
         if (resultat === "REESSAYER") {
             alert("Mince ! Retentez demain. 😥");
         } else {
-            // --- VICTOIRE ! ---
-            // 1. Son de victoire
             if(victorySound) victorySound.play();
-
-            // 2. Explosion de confettis
             confetti({
                 particleCount: 150,
                 spread: 70,
                 origin: { y: 0.6 },
-                colors: ['#c5a059', '#000000', '#ffffff'] // Couleurs Latyfa : Or, Noir, Blanc
+                colors: ['#c5a059', '#000000', '#ffffff']
             });
 
             const promoAmount = resultat.replace(/[^0-9]/g, "") || "5";
@@ -944,26 +940,51 @@ document.getElementById('spin').onclick = function() {
                 alert("🎉 MAGNIFIQUE !\nVous avez gagné : " + resultat + "\nVotre code promo : " + promoCode);
             }, 500);
         }
-        btn.disabled = false;
     }, 4000);
 };
-
     function majAffichageChances() {
-        const aujourdhui = new Date().toLocaleDateString();
-        let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: aujourdhui, count: 0 };
-        if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
-        
-        const reste = MAX_TENTATIVES - stats.count;
-        const msgZone = document.getElementById('wheel-msg');
-        if(reste <= 0) {
-            msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE</span>`;
-            document.getElementById('spin').disabled = true;
-        } else {
-            msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/${MAX_TENTATIVES}</span>`;
-        }
-        return stats;
-    }
+    const maintenant = Date.now();
+    const uneJournee = 24 * 60 * 60 * 1000; // 24 heures en millisecondes
+    let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { lastSpin: 0 };
+    
+    const msgZone = document.getElementById('wheel-msg');
+    const spinBtn = document.getElementById('spin');
+    const tempsEcoule = maintenant - stats.lastSpin;
 
+    if (tempsEcoule < uneJournee) {
+        // Le joueur doit attendre
+        spinBtn.disabled = true;
+        spinBtn.classList.replace('bg-black', 'bg-gray-400');
+        
+        // Lancer le compte à rebours visuel
+        const tempsRestant = uneJournee - tempsEcoule;
+        demarrerCompteARebours(tempsRestant);
+    } else {
+        // Le joueur peut tourner
+        msgZone.innerHTML = `<span class="text-green-600 font-black">🔥 C'EST VOTRE MOMENT !</span>`;
+        spinBtn.disabled = false;
+        spinBtn.classList.replace('bg-gray-400', 'bg-black');
+    }
+    return stats;
+}
+    function demarrerCompteARebours(ms) {
+    const msgZone = document.getElementById('wheel-msg');
+    
+    const interval = setInterval(() => {
+        ms -= 1000;
+        if (ms <= 0) {
+            clearInterval(interval);
+            majAffichageChances();
+            return;
+        }
+
+        const h = Math.floor(ms / 3600000);
+        const m = Math.floor((ms % 3600000) / 60000);
+        const s = Math.floor((ms % 60000) / 1000);
+
+        msgZone.innerHTML = `<span class="text-red-500 font-bold">PROCHAINE CHANCE DANS : ${h}h ${m}m ${s}s</span>`;
+    }, 1000);
+}
     // --- PANIER ET CALCULS ---
     function ouvrirPanier() {
         document.getElementById('cartModal').classList.add('active');
