@@ -1775,23 +1775,6 @@ refreshCategoriesUI(); // <--- C'est cette ligne qui lancera tes catégories au 
         localStorage.setItem('latyfa_theme', 'light');
     }
 }
-    function partagerProduit(plateforme) {
-    const texte = `Regarde ce magnifique article chez LATYFA BOUTIQUE : ${currentProduct.name} - ${currentProduct.price} F !`;
-    const url = window.location.href; // Idéalement, l'URL spécifique du produit
-    
-    let shareUrl = "";
-    if (plateforme === 'whatsapp') {
-        shareUrl = `https://wa.me/?text=${encodeURIComponent(texte + " " + url)}`;
-    } else if (plateforme === 'facebook') {
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    }
-    
-    window.open(shareUrl, '_blank');
-}
-
-// À lier dans ton HTML :
-// <button onclick="partagerProduit('whatsapp')" class="text-[#25D366] text-xl"><i class="fa-brands fa-whatsapp"></i></button>
-    
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
