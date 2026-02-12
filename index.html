@@ -588,45 +588,6 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
-    // Liste initiale (si le stockage est vide)
-let categories = JSON.parse(localStorage.getItem('latyfa_categories')) || [
-    { id: 'bijoux', nom: 'Bijoux', icone: 'fa-gem' },
-    { id: 'sac', nom: 'Sacs à main', icone: 'fa-bag-shopping' },
-    { id: 'parfum', nom: 'Parfums', icone: 'fa-spray-can-sparkles' }
-];
-
-function refreshCategoriesUI() {
-    // 1. Mise à jour du menu de navigation (Barre latérale)
-    const sidebar = document.querySelector('aside .flex-col');
-    if (sidebar) {
-        let html = `<span class="category-link cursor-pointer flex justify-between items-center" onclick="render('tous')"> Tout voir <i class="fa-solid fa-crown text-[10px] text-[#c5a059]"></i> </span>`;
-        html += categories.map(cat => `
-            <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('${cat.id}')">
-                ${cat.nom} <i class="fa-solid ${cat.icone} text-[10px]"></i>
-            </span>
-        `).join('');
-        sidebar.innerHTML = html;
-    }
-
-    // 2. Mise à jour des listes déroulantes (Select) dans l'Admin
-    const selectAdmin = document.getElementById('adm-cat');
-    if (selectAdmin) {
-        selectAdmin.innerHTML = categories.map(cat => `<option value="${cat.id}">${cat.nom}</option>`).join('');
-    }
-}
-
-// Fonction pour ajouter une nouvelle catégorie depuis la console ou un futur bouton
-function ajouterNouvelleCategorie() {
-    const nom = prompt("Nom de la catégorie (ex: Promotion) :");
-    if (!nom) return;
-    const id = nom.toLowerCase().replace(/\s/g, '_');
-    const icone = prompt("Icône FontAwesome (ex: fa-star, fa-heart, fa-fire) :") || "fa-tag";
-
-    categories.push({ id, nom, icone });
-    localStorage.setItem('latyfa_categories', JSON.stringify(categories));
-    refreshCategoriesUI();
-    alert("Catégorie '" + nom + "' ajoutée avec succès !");
-    }
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
@@ -1255,56 +1216,45 @@ function ouvrirAdmin() {
         alert("❌ Code incorrect. Accès refusé.");
     }
 }
-
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
-    const imgInput = document.getElementById('adm-img').value;
+    const imgInput = document.getElementById('adm-img').value; // Récupère le texte brut
+    const videoUrl = document.getElementById('adm-video').value;
 
     if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
 
+    // --- LA MAGIE EST ICI ---
+    // On coupe le texte à chaque virgule et on enlève les espaces vides
     const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
 
-    const donneesProduit = {
+    const newP = {
+        id: Date.now(),
         name: name,
         price: parseInt(price),
         cat: document.getElementById('adm-cat').value,
-        images: imagesArray,
-        video: document.getElementById('adm-video').value || null,
+        images: imagesArray, // On enregistre le tableau d'images
+        video: videoUrl || null, // La vidéo reste à part
         description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
+        enStock: true,
         stockBas: document.getElementById('adm-stock-bas').checked,
-        quantiteRestante: document.getElementById('adm-stock-count').value || "2",
-        dateAjout: Date.now()
-    };
-
-    if (idEnCoursDeModification) {
-        // MODE MODIFICATION
-        const index = products.findIndex(p => p.id === idEnCoursDeModification);
-        products[index] = { ...products[index], ...donneesProduit };
-        idEnCoursDeModification = null; // Reset
-        alert("Produit mis à jour !");
-    } else {
-        // MODE CRÉATION
-        const newP = { id: Date.now(), enStock: true, ...donneesProduit };
-        products.push(newP);
-        alert("Produit ajouté !");
-    }
-
-    // Sauvegarde et Reset Interface
+    quantiteRestante: document.getElementById('adm-stock-count').value || "2", // On prend le chiffre saisi
+    dateAjout: Date.now() 
+};
+    products.push(newP);
     localStorage.setItem('latyfa_db', JSON.stringify(products));
-    const btn = document.querySelector("button[onclick='ajouterProduitAdmin()']");
-    btn.innerText = "METTRE EN LIGNE";
-    btn.classList.replace('bg-blue-600', 'bg-black');
     
-    // Nettoyage complet
-    ['adm-name', 'adm-price', 'adm-img', 'adm-video', 'adm-desc', 'adm-stock-count'].forEach(id => {
-        document.getElementById(id).value = "";
-    });
-    document.getElementById('adm-stock-bas').checked = false;
-
+    // Nettoyage des champs
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    
     refreshAdminList();
     render();
+    alert("Produit ajouté avec " + imagesArray.length + " image(s) !");
 }
+
 function toggleStock(id) {
     const p = products.find(x => x.id === id);
     if(p) {
@@ -1334,7 +1284,6 @@ function refreshAdminList() {
                 <span class="font-bold text-[10px] ${p.enStock === false ? 'text-red-400 line-through' : 'text-gray-700'}">${p.name}</span>
             </div>
             <div class="flex gap-2">
-                <button onclick="preparerModification(${p.id})" class="text-blue-500 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
                 <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
                     ${p.enStock === false ? 'RUPTURE' : 'EN STOCK'}
                 </button>
@@ -1342,33 +1291,13 @@ function refreshAdminList() {
             </div>
         </div>
     `).join('');
-    }
-    let idEnCoursDeModification = null;
-
-function preparerModification(id) {
-    const p = products.find(x => x.id === id);
-    if (!p) return;
-
-    idEnCoursDeModification = id;
-    
-    // On remplit le formulaire
-    document.getElementById('adm-name').value = p.name;
-    document.getElementById('adm-price').value = p.price;
-    document.getElementById('adm-cat').value = p.cat;
-    document.getElementById('adm-img').value = p.images.join(', ');
-    document.getElementById('adm-video').value = p.video || "";
-    document.getElementById('adm-desc').value = p.description || "";
-    document.getElementById('adm-stock-bas').checked = p.stockBas || false;
-    document.getElementById('adm-stock-count').value = p.quantiteRestante || "2";
-
-    // On change le texte du bouton pour montrer qu'on modifie
-    const btn = document.querySelector("button[onclick='ajouterProduitAdmin()']");
-    btn.innerText = "ENREGISTRER LES MODIFICATIONS";
-    btn.classList.replace('bg-black', 'bg-blue-600');
-    
-    // Remonter en haut du formulaire
-    document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
-    }
+}
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        loader.classList.add('loader-hidden');
+    }, 1500); // 1.5 seconde pour un effet luxe bien dosé
+});
     function toggleHistorique() {
     const zone = document.getElementById('historique-zone');
     if (zone.classList.contains('hidden')) {
@@ -1653,14 +1582,6 @@ document.getElementById('tel-client').addEventListener('input', toggleBouton);
     <div class="max-w-xl mx-auto pb-20">
         <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
             <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
-            <div class="flex gap-2 mb-4">
-    <button onclick="ajouterNouvelleCategorie()" class="flex-1 bg-orange-100 text-orange-600 py-2 rounded-xl text-[10px] font-black uppercase">
-        <i class="fa-solid fa-folder-plus mr-2"></i> Créer une catégorie
-    </button>
-    <button onclick="reinitialiserCategories()" class="bg-gray-100 text-gray-400 px-3 py-2 rounded-xl text-[10px]">
-        <i class="fa-solid fa-rotate-left"></i>
-    </button>
-            </div>
             <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
         </div>
 
