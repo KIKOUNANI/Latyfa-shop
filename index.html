@@ -592,7 +592,7 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
         cart = []; // On vide le tableau
-        renderCart(); // On rafraîchit l'affichage
+        ouvrirPanier(); // On rafraîchit l'affichage
         // Optionnel : fermer le modal si le panier est vide
         // document.getElementById('cartModal').classList.remove('active');
     }
@@ -666,6 +666,11 @@ function afficherResultatsRecherche(liste) {
     let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
     let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
+    const MAX_TENTATIVES = 1; // 1 essai par jour
+const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
+const canva = document.getElementById('canvas');
+const ctx = canva.getContext('2d');
+
 
     // --- BOUTIQUE ---
     function render(filter = 'tous') {
@@ -1147,7 +1152,7 @@ document.getElementById('spin').onclick = function() {
 }
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
-    function suivreColis() { alert("Contactez-nous sur WhatsApp pour le suivi."); }
+    function suivreColis() { alert("si votre commande à été validé sur WhatsApp alors vous serez contacté !"); }
     function updateVisitorCount() {
         let count = localStorage.getItem('latyfa_visitors') || 1250;
         count = parseInt(count) + 1;
@@ -1488,7 +1493,7 @@ function selectPay(mode) {
     notifierAjout(label);
     
     // 5. Mettre à jour l'affichage
-    renderCart();
+    ouvrirPanier();
 }
 
 function notifierAjout(nom) {
