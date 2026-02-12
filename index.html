@@ -640,6 +640,22 @@ body.dark-theme {
     </div>
 </div>
 <script>
+    function viderPanier() {
+    if (confirm("Voulez-vous vraiment vider votre panier ?")) {
+        cart = []; // Vide la variable
+        localStorage.removeItem('latyfa_cart'); // ✅ EFFACE LA MÉMOIRE LOCALE
+        
+        // Remet le compteur à zéro visuellement
+        const badge = document.getElementById('cart-count');
+        if(badge) {
+            badge.innerText = "0";
+            badge.style.display = 'none';
+        }
+        
+        ouvrirPanier(); // Rafraîchit l'affichage du modal
+    }
+    }
+    
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
@@ -1601,11 +1617,22 @@ function calculerTailleRec() {
         }
     }
 }
-    window.addEventListener('DOMContentLoaded', () => {
-    // Met à jour le compteur visuel (le petit rond rouge)
-    const count = cart.reduce((a, b) => a + b.qty, 0);
-    document.getElementById('cart-count').innerText = count;
+    // Au chargement de la page, on synchronise le badge avec la mémoire
+window.addEventListener('DOMContentLoaded', () => {
+    const savedCart = localStorage.getItem('latyfa_cart');
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
+        const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
+        const badge = document.getElementById('cart-count');
+        if(badge) {
+            badge.innerText = totalArticles;
+            badge.style.display = totalArticles > 0 ? 'flex' : 'none';
+        }
+    } else {
+        cart = []; // Si rien en mémoire, panier vide
+    }
 });
+
     // --- SIMULATEUR DE GAINS (PREUVE SOCIALE) ---
 const villesCI = ["Abidjan", "Bouaké", "Yamoussoukro", "San-Pédro", "Korhogo", "Daloa", "Man", "Gagnoa", "Abengourou", "Ferké", "Odiéné", "Touba", "Botro"];
 const gainsPossibles = ["-5%", "-10%", "-15%", "la LIVRAISON GRATUITE", "un CADEAU"];
