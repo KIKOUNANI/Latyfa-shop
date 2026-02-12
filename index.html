@@ -10,13 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
-            .loader-hidden {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: all 0.5s ease;
-    pointer-events: none;
-            }
-            
             #stat-ca {
     transition: color 0.3s ease;
     text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
@@ -267,6 +260,11 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
         </main>
     </div>
+
+    <button onclick="document.querySelector('.wheel-mask').classList.add('active')" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#ff6600]">
+        <i class="fa-solid fa-gift text-[#ff6600] text-2xl"></i>
+    </button>
+
     <div class="wheel-mask">
     <div class="wheel-box">
         <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
@@ -590,131 +588,1001 @@ h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
     </div>
 </div>
 <script>
-    
-    // --- INITIALISATION DES DONNÉES ---
-let products = JSON.parse(localStorage.getItem('latyfa_db')) || [
-    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], enStock: true, stockBas: true, couleurs: ["Noir", "Or"], description: "Élégance Signature Latyfa. Cuir Premium." },
-    { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], enStock: true, description: "Finition Or 24K." }
-];
-
-let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
-let currentProduct = null;
-let remiseCodePromo = 0;
-
-// --- GESTION DE L'AFFICHAGE ---
-function render(filter = 'tous') {
+    let promoSonJoué = false; // Pour éviter que le son tourne en boucle
+    function viderPanier() {
+    if (confirm("Voulez-vous vraiment vider votre panier ?")) {
+        cart = []; // On vide le tableau
+        ouvrirPanier(); // On rafraîchit l'affichage
+        // Optionnel : fermer le modal si le panier est vide
+        // document.getElementById('cartModal').classList.remove('active');
+    }
+    }
+    function ouvrirGuide() {
+    document.getElementById('guideModal').classList.add('active');
+}
+    function rechercherProduit() {
+    const terme = document.getElementById('search-input').value.toLowerCase();
     const grid = document.getElementById('product-grid');
-    if (!grid) return;
+    
+    // On filtre les produits par nom
+    const produitsFiltrés = products.filter(p => 
+        p.name.toLowerCase().includes(terme) || 
+        p.cat.toLowerCase().includes(terme)
+    );
 
-    const filtered = products.filter(p => filter === 'tous' || p.cat === filter);
-    
-    grid.innerHTML = filtered.map(p => `
-        <div class="product-card p-3 relative ${!p.enStock ? 'opacity-75' : ''}" onclick="${p.enStock ? `voirDetails(${p.id})` : ''}">
-            ${p.stockBas ? '<span class="absolute top-2 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded animate-pulse z-10">STOCK LIMITÉ</span>' : ''}
-            <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border">
-            <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2">${p.name}</h3>
-            <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-            <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border">
-                ${p.enStock ? 'Voir l\'article' : 'Rupture de stock'}
-            </div>
-        </div>
-    `).join('');
-    
-    updateCartBadge();
+    if (produitsFiltrés.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-full text-center py-20">
+                <i class="fa-solid fa-box-open text-4xl text-gray-200 mb-4"></i>
+                <p class="text-gray-500 text-xs font-bold uppercase">Aucun résultat pour "${terme}"</p>
+            </div>`;
+    } else {
+        // On utilise ta fonction render existante mais avec les produits filtrés
+        // Note: Pour que cela fonctionne, on va légèrement modifier la logique de render
+        afficherResultatsRecherche(produitsFiltrés);
+    }
 }
 
-function voirDetails(id) {
+// Petite fonction helper pour ne pas casser ton système de catégories
+function afficherResultatsRecherche(liste) {
+    const grid = document.getElementById('product-grid');
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
+    
+    grid.innerHTML = liste.map(p => {
+        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
+        return `
+            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
+                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
+                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
+                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
+                </div>
+            </div>`;
+    }).join('');
+}
+
+    (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
+
+    // --- VARIABLES GLOBALES ---
+    const tarifsLivraison = {
+        "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
+        "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
+        "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
+        "bouake": { nom: "Retrait Boutique", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
+    };
+
+    let products = [
+        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
+        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
+        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
+        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
+    ];
+
+    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+    let currentProduct = null;
+    let remiseCodePromo = 0; // Réduction en % via la roue
+    const MAX_TENTATIVES = 1; // 1 essai par jour
+const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
+const canva = document.getElementById('canvas');
+const ctx = canva.getContext('2d');
+
+
+    // --- BOUTIQUE ---
+    function render(filter = 'tous') {
+    const grid = document.getElementById('product-grid');
+    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
+
+    grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
+        // Calcul pour le badge Nouveauté
+        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
+        
+        return `
+${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 PLUS QUE 2 EN STOCK !</span>' : ''}
+
+            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
+                
+                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
+                
+                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
+                
+                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
+                
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+                
+                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
+                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
+                </div>
+            </div>`;
+    }).join('');
+        const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
+const badge = document.getElementById('cart-count'); // l'ID de ton petit rond rouge sur l'icône
+if(badge) {
+    badge.innerText = totalArticles;
+    badge.style.display = totalArticles > 0 ? 'flex' : 'none';}
+}
+    function voirDetails(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
     currentProduct = p;
-    
     document.getElementById('productDetailModal').classList.add('active');
+
+    const vues = Math.floor(Math.random() * 17) + 8;
+    const oldVues = document.getElementById('view-counter');
+    if(oldVues) oldVues.remove();
+    
     document.getElementById('detail-name').innerText = p.name;
-    document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
-    document.getElementById('detail-desc').innerText = p.description;
-    document.getElementById('main-detail-img').src = p.images[0];
+    document.getElementById('detail-name').insertAdjacentHTML('afterend', `
+        <div id="view-counter" class="flex items-center gap-2 mt-2 bg-gray-50 w-fit px-3 py-1 rounded-full border border-gray-100">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <p class="text-[9px] font-black uppercase text-gray-500 tracking-tighter">
+                <span id="nb-vues-text" class="text-gray-900">${vues} personnes</span> consultent cet article
+            </p>
+        </div>
+    `);
 
-    // Gestion des options (Tailles/Couleurs)
-    const sizeArea = document.getElementById('size-area');
-    const colorArea = document.getElementById('color-area');
-    
-    if (p.pointures || p.tailles) {
-        sizeArea.classList.remove('hidden');
-        const options = p.pointures || p.tailles;
-        document.getElementById('select-size').innerHTML = options.map(o => `<option value="${o}">${o}</option>`).join('');
-    } else { sizeArea.classList.add('hidden'); }
+    const oldStockMsg = document.getElementById('dynamic-stock-msg');
+    if(oldStockMsg) oldStockMsg.remove();
 
-    if (p.couleurs) {
-        colorArea.classList.remove('hidden');
-        document.getElementById('select-color').innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
-    } else { colorArea.classList.add('hidden'); }
-}
-
-// --- LOGIQUE PANIER ---
-function ajouterDepuisDetail() {
-    const size = document.getElementById('select-size').value || "";
-    const color = document.getElementById('select-color').value || "";
-    const label = `${currentProduct.name} ${size ? '- '+size : ''} ${color ? '['+color+']' : ''}`;
-    
-    const existing = cart.find(x => x.label === label);
-    if (existing) {
-        existing.qty++;
-    } else {
-        cart.push({ id: currentProduct.id, label: label, price: currentProduct.price, qty: 1 });
+    if(p.stockBas) {
+        document.getElementById('detail-price').insertAdjacentHTML('afterend', `
+            <p id="dynamic-stock-msg" class="text-[10px] font-bold text-red-500 mt-2 italic animate-pulse">
+                <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${p.quantiteRestante || 2} articles en stock !
+            </p>
+        `);
     }
 
-    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-    updateCartBadge();
-    document.getElementById('productDetailModal').classList.remove('active');
+    const mediaContainer = document.getElementById('main-detail-img').parentElement;
+    mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
     
-    // Notification Toast
-    const toast = document.getElementById('toast');
-    toast.classList.replace('opacity-0', 'opacity-100');
-    setTimeout(() => toast.classList.replace('opacity-100', 'opacity-0'), 2000);
-}
+    let htmlMiniatures = p.images.map((img, index) => `
+        <img src="${img}" onclick="changerMedia('image', '${img}', this)" 
+        class="miniature-item h-16 w-16 object-cover rounded-lg cursor-pointer border-2 border-transparent transition-all ${index === 0 ? 'thumb-active' : ''}">
+    `).join('');
 
-function updateCartBadge() {
-    const count = cart.reduce((sum, item) => sum + item.qty, 0);
+    if(p.video) {
+        htmlMiniatures += `
+            <div onclick="changerMedia('video', '${p.video}', this)" 
+            class="miniature-item h-16 w-16 bg-black rounded-lg flex flex-col items-center justify-center cursor-pointer border-2 border-transparent text-[#c5a059] transition-all">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span class="text-[7px] font-black mt-1 uppercase">Vidéo</span>
+            </div>
+        `;
+    }
+    document.getElementById('thumbnails').innerHTML = htmlMiniatures;
+
+    document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
+    document.getElementById('detail-desc').innerText = p.description;
+
+    const existingBanner = document.getElementById('trust-banner-container');
+    if(existingBanner) existingBanner.remove();
+
+    document.getElementById('detail-desc').insertAdjacentHTML('afterend', `
+        <div id="trust-banner-container" class="mt-6">
+            <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-4 hover:scale-[1.02] transition-transform">
+                Ajouter au panier
+            </button>
+            <div class="flex items-center gap-3 bg-green-50 p-3 rounded-xl border border-green-100 mb-4">
+                <div class="h-8 w-8 bg-green-500 text-white rounded-full flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black uppercase text-gray-800">Satisfait ou Échangé</p>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase tracking-tighter">Vérifiez votre colis à la livraison</p>
+                </div>
+            </div>
+        </div>
+    `);
+    gererOptionsProduit(p);
+}
+function gererOptionsProduit(p) {
+    const sizeArea = document.getElementById('size-area');
+    const colorArea = document.getElementById('color-area');
+    const selectSize = document.getElementById('select-size');
+    const selectColor = document.getElementById('select-color');
+
+    // Gestion des Tailles / Pointures
+    if (p.pointures && p.pointures.length > 0) {
+        sizeArea.classList.remove('hidden');
+        selectSize.innerHTML = p.pointures.map(s => `<option value="${s}">${s}</option>`).join('');
+    } else if (p.tailles && p.tailles.length > 0) {
+        sizeArea.classList.remove('hidden');
+        selectSize.innerHTML = p.tailles.map(t => `<option value="${t}">${t}</option>`).join('');
+    } else {
+        sizeArea.classList.add('hidden');
+        selectSize.innerHTML = "";
+    }
+
+    // Gestion des Couleurs
+    if (p.couleurs && p.couleurs.length > 0) {
+        colorArea.classList.remove('hidden');
+        selectColor.innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
+    } else {
+        colorArea.classList.add('hidden');
+        selectColor.innerHTML = "";
+    }
+}
+    function ajouterDepuisDetail() {
+    const size = document.getElementById('select-size').value || "";
+    const color = document.getElementById('select-color').value || "";
+    const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
+    
+    // Jouer le son
+    const sound = document.getElementById('cart-sound');
+    if(sound) {
+        sound.currentTime = 0;
+        sound.play().catch(e => console.log("Interaction requise pour le son"));
+    }
+
+    const index = cart.findIndex(x => x.label === label);
+    if(index > -1) {
+        cart[index].qty++;
+    } else {
+        cart.push({
+            ...currentProduct, 
+            label: label, 
+            qty: 1,
+            price: currentProduct.price // Assure-toi que le prix est bien passé
+        });
+    }
+    
+    // Mise à jour du compteur visuel
+    const count = cart.reduce((a, b) => a + b.qty, 0);
     document.getElementById('cart-count').innerText = count;
+    
+    // Animation du panier
+    const cartIcon = document.getElementById('cart-count').parentElement;
+    cartIcon.classList.add('animate-cart');
+    setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
+
+    // Fermer la modale et sauvegarder
+    document.getElementById('productDetailModal').classList.remove('active');
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+
+    // Toast de confirmation
+    const toast = document.getElementById('toast');
+    toast.classList.remove('opacity-0');
+    setTimeout(() => toast.classList.add('opacity-0'), 2000);
 }
 
-// --- COMMANDE WHATSAPP ---
-function validerCommande() {
-    const nom = document.getElementById('nom-client').value;
-    const zone = document.getElementById('zone-livraison').value;
-    const total = document.getElementById('total-display').innerText;
-
-    let message = `✨ *COMMANDE LATYFA SHOP*\n\n`;
-    message += `👤 *CLIENT :* ${nom}\n`;
-    message += `📍 *ZONE :* ${zone}\n\n`;
-    message += `🛍️ *ARTICLES :*\n`;
-    
-    cart.forEach(item => {
-        message += `• ${item.label} (x${item.qty})\n`;
-    });
-
-    message += `\n💰 *TOTAL FINAL : ${total} F*`;
-    
-    // Sauvegarde en historique avant envoi
-    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-    historique.unshift({ date: new Date().toLocaleString(), client: nom, total: total, articles: cart.length });
-    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
-
-    window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(message)}`);
+function drawWheel() {
+    const arc = 2 * Math.PI / prizes.length;
+    ctx.clearRect(0, 0, 300, 300);
+    for (let i = 0; i < prizes.length; i++) {
+        ctx.beginPath();
+        // Alternance de couleurs Noir et Doré
+        ctx.fillStyle = i % 2 === 0 ? (prizes[i] === "REESSAYER" ? "#333" : "#c5a059") : "#000";
+        ctx.moveTo(150, 150);
+        ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
+        ctx.fill();
+        
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.translate(150, 150);
+        ctx.rotate(i * arc + arc / 2);
+        ctx.font = "bold 10px Montserrat";
+        ctx.textAlign = "right";
+        ctx.fillText(prizes[i], 130, 5);
+        ctx.restore();
+    }
 }
+// APPEL IMMÉDIAT POUR DESSINER LA ROUE AU CHARGEMENT
+drawWheel();
 
-// --- INITIALISATION AU CHARGEMENT ---
-window.onload = () => {
-    render();
-    if(typeof drawWheel === "function") drawWheel(); // Si la roue est présente
+document.getElementById('spin').onclick = function() {
+    let stats = majAffichageChances();
+    if (stats.count >= MAX_TENTATIVES) {
+        alert("Vous avez déjà utilisé votre chance aujourd'hui !");
+        return;
+    }
+
+    const btn = this;
+    const sound = document.getElementById('wheel-sound');
+    const victorySound = document.getElementById('victory-sound');
+    btn.disabled = true;
+
+    // Calcul de la rotation
+    const randomExtra = Math.floor(Math.random() * 360);
+    const totalRotation = 3600 + randomExtra; // 10 tours pour plus de suspense
+    
+    // --- EFFET SONORE DE ROTATION ---
+    let soundInterval = setInterval(() => {
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+    }, 150);
+
+    // On ralentit le son à la fin
+    setTimeout(() => { clearInterval(soundInterval); }, 3500);
+
+    canva.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
+    canva.style.transform = `rotate(${totalRotation}deg)`;
+
+    setTimeout(() => {
+        const actualAngle = randomExtra % 360;
+        const segmentSize = 360 / prizes.length;
+        const resultIndex = Math.floor(((360 - actualAngle + 270) % 360) / segmentSize);
+        const resultat = prizes[resultIndex];
+
+        stats.count++;
+        localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
+        majAffichageChances();
+
+        if (resultat === "REESSAYER") {
+            alert("Mince ! Retentez demain. 😥");
+        } else {
+            // --- VICTOIRE ! ---
+            // 1. Son de victoire
+            if(victorySound) victorySound.play();
+
+            // 2. Explosion de confettis
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#c5a059', '#000000', '#ffffff'] // Couleurs Latyfa : Or, Noir, Blanc
+            });
+
+            const promoAmount = resultat.replace(/[^0-9]/g, "") || "5";
+            const promoCode = "LATYFA" + promoAmount;
+            
+            localStorage.setItem('latyfa_active_promo', JSON.stringify({
+                code: promoCode,
+                expires: Date.now() + (24 * 60 * 60 * 1000),
+                remise: promoAmount
+            }));
+
+            setTimeout(() => {
+                alert("🎉 MAGNIFIQUE !\nVous avez gagné : " + resultat + "\nVotre code promo : " + promoCode);
+            }, 500);
+        }
+        btn.disabled = false;
+    }, 4000);
 };
 
+    function majAffichageChances() {
+        const aujourdhui = new Date().toLocaleDateString();
+        let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: aujourdhui, count: 0 };
+        if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
+        
+        const reste = MAX_TENTATIVES - stats.count;
+        const msgZone = document.getElementById('wheel-msg');
+        if(reste <= 0) {
+            msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE</span>`;
+            document.getElementById('spin').disabled = true;
+        } else {
+            msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/${MAX_TENTATIVES}</span>`;
+        }
+        return stats;
+    }
+
+    // --- PANIER ET CALCULS ---
+    function ouvrirPanier() {
+        document.getElementById('cartModal').classList.add('active');
+        const itemsDiv = document.getElementById('cart-items');
+        const form = document.getElementById('checkout-form');
+        
+        if(cart.length === 0) { 
+            itemsDiv.innerHTML = "<p class='text-center py-10 text-[10px] font-bold uppercase text-gray-400'>Panier Vide</p>"; 
+            form.style.display = "none"; 
+            return; 
+        }
+        
+        form.style.display = "block";
+        itemsDiv.innerHTML = cart.map(item => `
+            <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
+                <div class="flex-1">${item.label}</div>
+                <div class="flex gap-2 items-center">
+                    <button onclick="modifierQty('${item.label}',-1)" class="bg-gray-100 px-2 rounded">-</button>
+                    <span>${item.qty}</span>
+                    <button onclick="modifierQty('${item.label}',1)" class="bg-gray-100 px-2 rounded">+</button>
+                </div>
+            </div>`).join('');
+        
+        majResume();
+    }
+
+    function modifierQty(label, d) {
+        const i = cart.find(x => x.label === label);
+        if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
+        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
+        ouvrirPanier();
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+
+    }
+
+    function appliquerPromo() {
+        const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
+        const msg = document.getElementById('promo-msg');
+        const savedPromo = JSON.parse(localStorage.getItem('latyfa_active_promo'));
+        const usedPromos = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
+
+        msg.classList.remove('hidden');
+
+        if (usedPromos.includes(inputCode)) {
+            msg.innerText = "❌ Ce code a déjà été utilisé.";
+            msg.className = "text-[9px] font-bold text-red-600";
+            remiseCodePromo = 0;
+        } 
+        else if (savedPromo && inputCode === savedPromo.code) {
+            if (Date.now() > savedPromo.expires) {
+                msg.innerText = "⏰ Code expiré (24h).";
+                msg.className = "text-[9px] font-bold text-red-600";
+                remiseCodePromo = 0;
+            } else {
+                remiseCodePromo = parseInt(savedPromo.remise);
+                msg.innerText = "✅ Code -" + remiseCodePromo + "% appliqué !";
+                msg.className = "text-[9px] font-bold text-green-600";
+            }
+        } else {
+            msg.innerText = "❌ Code invalide.";
+            msg.className = "text-[9px] font-bold text-red-600";
+            remiseCodePromo = 0;
+        }
+        majResume();
+    }
+
+    function majResume() {
+    const zoneKey = document.getElementById('zone-livraison').value;
+    const isCadeau = document.getElementById('check-cadeau').checked;
+    const containerResume = document.getElementById('resume-final');
+    const alertePromoValentin = document.getElementById('promo-congrats');
+    
+    // 1. Calcul du Sous-total des articles
+    let totalArticles = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    
+    // 2. Frais de livraison
+    let fraisLivraison = 0;
+    if (zoneKey && tarifsLivraison[zoneKey]) {
+        fraisLivraison = tarifsLivraison[zoneKey].prix;
+    }
+
+    // 3. Option Emballage Cadeau
+    let fraisCadeau = isCadeau ? 1000 : 0;
+
+    // 4. Remise St Valentin (-20% si achat > 20.000 F entre le 14 et 28 fév)
+    let remiseValentin = 0;
+    const maintenant = new Date();
+    const debutPromo = new Date(2026, 1, 14); // 14 Février
+    const finPromo = new Date(2026, 1, 28);   // 28 Février
+
+    if (maintenant >= debutPromo && maintenant <= finPromo && totalArticles >= 20000) {
+        remiseValentin = totalArticles * 0.20;
+        alertePromoValentin.classList.remove('hidden');
+    } else {
+        alertePromoValentin.classList.add('hidden');
+    }
+
+    // 5. Remise Code Promo de la Roue (remiseCodePromo est une variable globale)
+    let remiseRoue = (remiseCodePromo > 0) ? (totalArticles * (remiseCodePromo / 100)) : 0;
+
+    // 6. CALCUL TOTAL FINAL
+    let totalFinal = totalArticles + fraisLivraison + fraisCadeau - remiseValentin - remiseRoue;
+    if (totalFinal < 0) totalFinal = 0; // Sécurité
+
+    // 7. AFFICHAGE DANS LE RÉSUMÉ
+    containerResume.innerHTML = `
+        <div class="flex justify-between"><span>Articles:</span> <span>${totalArticles.toLocaleString()} F</span></div>
+        ${fraisLivraison > 0 ? `<div class="flex justify-between"><span>Livraison (${tarifsLivraison[zoneKey].nom}):</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>` : ''}
+        ${fraisCadeau > 0 ? `<div class="flex justify-between text-pink-500 italic"><span>Option Cadeau Luxe:</span> <span>+1.000 F</span></div>` : ''}
+        ${remiseValentin > 0 ? `<div class="flex justify-between text-green-600 font-bold"><span>Remise Valentin (-20%):</span> <span>-${Math.round(remiseValentin).toLocaleString()} F</span></div>` : ''}
+        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600 font-bold"><span>Remise Code Lucky (-${remiseCodePromo}%):</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
+    `;
+
+    // Mise à jour du gros chiffre rouge
+    document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    
+    // On vérifie si le bouton de commande doit être activé
+    toggleBouton();
+}
+    function toggleBouton() {
+    const chk = document.getElementById('check-verif').checked;
+    const nom = document.getElementById('nom-client').value.trim();
+    const tel = document.getElementById('tel-client').value.trim();
+    const zone = document.getElementById('zone-livraison').value;
+    const btn = document.getElementById('btn-final');
+
+    // Le bouton s'active seulement si tout est rempli + case cochée
+    if (chk && nom !== "" && tel !== "" && zone !== "") {
+        btn.classList.remove('bg-gray-300', 'btn-disabled', 'pointer-events-none');
+        btn.classList.add('ali-gradient', 'cursor-pointer');
+        btn.disabled = false;
+    } else {
+        btn.classList.add('bg-gray-300', 'btn-disabled', 'pointer-events-none');
+        btn.classList.remove('ali-gradient', 'cursor-pointer');
+        btn.disabled = true;
+    }
+}
+    function validerCommande() {
+    const nom = document.getElementById('nom-client').value;
+    const tel = document.getElementById('tel-client').value;
+    const quartier = document.getElementById('quartier-client').value;
+    const zone = document.getElementById('zone-livraison').value;
+    const total = document.getElementById('total-display').innerText;
+    const isCadeau = document.getElementById('check-cadeau').checked;
+    const codeUtilise = document.getElementById('input-promo').value || "Aucun";
+
+    if(!nom || !tel || !quartier || !zone) {
+        alert("⚠️ Merci de remplir tous les champs obligatoires.");
+        return;
+    }
+
+    // 1. Préparation de la liste des articles pour WhatsApp et l'historique
+    let listArticles = cart.map(i => `${i.label} (x${i.qty})`).join(', ');
+    
+    // 2. Création de l'objet commande pour l'historique
+    const nouvelleCommande = {
+        date: new Date().toLocaleString('fr-FR'),
+        client: nom.toUpperCase(),
+        tel: tel,
+        lieu: `${quartier} (${tarifsLivraison[zone].nom})`,
+        articles: listArticles,
+        total: total,
+        promo: codeUtilise,
+        cadeau: isCadeau ? "OUI" : "NON"
+    };
+
+    // 3. Sauvegarde dans l'historique (localStorage)
+    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+     mettreAJourStats();
+    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
+    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
+
+    // 4. Construction du message WhatsApp
+    let listWA = cart.map(i => `• ${i.label} (x${i.qty})`).join('\n');
+    let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP*\n\n`;
+    msg += `👤 *CLIENT:* ${nom}\n`;
+    msg += `📞 *TEL:* ${tel}\n`;
+    msg += `📍 *QUARTIER:* ${quartier}\n`;
+    msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
+    msg += `📝 *ARTICLES:*\n${listWA}\n`;
+    if(isCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
+    msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
+
+    // 5. Envoi
+    window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
+}
+    // --- DIVERS ---
+    function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
+    function suivreColis() { alert("si votre commande à été validé sur WhatsApp alors vous serez contacté !"); }
+    function updateVisitorCount() {
+        let count = localStorage.getItem('latyfa_visitors') || 1250;
+        count = parseInt(count) + 1;
+        localStorage.setItem('latyfa_visitors', count);
+        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
+    }
+
+    setInterval(() => {
+        const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
+        if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
+        const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+        document.getElementById('countdown').innerText = `${d}j ${h}h ${m}m ${s}s`;
+    }, 1000);
+
+    // Initialisation finale
+    drawWheel(); 
+    majAffichageChances(); 
+    render(); 
+    updateVisitorCount();
+    
+    // --- LOGIQUE DE PREUVE SOCIALE (Notifications de vente) ---
+const notifications = [
+    "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
+    "Nouveau colis expédié vers Yamoussoukro 📦",
+    "Une commande de Parfum Prestige vient d'être validée 🕯️",
+    "5 personnes consultent actuellement ce produit 🔥",
+    "Un ensemble de bijoux a été ajouté au panier à Bouaké 💎"
+];
+
+function showSocialProof() {
+    const box = document.getElementById('social-proof');
+    const text = document.getElementById('proof-text');
+    if(!box || !text) return;
+
+    text.innerText = notifications[Math.floor(Math.random() * notifications.length)];
+    box.classList.remove('translate-y-20', 'opacity-0');
+    
+    setTimeout(() => {
+        box.classList.add('translate-y-20', 'opacity-0');
+    }, 5000);
+}
+
+// Lancement de la preuve sociale
+setTimeout(() => {
+    showSocialProof();
+    setInterval(showSocialProof, 15000);
+}, 3000);
+
+// --- LOGIQUE ADMIN (Gestion du catalogue) ---
+// --- LOGIQUE ADMIN (Gestion du catalogue) ---
+function ouvrirAdmin() {
+    // On récupère le code enregistré ou on utilise "2026" par défaut
+    const codeAttendu = localStorage.getItem('latyfa_admin_code') || "2026";
+    
+    const codeSaisi = prompt("Veuillez entrer le code d'accès :");
+
+    if (codeSaisi === codeAttendu) {
+        document.getElementById('adminModal').classList.remove('hidden');
+        document.getElementById('adminModal').classList.add('flex');
+        
+        chargerHistorique();
+        mettreAJourStats();
+    } else {
+        alert("❌ Code incorrect. Accès refusé.");
+    }
+}
+function ajouterProduitAdmin() {
+    const name = document.getElementById('adm-name').value;
+    const price = document.getElementById('adm-price').value;
+    const imgInput = document.getElementById('adm-img').value; // Récupère le texte brut
+    const videoUrl = document.getElementById('adm-video').value;
+
+    if(!name || !price || !imgInput) return alert("Remplis les champs obligatoires !");
+
+    // --- LA MAGIE EST ICI ---
+    // On coupe le texte à chaque virgule et on enlève les espaces vides
+    const imagesArray = imgInput.split(',').map(link => link.trim()).filter(link => link !== "");
+
+    const newP = {
+        id: Date.now(),
+        name: name,
+        price: parseInt(price),
+        cat: document.getElementById('adm-cat').value,
+        images: imagesArray, // On enregistre le tableau d'images
+        video: videoUrl || null, // La vidéo reste à part
+        description: document.getElementById('adm-desc').value || "Produit Latyfa Business",
+        enStock: true,
+        stockBas: document.getElementById('adm-stock-bas').checked,
+    quantiteRestante: document.getElementById('adm-stock-count').value || "2", // On prend le chiffre saisi
+    dateAjout: Date.now() 
+};
+    products.push(newP);
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    
+    // Nettoyage des champs
+    document.getElementById('adm-name').value = "";
+    document.getElementById('adm-price').value = "";
+    document.getElementById('adm-img').value = "";
+    document.getElementById('adm-video').value = "";
+    
+    refreshAdminList();
+    render();
+    alert("Produit ajouté avec " + imagesArray.length + " image(s) !");
+}
+
+function toggleStock(id) {
+    const p = products.find(x => x.id === id);
+    if(p) {
+        p.enStock = (p.enStock === undefined) ? false : !p.enStock;
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        refreshAdminList();
+        render();
+    }
+}
+
+function supprimerProduit(id) {
+    if(confirm("Supprimer définitivement cet article ?")) {
+        products = products.filter(p => p.id !== id);
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        refreshAdminList();
+        render();
+    }
+}
+
+function refreshAdminList() {
+    const list = document.getElementById('admin-list');
+    if (!list) return;
+    list.innerHTML = products.map(p => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border mb-2 shadow-sm">
+            <div class="flex items-center gap-2">
+                <img src="${p.images[0]}" class="w-8 h-8 object-cover rounded ${p.enStock === false ? 'grayscale' : ''}">
+                <span class="font-bold text-[10px] ${p.enStock === false ? 'text-red-400 line-through' : 'text-gray-700'}">${p.name}</span>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
+                    ${p.enStock === false ? 'RUPTURE' : 'EN STOCK'}
+                </button>
+                <button onclick="supprimerProduit(${p.id})" class="text-red-500 p-1"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        loader.classList.add('loader-hidden');
+    }, 1500); // 1.5 seconde pour un effet luxe bien dosé
+});
+    function toggleHistorique() {
+    const zone = document.getElementById('historique-zone');
+    if (zone.classList.contains('hidden')) {
+        zone.classList.remove('hidden');
+        chargerHistorique();
+    } else {
+        zone.classList.add('hidden');
+    }
+}
+
+function chargerHistorique() {
+    const zone = document.getElementById('historique-zone');
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+
+    if (historique.length === 0) {
+        zone.innerHTML = `
+            <div class="text-center py-10 opacity-50">
+                <i class="fa-solid fa-box-archive text-3xl mb-2"></i>
+                <p class="text-[10px] uppercase font-bold">Aucune vente enregistrée</p>
+            </div>`;
+        return;
+    }
+    zone.innerHTML = historique.map(cmd => `
+        <div class="bg-white p-4 rounded-xl border-l-4 border-[#c5a059] shadow-sm text-[10px] mb-3">
+            <div class="flex justify-between items-start mb-2">
+                <span class="font-black text-gray-400">📅 ${cmd.date}</span>
+                <span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold">${cmd.total} F</span>
+            </div>
+            <p class="mb-1"><strong>👤 CLIENT :</strong> ${cmd.client} (${cmd.tel})</p>
+            <p class="mb-1"><strong>📍 DESTINATION :</strong> ${cmd.lieu}</p>
+            <p class="mb-1"><strong>🛍️ PANIER :</strong> ${cmd.articles}</p>
+            <div class="flex gap-2 mt-2 pt-2 border-t border-gray-50 text-[8px] font-bold uppercase">
+                <span class="${cmd.promo !== 'Aucun' ? 'text-blue-500' : 'text-gray-300'}">🎟️ Code: ${cmd.promo}</span>
+                <span class="${cmd.cadeau === 'OUI' ? 'text-pink-500' : 'text-gray-300'}">🎁 Cadeau: ${cmd.cadeau}</span>
+            </div>
+        </div>
+    `).join('');
+}
+    function effacerToutLHistorique() {
+    // Premier avertissement
+    if (confirm("🚨 ATTENTION : Vous allez supprimer TOUTES les ventes de l'historique.")) {
+        
+        // Deuxième vérification de sécurité (le rappel de sauvegarde)
+        if (confirm("❓ Avez-vous bien téléchargé votre sauvegarde Excel (Fichier CSV) avant de continuer ?")) {
+            
+            // Si l'utilisateur confirme les deux, on efface
+            localStorage.removeItem('latyfa_historique');
+            
+            chargerHistorique();
+            mettreAJourStats();
+            
+            alert("✅ Historique réinitialisé avec succès.");
+        } else {
+            // Si l'utilisateur dit "Non" à la sauvegarde, on lui propose de le faire
+            alert("Sauvegarde annulée. Pensez à cliquer sur 'Sauvegarder (Excel)' avant d'effacer.");
+        }
+    }
+}
+    function changerMedia(type, source, element) {
+    const container = document.getElementById('main-detail-img').parentElement;
+    
+    // 1. Mise à jour visuelle des miniatures
+    document.querySelectorAll('.miniature-item').forEach(el => el.classList.remove('thumb-active'));
+    element.classList.add('thumb-active');
+
+    // 2. Changement du média avec animation
+    if(type === 'video') {
+        container.innerHTML = `
+            <video id="main-detail-video" src="${source}" controls autoplay loop muted
+            class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn"></video>
+        `;
+    } else {
+        container.innerHTML = `
+            <img id="main-detail-img" src="${source}" 
+            class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn">
+        `;
+    }
+}
+function calculerTailleRec() {
+    const poids = parseFloat(document.getElementById('user-weight').value);
+    const resultZone = document.getElementById('size-result');
+    const selectSize = document.getElementById('select-size');
+    
+    if (!poids || poids < 30) {
+        resultZone.innerText = "Veuillez entrer un poids valide.";
+        return;
+    }
+
+    let recommendation = "";
+    if (poids < 55) recommendation = "S";
+    else if (poids >= 55 && poids < 68) recommendation = "M";
+    else if (poids >= 68 && poids < 82) recommendation = "L";
+    else if (poids >= 82 && poids < 95) recommendation = "XL";
+    else recommendation = "XXL";
+
+    resultZone.innerHTML = `✨ Taille conseillée : <span class="text-lg">${recommendation}</span>`;
+    
+    // On sélectionne automatiquement la taille dans le menu si elle existe
+    if (selectSize) {
+        for (let i = 0; i < selectSize.options.length; i++) {
+            if (selectSize.options[i].value === recommendation) {
+                selectSize.selectedIndex = i;
+                break;
+            }
+        }
+    }
+}
+    window.addEventListener('DOMContentLoaded', () => {
+    // Met à jour le compteur visuel (le petit rond rouge)
+    const count = cart.reduce((a, b) => a + b.qty, 0);
+    document.getElementById('cart-count').innerText = count;
+});
+    // --- SIMULATEUR DE GAINS (PREUVE SOCIALE) ---
+const villesCI = ["Abidjan", "Bouaké", "Yamoussoukro", "San-Pédro", "Korhogo", "Daloa", "Man", "Gagnoa", "Abengourou", "Ferké", "Odiéné", "Touba", "Botro"];
+const gainsPossibles = ["-5%", "-10%", "-15%", "la LIVRAISON GRATUITE", "un CADEAU"];
+
+function lancerNotificationGain() {
+    const notif = document.getElementById('wheel-notif');
+    const texte = document.getElementById('notif-text');
+    
+    // Si la roue est déjà ouverte, on n'affiche pas la notif pour ne pas gêner
+    if (document.querySelector('.wheel-mask').classList.contains('active')) return;
+
+    const ville = villesCI[Math.floor(Math.random() * villesCI.length)];
+    const gain = gainsPossibles[Math.floor(Math.random() * gainsPossibles.length)];
+    
+    texte.innerHTML = `Une cliente de <span class="text-[#c5a059]">${ville}</span> vient de gagner <span class="text-black">${gain}</span> !`;
+    
+    // Apparition
+    notif.classList.remove('translate-x-[-120%]');
+    
+    // Disparition après 6 secondes
+    setTimeout(() => {
+        notif.classList.add('translate-x-[-120%]');
+    }, 6000);
+}
+
+// Lancer la première notif après 10 secondes, puis toutes les 35 secondes
+setTimeout(() => {
+    lancerNotificationGain();
+    setInterval(lancerNotificationGain, 35000);
+}, 10000);
+
+function selectPay(mode) {
+    const btnMobile = document.getElementById('pay-mobile');
+    const btnCash = document.getElementById('pay-cash');
+    const inputHidden = document.getElementById('mode-pay');
+
+    if (mode === 'TRANSFERT') {
+        inputHidden.value = "TRANSFERT MOBILE (WAVE/ORANGE/MTN)";
+        // Style Actif
+        btnMobile.classList.replace('border-gray-100', 'border-[#c5a059]');
+        btnMobile.classList.add('bg-orange-50');
+        btnMobile.style.opacity = "1";
+        // Style Inactif
+        btnCash.classList.replace('border-[#c5a059]', 'border-gray-100');
+        btnCash.classList.remove('bg-orange-50');
+        btnCash.style.opacity = "0.5";
+    } else {
+        inputHidden.value = "CASH / RETRAIT EN BOUTIQUE";
+        // Style Actif
+        btnCash.classList.replace('border-gray-100', 'border-[#c5a059]');
+        btnCash.classList.add('bg-orange-50');
+        btnCash.style.opacity = "1";
+        // Style Inactif
+        btnMobile.classList.replace('border-[#c5a059]', 'border-gray-100');
+        btnMobile.classList.remove('bg-orange-50');
+        btnMobile.style.opacity = "0.5";
+    }
+}
+    function ajouterAuPanier(id, label, price, img) {
+    // 1. Chercher si l'article est déjà là
+    const itemExistant = cart.find(item => item.id === id);
+
+    if (itemExistant) {
+        // 2. Si oui, on augmente juste la quantité
+        itemExistant.qty += 1;
+    } else {
+        // 3. Si non, on l'ajoute comme nouveau
+        cart.push({
+            id: id,
+            label: label,
+            price: price,
+            img: img,
+            qty: 1
+        });
+    }
+
+    // 4. Petit effet visuel pour confirmer l'ajout
+    notifierAjout(label);
+    
+    // 5. Mettre à jour l'affichage
+    ouvrirPanier();
+}
+
+function notifierAjout(nom) {
+    // Tu peux créer une petite notification temporaire ici
+    console.log(nom + " ajouté au panier !");
+}
+        function mettreAJourStats() {
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    const zoneCA = document.getElementById('stat-ca');
+    const zoneNB = document.getElementById('stat-nb');
+
+    let totalCA = 0;
+    historique.forEach(cmd => {
+        let prixNettoyé = cmd.total.toString().replace(/\s/g, '').replace(/,/g, '');
+        totalCA += parseInt(prixNettoyé) || 0;
+    });
+
+    // --- LOGIQUE DE L'ANIMATION DU COMPTEUR ---
+    let depart = 0;
+    let fin = totalCA;
+    let duree = 1000; // L'animation dure 1 seconde
+    let debutTemps = null;
+
+    function animation(tempsActuel) {
+        if (!debutTemps) debutTemps = tempsActuel;
+        let progression = tempsActuel - debutTemps;
+        
+        // Calcul du chiffre actuel en fonction du temps écoulé
+        let valeurActuelle = Math.min(Math.floor((progression / duree) * (fin - depart) + depart), fin);
+        
+        zoneCA.innerText = valeurActuelle.toLocaleString('fr-FR') + " F";
+
+        if (progression < duree) {
+            requestAnimationFrame(animation);
+        }
+    }
+    // On lance l'animation
+    requestAnimationFrame(animation);   
+    // Mise à jour directe du nombre de commandes
+    zoneNB.innerText = historique.length;
+}
+    function changerMotDePasse() {
+    const nouveauCode = prompt("Entrez votre nouveau code secret :");
+    
+    if (nouveauCode && nouveauCode.trim() !== "") {
+        localStorage.setItem('latyfa_admin_code', nouveauCode);
+        alert("✅ Nouveau code enregistré avec succès !");
+    } else {
+        alert("⚠️ Le code ne peut pas être vide.");
+    }
+    }
+    function sauvegarderHistorique() {
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+
+    if (historique.length === 0) {
+        alert("Rien à sauvegarder pour le moment.");
+        return;
+    }
+
+    // Création de l'en-tête du fichier CSV
+    let csvContent = "Date;Client;Telephone;Lieu;Articles;Total;Promo;Cadeau\n";
+
+    // Ajout des lignes
+    historique.forEach(cmd => {
+        let ligne = `${cmd.date};${cmd.client};${cmd.tel};${cmd.lieu};${cmd.articles};${cmd.total};${cmd.promo};${cmd.cadeau}`;
+        csvContent += ligne + "\n";
+    });
+
+    // Création du fichier et téléchargement
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Ventes_LatyfaShop_${new Date().toLocaleDateString()}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+        }
+    // Relance la vérification dès que l'utilisateur écrit dans les champs
+document.getElementById('nom-client').addEventListener('input', toggleBouton);
+document.getElementById('tel-client').addEventListener('input', toggleBouton);
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
 <div id="adminModal" class="modal bg-gray-50">
-    <div class="max-w-xl mx-auto pb-20 px-4">
-        
+    <div class="max-w-xl mx-auto pb-20">
         <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
             <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
             <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
@@ -722,123 +1590,93 @@ window.onload = () => {
 
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
             <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
-            <div class="space-y-4">
+            <div class="grid grid-cols-1 gap-4">
                 <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-col">
-                        <label class="text-[9px] font-bold text-gray-400 uppercase">Alerte Stock (Chiffre)</label>
-                        <input type="number" id="adm-stock-count" placeholder="Ex: 2" class="border p-3 rounded-lg text-sm">
-                    </div>
-                    <div class="flex items-center gap-2 pt-4">
-                        <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-                        <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
-                    </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+    <div class="flex flex-col">
+        <label class="text-[9px] font-bold text-gray-400 uppercase">Alerte Stock (Ex: 2)</label>
+        <input type="number" id="adm-stock-count" placeholder="Ex: 3" class="w-full border p-3 rounded-lg text-sm">
+    </div>
+    <div class="flex items-center gap-2 mt-4">
+        <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+        <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
+    </div>
+</div>
+                    <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
+                    <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
+                        <option value="bijoux">Bijoux</option>
+                        <option value="vetements">Vêtements</option>
+                        <option value="chaussures">Chaussures</option>
+                        <option value="sac">Sacs</option>
+                        <option value="parfum">Parfums</option>
+                        <option value="hanche">Perles de hanche</option>
+                        <option value="autres">Autres</option>
+                    </select>
                 </div>
-
-                <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
-                
-                <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
-                    <option value="bijoux">Bijoux</option>
-                    <option value="vetements">Vêtements</option>
-                    <option value="chaussures">Chaussures</option>
-                    <option value="sac">Sacs</option>
-                    <option value="parfum">Parfums</option>
-                    <option value="hanche">Perles de hanche</option>
-                    <option value="autres">Autres</option>
-                </select>
-
-                <div class="space-y-1">
-                    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez par une virgule)</label>
-                    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                </div>
-
-                <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm">
+               <div class="space-y-1">
+    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez les liens par une virgule si plusieurs)</label>
+    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+</div> 
+                <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm mt-2">
                 <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                
-                <button onclick="ajouterProduitAdmin()" class="w-full bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">
-                    Mettre en ligne
-                </button>
+                <div class="flex items-center gap-2 mb-4">
+    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
+    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Activer l'alerte "Stock Limité"</label>
+</div>
+                <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
             </div>
         </div>
-
-        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 text-center">Tableau de Bord</h3>
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
-                <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Chiffre d'Affaires</p>
-                <div id="stat-ca" class="text-xl font-black text-blue-700">0 F</div>
-            </div>
-            <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
-                <p class="text-[9px] font-black uppercase text-green-400 mb-1">Commandes</p>
-                <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 mb-2">
-            <div class="bg-gray-50 p-3 rounded-xl border text-center">
-                <p class="text-[8px] font-black uppercase text-gray-400">Total Tours Roue</p>
-                <div id="stat-total-spins" class="text-lg font-black text-gray-800">0</div>
-            </div>
-            <div class="bg-gray-50 p-3 rounded-xl border text-center">
-                <p class="text-[8px] font-black uppercase text-gray-400">Gains Clients</p>
-                <div id="stat-total-wins" class="text-lg font-black text-[#c5a059]">0</div>
-            </div>
-        </div>
-
-        <button onclick="resetStatsRoue()" class="w-full mb-6 text-[8px] font-bold text-red-400 uppercase hover:text-red-600 transition tracking-widest">
-            <i class="fa-solid fa-trash-can mr-1"></i> Réinitialiser les compteurs de la roue
-        </button>
 
         <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
-        <div id="admin-list" class="space-y-2 mb-10"></div>
-
+        <div id="admin-list" class="space-y-2 mb-10">
+            </div>
+    
+<div class="grid grid-cols-2 gap-4 mb-8">
+    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
+        <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Chiffre d'Affaires</p>
+        <div id="stat-ca" class="text-xl font-black text-blue-700">0 F</div>
+    </div>
+    <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
+        <p class="text-[9px] font-black uppercase text-green-400 mb-1">Commandes</p>
+        <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
+    </div>
+</div>
         <div class="pt-8 border-t-2 border-dashed border-gray-200">
-            <div class="flex flex-col gap-4 mb-4">
-                <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
-                    <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
-                </h3>
-                <div class="flex gap-2">
-                    <button onclick="sauvegarderHistorique()" class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md">
-                        <i class="fa-solid fa-file-export mr-2"></i> Sauvegarder (Excel)
-                    </button>
-                    <button onclick="effacerToutLHistorique()" class="bg-red-100 text-red-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-red-600 hover:text-white transition-all">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4">
-                <i class="fa-solid fa-clock-rotate-left mr-2"></i> Voir l'historique complet
+    <div class="flex flex-col gap-4 mb-4">
+        <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
+            <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
+        </h3>
+        
+        <div class="flex gap-2">
+            <button onclick="sauvegarderHistorique()" 
+                    class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md active:scale-95 transition-all">
+                <i class="fa-solid fa-file-export mr-2"></i> Sauvegarder (Excel)
             </button>
-            <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10"></div>
+            
+            <button onclick="effacerToutLHistorique()" 
+                    class="bg-red-100 text-red-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-red-600 hover:text-white transition-all">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
         </div>
+    </div>
+    
+    <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
+        <i class="fa-solid fa-clock-rotate-left mr-2"></i> Voir l'historique complet
+    </button>
 
-        <div class="mt-6 border-t border-gray-100 pt-4 space-y-4">
-            <div class="p-4 bg-orange-50 border border-orange-200 rounded-2xl">
-                <p class="text-[9px] font-black uppercase text-orange-400 mb-2">Zone de Test Roue</p>
-                <button onclick="resetRoueAdmin()" class="w-full bg-orange-500 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest">
-                    <i class="fa-solid fa-rotate-left mr-2"></i> Réinitialiser mon Chrono Roue
-                </button>
-            </div>
-
-            <div class="p-4 bg-gray-50 border border-gray-200 rounded-2xl">
-                <p class="text-[9px] font-black uppercase text-gray-400 mb-3">Configuration des Gains</p>
-                <div id="admin-prizes-list" class="space-y-2"></div>
-                <button onclick="sauvegarderGains()" class="w-full mt-4 bg-black text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest">
-                    Mettre à jour les gains
-                </button>
-            </div>
-
-            <div class="text-center">
-                <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest">
-                    <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
-                </button>
-            </div>
+    <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10">
         </div>
-
-        <button onclick="document.getElementById('adminModal').classList.remove('active')" class="w-full mt-8 bg-gray-100 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px]">
-            <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
-        </button>
+</div>
+    <div class="text-center mt-6">
+    <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest">
+        <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
+    </button>
+    </div>
+    <div class="mt-6 border-t border-gray-100 pt-4">
+    <button onclick="document.getElementById('adminModal').classList.add('hidden')" 
+            class="w-full bg-gray-50 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px] hover:bg-gray-100 active:scale-95 transition-all">
+        <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
+    </button>
     </div>
 </div>
 <div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
