@@ -662,11 +662,65 @@ function afficherResultatsRecherche(liste) {
     let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
     const MAX_TENTATIVES = 1; // 1 essai par jour
-const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
+// 1. On récupère les gains sauvegardés ou on met ceux par défaut
+let prizes = JSON.parse(localStorage.getItem('latyfa_wheel_prizes')) || [
+    "-10% CODE: LATYFA10", 
+    "LIVRAISON OFFERTE", 
+    "REESSAYER", 
+    "-20% CODE: LATYFA20", 
+    "CADEAU SURPRISE", 
+    "REESSAYER"
+];
+// On récupère les réglages ou on met les valeurs par défaut avec probabilités (poids)
+let wheelConfig = JSON.parse(localStorage.getItem('latyfa_wheel_config')) || [
+    { text: "-10% CODE: LATYFA10", weight: 30 }, // 30% de chance
+    { text: "LIVRAISON OFFERTE", weight: 20 },
+    { text: "REESSAYER", weight: 25 },
+    { text: "-20% CODE: LATYFA20", weight: 10 },
+    { text: "CADEAU SURPRISE", weight: 5 },
+    { text: "REESSAYER", weight: 10 }
+];
+function chargerGainsDansAdmin() {
+    const container = document.getElementById('admin-prizes-list');
+    container.innerHTML = '<p class="text-[8px] text-gray-400 mb-2 italic">Note: Le total des % doit idéalement faire 100.</p>';
+    
+    wheelConfig.forEach((item, index) => {
+        container.innerHTML += `
+            <div class="flex items-center gap-1 mb-1">
+                <input type="text" id="prize-text-${index}" value="${item.text}" class="flex-1 text-[10px] p-2 border rounded-lg">
+                <div class="relative w-16">
+                    <input type="number" id="prize-weight-${index}" value="${item.weight}" class="w-full text-[10px] p-2 border rounded-lg pr-5">
+                    <span class="absolute right-1 top-2 text-[9px]">%</span>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// 3. Fonction pour sauvegarder les nouveaux gains
+function sauvegarderGains() {
+    let nouvelleConfig = [];
+    for (let i = 0; i < 6; i++) {
+        nouvelleConfig.push({
+            text: document.getElementById(`prize-text-${i}`).value,
+            weight: parseInt(document.getElementById(`prize-weight-${i}`).value) || 0
+        });
+    }
+    wheelConfig = nouvelleConfig;
+    // On met aussi à jour le tableau 'prizes' utilisé pour le dessin de la roue
+    prizes = wheelConfig.map(item => item.text); 
+    
+    localStorage.setItem('latyfa_wheel_config', JSON.stringify(wheelConfig));
+    drawWheel(); 
+    alert("✅ Configuration et probabilités enregistrées !");
+}
+    // On redessine le canvas pour que les nouveaux textes apparaissent sur la roue
+    drawWheel(); 
+    alert("✅ Les gains de la roue ont été mis à jour !");
+}
+
 const canva = document.getElementById('canvas');
 const ctx = canva.getContext('2d');
-
-
     // --- BOUTIQUE ---
     function render(filter = 'tous') {
     const grid = document.getElementById('product-grid');
@@ -889,7 +943,26 @@ document.getElementById('spin').onclick = function() {
     const victorySound = document.getElementById('victory-sound');
     btn.disabled = true;
 
-    const randomExtra = Math.floor(Math.random() * 360);
+    // --- LOGIQUE DE PROBABILITÉS ---
+let totalWeight = wheelConfig.reduce((acc, item) => acc + item.weight, 0);
+let randomWeight = Math.random() * totalWeight;
+let cumulativeWeight = 0;
+let winningIndex = 0;
+
+for (let i = 0; i < wheelConfig.length; i++) {
+    cumulativeWeight += wheelConfig[i].weight;
+    if (randomWeight <= cumulativeWeight) {
+        winningIndex = i;
+        break;
+    }
+}
+// Calcul de l'angle pour tomber précisément sur le segment gagnant choisi
+// Le 270 est l'ajustement pour que le curseur du haut corresponde au bon index
+const segmentSize = 360 / wheelConfig.length;
+const targetAngle = (360 - (winningIndex * segmentSize) + 270) % 360;
+// On ajoute un petit aléatoire pour ne pas tomber pile au milieu du segment à chaque fois
+const randomExtra = targetAngle + (Math.random() * (segmentSize * 0.8) - (segmentSize * 0.4));
+// -------------------------------
     const totalRotation = 3600 + randomExtra; 
     
     let soundInterval = setInterval(() => {
@@ -1232,8 +1305,8 @@ function ouvrirAdmin() {
 
     if (codeSaisi === codeAttendu) {
         document.getElementById('adminModal').classList.remove('hidden');
-        document.getElementById('adminModal').classList.add('flex');
-        
+        document.getElementById('adminModal').classList.add('flex'); 
+        chargerGainsDansAdmin();
         chargerHistorique();
         mettreAJourStats();
     } else {
@@ -1278,7 +1351,22 @@ function ajouterProduitAdmin() {
     render();
     alert("Produit ajouté avec " + imagesArray.length + " image(s) !");
 }
-
+    function resetRoueAdmin() {
+    // Supprime l'heure du dernier tour enregistrée sur ton navigateur
+    localStorage.removeItem('latyfa_wheel_stats');
+    
+    // On réinitialise aussi l'affichage visuel sur la roue
+    const msgZone = document.getElementById('wheel-msg');
+    const spinBtn = document.getElementById('spin');
+    
+    if(msgZone) msgZone.innerHTML = `<span class="text-green-600 font-black">🔥 TEST : ROUE RÉINITIALISÉE !</span>`;
+    if(spinBtn) {
+        spinBtn.disabled = false;
+        spinBtn.classList.replace('bg-gray-400', 'bg-black');
+    }
+    
+    alert("✅ Ton chrono personnel a été remis à zéro. Tu peux retourner à la roue pour tester !");
+    }
 function toggleStock(id) {
     const p = products.find(x => x.id === id);
     if(p) {
@@ -1694,6 +1782,20 @@ document.getElementById('tel-client').addEventListener('input', toggleBouton);
     </button>
     </div>
     <div class="mt-6 border-t border-gray-100 pt-4">
+        <div class="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-2xl">
+    <p class="text-[9px] font-black uppercase text-orange-400 mb-2">Zone de Test Roue</p>
+    <button onclick="resetRoueAdmin()" class="w-full bg-orange-500 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-sm active:scale-95 transition-all">
+        <i class="fa-solid fa-rotate-left mr-2"></i> Réinitialiser mon Chrono Roue
+    </button>
+        </div>
+        <div class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-2xl">
+    <p class="text-[9px] font-black uppercase text-gray-400 mb-3">Configuration des Gains (6 segments)</p>
+    <div id="admin-prizes-list" class="space-y-2">
+        </div>
+    <button onclick="sauvegarderGains()" class="w-full mt-4 bg-black text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest shadow-sm active:scale-95 transition-all">
+        Mettre à jour les gains
+    </button>
+        </div>
     <button onclick="document.getElementById('adminModal').classList.add('hidden')" 
             class="w-full bg-gray-50 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px] hover:bg-gray-100 active:scale-95 transition-all">
         <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
