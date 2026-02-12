@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
+            #stat-ca {
+    transition: color 0.3s ease;
+    text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+            }
          #main-detail-img, #main-detail-video {
     animation: fadeIn 0.4s ease-in-out;
 }
@@ -888,8 +892,6 @@ function gererOptionsProduit(p) {
         selectColor.innerHTML = "";
     }
 }
-
-    function ajouterDepuisDetail() {
     function ajouterDepuisDetail() {
     const size = document.getElementById('select-size').value || "";
     const color = document.getElementById('select-color').value || "";
@@ -954,7 +956,6 @@ function drawWheel() {
         ctx.restore();
     }
 }
-
 // APPEL IMMÉDIAT POUR DESSINER LA ROUE AU CHARGEMENT
 drawWheel();
 
@@ -1166,31 +1167,52 @@ document.getElementById('spin').onclick = function() {
         btn.disabled = !chk;
     }
     function validerCommande() {
-    function validerCommande() {
     const nom = document.getElementById('nom-client').value;
     const tel = document.getElementById('tel-client').value;
     const quartier = document.getElementById('quartier-client').value;
     const zone = document.getElementById('zone-livraison').value;
     const total = document.getElementById('total-display').innerText;
-    const optionCadeau = document.getElementById('check-cadeau').checked; // Récupération ici
+    const isCadeau = document.getElementById('check-cadeau').checked;
+    const codeUtilise = document.getElementById('input-promo').value || "Aucun";
 
     if(!nom || !tel || !quartier || !zone) {
-        alert("⚠️ Merci de remplir tous les champs (Nom, Tel, Quartier et Zone).");
+        alert("⚠️ Merci de remplir tous les champs obligatoires.");
         return;
     }
 
-    let list = cart.map(i => `• ${i.label} (x${i.qty})`).join('\n');
+    // 1. Préparation de la liste des articles pour WhatsApp et l'historique
+    let listArticles = cart.map(i => `${i.label} (x${i.qty})`).join(', ');
+    
+    // 2. Création de l'objet commande pour l'historique
+    const nouvelleCommande = {
+        date: new Date().toLocaleString('fr-FR'),
+        client: nom.toUpperCase(),
+        tel: tel,
+        lieu: `${quartier} (${tarifsLivraison[zone].nom})`,
+        articles: listArticles,
+        total: total,
+        promo: codeUtilise,
+        cadeau: isCadeau ? "OUI" : "NON"
+    };
+
+    // 3. Sauvegarde dans l'historique (localStorage)
+    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+     mettreAJourStats();
+    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
+    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
+
+    // 4. Construction du message WhatsApp
+    let listWA = cart.map(i => `• ${i.label} (x${i.qty})`).join('\n');
     let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP*\n\n`;
     msg += `👤 *CLIENT:* ${nom}\n`;
     msg += `📞 *TEL:* ${tel}\n`;
     msg += `📍 *QUARTIER:* ${quartier}\n`;
     msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
-    msg += `📝 *ARTICLES:*\n${list}\n`;
-    
-    if(optionCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
-    
+    msg += `📝 *ARTICLES:*\n${listWA}\n`;
+    if(isCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
     msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
 
+    // 5. Envoi
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
 }
     // --- DIVERS ---
@@ -1247,15 +1269,21 @@ setTimeout(() => {
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
 // --- LOGIQUE ADMIN (Gestion du catalogue) ---
 function ouvrirAdmin() {
-    const mdp = prompt("Code d'accès Admin :");
-    if(mdp === "2026") {
-        document.getElementById('adminModal').classList.add('active');
-        const savedDb = localStorage.getItem('latyfa_db');
-        if(savedDb) { products = JSON.parse(savedDb); }
-        refreshAdminList(); 
-    } else { alert("Accès refusé"); }
-}
+    // On récupère le code enregistré ou on utilise "2026" par défaut
+    const codeAttendu = localStorage.getItem('latyfa_admin_code') || "2026";
+    
+    const codeSaisi = prompt("Veuillez entrer le code d'accès :");
 
+    if (codeSaisi === codeAttendu) {
+        document.getElementById('adminModal').classList.remove('hidden');
+        document.getElementById('adminModal').classList.add('flex');
+        
+        chargerHistorique();
+        mettreAJourStats();
+    } else {
+        alert("❌ Code incorrect. Accès refusé.");
+    }
+}
 function ajouterProduitAdmin() {
     const name = document.getElementById('adm-name').value;
     const price = document.getElementById('adm-price').value;
@@ -1353,35 +1381,47 @@ function chargerHistorique() {
     const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
 
     if (historique.length === 0) {
-        zone.innerHTML = "<p class='text-[10px] text-center text-gray-400 uppercase font-bold'>Aucune commande enregistrée</p>";
+        zone.innerHTML = `
+            <div class="text-center py-10 opacity-50">
+                <i class="fa-solid fa-box-archive text-3xl mb-2"></i>
+                <p class="text-[10px] uppercase font-bold">Aucune vente enregistrée</p>
+            </div>`;
         return;
     }
-
     zone.innerHTML = historique.map(cmd => `
-        <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500 shadow-sm text-[10px]">
-            <div class="flex justify-between font-black text-blue-600 mb-1">
-                <span>📅 ${cmd.date}</span>
-                <span>💰 ${cmd.total} F</span>
+        <div class="bg-white p-4 rounded-xl border-l-4 border-[#c5a059] shadow-sm text-[10px] mb-3">
+            <div class="flex justify-between items-start mb-2">
+                <span class="font-black text-gray-400">📅 ${cmd.date}</span>
+                <span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold">${cmd.total} F</span>
             </div>
-            <p><strong>👤 Client:</strong> ${cmd.client}</p>
-            <p><strong>📍 Lieu:</strong> ${cmd.lieu}</p>
-            <p><strong>🛍️ Articles:</strong> ${cmd.articles}</p>
-            <p class="text-[8px] text-gray-400 mt-1 italic">Code utilisé: ${cmd.promo}</p>
+            <p class="mb-1"><strong>👤 CLIENT :</strong> ${cmd.client} (${cmd.tel})</p>
+            <p class="mb-1"><strong>📍 DESTINATION :</strong> ${cmd.lieu}</p>
+            <p class="mb-1"><strong>🛍️ PANIER :</strong> ${cmd.articles}</p>
+            <div class="flex gap-2 mt-2 pt-2 border-t border-gray-50 text-[8px] font-bold uppercase">
+                <span class="${cmd.promo !== 'Aucun' ? 'text-blue-500' : 'text-gray-300'}">🎟️ Code: ${cmd.promo}</span>
+                <span class="${cmd.cadeau === 'OUI' ? 'text-pink-500' : 'text-gray-300'}">🎁 Cadeau: ${cmd.cadeau}</span>
+            </div>
         </div>
     `).join('');
 }
     function effacerToutLHistorique() {
-    // Sécurité : on demande confirmation avant de tout supprimer
-    if (confirm("🚨 VOULEZ-VOUS VRAIMENT TOUT EFFACER ?\nCette action est irréversible et supprimera tout l'historique de vos ventes.")) {
+    // Premier avertissement
+    if (confirm("🚨 ATTENTION : Vous allez supprimer TOUTES les ventes de l'historique.")) {
         
-        // Supprime l'entrée de la mémoire
-        localStorage.removeItem('latyfa_historique');
-        
-        // Rafraîchit l'affichage pour montrer que c'est vide
-        chargerHistorique();
-        
-        // Petite alerte de succès
-        alert("✅ Historique vidé avec succès.");
+        // Deuxième vérification de sécurité (le rappel de sauvegarde)
+        if (confirm("❓ Avez-vous bien téléchargé votre sauvegarde Excel (Fichier CSV) avant de continuer ?")) {
+            
+            // Si l'utilisateur confirme les deux, on efface
+            localStorage.removeItem('latyfa_historique');
+            
+            chargerHistorique();
+            mettreAJourStats();
+            
+            alert("✅ Historique réinitialisé avec succès.");
+        } else {
+            // Si l'utilisateur dit "Non" à la sauvegarde, on lui propose de le faire
+            alert("Sauvegarde annulée. Pensez à cliquer sur 'Sauvegarder (Excel)' avant d'effacer.");
+        }
     }
 }
     function changerMedia(type, source, element) {
@@ -1525,6 +1565,81 @@ function notifierAjout(nom) {
     // Tu peux créer une petite notification temporaire ici
     console.log(nom + " ajouté au panier !");
 }
+        function mettreAJourStats() {
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    const zoneCA = document.getElementById('stat-ca');
+    const zoneNB = document.getElementById('stat-nb');
+
+    let totalCA = 0;
+    historique.forEach(cmd => {
+        let prixNettoyé = cmd.total.toString().replace(/\s/g, '').replace(/,/g, '');
+        totalCA += parseInt(prixNettoyé) || 0;
+    });
+
+    // --- LOGIQUE DE L'ANIMATION DU COMPTEUR ---
+    let depart = 0;
+    let fin = totalCA;
+    let duree = 1000; // L'animation dure 1 seconde
+    let debutTemps = null;
+
+    function animation(tempsActuel) {
+        if (!debutTemps) debutTemps = tempsActuel;
+        let progression = tempsActuel - debutTemps;
+        
+        // Calcul du chiffre actuel en fonction du temps écoulé
+        let valeurActuelle = Math.min(Math.floor((progression / duree) * (fin - depart) + depart), fin);
+        
+        zoneCA.innerText = valeurActuelle.toLocaleString('fr-FR') + " F";
+
+        if (progression < duree) {
+            requestAnimationFrame(animation);
+        }
+    }
+    // On lance l'animation
+    requestAnimationFrame(animation);   
+    // Mise à jour directe du nombre de commandes
+    zoneNB.innerText = historique.length;
+}
+    function changerMotDePasse() {
+    const nouveauCode = prompt("Entrez votre nouveau code secret :");
+    
+    if (nouveauCode && nouveauCode.trim() !== "") {
+        localStorage.setItem('latyfa_admin_code', nouveauCode);
+        alert("✅ Nouveau code enregistré avec succès !");
+    } else {
+        alert("⚠️ Le code ne peut pas être vide.");
+    }
+    }
+    function sauvegarderHistorique() {
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+
+    if (historique.length === 0) {
+        alert("Rien à sauvegarder pour le moment.");
+        return;
+    }
+
+    // Création de l'en-tête du fichier CSV
+    let csvContent = "Date;Client;Telephone;Lieu;Articles;Total;Promo;Cadeau\n";
+
+    // Ajout des lignes
+    historique.forEach(cmd => {
+        let ligne = `${cmd.date};${cmd.client};${cmd.tel};${cmd.lieu};${cmd.articles};${cmd.total};${cmd.promo};${cmd.cadeau}`;
+        csvContent += ligne + "\n";
+    });
+
+    // Création du fichier et téléchargement
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Ventes_LatyfaShop_${new Date().toLocaleDateString()}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+        }
 </script>
 
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
@@ -1552,7 +1667,6 @@ function notifierAjout(nom) {
         <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
     </div>
 </div>
-
                     <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
                     <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
                         <option value="bijoux">Bijoux</option>
@@ -1585,8 +1699,22 @@ function notifierAjout(nom) {
         <div class="pt-8 border-t-2 border-dashed border-gray-200">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
-                    <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+    <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-4 rounded-2xl border border-[#c5a059]/30">
+        <p class="text-[8px] font-black text-[#c5a059] uppercase tracking-widest mb-1">Chiffre d'Affaires</p>
+        <p id="stat-ca" class="text-xl font-black text-white">0 F</p>
+    </div>
+    <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+        <p class="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Commandes Total</p>
+        <p id="stat-nb" class="text-xl font-black text-gray-800">0</p>
+    </div>
+</div>
+                 <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
                 </h3>
+                <button onclick="sauvegarderHistorique()" 
+        class="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider hover:bg-blue-100 transition">
+    <i class="fa-solid fa-file-export mr-1"></i> Sauvegarder (Excel)
+                </button>
                 <button onclick="effacerToutLHistorique()" 
                         class="text-[9px] bg-red-100 text-red-600 px-3 py-1.5 rounded-lg uppercase font-black hover:bg-red-600 hover:text-white transition-all">
                     <i class="fa-solid fa-trash-can"></i> Vider
@@ -1601,8 +1729,18 @@ function notifierAjout(nom) {
                 </div>
         </div>
     </div>
+    <div class="text-center mt-6">
+    <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest">
+        <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
+    </button>
+    </div>
+    <div class="mt-6 border-t border-gray-100 pt-4">
+    <button onclick="document.getElementById('adminModal').classList.add('hidden')" 
+            class="w-full bg-gray-50 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px] hover:bg-gray-100 active:scale-95 transition-all">
+        <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
+    </button>
+    </div>
 </div>
-
 <div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
     <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
         <div class="flex justify-between items-center mb-4">
@@ -1647,5 +1785,5 @@ function notifierAjout(nom) {
     </div>
 </div>
 <audio id="sound-promo" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
-</body>
-</html>
+        </body>
+        </html>
