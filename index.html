@@ -640,15 +640,25 @@ body.dark-theme {
     </div>
 </div>
 <script>
+    // On charge ce qui existe, sinon on crée un tableau vide
+let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
-        cart = []; // On vide le tableau
-        ouvrirPanier(); // On rafraîchit l'affichage
-        // Optionnel : fermer le modal si le panier est vide
-        // document.getElementById('cartModal').classList.remove('active');
+        cart = []; // Vide la variable de travail
+        localStorage.removeItem('latyfa_cart'); // SUPPRIME la sauvegarde locale
+        
+        // On met à jour l'affichage
+        document.getElementById('cart-count').innerText = "0";
+        ouvrirPanier(); 
+        
+        // Optionnel : on ferme le panier s'il est vide
+        setTimeout(() => {
+            document.getElementById('cartModal').classList.remove('active');
+        }, 500);
     }
-    }
+}
+
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
