@@ -764,16 +764,13 @@ function refreshCategoriesUI() {
     }
     }
 
-    let products = [
-        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
-        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
-        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
-        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
-        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
-    ];
+    let products = JSON.parse(localStorage.getItem('latyfa_db')) || [
+    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa." },
+    { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], enStock: true, stockBas: true, description: "Finition Or 24K." }
+];
 
-    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
-    let currentProduct = null;
+let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+let remiseCodePromo = 0;
     let remiseCodePromo = 0; // Réduction en % via la roue
     const MAX_TENTATIVES = 1; // 1 essai par jour
 const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
@@ -1200,56 +1197,36 @@ document.getElementById('spin').onclick = function() {
     }
 
     function majResume() {
+    function majResume() {
     const zoneKey = document.getElementById('zone-livraison').value;
     const isCadeau = document.getElementById('check-cadeau').checked;
     const containerResume = document.getElementById('resume-final');
     const alertePromoValentin = document.getElementById('promo-congrats');
     
-    // 1. Calcul du Sous-total des articles
     let totalArticles = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    
-    // 2. Frais de livraison
-    let fraisLivraison = 0;
-    if (zoneKey && tarifsLivraison[zoneKey]) {
-        fraisLivraison = tarifsLivraison[zoneKey].prix;
-    }
-
-    // 3. Option Emballage Cadeau
+    let fraisLivraison = (zoneKey && tarifsLivraison[zoneKey]) ? tarifsLivraison[zoneKey].prix : 0;
     let fraisCadeau = isCadeau ? 1000 : 0;
 
-    // 4. Remise St Valentin (-20% si achat > 20.000 F entre le 14 et 28 fév)
+    // Calcul Remise Valentin
     let remiseValentin = 0;
     const maintenant = new Date();
-    const debutPromo = new Date(2026, 1, 14); // 14 Février
-    const finPromo = new Date(2026, 1, 28);   // 28 Février
-
-    if (maintenant >= debutPromo && maintenant <= finPromo && totalArticles >= 20000) {
+    if (maintenant >= new Date(2026, 1, 14) && maintenant <= new Date(2026, 1, 28) && totalArticles >= 20000) {
         remiseValentin = totalArticles * 0.20;
-        alertePromoValentin.classList.remove('hidden');
+        alertePromoValentin?.classList.remove('hidden');
     } else {
-        alertePromoValentin.classList.add('hidden');
+        alertePromoValentin?.classList.add('hidden');
     }
 
-    // 5. Remise Code Promo de la Roue (remiseCodePromo est une variable globale)
-    let remiseRoue = (remiseCodePromo > 0) ? (totalArticles * (remiseCodePromo / 100)) : 0;
-
-    // 6. CALCUL TOTAL FINAL
-    let totalFinal = totalArticles + fraisLivraison + fraisCadeau - remiseValentin - remiseRoue;
-    if (totalFinal < 0) totalFinal = 0; // Sécurité
-
-    // 7. AFFICHAGE DANS LE RÉSUMÉ
-    containerResume.innerHTML = `
-        <div class="flex justify-between"><span>Articles:</span> <span>${totalArticles.toLocaleString()} F</span></div>
-        ${fraisLivraison > 0 ? `<div class="flex justify-between"><span>Livraison (${tarifsLivraison[zoneKey].nom}):</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>` : ''}
-        ${fraisCadeau > 0 ? `<div class="flex justify-between text-pink-500 italic"><span>Option Cadeau Luxe:</span> <span>+1.000 F</span></div>` : ''}
-        ${remiseValentin > 0 ? `<div class="flex justify-between text-green-600 font-bold"><span>Remise Valentin (-20%):</span> <span>-${Math.round(remiseValentin).toLocaleString()} F</span></div>` : ''}
-        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600 font-bold"><span>Remise Code Lucky (-${remiseCodePromo}%):</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
-    `;
-
-    // Mise à jour du gros chiffre rouge
-    document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    let totalFinal = totalArticles + fraisLivraison + fraisCadeau - remiseValentin - (totalArticles * (remiseCodePromo / 100));
     
-    // On vérifie si le bouton de commande doit être activé
+    if(containerResume) {
+        containerResume.innerHTML = `
+            <div class="flex justify-between"><span>Articles:</span> <span>${totalArticles.toLocaleString()} F</span></div>
+            <div class="flex justify-between"><span>Livraison:</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>
+            ${remiseValentin > 0 ? `<div class="text-green-600 flex justify-between"><span>Remise Valentin:</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
+        `;
+    }
+    document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
     toggleBouton();
 }
     function toggleBouton() {
