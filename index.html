@@ -50,12 +50,9 @@ body {
     font-family: 'Montserrat', sans-serif; 
     margin: 0; 
     scroll-behavior: smooth; 
+    /* Transition douce pour tous les changements de couleur */
+body {
     transition: background-color 0.5s ease, color 0.5s ease !important;
-}
-
-/* On applique la transition aussi aux cartes et au header */
-header, aside, .product-card, .modal > div, button, div {
-    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
 }
 
 /* On applique la transition aussi aux cartes et au header */
@@ -205,7 +202,7 @@ body.dark-theme {
 
 .mode-icon-spin {
     animation: spin-slow 0.5s ease-in-out;
-} }
+}
 </style>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
@@ -548,27 +545,12 @@ body.dark-theme {
             </div>
 
             <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm font-bold bg-blue-50 border-blue-200 outline-none">
-    <option value="">-- CHOISIR ZONE LIVRAISON --</option>
-    <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
-    <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-    <option value="interieur">Intérieur pays (3.000 F)</option>
-    <option value="bouake">Retrait Boutique (Gratuit)</option>
-</select>
-
-<div class="mt-4">
-    <label class="text-[9px] font-black uppercase text-gray-400 mb-2 block">Mode de paiement souhaité :</label>
-    <div class="grid grid-cols-2 gap-2">
-        <div id="pay-mobile" onclick="selectPay('TRANSFERT')" class="border border-gray-100 p-3 rounded-xl cursor-pointer text-center transition-all">
-            <i class="fa-solid fa-mobile-screen-button text-[#c5a059] mb-1"></i>
-            <p class="text-[9px] font-bold uppercase">Mobile Money</p>
-        </div>
-        <div id="pay-cash" onclick="selectPay('CASH')" class="border border-gray-100 p-3 rounded-xl cursor-pointer text-center transition-all">
-            <i class="fa-solid fa-hand-holding-dollar text-[#c5a059] mb-1"></i>
-            <p class="text-[9px] font-bold uppercase">Espèces / Retrait</p>
-        </div>
-    </div>
-    <input type="hidden" id="mode-pay" value="">
-</div>
+                <option value="">-- CHOISIR ZONE LIVRAISON --</option>
+                <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+                <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+                <option value="interieur">Intérieur pays (3.000 F)</option>
+                <option value="bouake">Retrait Boutique (Gratuit)</option>
+            </select>
 
             <div class="bg-gray-50 p-4 rounded-xl space-y-2 border border-gray-100">
                 <div class="flex items-center justify-between">
@@ -658,11 +640,6 @@ body.dark-theme {
     </div>
 </div>
 <script>
-    let products = JSON.parse(localStorage.getItem('latyfa_db')) || [/* tes produits par défaut */];
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-let currentCategory = 'all';
-let isDarkMode = localStorage.getItem('darkMode') === 'true';
-let remiseCodePromo = 0;
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
@@ -694,11 +671,11 @@ let remiseCodePromo = 0;
     );
 
     if (produitsFiltrés.length === 0) {
-        grid.innerHTML = '
+        grid.innerHTML = `
             <div class="col-span-full text-center py-20">
                 <i class="fa-solid fa-box-open text-4xl text-gray-200 mb-4"></i>
                 <p class="text-gray-500 text-xs font-bold uppercase">Aucun résultat pour "${terme}"</p>
-            </div>';
+            </div>`;
     } else {
         // On utilise ta fonction render existante mais avec les produits filtrés
         // Note: Pour que cela fonctionne, on va légèrement modifier la logique de render
@@ -767,13 +744,16 @@ function refreshCategoriesUI() {
     }
     }
 
-    let products = JSON.parse(localStorage.getItem('latyfa_db')) || [
-    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa." },
-    { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], enStock: true, stockBas: true, description: "Finition Or 24K." }
-];
+    let products = [
+        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
+        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
+        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
+        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
+    ];
 
-let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
-let remiseCodePromo = 0;
+    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+    let currentProduct = null;
     let remiseCodePromo = 0; // Réduction en % via la roue
     const MAX_TENTATIVES = 1; // 1 essai par jour
 const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
@@ -928,7 +908,7 @@ if(badge) {
     const existingBanner = document.getElementById('trust-banner-container');
     if(existingBanner) existingBanner.remove();
 
-    document.getElementById('detail-desc').insertAdjacentHTML('afterend', 
+    document.getElementById('detail-desc').insertAdjacentHTML('afterend', `
         <div id="trust-banner-container" class="mt-6">
             <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-4 hover:scale-[1.02] transition-transform">
                 Ajouter au panier
@@ -943,7 +923,7 @@ if(badge) {
                 </div>
             </div>
         </div>
-    );
+    `);
     gererOptionsProduit(p);
 }
 function gererOptionsProduit(p) {
@@ -1146,7 +1126,7 @@ document.getElementById('spin').onclick = function() {
         }
         
         form.style.display = "block";
-        itemsDiv.innerHTML = cart.map(item =>
+        itemsDiv.innerHTML = cart.map(item => `
             <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
                 <div class="flex-1">${item.label}</div>
                 <div class="flex gap-2 items-center">
@@ -1181,7 +1161,7 @@ document.getElementById('spin').onclick = function() {
             msg.className = "text-[9px] font-bold text-red-600";
             remiseCodePromo = 0;
         } 
-    } else if (savedPromo && inputCode === savedPromo.code) {
+        else if (savedPromo && inputCode === savedPromo.code) {
             if (Date.now() > savedPromo.expires) {
                 msg.innerText = "⏰ Code expiré (24h).";
                 msg.className = "text-[9px] font-bold text-red-600";
@@ -1205,29 +1185,51 @@ document.getElementById('spin').onclick = function() {
     const containerResume = document.getElementById('resume-final');
     const alertePromoValentin = document.getElementById('promo-congrats');
     
+    // 1. Calcul du Sous-total des articles
     let totalArticles = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    let fraisLivraison = (zoneKey && tarifsLivraison[zoneKey]) ? tarifsLivraison[zoneKey].prix : 0;
+    
+    // 2. Frais de livraison
+    let fraisLivraison = 0;
+    if (zoneKey && tarifsLivraison[zoneKey]) {
+        fraisLivraison = tarifsLivraison[zoneKey].prix;
+    }
+
+    // 3. Option Emballage Cadeau
     let fraisCadeau = isCadeau ? 1000 : 0;
 
-    // Calcul Remise Valentin
+    // 4. Remise St Valentin (-20% si achat > 20.000 F entre le 14 et 28 fév)
     let remiseValentin = 0;
     const maintenant = new Date();
-    if (maintenant >= new Date(2026, 1, 14) && maintenant <= new Date(2026, 1, 28) && totalArticles >= 20000) {
+    const debutPromo = new Date(2026, 1, 14); // 14 Février
+    const finPromo = new Date(2026, 1, 28);   // 28 Février
+
+    if (maintenant >= debutPromo && maintenant <= finPromo && totalArticles >= 20000) {
         remiseValentin = totalArticles * 0.20;
-        alertePromoValentin?.classList.remove('hidden');
+        alertePromoValentin.classList.remove('hidden');
     } else {
-        alertePromoValentin?.classList.add('hidden');
+        alertePromoValentin.classList.add('hidden');
     }
 
-    let totalFinal = totalArticles + fraisLivraison + fraisCadeau - remiseValentin - (totalArticles * (remiseCodePromo / 100));
-    
-    if(containerResume) {
-        containerResume.innerHTML = 
-            <div class="flex justify-between"><span>Articles:</span> <span>${totalArticles.toLocaleString()} F</span></div>
-            <div class="flex justify-between"><span>Livraison:</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>
-            ${remiseValentin > 0 ? `<div class="text-green-600 flex justify-between"><span>Remise Valentin:</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
-    }
+    // 5. Remise Code Promo de la Roue (remiseCodePromo est une variable globale)
+    let remiseRoue = (remiseCodePromo > 0) ? (totalArticles * (remiseCodePromo / 100)) : 0;
+
+    // 6. CALCUL TOTAL FINAL
+    let totalFinal = totalArticles + fraisLivraison + fraisCadeau - remiseValentin - remiseRoue;
+    if (totalFinal < 0) totalFinal = 0; // Sécurité
+
+    // 7. AFFICHAGE DANS LE RÉSUMÉ
+    containerResume.innerHTML = `
+        <div class="flex justify-between"><span>Articles:</span> <span>${totalArticles.toLocaleString()} F</span></div>
+        ${fraisLivraison > 0 ? `<div class="flex justify-between"><span>Livraison (${tarifsLivraison[zoneKey].nom}):</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>` : ''}
+        ${fraisCadeau > 0 ? `<div class="flex justify-between text-pink-500 italic"><span>Option Cadeau Luxe:</span> <span>+1.000 F</span></div>` : ''}
+        ${remiseValentin > 0 ? `<div class="flex justify-between text-green-600 font-bold"><span>Remise Valentin (-20%):</span> <span>-${Math.round(remiseValentin).toLocaleString()} F</span></div>` : ''}
+        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600 font-bold"><span>Remise Code Lucky (-${remiseCodePromo}%):</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
+    `;
+
+    // Mise à jour du gros chiffre rouge
     document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    
+    // On vérifie si le bouton de commande doit être activé
     toggleBouton();
 }
     function toggleBouton() {
@@ -1255,47 +1257,57 @@ document.getElementById('spin').onclick = function() {
     const zone = document.getElementById('zone-livraison').value;
     const total = document.getElementById('total-display').innerText;
     const isCadeau = document.getElementById('check-cadeau').checked;
-    const modePay = document.getElementById('mode-pay').value || "Non spécifié";
+    const codeUtilise = document.getElementById('input-promo').value || "Aucun";
 
     if(!nom || !tel || !quartier || !zone) {
         alert("⚠️ Merci de remplir tous les champs obligatoires.");
         return;
     }
 
+    // 1. Préparation de la liste des articles pour WhatsApp et l'historique
+    let listArticles = cart.map(i => `${i.label} (x${i.qty})`).join(', ');
+    
+    // 2. Création de l'objet commande pour l'historique
+    const nouvelleCommande = {
+        date: new Date().toLocaleString('fr-FR'),
+        client: nom.toUpperCase(),
+        tel: tel,
+        lieu: `${quartier} (${tarifsLivraison[zone].nom})`,
+        articles: listArticles,
+        total: total,
+        promo: codeUtilise,
+        cadeau: isCadeau ? "OUI" : "NON"
+    };
+
+    // 3. Sauvegarde dans l'historique (localStorage)
+    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+     mettreAJourStats();
+    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
+    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
+
+    // 4. Construction du message WhatsApp
     let listWA = cart.map(i => `• ${i.label} (x${i.qty})`).join('\n');
     let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP*\n\n`;
     msg += `👤 *CLIENT:* ${nom}\n`;
     msg += `📞 *TEL:* ${tel}\n`;
     msg += `📍 *QUARTIER:* ${quartier}\n`;
-    msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n`;
-    msg += `💳 *PAIEMENT:* ${modePay}\n\n`;
+    msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
     msg += `📝 *ARTICLES:*\n${listWA}\n`;
     if(isCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
     msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
 
+    // 5. Envoi
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
 }
-
-// Initialisation au chargement
-window.onload = function() {
-    render();
-    drawWheel();
-    refreshCategoriesUI();
-    updateVisitorCount();
-    
-    // Cacher le loader
-    setTimeout(() => {
-        document.getElementById('loader').classList.add('loader-hidden');
-    }, 1000);
-};
-
+    // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
     function suivreColis() { alert("si votre commande à été validé sur WhatsApp alors vous serez contacté !"); }
     function updateVisitorCount() {
         let count = localStorage.getItem('latyfa_visitors') || 1250;
         count = parseInt(count) + 1;
         localStorage.setItem('latyfa_visitors', count);
-        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR')
+        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
+    }
 
     setInterval(() => {
         const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
@@ -1421,7 +1433,7 @@ let idEnCoursDeModification = null;
 function refreshAdminList() {
     const list = document.getElementById('admin-list');
     if (!list) return;
-    list.innerHTML = products.map(p =>
+    list.innerHTML = products.map(p => `
         <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 mb-2 shadow-sm">
             <div class="flex items-center gap-3">
                 <img src="${p.images[0]}" class="w-10 h-10 object-cover rounded-lg ${p.enStock === false ? 'grayscale' : ''}">
@@ -1430,8 +1442,25 @@ function refreshAdminList() {
                     <span class="text-[10px] font-bold text-[#c5a059]">${p.price.toLocaleString()} F</span>
                 </div>
             </div>
+            <div class="flex gap-1">
+                <button onclick="modifPrixRapide(${p.id})" class="bg-orange-50 text-orange-500 p-2 rounded-lg hover:bg-orange-500 hover:text-white transition-all">
+                    <i class="fa-solid fa-tags text-[10px]"></i>
+                </button>
+                
+                <button onclick="preparerModification(${p.id})" class="bg-blue-50 text-blue-500 p-2 rounded-lg hover:bg-blue-500 hover:text-white transition-all">
+                    <i class="fa-solid fa-pen-to-square text-[10px]"></i>
+                </button>
+                
+                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded-lg ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
+                    ${p.enStock === false ? 'OFF' : 'ON'}
+                </button>
+                
+                <button onclick="supprimerProduit(${p.id})" class="text-gray-300 hover:text-red-500 p-2">
+                    <i class="fa-solid fa-trash-can text-[10px]"></i>
+                </button>
             </div>
-    ).join('');
+        </div>
+    `).join('');
 }
 
     function preparerModification(id) {
@@ -1470,14 +1499,14 @@ function chargerHistorique() {
     const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
 
     if (historique.length === 0) {
-        zone.innerHTML =
+        zone.innerHTML = `
             <div class="text-center py-10 opacity-50">
                 <i class="fa-solid fa-box-archive text-3xl mb-2"></i>
                 <p class="text-[10px] uppercase font-bold">Aucune vente enregistrée</p>
             </div>`;
         return;
     }
-    zone.innerHTML = historique.map(cmd => 
+    zone.innerHTML = historique.map(cmd => `
         <div class="bg-white p-4 rounded-xl border-l-4 border-[#c5a059] shadow-sm text-[10px] mb-3">
             <div class="flex justify-between items-start mb-2">
                 <span class="font-black text-gray-400">📅 ${cmd.date}</span>
@@ -1491,14 +1520,14 @@ function chargerHistorique() {
                 <span class="${cmd.cadeau === 'OUI' ? 'text-pink-500' : 'text-gray-300'}">🎁 Cadeau: ${cmd.cadeau}</span>
             </div>
         </div>
-    ).join('');
+    `).join('');
 }
     function effacerToutLHistorique() {
     // Premier avertissement
-    if (confirm("🚨 ATTENTION : Vous allez supprimer TOUTES les ventes de l'historique.")) 
+    if (confirm("🚨 ATTENTION : Vous allez supprimer TOUTES les ventes de l'historique.")) {
         
         // Deuxième vérification de sécurité (le rappel de sauvegarde)
-        if (confirm("❓ Avez-vous bien téléchargé votre sauvegarde Excel (Fichier CSV) avant de continuer ?")) 
+        if (confirm("❓ Avez-vous bien téléchargé votre sauvegarde Excel (Fichier CSV) avant de continuer ?")) {
             
             // Si l'utilisateur confirme les deux, on efface
             localStorage.removeItem('latyfa_historique');
@@ -1507,11 +1536,12 @@ function chargerHistorique() {
             mettreAJourStats();
             
             alert("✅ Historique réinitialisé avec succès.");
-    } else 
+        } else {
             // Si l'utilisateur dit "Non" à la sauvegarde, on lui propose de le faire
             alert("Sauvegarde annulée. Pensez à cliquer sur 'Sauvegarder (Excel)' avant d'effacer.");
         }
-    
+    }
+}
     function changerMedia(type, source, element) {
     const container = document.getElementById('main-detail-img').parentElement;
     
@@ -1521,13 +1551,15 @@ function chargerHistorique() {
 
     // 2. Changement du média avec animation
     if(type === 'video') {
-        container.innerHTML = 
+        container.innerHTML = `
             <video id="main-detail-video" src="${source}" controls autoplay loop muted
             class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn"></video>
-                } else 
-        container.innerHTML = 
+        `;
+    } else {
+        container.innerHTML = `
             <img id="main-detail-img" src="${source}" 
             class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn">
+        `;
     }
 }
 function calculerTailleRec() {
@@ -1542,12 +1574,10 @@ function calculerTailleRec() {
 
     let recommendation = "";
     if (poids < 55) recommendation = "S";
-    }
-    } 
-    } else if (poids >= 55 && poids < 68) recommendation = "M";
-    } else if (poids >= 68 && poids < 82) recommendation = "L";
-    } else if (poids >= 82 && poids < 95) recommendation = "XL";
-   } else recommendation = "XXL";
+    else if (poids >= 55 && poids < 68) recommendation = "M";
+    else if (poids >= 68 && poids < 82) recommendation = "L";
+    else if (poids >= 82 && poids < 95) recommendation = "XL";
+    else recommendation = "XXL";
 
     resultZone.innerHTML = `✨ Taille conseillée : <span class="text-lg">${recommendation}</span>`;
     
@@ -1760,11 +1790,6 @@ refreshCategoriesUI(); // <--- C'est cette ligne qui lancera tes catégories au 
         localStorage.setItem('latyfa_theme', 'light');
     }
 }
-    // Force la suppression du loader même s'il y a une erreur ailleurs
-setTimeout(() => {
-    const loader = document.getElementById('loader');
-    if(loader) loader.style.display = 'none';
-}, 3000);
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
