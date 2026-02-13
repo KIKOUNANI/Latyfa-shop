@@ -1438,7 +1438,7 @@ let idEnCoursDeModification = null;
 function refreshAdminList() {
     const list = document.getElementById('admin-list');
     if (!list) return;
-    list.innerHTML = products.map(p => `
+    list.innerHTML = products.map(p => 
         <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 mb-2 shadow-sm">
             <div class="flex items-center gap-3">
                 <img src="${p.images[0]}" class="w-10 h-10 object-cover rounded-lg ${p.enStock === false ? 'grayscale' : ''}">
@@ -1465,7 +1465,7 @@ function refreshAdminList() {
                 </button>
             </div>
         </div>
-    `).join('');
+    ).join('');
 }
 
     function preparerModification(id) {
@@ -1511,7 +1511,7 @@ function chargerHistorique() {
             </div>`;
         return;
     }
-    zone.innerHTML = historique.map(cmd => `
+    zone.innerHTML = historique.map(cmd => 
         <div class="bg-white p-4 rounded-xl border-l-4 border-[#c5a059] shadow-sm text-[10px] mb-3">
             <div class="flex justify-between items-start mb-2">
                 <span class="font-black text-gray-400">📅 ${cmd.date}</span>
@@ -1525,14 +1525,14 @@ function chargerHistorique() {
                 <span class="${cmd.cadeau === 'OUI' ? 'text-pink-500' : 'text-gray-300'}">🎁 Cadeau: ${cmd.cadeau}</span>
             </div>
         </div>
-    `).join('');
+    ).join('');
 }
     function effacerToutLHistorique() {
     // Premier avertissement
-    if (confirm("🚨 ATTENTION : Vous allez supprimer TOUTES les ventes de l'historique.")) {
+    if (confirm("🚨 ATTENTION : Vous allez supprimer TOUTES les ventes de l'historique.")) 
         
         // Deuxième vérification de sécurité (le rappel de sauvegarde)
-        if (confirm("❓ Avez-vous bien téléchargé votre sauvegarde Excel (Fichier CSV) avant de continuer ?")) {
+        if (confirm("❓ Avez-vous bien téléchargé votre sauvegarde Excel (Fichier CSV) avant de continuer ?")) 
             
             // Si l'utilisateur confirme les deux, on efface
             localStorage.removeItem('latyfa_historique');
@@ -1541,12 +1541,11 @@ function chargerHistorique() {
             mettreAJourStats();
             
             alert("✅ Historique réinitialisé avec succès.");
-        } else {
+          else 
             // Si l'utilisateur dit "Non" à la sauvegarde, on lui propose de le faire
             alert("Sauvegarde annulée. Pensez à cliquer sur 'Sauvegarder (Excel)' avant d'effacer.");
         }
-    }
-}
+    
     function changerMedia(type, source, element) {
     const container = document.getElementById('main-detail-img').parentElement;
     
@@ -1556,12 +1555,12 @@ function chargerHistorique() {
 
     // 2. Changement du média avec animation
     if(type === 'video') {
-        container.innerHTML = `
+        container.innerHTML = 
             <video id="main-detail-video" src="${source}" controls autoplay loop muted
             class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn"></video>
         `;
-    } else {
-        container.innerHTML = `
+    else 
+        container.innerHTML = 
             <img id="main-detail-img" src="${source}" 
             class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn">
         `;
@@ -1647,7 +1646,7 @@ function selectPay(mode) {
         btnCash.classList.replace('border-[#c5a059]', 'border-gray-100');
         btnCash.classList.remove('bg-orange-50');
         btnCash.style.opacity = "0.5";
-    } else {
+    else {
         inputHidden.value = "CASH / RETRAIT EN BOUTIQUE";
         // Style Actif
         btnCash.classList.replace('border-gray-100', 'border-[#c5a059]');
@@ -1666,7 +1665,7 @@ function selectPay(mode) {
     if (itemExistant) {
         // 2. Si oui, on augmente juste la quantité
         itemExistant.qty += 1;
-    } else {
+    else {
         // 3. Si non, on l'ajoute comme nouveau
         cart.push({
             id: id,
@@ -1729,7 +1728,7 @@ function notifierAjout(nom) {
     if (nouveauCode && nouveauCode.trim() !== "") {
         localStorage.setItem('latyfa_admin_code', nouveauCode);
         alert("✅ Nouveau code enregistré avec succès !");
-    } else {
+     else {
         alert("⚠️ Le code ne peut pas être vide.");
     }
     }
@@ -1788,7 +1787,7 @@ refreshCategoriesUI(); // <--- C'est cette ligne qui lancera tes catégories au 
         btn.style.backgroundColor = "#fbbf24"; // Jaune soleil
         btn.style.color = "#000";
         localStorage.setItem('latyfa_theme', 'dark');
-    } else {
+    else {
         btn.innerHTML = '<i class="fa-solid fa-moon mode-icon-spin"></i>';
         btn.style.backgroundColor = "#f3f4f6"; // Gris clair
         btn.style.color = "#4b5563";
