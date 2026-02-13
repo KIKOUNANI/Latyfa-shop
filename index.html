@@ -178,37 +178,65 @@ body.dark-theme {
 
 .dark-theme .text-gray-800, 
 .dark-theme .text-gray-600,
-.dark-theme h1, .dark-theme h2, .dark-theme h3 {
-    color: #ffffff !important;
+<style>
+/* 1. VARIABLES ET ANIMATIONS */
+:root {
+    --latyfa-gold: #c5a059;
+    --latyfa-dark: #1a1a1a;
+    --latyfa-accent: #ff6600;
 }
 
-.dark-theme .bg-gray-50, 
-.dark-theme .bg-gray-100 {
-    background-color: #2a2a2a !important;
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+@keyframes pulse-gold { 
+    0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); } 
+    70% { box-shadow: 0 0 0 10px rgba(197, 160, 89, 0); } 
+    100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); } 
+}
+@keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* 2. BASE ET MODE SOMBRE */
+body {
+    background-color: #fcfcfc;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    scroll-behavior: smooth;
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-.dark-theme .category-link {
-    color: #bbb;
-    border-bottom-color: #333;
+body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
+
+.dark-theme header, .dark-theme aside, .dark-theme .product-card, .dark-theme .modal > div {
+    background-color: #1e1e1e !important;
+    border-color: #333 !important;
 }
 
-.dark-theme .product-card {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+/* 3. COMPOSANTS */
+.logo-font { font-family: 'Playfair Display', serif; color: var(--latyfa-gold) !important; }
+
+.product-card {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: 0.3s ease;
 }
-            @keyframes spin-slow {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.product-card:hover { border-color: var(--latyfa-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+.ali-gradient { 
+    background: linear-gradient(90deg, var(--latyfa-gold) 0%, #e2c286 100%) !important; 
+    animation: pulse-gold 2s infinite;
 }
 
-.mode-icon-spin {
-    animation: spin-slow 0.5s ease-in-out;
-}
+.modal { display: none; position: fixed; z-index: 1000; inset: 0; background: white; overflow-y: auto; padding: 20px; }
+.modal.active { display: block; }
+
+.mode-icon-spin { animation: spin-slow 0.5s ease-in-out; }
+
+/* Utilitaires */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.loader-hidden { opacity: 0; pointer-events: none; }
 </style>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
-<audio id="victory-sound" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
-</head>
-<body>   
+   
     <audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
     <audio id="cart-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
     <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
@@ -1594,6 +1622,151 @@ function calculerTailleRec() {
     window.addEventListener('DOMContentLoaded', () => {
     // Met à jour le compteur visuel (le petit rond rouge)
     const count = cart.reduce((a, b) => a + b.qty, 0);
+        // --- 5. LOGIQUE DE LA ROUE DE LA FORTUNE ---
+const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
+const canvas = document.getElementById('canvas');
+const ctx = canvas ? canvas.getContext('2d') : null;
+
+function drawWheel() {
+    if (!ctx) return;
+    const arc = 2 * Math.PI / prizes.length;
+    ctx.clearRect(0, 0, 300, 300);
+    for (let i = 0; i < prizes.length; i++) {
+        ctx.beginPath();
+        ctx.fillStyle = i % 2 === 0 ? "#c5a059" : "#1a1a1a";
+        ctx.moveTo(150, 150);
+        ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
+        ctx.fill();
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.translate(150, 150);
+        ctx.rotate(i * arc + arc / 2);
+        ctx.font = "bold 12px Montserrat";
+        ctx.textAlign = "right";
+        ctx.fillText(prizes[i], 130, 5);
+        ctx.restore();
+    }
+}
+
+function lancerRoue() {
+    const btn = document.getElementById('spin');
+    const wheel = document.getElementById('canvas');
+    if (!btn || !wheel) return;
+
+    btn.disabled = true;
+    const randomRotation = Math.floor(Math.random() * 360) + 3600; // 10 tours + aléatoire
+    wheel.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
+    wheel.style.transform = `rotate(${randomRotation}deg)`;
+
+    setTimeout(() => {
+        btn.disabled = false;
+        alert("🎉 Félicitations ! Vérifiez votre cadeau lors de la commande.");
+        document.querySelector('.wheel-mask').classList.remove('active');
+    }, 4500);
+}
+
+// Initialiser le dessin de la roue
+setTimeout(drawWheel, 100);
+
+// Lier le bouton spin s'il existe
+document.addEventListener('click', (e) => {
+    if(e.target && e.target.id === 'spin') lancerRoue();
+});
+       // --- 6. GESTION DE L'ESPACE ADMIN ---
+let idEnCoursDeModification = null;
+
+function toggleAdmin() {
+    const modal = document.getElementById('adminModal');
+    if (modal) {
+        modal.classList.toggle('active');
+        refreshAdminList();
+    }
+}
+
+function refreshAdminList() {
+    const list = document.getElementById('admin-list');
+    if (!list) return;
+    
+    list.innerHTML = products.map(p => `
+        <div class="flex justify-between items-center bg-white p-3 rounded-lg border mb-2 shadow-sm">
+            <div class="flex items-center gap-3">
+                <img src="${p.images[0]}" class="w-10 h-10 object-cover rounded shadow-sm">
+                <div>
+                    <p class="font-bold text-[11px] uppercase">${p.name}</p>
+                    <p class="text-[#c5a059] font-black text-[10px]">${p.price.toLocaleString()} F</p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="preparerModification(${p.id})" class="text-blue-500 bg-blue-50 p-2 rounded"><i class="fa-solid fa-pen"></i></button>
+                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}">
+                    ${p.enStock ? 'STOCK OK' : 'OUT'}
+                </button>
+                <button onclick="supprimerProduit(${p.id})" class="text-red-500 bg-red-50 p-2 rounded"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function ajouterProduitAdmin() {
+    const name = document.getElementById('adm-name').value;
+    const price = document.getElementById('adm-price').value;
+    const imgInput = document.getElementById('adm-img').value;
+
+    if(!name || !price || !imgInput) return alert("Veuillez remplir les champs obligatoires !");
+
+    const imagesArray = imgInput.split(',').map(link => link.trim());
+
+    const donneesProduit = {
+        name: name,
+        price: parseInt(price),
+        cat: document.getElementById('adm-cat').value,
+        images: imagesArray,
+        description: document.getElementById('adm-desc').value || "Produit exclusif Latyfa Business",
+        enStock: true
+    };
+
+    if (idEnCoursDeModification) {
+        const index = products.findIndex(p => p.id === idEnCoursDeModification);
+        products[index] = { ...products[index], ...donneesProduit };
+        idEnCoursDeModification = null;
+        alert("Produit mis à jour avec succès !");
+    } else {
+        const newP = { id: Date.now(), ...donneesProduit };
+        products.unshift(newP); // Ajoute en haut de liste
+        alert("Nouveau produit en ligne !");
+    }
+
+    sauvegarderEtRelancer();
+    viderFormulaire();
+}
+
+function supprimerProduit(id) {
+    if(confirm("Supprimer définitivement cet article ?")) {
+        products = products.filter(p => p.id !== id);
+        sauvegarderEtRelancer();
+    }
+}
+
+function toggleStock(id) {
+    const p = products.find(x => x.id === id);
+    if(p) {
+        p.enStock = !p.enStock;
+        sauvegarderEtRelancer();
+    }
+}
+
+function sauvegarderEtRelancer() {
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    render();
+    refreshAdminList();
+}
+
+function viderFormulaire() {
+    ['adm-name', 'adm-price', 'adm-img', 'adm-desc'].forEach(id => {
+        document.getElementById(id).value = "";
+    });
+    }
+    
     document.getElementById('cart-count').innerText = count;
 });
     // --- SIMULATEUR DE GAINS (PREUVE SOCIALE) ---
