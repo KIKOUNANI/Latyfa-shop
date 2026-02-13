@@ -655,6 +655,7 @@ body.dark-theme {
     </div>
 </div>
 <script>
+    let products = JSON.parse(localStorage.getItem('latyfa_db'))
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
@@ -1176,7 +1177,7 @@ document.getElementById('spin').onclick = function() {
             msg.className = "text-[9px] font-bold text-red-600";
             remiseCodePromo = 0;
         } 
-        else if (savedPromo && inputCode === savedPromo.code) {
+    } else if (savedPromo && inputCode === savedPromo.code) {
             if (Date.now() > savedPromo.expires) {
                 msg.innerText = "⏰ Code expiré (24h).";
                 msg.className = "text-[9px] font-bold text-red-600";
@@ -1541,7 +1542,7 @@ function chargerHistorique() {
             mettreAJourStats();
             
             alert("✅ Historique réinitialisé avec succès.");
-          else 
+    } else 
             // Si l'utilisateur dit "Non" à la sauvegarde, on lui propose de le faire
             alert("Sauvegarde annulée. Pensez à cliquer sur 'Sauvegarder (Excel)' avant d'effacer.");
         }
@@ -1578,10 +1579,12 @@ function calculerTailleRec() {
 
     let recommendation = "";
     if (poids < 55) recommendation = "S";
-    else if (poids >= 55 && poids < 68) recommendation = "M";
-    else if (poids >= 68 && poids < 82) recommendation = "L";
-    else if (poids >= 82 && poids < 95) recommendation = "XL";
-    else recommendation = "XXL";
+    }
+    } 
+    } else if (poids >= 55 && poids < 68) recommendation = "M";
+    } else if (poids >= 68 && poids < 82) recommendation = "L";
+    } else if (poids >= 82 && poids < 95) recommendation = "XL";
+   } else recommendation = "XXL";
 
     resultZone.innerHTML = `✨ Taille conseillée : <span class="text-lg">${recommendation}</span>`;
     
@@ -1646,7 +1649,7 @@ function selectPay(mode) {
         btnCash.classList.replace('border-[#c5a059]', 'border-gray-100');
         btnCash.classList.remove('bg-orange-50');
         btnCash.style.opacity = "0.5";
-    else {
+    } else {
         inputHidden.value = "CASH / RETRAIT EN BOUTIQUE";
         // Style Actif
         btnCash.classList.replace('border-gray-100', 'border-[#c5a059]');
@@ -1665,7 +1668,7 @@ function selectPay(mode) {
     if (itemExistant) {
         // 2. Si oui, on augmente juste la quantité
         itemExistant.qty += 1;
-    else {
+    } else {
         // 3. Si non, on l'ajoute comme nouveau
         cart.push({
             id: id,
@@ -1728,7 +1731,7 @@ function notifierAjout(nom) {
     if (nouveauCode && nouveauCode.trim() !== "") {
         localStorage.setItem('latyfa_admin_code', nouveauCode);
         alert("✅ Nouveau code enregistré avec succès !");
-     else {
+    } else {
         alert("⚠️ Le code ne peut pas être vide.");
     }
     }
@@ -1787,13 +1790,18 @@ refreshCategoriesUI(); // <--- C'est cette ligne qui lancera tes catégories au 
         btn.style.backgroundColor = "#fbbf24"; // Jaune soleil
         btn.style.color = "#000";
         localStorage.setItem('latyfa_theme', 'dark');
-    else {
+    } else {
         btn.innerHTML = '<i class="fa-solid fa-moon mode-icon-spin"></i>';
         btn.style.backgroundColor = "#f3f4f6"; // Gris clair
         btn.style.color = "#4b5563";
         localStorage.setItem('latyfa_theme', 'light');
     }
 }
+    // Force la suppression du loader même s'il y a une erreur ailleurs
+setTimeout(() => {
+    const loader = document.getElementById('loader');
+    if(loader) loader.style.display = 'none';
+}, 3000);
 </script>
 <div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
