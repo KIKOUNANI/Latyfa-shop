@@ -954,63 +954,54 @@ function gererOptionsProduit(p) {
     }
 }
     function ajouterDepuisDetail() {
+    if (!currentProduct) return; // Sécurité si aucun produit n'est sélectionné
+
     const size = document.getElementById('select-size').value || "";
     const color = document.getElementById('select-color').value || "";
     const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
 
-    // Jouer le son
+    // Gestion du son
     const sound = document.getElementById('cart-sound');
     if(sound) {
         sound.currentTime = 0;
-        sound.play().catch(e => console.log("Interaction requise"));
+        sound.play().catch(e => console.log("Son bloqué par le navigateur"));
     }
 
+    // Mise à jour du tableau cart
     const index = cart.findIndex(x => x.label === label);
     if(index > -1) {
         cart[index].qty++;
     } else {
-        cart.push({ ...currentProduct, label: label, qty: 1 });
+        cart.push({ 
+            id: currentProduct.id, 
+            label: label, 
+            qty: 1, 
+            price: currentProduct.price,
+            images: currentProduct.images 
+        });
     }
 
-    // --- MISE À JOUR DU COMPTEUR (LA LIGNE CORRECTRICE) ---
+    // MISE À JOUR VISUELLE DU COMPTEUR
     const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
-    document.getElementById('cart-count').innerText = totalArticles;
-    document.getElementById('cart-count').style.display = totalArticles > 0 ? 'flex' : 'none';
+    const badge = document.getElementById('cart-count');
+    if(badge) {
+        badge.innerText = totalArticles;
+        badge.style.display = totalArticles > 0 ? 'flex' : 'none';
+    }
 
-    // Animation du panier
-    const cartIcon = document.getElementById('cart-count').parentElement;
-    cartIcon.classList.add('animate-cart');
-    setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
-
-    // Sauvegarde et fermeture
-    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-    document.getElementById('productDetailModal').classList.remove('active');
-
-    // Toast de confirmation
-    const toast = document.getElementById('toast');
-    toast.classList.remove('opacity-0');
-    setTimeout(() => toast.classList.add('opacity-0'), 2000);
-}
-
-    
-    // Mise à jour du compteur visuel
-    const count = cart.reduce((a, b) => a + b.qty, 0);
-    document.getElementById('cart-count').innerText = count;
-    
-    // Animation du panier
-    const cartIcon = document.getElementById('cart-count').parentElement;
-    cartIcon.classList.add('animate-cart');
-    setTimeout(() => cartIcon.classList.remove('animate-cart'), 500);
-
-    // Fermer la modale et sauvegarder
-    document.getElementById('productDetailModal').classList.remove('active');
+    // Sauvegarde locale
     localStorage.setItem('latyfa_cart', JSON.stringify(cart));
 
-    // Toast de confirmation
+    // Fermeture de la modale et animation
+    document.getElementById('productDetailModal').classList.remove('active');
+    
     const toast = document.getElementById('toast');
-    toast.classList.remove('opacity-0');
-    setTimeout(() => toast.classList.add('opacity-0'), 2000);
+    if(toast) {
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2000);
+    }
 }
+
 
 function drawWheel() {
     const arc = 2 * Math.PI / prizes.length;
