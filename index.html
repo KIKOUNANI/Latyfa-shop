@@ -551,6 +551,20 @@ body.dark-theme {
                 <option value="interieur">Intérieur pays (3.000 F)</option>
                 <option value="bouake">Retrait Boutique (Gratuit)</option>
             </select>
+            <div class="mt-4">
+    <label class="text-[9px] font-black uppercase text-gray-400 mb-2 block">Mode de paiement souhaité :</label>
+    <div class="grid grid-cols-2 gap-2">
+        <div id="pay-mobile" onclick="selectPay('TRANSFERT')" class="border border-gray-100 p-3 rounded-xl cursor-pointer text-center transition-all hover:border-[#c5a059]">
+            <i class="fa-solid fa-mobile-screen-button text-[#c5a059] mb-1"></i>
+            <p class="text-[9px] font-bold uppercase">Mobile Money</p>
+        </div>
+        <div id="pay-cash" onclick="selectPay('CASH')" class="border border-gray-100 p-3 rounded-xl cursor-pointer text-center transition-all hover:border-[#c5a059]">
+            <i class="fa-solid fa-hand-holding-dollar text-[#c5a059] mb-1"></i>
+            <p class="text-[9px] font-bold uppercase">Espèces / Retrait</p>
+        </div>
+    </div>
+    <input type="hidden" id="mode-pay" value="">
+            </div>
 
             <div class="bg-gray-50 p-4 rounded-xl space-y-2 border border-gray-100">
                 <div class="flex items-center justify-between">
@@ -1278,7 +1292,7 @@ document.getElementById('spin').onclick = function() {
         promo: codeUtilise,
         cadeau: isCadeau ? "OUI" : "NON"
     };
-
+const modePay = document.getElementById('mode-pay').value || "Non spécifié";
     // 3. Sauvegarde dans l'historique (localStorage)
     let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
      mettreAJourStats();
@@ -1292,6 +1306,8 @@ document.getElementById('spin').onclick = function() {
     msg += `📞 *TEL:* ${tel}\n`;
     msg += `📍 *QUARTIER:* ${quartier}\n`;
     msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
+        {tarifsLivraison[zone].nom}\n`;
+    msg += `💳 *PAIEMENT:* ${modePay}\n\n`;
     msg += `📝 *ARTICLES:*\n${listWA}\n`;
     if(isCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
     msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
