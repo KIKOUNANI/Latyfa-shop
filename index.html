@@ -1312,10 +1312,7 @@ const modePay = document.getElementById('mode-pay').value || "Non spécifié";
     msg += `📝 *ARTICLES:*\n${listWA}\n`;
     if(isCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
     msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
-
-    // 5. Envoi
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-}
     // --- DIVERS ---
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
     function suivreColis() { alert("si votre commande à été validé sur WhatsApp alors vous serez contacté !"); }
@@ -1323,8 +1320,7 @@ const modePay = document.getElementById('mode-pay').value || "Non spécifié";
         let count = localStorage.getItem('latyfa_visitors') || 1250;
         count = parseInt(count) + 1;
         localStorage.setItem('latyfa_visitors', count);
-        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
-    }
+        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR')
 
     setInterval(() => {
         const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
