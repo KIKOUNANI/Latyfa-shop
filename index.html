@@ -50,9 +50,12 @@ body {
     font-family: 'Montserrat', sans-serif; 
     margin: 0; 
     scroll-behavior: smooth; 
-    /* Transition douce pour tous les changements de couleur */
-body {
     transition: background-color 0.5s ease, color 0.5s ease !important;
+}
+
+/* On applique la transition aussi aux cartes et au header */
+header, aside, .product-card, .modal > div, button, div {
+    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
 }
 
 /* On applique la transition aussi aux cartes et au header */
@@ -655,11 +658,9 @@ body.dark-theme {
     </div>
 </div>
 <script>
-    let products = JSON.parse(localStorage.getItem('latyfa_db')) || [
-    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa." },
-    // ... remets tes autres produits par défaut ici
-];
-    let products = JSON.parse(localStorage.getItem('latyfa_db'))
+    let products = JSON.parse(localStorage.getItem('latyfa_db')) || [/* tes produits par défaut */];
+let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+let remiseCodePromo = 0;
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
@@ -691,11 +692,11 @@ body.dark-theme {
     );
 
     if (produitsFiltrés.length === 0) {
-        grid.innerHTML = `
+        grid.innerHTML = '
             <div class="col-span-full text-center py-20">
                 <i class="fa-solid fa-box-open text-4xl text-gray-200 mb-4"></i>
                 <p class="text-gray-500 text-xs font-bold uppercase">Aucun résultat pour "${terme}"</p>
-            </div>`;
+            </div>';
     } else {
         // On utilise ta fonction render existante mais avec les produits filtrés
         // Note: Pour que cela fonctionne, on va légèrement modifier la logique de render
@@ -925,7 +926,7 @@ if(badge) {
     const existingBanner = document.getElementById('trust-banner-container');
     if(existingBanner) existingBanner.remove();
 
-    document.getElementById('detail-desc').insertAdjacentHTML('afterend', `
+    document.getElementById('detail-desc').insertAdjacentHTML('afterend', 
         <div id="trust-banner-container" class="mt-6">
             <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-4 hover:scale-[1.02] transition-transform">
                 Ajouter au panier
@@ -940,7 +941,7 @@ if(badge) {
                 </div>
             </div>
         </div>
-    `);
+    );
     gererOptionsProduit(p);
 }
 function gererOptionsProduit(p) {
@@ -1143,7 +1144,7 @@ document.getElementById('spin').onclick = function() {
         }
         
         form.style.display = "block";
-        itemsDiv.innerHTML = cart.map(item => `
+        itemsDiv.innerHTML = cart.map(item =>
             <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
                 <div class="flex-1">${item.label}</div>
                 <div class="flex gap-2 items-center">
@@ -1220,11 +1221,10 @@ document.getElementById('spin').onclick = function() {
     let totalFinal = totalArticles + fraisLivraison + fraisCadeau - remiseValentin - (totalArticles * (remiseCodePromo / 100));
     
     if(containerResume) {
-        containerResume.innerHTML = `
+        containerResume.innerHTML = 
             <div class="flex justify-between"><span>Articles:</span> <span>${totalArticles.toLocaleString()} F</span></div>
             <div class="flex justify-between"><span>Livraison:</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>
             ${remiseValentin > 0 ? `<div class="text-green-600 flex justify-between"><span>Remise Valentin:</span> <span>-${remiseValentin.toLocaleString()} F</span></div>` : ''}
-        `;
     }
     document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
     toggleBouton();
@@ -1420,7 +1420,7 @@ let idEnCoursDeModification = null;
 function refreshAdminList() {
     const list = document.getElementById('admin-list');
     if (!list) return;
-    list.innerHTML = products.map(p => `
+    list.innerHTML = products.map(p =>
         <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 mb-2 shadow-sm">
             <div class="flex items-center gap-3">
                 <img src="${p.images[0]}" class="w-10 h-10 object-cover rounded-lg ${p.enStock === false ? 'grayscale' : ''}">
@@ -1430,7 +1430,7 @@ function refreshAdminList() {
                 </div>
             </div>
             </div>
-    `).join('');
+    ).join('');
 }
 
     function preparerModification(id) {
@@ -1469,7 +1469,7 @@ function chargerHistorique() {
     const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
 
     if (historique.length === 0) {
-        zone.innerHTML = `
+        zone.innerHTML =
             <div class="text-center py-10 opacity-50">
                 <i class="fa-solid fa-box-archive text-3xl mb-2"></i>
                 <p class="text-[10px] uppercase font-bold">Aucune vente enregistrée</p>
@@ -1523,12 +1523,10 @@ function chargerHistorique() {
         container.innerHTML = 
             <video id="main-detail-video" src="${source}" controls autoplay loop muted
             class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn"></video>
-        `;
-    else 
+                } else 
         container.innerHTML = 
             <img id="main-detail-img" src="${source}" 
             class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn">
-        `;
     }
 }
 function calculerTailleRec() {
