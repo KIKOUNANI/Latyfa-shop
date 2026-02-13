@@ -659,7 +659,9 @@ body.dark-theme {
 </div>
 <script>
     let products = JSON.parse(localStorage.getItem('latyfa_db')) || [/* tes produits par défaut */];
-let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let currentCategory = 'all';
+let isDarkMode = localStorage.getItem('darkMode') === 'true';
 let remiseCodePromo = 0;
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
@@ -1197,7 +1199,6 @@ document.getElementById('spin').onclick = function() {
         majResume();
     }
 
-    function majResume() {
     function majResume() {
     const zoneKey = document.getElementById('zone-livraison').value;
     const isCadeau = document.getElementById('check-cadeau').checked;
