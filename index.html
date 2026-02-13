@@ -643,12 +643,20 @@ body.dark-theme {
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
-        cart = []; // On vide le tableau
-        ouvrirPanier(); // On rafraîchit l'affichage
-        // Optionnel : fermer le modal si le panier est vide
-        // document.getElementById('cartModal').classList.remove('active');
+        cart = []; // On vide la variable
+        localStorage.setItem('latyfa_cart', JSON.stringify(cart)); // On vide le stockage réel
+        
+        // Mise à jour immédiate de l'affichage
+        document.getElementById('cart-count').innerText = "0";
+        ouvrirPanier(); 
+        
+        // Optionnel : Fermer le panier après 1 seconde
+        setTimeout(() => {
+            document.getElementById('cartModal').classList.remove('active');
+        }, 500);
     }
-    }
+}
+
     function ouvrirGuide() {
     document.getElementById('guideModal').classList.add('active');
 }
