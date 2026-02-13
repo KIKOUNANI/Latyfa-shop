@@ -545,26 +545,27 @@ body.dark-theme {
             </div>
 
             <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm font-bold bg-blue-50 border-blue-200 outline-none">
-                <option value="">-- CHOISIR ZONE LIVRAISON --</option>
-                <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
-                <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-                <option value="interieur">Intérieur pays (3.000 F)</option>
-                <option value="bouake">Retrait Boutique (Gratuit)</option>
-            </select>
-            <div class="mt-4">
+    <option value="">-- CHOISIR ZONE LIVRAISON --</option>
+    <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
+    <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
+    <option value="interieur">Intérieur pays (3.000 F)</option>
+    <option value="bouake">Retrait Boutique (Gratuit)</option>
+</select>
+
+<div class="mt-4">
     <label class="text-[9px] font-black uppercase text-gray-400 mb-2 block">Mode de paiement souhaité :</label>
     <div class="grid grid-cols-2 gap-2">
-        <div id="pay-mobile" onclick="selectPay('TRANSFERT')" class="border border-gray-100 p-3 rounded-xl cursor-pointer text-center transition-all hover:border-[#c5a059]">
+        <div id="pay-mobile" onclick="selectPay('TRANSFERT')" class="border border-gray-100 p-3 rounded-xl cursor-pointer text-center transition-all">
             <i class="fa-solid fa-mobile-screen-button text-[#c5a059] mb-1"></i>
             <p class="text-[9px] font-bold uppercase">Mobile Money</p>
         </div>
-        <div id="pay-cash" onclick="selectPay('CASH')" class="border border-gray-100 p-3 rounded-xl cursor-pointer text-center transition-all hover:border-[#c5a059]">
+        <div id="pay-cash" onclick="selectPay('CASH')" class="border border-gray-100 p-3 rounded-xl cursor-pointer text-center transition-all">
             <i class="fa-solid fa-hand-holding-dollar text-[#c5a059] mb-1"></i>
             <p class="text-[9px] font-bold uppercase">Espèces / Retrait</p>
         </div>
     </div>
     <input type="hidden" id="mode-pay" value="">
-            </div>
+</div>
 
             <div class="bg-gray-50 p-4 rounded-xl space-y-2 border border-gray-100">
                 <div class="flex items-center justify-between">
