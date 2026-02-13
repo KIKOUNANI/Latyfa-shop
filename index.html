@@ -655,6 +655,10 @@ body.dark-theme {
     </div>
 </div>
 <script>
+    let products = JSON.parse(localStorage.getItem('latyfa_db')) || [
+    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa." },
+    // ... remets tes autres produits par défaut ici
+];
     let products = JSON.parse(localStorage.getItem('latyfa_db'))
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
@@ -1439,7 +1443,7 @@ let idEnCoursDeModification = null;
 function refreshAdminList() {
     const list = document.getElementById('admin-list');
     if (!list) return;
-    list.innerHTML = products.map(p => 
+    list.innerHTML = products.map(p => `
         <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 mb-2 shadow-sm">
             <div class="flex items-center gap-3">
                 <img src="${p.images[0]}" class="w-10 h-10 object-cover rounded-lg ${p.enStock === false ? 'grayscale' : ''}">
@@ -1448,25 +1452,8 @@ function refreshAdminList() {
                     <span class="text-[10px] font-bold text-[#c5a059]">${p.price.toLocaleString()} F</span>
                 </div>
             </div>
-            <div class="flex gap-1">
-                <button onclick="modifPrixRapide(${p.id})" class="bg-orange-50 text-orange-500 p-2 rounded-lg hover:bg-orange-500 hover:text-white transition-all">
-                    <i class="fa-solid fa-tags text-[10px]"></i>
-                </button>
-                
-                <button onclick="preparerModification(${p.id})" class="bg-blue-50 text-blue-500 p-2 rounded-lg hover:bg-blue-500 hover:text-white transition-all">
-                    <i class="fa-solid fa-pen-to-square text-[10px]"></i>
-                </button>
-                
-                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded-lg ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
-                    ${p.enStock === false ? 'OFF' : 'ON'}
-                </button>
-                
-                <button onclick="supprimerProduit(${p.id})" class="text-gray-300 hover:text-red-500 p-2">
-                    <i class="fa-solid fa-trash-can text-[10px]"></i>
-                </button>
             </div>
-        </div>
-    ).join('');
+    `).join('');
 }
 
     function preparerModification(id) {
