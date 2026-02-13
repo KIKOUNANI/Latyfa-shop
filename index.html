@@ -1272,48 +1272,40 @@ document.getElementById('spin').onclick = function() {
     const zone = document.getElementById('zone-livraison').value;
     const total = document.getElementById('total-display').innerText;
     const isCadeau = document.getElementById('check-cadeau').checked;
-    const codeUtilise = document.getElementById('input-promo').value || "Aucun";
+    const modePay = document.getElementById('mode-pay').value || "Non spécifié";
 
     if(!nom || !tel || !quartier || !zone) {
         alert("⚠️ Merci de remplir tous les champs obligatoires.");
         return;
     }
 
-    // 1. Préparation de la liste des articles pour WhatsApp et l'historique
-    let listArticles = cart.map(i => `${i.label} (x${i.qty})`).join(', ');
-    
-    // 2. Création de l'objet commande pour l'historique
-    const nouvelleCommande = {
-        date: new Date().toLocaleString('fr-FR'),
-        client: nom.toUpperCase(),
-        tel: tel,
-        lieu: `${quartier} (${tarifsLivraison[zone].nom})`,
-        articles: listArticles,
-        total: total,
-        promo: codeUtilise,
-        cadeau: isCadeau ? "OUI" : "NON"
-    };
-const modePay = document.getElementById('mode-pay').value || "Non spécifié";
-    // 3. Sauvegarde dans l'historique (localStorage)
-    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-     mettreAJourStats();
-    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
-    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
-
-    // 4. Construction du message WhatsApp
     let listWA = cart.map(i => `• ${i.label} (x${i.qty})`).join('\n');
     let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP*\n\n`;
     msg += `👤 *CLIENT:* ${nom}\n`;
     msg += `📞 *TEL:* ${tel}\n`;
     msg += `📍 *QUARTIER:* ${quartier}\n`;
-    msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
-        {tarifsLivraison[zone].nom}\n`;
+    msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n`;
     msg += `💳 *PAIEMENT:* ${modePay}\n\n`;
     msg += `📝 *ARTICLES:*\n${listWA}\n`;
     if(isCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
     msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
+
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
-    // --- DIVERS ---
+}
+
+// Initialisation au chargement
+window.onload = function() {
+    render();
+    drawWheel();
+    refreshCategoriesUI();
+    updateVisitorCount();
+    
+    // Cacher le loader
+    setTimeout(() => {
+        document.getElementById('loader').classList.add('loader-hidden');
+    }, 1000);
+};
+
     function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
     function suivreColis() { alert("si votre commande à été validé sur WhatsApp alors vous serez contacté !"); }
     function updateVisitorCount() {
