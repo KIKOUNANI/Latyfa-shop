@@ -378,23 +378,47 @@ body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
                     <p id="detail-price" class="text-[#ff6600] font-black text-2xl mt-2"></p>
                     <div class="my-4 border-t pt-4"><p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p></div>
                     <div class="space-y-4 my-6">
-                        <div id="size-area" class="hidden">
-                            <label class="text-[10px] font-black uppercase text-gray-400">Taille / Pointure</label>
-                            <div id="size-helper-ui" class="hidden mb-4 p-4 bg-orange-50 rounded-xl border-2 border-dashed border-orange-200">
-    <p class="text-[10px] font-black uppercase mb-3 text-orange-800">Trouver ma taille idéale</p>
-    <div class="flex gap-2">
-        <input type="number" id="user-weight" placeholder="Ton poids (kg)" 
-               class="w-1/2 p-3 text-sm border rounded-lg focus:ring-2 focus:ring-[#c5a059] outline-none">
-        <button onclick="calculerTailleRec()" 
-                class="w-1/2 bg-black text-white text-[10px] font-black rounded-lg hover:bg-[#c5a059] transition-all">
-            CALCULER
+    <div id="size-area" class="block"> 
+        <label class="block text-[10px] font-black uppercase text-gray-400 mb-2">Taille / Pointure</label>
+        
+        <button id="btn-aide-taille" onclick="document.getElementById('size-helper-ui').classList.toggle('hidden')" 
+                class="text-[9px] font-bold text-[#c5a059] uppercase underline mb-3 block">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Aide-moi à choisir ma taille
         </button>
+
+        <div id="size-helper-ui" class="hidden mb-4 p-4 bg-orange-50 rounded-xl border-2 border-dashed border-orange-200">
+            <p class="text-[10px] font-black uppercase mb-3 text-orange-800">Trouver ma taille idéale</p>
+            <div class="flex gap-2">
+                <input type="number" id="user-weight" placeholder="Ton poids (kg)" 
+                       class="w-1/2 p-3 text-sm border rounded-lg focus:ring-2 focus:ring-[#c5a059] outline-none">
+                <button onclick="calculerTailleRec()" 
+                        class="w-1/2 bg-black text-white text-[10px] font-black rounded-lg hover:bg-[#c5a059] transition-all">
+                    CALCULER
+                </button>
+            </div>
+            <p id="size-result" class="mt-3 text-[11px] font-bold text-green-600 uppercase tracking-wider"></p>
+        </div>
+
+        <div id="shoe-guide-ui" class="hidden mb-4 p-4 bg-blue-50 rounded-xl border-2 border-dashed border-blue-200">
+             <p class="text-[10px] font-black uppercase mb-2 text-blue-800">Guide des pointures</p>
+             <p class="text-[9px] text-blue-600 mb-2 italic">Mesurez votre pied du talon aux orteils.</p>
+             <table class="w-full text-[10px] text-left border-collapse">
+                <tr class="border-b border-blue-100">
+                    <th class="py-1">Taille</th><th class="py-1">CM</th>
+                </tr>
+                <tr><td>38-40</td><td>25.0 cm</td></tr>
+                <tr><td>41-43</td><td>26.5 cm</td></tr>
+                <tr><td>44-45</td><td>28.0 cm</td></tr>
+             </table>
+        </div>
+
+        <select id="select-size" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold outline-none focus:ring-2 focus:ring-black">
+            </select>
     </div>
-    <p id="size-result" class="mt-3 text-[11px] font-bold text-green-600 uppercase tracking-wider"></p>
 </div>
 <button onclick="document.getElementById('size-helper-ui').classList.toggle('hidden')" class="text-[9px] font-bold text-[#c5a059] uppercase underline mb-2">
     <i class="fa-solid fa-wand-magic-sparkles"></i> Aide-moi à choisir ma taille
-</button>
+ 
                     <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
                         </div>
                         <div id="color-area" class="hidden">
