@@ -380,15 +380,18 @@ body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
                     <div class="space-y-4 my-6">
                         <div id="size-area" class="hidden">
                             <label class="text-[10px] font-black uppercase text-gray-400">Taille / Pointure</label>
-                            <div id="size-helper-ui" class="hidden mb-4 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-    <p class="text-[9px] font-black uppercase mb-2">Calculateur de taille</p>
+                            <div id="size-helper-ui" class="hidden mb-4 p-4 bg-orange-50 rounded-xl border-2 border-dashed border-orange-200">
+    <p class="text-[10px] font-black uppercase mb-3 text-orange-800">Trouver ma taille idéale</p>
     <div class="flex gap-2">
-        <input type="number" id="user-weight" placeholder="Poids (kg)" class="w-1/2 p-2 text-xs border rounded">
-        <button onclick="calculerTailleRec()" class="w-1/2 bg-black text-white text-[10px] font-bold rounded">CALCULER</button>
+        <input type="number" id="user-weight" placeholder="Ton poids (kg)" 
+               class="w-1/2 p-3 text-sm border rounded-lg focus:ring-2 focus:ring-[#c5a059] outline-none">
+        <button onclick="calculerTailleRec()" 
+                class="w-1/2 bg-black text-white text-[10px] font-black rounded-lg hover:bg-[#c5a059] transition-all">
+            CALCULER
+        </button>
     </div>
-    <p id="size-result" class="mt-2 text-[10px] font-bold text-green-600 uppercase"></p>
+    <p id="size-result" class="mt-3 text-[11px] font-bold text-green-600 uppercase tracking-wider"></p>
 </div>
-
 <button onclick="document.getElementById('size-helper-ui').classList.toggle('hidden')" class="text-[9px] font-bold text-[#c5a059] uppercase underline mb-2">
     <i class="fa-solid fa-wand-magic-sparkles"></i> Aide-moi à choisir ma taille
 </button>
@@ -888,7 +891,7 @@ if(badge) {
     if(oldVues) oldVues.remove();
     
     document.getElementById('detail-name').innerText = p.name;
-    document.getElementById('detail-name').insertAdjacentHTML('afterend', `
+    document.getElementById('detail-name').insertAdjacentHTML('afterend', 
         <div id="view-counter" class="flex items-center gap-2 mt-2 bg-gray-50 w-fit px-3 py-1 rounded-full border border-gray-100">
             <span class="relative flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -898,7 +901,18 @@ if(badge) {
                 <span id="nb-vues-text" class="text-gray-900">${vues} personnes</span> consultent cet article
             </p>
         </div>
-    `);
+        const aideTailleSection = document.getElementById('size-helper-ui');
+    const guideChaussureSection = document.getElementById('shoe-guide-ui');
+
+    // On vérifie la catégorie pour afficher le bon outil
+    if (produit.categorie === 'chaussures') {
+        aideTailleSection.classList.add('hidden'); // Cache le calculateur de poids
+        guideChaussureSection.classList.remove('hidden'); // Affiche le guide des pointures
+    } else {
+        aideTailleSection.classList.remove('hidden'); // Affiche le calculateur de poids
+        guideChaussureSection.classList.add('hidden'); // Cache le guide des pointures
+    }
+}
 
     const oldStockMsg = document.getElementById('dynamic-stock-msg');
     if(oldStockMsg) oldStockMsg.remove();
@@ -1595,37 +1609,41 @@ function calculerTailleRec() {
     const resultZone = document.getElementById('size-result');
     const selectSize = document.getElementById('select-size');
     
-    if (!poids || poids < 30) {
-        resultZone.innerText = "Veuillez entrer un poids valide.";
+    if (!poids || poids < 30 || poids > 150) {
+        resultZone.innerText = "Veuillez entrer un poids réaliste (ex: 65).";
+        resultZone.classList.replace('text-green-600', 'text-red-500');
         return;
     }
 
     let recommendation = "";
+    // Logique de recommandation basée sur le poids
     if (poids < 55) recommendation = "S";
-    else if (poids >= 55 && poids < 68) recommendation = "M";
-    else if (poids >= 68 && poids < 82) recommendation = "L";
-    else if (poids >= 82 && poids < 95) recommendation = "XL";
-    else recommendation = "XXL";
+    else if (poids < 68) recommendation = "M";
+    else if (poids < 80) recommendation = "L";
+    else if (poids < 95) recommendation = "XL";
+    else if (poids < 110) recommendation = "XXL";
+    else recommendation = "3XL";
 
-    resultZone.innerHTML = `✨ Taille conseillée : <span class="text-lg">${recommendation}</span>`;
+    // Affichage du résultat avec animation
+    resultZone.classList.replace('text-red-500', 'text-green-600');
+    resultZone.innerHTML = `✨ Taille conseillée : <strong>${recommendation}</strong>`;
     
-    // On sélectionne automatiquement la taille dans le menu si elle existe
+    // --- AUTO-SÉLECTION ---
+    // Cette partie sélectionne automatiquement la taille dans le menu déroulant
     if (selectSize) {
+        let found = false;
         for (let i = 0; i < selectSize.options.length; i++) {
             if (selectSize.options[i].value === recommendation) {
                 selectSize.selectedIndex = i;
+                found = true;
                 break;
             }
         }
+        if (!found) {
+            resultZone.innerHTML += "<br><span class='text-[8px] text-orange-500'>Note: Cette taille n'est pas dispo pour cet article.</span>";
+        }
     }
 }
-    window.addEventListener('DOMContentLoaded', () => {
-    // Met à jour le compteur visuel (le petit rond rouge)
-    const count = cart.reduce((a, b) => a + b.qty, 0);
-        // --- 5. LOGIQUE DE LA ROUE DE LA FORTUNE ---
-const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
-const canvas = document.getElementById('canvas');
-const ctx = canvas ? canvas.getContext('2d') : null;
 
 function drawWheel() {
     if (!ctx) return;
