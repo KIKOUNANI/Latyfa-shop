@@ -19,6 +19,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <!-- Chart.js pour les graphiques admin -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Facebook SDK (gratuit) -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v18.0&appId=123456789012345" nonce="ABC123"></script>
+    <!-- Google Identity Services (gratuit) -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <!-- Manifest PWA -->
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#c5a059">
@@ -389,13 +393,6 @@
             background: #fef3c7;
         }
         
-        .sms-test {
-            background: #f3f4f6;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 10px;
-        }
-        
         .maintenance-toggle {
             display: flex;
             align-items: center;
@@ -425,6 +422,356 @@
             background: #9ca3af;
             color: white;
             opacity: 0.5;
+        }
+        
+        /* CHAT WIDGET */
+        .chat-widget {
+            position: fixed;
+            bottom: 100px;
+            right: 90px;
+            z-index: 1000;
+        }
+        
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            background: var(--latyfa-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(197,160,89,0.4);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(197,160,89,0.6);
+        }
+        
+        .chat-button i {
+            color: white;
+            font-size: 24px;
+        }
+        
+        .chat-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chat-window.active {
+            display: block;
+        }
+        
+        .chat-header {
+            background: var(--latyfa-gold);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header h3 {
+            font-weight: 900;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .chat-header button {
+            color: white;
+            font-size: 20px;
+            line-height: 1;
+        }
+        
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f9fafb;
+        }
+        
+        .chat-message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-message.support {
+            align-items: flex-start;
+        }
+        
+        .chat-message.user {
+            align-items: flex-end;
+        }
+        
+        .message-bubble {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+        
+        .chat-message.support .message-bubble {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: #1f2937;
+        }
+        
+        .chat-message.user .message-bubble {
+            background: var(--latyfa-gold);
+            color: white;
+        }
+        
+        .message-time {
+            font-size: 8px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+        
+        .chat-footer {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-footer input {
+            flex: 1;
+            border: 1px solid #e5e7eb;
+            border-radius: 25px;
+            padding: 10px 15px;
+            font-size: 11px;
+            outline: none;
+        }
+        
+        .chat-footer input:focus {
+            border-color: var(--latyfa-gold);
+        }
+        
+        .chat-footer button {
+            width: 40px;
+            height: 40px;
+            background: var(--latyfa-gold);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-footer button:hover {
+            transform: scale(1.1);
+        }
+        
+        /* QR CODE MODAL */
+        .qr-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .qr-image {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            border: 2px solid var(--latyfa-gold);
+            border-radius: 20px;
+            padding: 10px;
+        }
+        
+        .qr-amount {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--latyfa-gold);
+            margin: 10px 0;
+        }
+        
+        .social-login-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .social-login-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .social-login-btn.facebook {
+            background: #1877f2;
+            color: white;
+        }
+        
+        .social-login-btn.google {
+            background: #ffffff;
+            color: #757575;
+            border: 1px solid #dadce0;
+        }
+        
+        .social-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .social-login-btn i {
+            font-size: 14px;
+        }
+        
+        /* PARRAINAGE */
+        .parrainage-card {
+            background: linear-gradient(135deg, #c5a059, #e2c286);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .palier-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--latyfa-gold);
+            transition: width 0.3s ease;
+        }
+        
+        /* SUIVI LIVRAISON */
+        .tracking-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .step-indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 12px;
+            margin-right: 15px;
+        }
+        
+        .step-indicator.completed {
+            background: #10b981;
+            color: white;
+        }
+        
+        .step-indicator.current {
+            background: var(--latyfa-gold);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        .step-indicator.pending {
+            background: #e5e7eb;
+            color: #9ca3af;
+        }
+        
+        .simulated-map {
+            height: 200px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .map-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(0deg, #ddd, #ddd 1px, transparent 1px, transparent 20px),
+                        repeating-linear-gradient(90deg, #ddd, #ddd 1px, transparent 1px, transparent 20px);
+            animation: moveMap 30s linear infinite;
+        }
+        
+        @keyframes moveMap {
+            from { transform: translate(0, 0); }
+            to { transform: translate(20px, 20px); }
+        }
+        
+        .map-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: var(--latyfa-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            animation: bounce 2s infinite;
+            z-index: 10;
+        }
+        
+        .map-destination {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #ef4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
         }
         
         .wheel-mask { 
@@ -1097,6 +1444,9 @@
                     <div class="user-dropdown-item" onclick="voirFavoris()">
                         <i class="fa-regular fa-heart"></i> Mes favoris
                     </div>
+                    <div class="user-dropdown-item" onclick="voirParrainage()">
+                        <i class="fa-solid fa-handshake"></i> Parrainage
+                    </div>
                     <div class="user-dropdown-item" onclick="deconnexion()">
                         <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
                     </div>
@@ -1130,12 +1480,165 @@
     </div>
 </header>
 
-<!-- MODALE AUTHENTIFICATION -->
+<!-- ==================== CHAT WIDGET AVEC IA ==================== -->
+<div class="chat-widget">
+    <div class="chat-button" onclick="toggleChat()">
+        <i class="fa-regular fa-comment-dots"></i>
+        <span class="chat-badge" id="chatBadge">1</span>
+    </div>
+    
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <h3>💬 Chat Latyfa</h3>
+            <div class="flex gap-1">
+                <button onclick="toggleIAMode()" class="text-[8px] bg-white text-black px-2 py-1 rounded">
+                    <span id="iaMode">🤖 IA OFF</span>
+                </button>
+                <button onclick="toggleChat()">×</button>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message support">
+                <div class="message-bubble">
+                    Bonjour ! 👋 Comment puis-je vous aider aujourd'hui ?
+                </div>
+                <div class="message-time">à l'instant</div>
+            </div>
+        </div>
+        
+        <div class="chat-footer">
+            <input type="text" id="chatInput" placeholder="Votre message..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
+            <button onclick="sendChatMessage()">
+                <i class="fa-regular fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODALE QR CODE ==================== -->
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-black uppercase italic text-[#c5a059]">📱 Paiement Mobile</h2>
+            <button onclick="fermerQR()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+        </div>
+        
+        <div class="qr-container">
+            <div class="qr-image" id="qrImageContainer">
+                <img id="qrImage" src="" alt="QR Code" class="w-full h-full object-contain">
+            </div>
+            
+            <div class="qr-amount" id="qrMontant">0 F</div>
+            
+            <p class="text-[10px] text-gray-500 mb-4">Scannez ce code avec votre application mobile</p>
+            
+            <div class="flex gap-2 justify-center">
+                <img src="https://goamobile.com/logosent/wave@221@-P-2021-06-30_00-18-27wave_logo_2.png" class="h-6" alt="Wave">
+                <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/orange-money-logo.png" class="h-6" alt="Orange Money">
+                <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/mtn-mobile-money-logo.jpg" class="h-6" alt="MTN">
+            </div>
+            
+            <button onclick="fermerQR()" class="btn-primary w-full mt-4 text-[10px] py-3">
+                J'AI EFFECTUÉ LE PAIEMENT
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MODALE SUIVI LIVRAISON ==================== -->
+<div id="suiviModal" class="modal">
+    <div class="modal-content max-w-2xl">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-black uppercase italic text-[#c5a059]">🚚 Suivi de commande</h2>
+            <button onclick="fermerSuivi()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+        </div>
+        
+        <!-- Barre de progression -->
+        <div class="flex justify-between mb-6 text-[8px] font-black">
+            <div class="text-center">
+                <div class="step-indicator completed" id="step1">1</div>
+                <span>Préparation</span>
+            </div>
+            <div class="flex-1 h-1 bg-gray-200 mt-4"></div>
+            <div class="text-center">
+                <div class="step-indicator current" id="step2">2</div>
+                <span>Prise en charge</span>
+            </div>
+            <div class="flex-1 h-1 bg-gray-200 mt-4"></div>
+            <div class="text-center">
+                <div class="step-indicator pending" id="step3">3</div>
+                <span>En route</span>
+            </div>
+            <div class="flex-1 h-1 bg-gray-200 mt-4"></div>
+            <div class="text-center">
+                <div class="step-indicator pending" id="step4">4</div>
+                <span>Arrivée</span>
+            </div>
+            <div class="flex-1 h-1 bg-gray-200 mt-4"></div>
+            <div class="text-center">
+                <div class="step-indicator pending" id="step5">5</div>
+                <span>Livré</span>
+            </div>
+        </div>
+        
+        <!-- Carte simulée -->
+        <div class="simulated-map">
+            <div class="map-grid"></div>
+            <div class="map-marker" id="livreurMarker" style="top: 40%; left: 30%;">
+                <i class="fa-solid fa-truck"></i>
+            </div>
+            <div class="map-destination" style="top: 60%; left: 70%;">
+                <i class="fa-solid fa-flag"></i>
+            </div>
+        </div>
+        
+        <!-- Infos livreur -->
+        <div class="bg-gray-50 p-4 rounded-xl mb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-[#c5a059] rounded-full flex items-center justify-center text-white">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold" id="livreurNom">Votre livreur: Kouassi Jean</p>
+                    <p class="text-[8px] text-gray-500" id="tempsEstime">🚚 Délai estimé: 20-30 min</p>
+                    <p class="text-[8px] text-gray-400 mt-1" id="positionActuelle">Position: Départ dépôt</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bouton actualiser -->
+        <button onclick="actualiserSuivi()" class="w-full bg-gray-100 py-3 rounded-lg text-[10px] font-black uppercase hover:bg-gray-200 transition">
+            <i class="fa-solid fa-rotate mr-2"></i> ACTUALISER LE SUIVI
+        </button>
+    </div>
+</div>
+
+<!-- MODALE AUTHENTIFICATION (AVEC BOUTONS SOCIAUX) -->
 <div id="authModal" class="modal">
     <div class="modal-content max-w-md">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-black uppercase italic text-[#c5a059]">Compte client</h2>
             <button onclick="fermerAuthModal()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+        </div>
+        
+        <!-- BOUTONS CONNEXION RÉSEAUX SOCIAUX -->
+        <div class="social-login-buttons">
+            <button onclick="loginWithFacebook()" class="social-login-btn facebook">
+                <i class="fa-brands fa-facebook-f"></i> Facebook
+            </button>
+            <button onclick="loginWithGoogle()" class="social-login-btn google">
+                <i class="fa-brands fa-google"></i> Google
+            </button>
+        </div>
+        
+        <div class="relative my-6">
+            <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-gray-500 text-[9px]">OU</span>
+            </div>
         </div>
         
         <div class="flex border-b mb-6">
@@ -1162,6 +1665,105 @@
             </div>
             <button onclick="inscription()" class="btn-primary w-full">S'INSCRIRE</button>
         </div>
+    </div>
+</div>
+
+<!-- MODALE PARRAINAGE -->
+<div id="parrainageModal" class="modal">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-black uppercase italic text-[#c5a059]">🤝 Programme de parrainage</h2>
+            <button onclick="fermerParrainage()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+        </div>
+        
+        <div class="parrainage-card">
+            <p class="text-[10px] mb-4">Parrainez vos amis et gagnez des récompenses !</p>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <div class="bg-white/20 p-2 rounded-lg text-center">
+                    <span class="text-lg font-black" id="nbFilleuls">0</span>
+                    <span class="text-[8px] block">Filleuls</span>
+                </div>
+                <div class="bg-white/20 p-2 rounded-lg text-center">
+                    <span class="text-lg font-black" id="gainTotal">0 F</span>
+                    <span class="text-[8px] block">Gagné</span>
+                </div>
+                <div class="bg-white/20 p-2 rounded-lg text-center">
+                    <span class="text-lg font-black" id="prochainPalier">1</span>
+                    <span class="text-[8px] block">Prochain</span>
+                </div>
+            </div>
+            
+            <!-- Lien de parrainage -->
+            <div class="bg-white p-3 rounded-xl mb-3">
+                <p class="text-[8px] text-gray-400 mb-1">Votre lien personnel</p>
+                <div class="flex gap-2">
+                    <input type="text" id="lienParrainage" readonly class="flex-1 bg-gray-50 text-gray-800 text-[9px] p-2 rounded-lg">
+                    <button onclick="copierLien()" class="bg-black text-white px-3 py-2 rounded-lg text-[8px] font-black">
+                        COPIER
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Boutons de partage -->
+            <div class="flex gap-2 mb-4">
+                <button onclick="partagerWhatsApp()" class="flex-1 bg-green-500 text-white py-2 rounded-lg text-[8px] font-black">
+                    <i class="fa-brands fa-whatsapp mr-1"></i> WhatsApp
+                </button>
+                <button onclick="partagerFacebook()" class="flex-1 bg-blue-600 text-white py-2 rounded-lg text-[8px] font-black">
+                    <i class="fa-brands fa-facebook-f mr-1"></i> Facebook
+                </button>
+                <button onclick="genererQRParrainage()" class="flex-1 bg-gray-800 text-white py-2 rounded-lg text-[8px] font-black">
+                    <i class="fa-solid fa-qrcode mr-1"></i> QR Code
+                </button>
+            </div>
+        </div>
+        
+        <!-- Paliers -->
+        <h4 class="text-[10px] font-black uppercase mb-3">🏆 Paliers de récompenses</h4>
+        <div class="space-y-3 mb-4">
+            <div class="palier-item">
+                <div class="flex justify-between text-[8px] mb-1">
+                    <span>1 filleul</span>
+                    <span class="font-black text-[#c5a059]">1.000 F</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress1" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="palier-item">
+                <div class="flex justify-between text-[8px] mb-1">
+                    <span>5 filleuls</span>
+                    <span class="font-black text-[#c5a059]">10.000 F</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress5" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="palier-item">
+                <div class="flex justify-between text-[8px] mb-1">
+                    <span>10 filleuls</span>
+                    <span class="font-black text-[#c5a059]">25.000 F</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress10" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="palier-item">
+                <div class="flex justify-between text-[8px] mb-1">
+                    <span>20 filleuls</span>
+                    <span class="font-black text-[#c5a059]">VIP à vie</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress20" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Liste des filleuls -->
+        <h4 class="text-[10px] font-black uppercase mb-2">👥 Mes filleuls</h4>
+        <div id="listeFilleuls" class="space-y-2 max-h-40 overflow-y-auto"></div>
     </div>
 </div>
 
@@ -1323,8 +1925,8 @@
                 </div>
                 <div id="thumbnails" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
                 
-                <button onclick="lancerAR(this)" class="ar-button w-full mt-4">
-                    <i class="fa-solid fa-camera"></i> ESSAYER EN RÉALITÉ AUGMENTÉE
+                <button onclick="genererQRDepuisDetail()" class="bg-green-600 text-white w-full py-3 rounded-lg text-[10px] font-black uppercase mt-4 hover:bg-green-700 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-qrcode"></i> PAIEMENT PAR QR CODE
                 </button>
             </div>
             
@@ -1479,6 +2081,10 @@
                     </div>
                 </div>
                 <input type="hidden" id="selected-payment" value="">
+                
+                <button onclick="genererQRDepuisPanier()" class="w-full bg-green-600 text-white py-3 rounded-lg text-[10px] font-black uppercase hover:bg-green-700 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-qrcode"></i> PAYER PAR QR CODE
+                </button>
             </div>
 
             <div class="bg-gray-50 p-4 rounded-xl space-y-2 border border-gray-100">
@@ -1649,7 +2255,7 @@
     </div>
 </div>
 
-<!-- ==================== MODALE ADMIN AVEC MENUS ==================== -->
+<!-- ==================== MODALE ADMIN ==================== -->
 <div id="adminModal" class="modal">
     <div class="modal-content max-w-4xl" style="max-width: 900px;">
         <div class="flex justify-between items-center mb-6">
@@ -1659,7 +2265,7 @@
             <button onclick="fermerAdmin()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
         </div>
 
-        <!-- MENU ADMIN AVEC ICÔNES -->
+        <!-- MENU ADMIN -->
         <div class="admin-menu">
             <div class="admin-menu-item active" onclick="switchAdminSection('dashboard')" id="menuDashboard">
                 <i class="fa-solid fa-chart-pie"></i>
@@ -1680,10 +2286,6 @@
             <div class="admin-menu-item" onclick="switchAdminSection('messagerie')" id="menuMessagerie">
                 <i class="fa-regular fa-envelope"></i>
                 <span>Messagerie</span>
-            </div>
-            <div class="admin-menu-item" onclick="switchAdminSection('sms')" id="menuSMS">
-                <i class="fa-solid fa-message"></i>
-                <span>SMS</span>
             </div>
             <div class="admin-menu-item" onclick="switchAdminSection('sauvegarde')" id="menuSauvegarde">
                 <i class="fa-solid fa-database"></i>
@@ -1754,7 +2356,6 @@
                 <i class="fa-solid fa-box text-[#c5a059]"></i> Gestion des produits
             </h3>
             
-            <!-- AJOUT PRODUIT -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-6">
                 <h4 class="text-[10px] font-black uppercase text-[#c5a059] mb-4">➕ Ajouter un nouvel article</h4>
                 <div class="grid grid-cols-1 gap-4">
@@ -1790,7 +2391,6 @@
                 </div>
             </div>
 
-            <!-- LISTE PRODUITS -->
             <h4 class="text-[10px] font-black uppercase mb-3">📦 Articles en ligne</h4>
             <div id="admin-list" class="space-y-2 mb-4 max-h-[300px] overflow-y-auto pr-2"></div>
         </div>
@@ -1811,10 +2411,6 @@
             </div>
 
             <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
-            
-            <div id="commandes-en-cours" class="space-y-3 max-h-[300px] overflow-y-auto pr-2">
-                <!-- Les commandes récentes apparaîtront ici -->
-            </div>
         </div>
 
         <!-- SECTION CLIENTS -->
@@ -1835,10 +2431,10 @@
             <div id="clients-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-2"></div>
         </div>
 
-        <!-- SECTION MESSAGERIE (Email) -->
+        <!-- SECTION MESSAGERIE -->
         <div id="messagerieSection" class="admin-section">
             <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
-                <i class="fa-regular fa-envelope text-[#c5a059]"></i> Messagerie Email
+                <i class="fa-regular fa-envelope text-[#c5a059]"></i> Messagerie
             </h3>
             
             <div class="mb-4">
@@ -1848,9 +2444,7 @@
                     <button onclick="selectClientsAvecCommandes()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Clients actifs</button>
                     <button onclick="clearClientSelection()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Effacer</button>
                 </div>
-                <div id="clientsSelector" class="client-selector border rounded-lg p-3 max-h-40 overflow-y-auto">
-                    <!-- Les clients avec cases à cocher seront injectés ici -->
-                </div>
+                <div id="clientsSelector" class="border rounded-lg p-3 max-h-40 overflow-y-auto"></div>
             </div>
             
             <div class="mb-4">
@@ -1865,117 +2459,29 @@
             
             <div class="flex gap-2 mb-6">
                 <button onclick="envoyerMessage()" class="btn-primary flex-1">
-                    <i class="fa-regular fa-paper-plane mr-2"></i> ENVOYER PAR EMAIL
+                    <i class="fa-regular fa-paper-plane mr-2"></i> ENVOYER
                 </button>
-                <button onclick="previsualiserMessage()" class="bg-gray-100 px-6 rounded-lg text-[10px] font-black uppercase hover:bg-gray-200">
-                    APERÇU
-                </button>
-            </div>
-            
-            <div class="border-t pt-4">
-                <h4 class="text-[9px] font-black uppercase mb-3 flex items-center gap-2">
-                    <i class="fa-regular fa-clock"></i> Derniers emails envoyés
-                </h4>
-                <div id="messagesEnvoyes" class="space-y-2 max-h-32 overflow-y-auto text-[8px]"></div>
-            </div>
-        </div>
-
-        <!-- SECTION SMS (NOUVEAU) -->
-        <div id="smsSection" class="admin-section">
-            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-message text-[#c5a059]"></i> Messagerie SMS
-            </h3>
-            
-            <div class="bg-blue-50 p-4 rounded-xl mb-4 text-[10px] border border-blue-200">
-                <i class="fa-solid fa-circle-info text-blue-500 mr-2"></i>
-                Les SMS seront envoyés via un service SMS (configuration requise). Pour l'instant, ils apparaîtront dans la messagerie interne.
-            </div>
-            
-            <div class="mb-4">
-                <label class="text-[9px] font-bold uppercase block mb-2">Numéros de téléphone</label>
-                <div class="flex gap-2 mb-3 flex-wrap">
-                    <button onclick="selectAllTel()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Tous les numéros</button>
-                    <button onclick="selectTestTel()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Téléphone test</button>
-                    <button onclick="clearTelSelection()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Effacer</button>
-                </div>
-                <div id="telSelector" class="client-selector border rounded-lg p-3 max-h-40 overflow-y-auto">
-                    <!-- Les numéros de téléphone avec cases à cocher -->
-                </div>
-            </div>
-            
-            <div class="mb-4">
-                <label class="text-[9px] font-bold uppercase block mb-2">Message SMS (160 caractères max)</label>
-                <textarea id="smsContenu" maxlength="160" rows="3" placeholder="Votre message SMS..." class="w-full border p-3 rounded-lg text-sm"></textarea>
-                <div class="text-right text-[8px] text-gray-400 mt-1">
-                    <span id="smsCount">0</span>/160 caractères
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-2 mb-4">
-                <button onclick="envoyerSMS('test')" class="bg-green-600 text-white py-3 rounded-lg text-[10px] font-black uppercase hover:bg-green-700 transition">
-                    <i class="fa-solid fa-flask mr-2"></i> TEST (à moi-même)
-                </button>
-                <button onclick="envoyerSMS('reel')" class="btn-primary py-3">
-                    <i class="fa-solid fa-paper-plane mr-2"></i> ENVOYER SMS
-                </button>
-            </div>
-            
-            <div class="sms-test">
-                <h4 class="text-[9px] font-black uppercase mb-2">🔄 Intégration SMS (à configurer)</h4>
-                <p class="text-[8px] text-gray-600 mb-2">Services supportés :</p>
-                <div class="flex gap-2 flex-wrap">
-                    <span class="bg-gray-100 px-2 py-1 rounded text-[8px]">Twilio</span>
-                    <span class="bg-gray-100 px-2 py-1 rounded text-[8px]">Orange SMS API</span>
-                    <span class="bg-gray-100 px-2 py-1 rounded text-[8px]">MTN SMS API</span>
-                    <span class="bg-gray-100 px-2 py-1 rounded text-[8px]">Wave SMS</span>
-                </div>
-            </div>
-            
-            <div class="border-t pt-4 mt-4">
-                <h4 class="text-[9px] font-black uppercase mb-3">📤 Derniers SMS envoyés</h4>
-                <div id="smsEnvoyes" class="space-y-2 max-h-32 overflow-y-auto text-[8px]"></div>
             </div>
         </div>
 
         <!-- SECTION SAUVEGARDE -->
         <div id="sauvegardeSection" class="admin-section">
             <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-database text-[#c5a059]"></i> Sauvegarde des données
+                <i class="fa-solid fa-database text-[#c5a059]"></i> Sauvegarde
             </h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div class="backup-option" onclick="sauvegarderToutesDonnees()">
                     <i class="fa-solid fa-cloud-arrow-down text-4xl text-[#c5a059] mb-3"></i>
-                    <h4 class="text-[10px] font-black uppercase mb-2">Sauvegarder toutes les données</h4>
-                    <p class="text-[8px] text-gray-400">Produits, clients, commandes, messages</p>
+                    <h4 class="text-[10px] font-black uppercase mb-2">Sauvegarder</h4>
+                    <p class="text-[8px] text-gray-400">Toutes les données</p>
                 </div>
                 
                 <div class="backup-option" onclick="restaurerDonnees()">
                     <i class="fa-solid fa-cloud-arrow-up text-4xl text-[#c5a059] mb-3"></i>
-                    <h4 class="text-[10px] font-black uppercase mb-2">Restaurer une sauvegarde</h4>
-                    <p class="text-[8px] text-gray-400">Choisir un fichier JSON</p>
+                    <h4 class="text-[10px] font-black uppercase mb-2">Restaurer</h4>
+                    <p class="text-[8px] text-gray-400">Fichier JSON</p>
                     <input type="file" id="restoreFile" accept=".json" style="display: none;">
-                </div>
-            </div>
-            
-            <div class="bg-white p-4 rounded-xl border border-gray-200 mb-4">
-                <h4 class="text-[10px] font-black uppercase mb-3 flex items-center gap-2">
-                    <i class="fa-regular fa-clock"></i> Sauvegardes automatiques
-                </h4>
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-[9px]">Sauvegarde automatique quotidienne</span>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="autoBackup" class="sr-only peer" onchange="toggleAutoBackup()">
-                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#c5a059]"></div>
-                    </label>
-                </div>
-                <p class="text-[8px] text-gray-400">Dernière sauvegarde : <span id="lastBackup">Jamais</span></p>
-            </div>
-            
-            <div class="bg-gray-50 p-4 rounded-xl">
-                <h4 class="text-[10px] font-black uppercase mb-3">📋 Sauvegardes disponibles</h4>
-                <div id="backupList" class="space-y-2 max-h-40 overflow-y-auto">
-                    <!-- Liste des sauvegardes -->
                 </div>
             </div>
         </div>
@@ -1983,7 +2489,7 @@
         <!-- SECTION MAINTENANCE -->
         <div id="maintenanceSection" class="admin-section">
             <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-screwdriver-wrench text-[#c5a059]"></i> Mode maintenance
+                <i class="fa-solid fa-screwdriver-wrench text-[#c5a059]"></i> Maintenance
             </h3>
             
             <div class="maintenance-toggle mb-6">
@@ -1997,14 +2503,12 @@
                     <i class="fa-solid fa-triangle-exclamation text-yellow-600"></i>
                     Zone de danger
                 </h4>
-                <p class="text-[9px] text-gray-600 mb-3">Actions irréversibles</p>
                 <button onclick="effacerToutesDonnees()" class="bg-red-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase hover:bg-red-700 transition">
                     <i class="fa-solid fa-trash-can mr-2"></i> EFFACER TOUTES LES DONNÉES
                 </button>
             </div>
         </div>
 
-        <!-- PIED DE PAGE ADMIN -->
         <div class="text-center mt-6 pt-4 border-t">
             <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest transition-colors">
                 <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
@@ -2149,8 +2653,45 @@
     
     let clients = [];
     let messages = [];
-    let smsEnvoyes = [];
     let utilisateurConnecte = null;
+    
+    // ==================== VARIABLES PARRAINAGE ====================
+    let parrainage = {
+        parrains: {},
+        filleuls: {},
+        paliers: [
+            { seuil: 1, gain: 1000, nom: "Bronze" },
+            { seuil: 5, gain: 10000, nom: "Argent" },
+            { seuil: 10, gain: 25000, nom: "Or" },
+            { seuil: 20, gain: "VIP", nom: "Platine" }
+        ]
+    };
+    
+    // ==================== VARIABLES SUIVI ====================
+    let suiviInterval = null;
+    let etapeSuivi = 2; // 1: préparation, 2: prise en charge, 3: en route, 4: arrivée, 5: livré
+    let positionsSimulees = [
+        { top: 40, left: 30 }, // Départ
+        { top: 45, left: 40 }, // En route 1
+        { top: 50, left: 50 }, // En route 2
+        { top: 55, left: 60 }, // En route 3
+        { top: 60, left: 70 }  // Arrivée
+    ];
+    
+    // ==================== VARIABLES CHAT IA ====================
+    let iaActif = false;
+    const reponseIA = {
+        "bonjour": "Bonjour ! 👋 Comment puis-je vous aider aujourd'hui ?",
+        "prix": "Les prix varient de 5.000 F à 150.000 F selon les articles. Vous cherchez quelque chose en particulier ?",
+        "combien": "Les prix sont affichés sur chaque produit. Puis-je vous aider à trouver un article spécifique ?",
+        "livraison": "Nous livrons partout en Côte d'Ivoire ! À Abidjan : 24-48h, à l'intérieur : 2-4 jours. Frais de 1.500 F à 3.000 F.",
+        "paiement": "Nous acceptons Wave, Orange Money, MTN Money et le cash à la livraison. Tous les paiements sont sécurisés !",
+        "retour": "Les retours sont possibles sous 7 jours après réception. Contactez-nous pour plus d'informations.",
+        "contact": "Vous pouvez nous joindre au 0709002881 sur WhatsApp, ou utiliser le chat en direct.",
+        "catalogue": "Nous avons des bijoux, sacs, parfums, vêtements et chaussures. Quelle catégorie vous intéresse ?",
+        "merci": "Avec plaisir ! N'hésitez pas si vous avez d'autres questions. 😊",
+        "au revoir": "Au revoir ! Merci de votre visite et à bientôt sur Latyfa Shop !"
+    };
     
     const tarifsLivraison = {
         "abidjan_nord": { nom: "Abidjan Nord", prix: 1500 },
@@ -2189,13 +2730,433 @@
         "Nouvelle cliente fidèle - Merci Mariam ! 🌟"
     ];
     
+    // ==================== FONCTIONS CHAT IA ====================
+    function toggleChat() {
+        document.getElementById('chatWindow').classList.toggle('active');
+        if (document.getElementById('chatWindow').classList.contains('active')) {
+            document.getElementById('chatBadge').style.display = 'none';
+        }
+    }
+    
+    function toggleIAMode() {
+        iaActif = !iaActif;
+        document.getElementById('iaMode').innerText = iaActif ? '🤖 IA ON' : '🤖 IA OFF';
+        
+        const chatDiv = document.getElementById('chatMessages');
+        chatDiv.innerHTML += `
+            <div class="chat-message support">
+                <div class="message-bubble">
+                    ${iaActif ? '🤖 Mode IA activé ! Je répondrai automatiquement à vos questions.' : '👨‍💼 Mode conseiller humain activé. Un vrai conseiller vous répondra.'}
+                </div>
+                <div class="message-time">à l'instant</div>
+            </div>
+        `;
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+    
+    function sendChatMessage() {
+        const input = document.getElementById('chatInput');
+        const msg = input.value.trim();
+        if (!msg) return;
+        
+        const chatDiv = document.getElementById('chatMessages');
+        const now = new Date();
+        const timeStr = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
+        
+        chatDiv.innerHTML += `
+            <div class="chat-message user">
+                <div class="message-bubble">${msg}</div>
+                <div class="message-time">${timeStr}</div>
+            </div>
+        `;
+        
+        input.value = '';
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+        
+        if (iaActif) {
+            setTimeout(() => {
+                const msgLower = msg.toLowerCase();
+                let reponse = "Je n'ai pas compris. Pouvez-vous reformuler ? Ou je peux transmettre à un conseiller humain.";
+                
+                for (const [motCle, texte] of Object.entries(reponseIA)) {
+                    if (msgLower.includes(motCle)) {
+                        reponse = texte;
+                        break;
+                    }
+                }
+                
+                chatDiv.innerHTML += `
+                    <div class="chat-message support">
+                        <div class="message-bubble">🤖 ${reponse}</div>
+                        <div class="message-time">${new Date().getHours() + ':' + new Date().getMinutes().toString().padStart(2, '0')}</div>
+                    </div>
+                `;
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+            }, 1000);
+        } else {
+            chatDiv.innerHTML += `
+                <div class="chat-message support">
+                    <div class="message-bubble">Merci ! Un conseiller vous répondra dès que possible.</div>
+                    <div class="message-time">${timeStr}</div>
+                </div>
+            `;
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
+    }
+    
+    // ==================== FONCTIONS SUIVI LIVRAISON ====================
+    function ouvrirSuivi(commandeId) {
+        document.getElementById('suiviModal').classList.add('active');
+        
+        // Réinitialiser le suivi
+        etapeSuivi = 2;
+        mettreAJourSuivi();
+        
+        // Démarrer la simulation
+        if (suiviInterval) clearInterval(suiviInterval);
+        suiviInterval = setInterval(simulerAvancement, 10000); // Avance toutes les 10 secondes
+    }
+    
+    function fermerSuivi() {
+        document.getElementById('suiviModal').classList.remove('active');
+        if (suiviInterval) {
+            clearInterval(suiviInterval);
+            suiviInterval = null;
+        }
+    }
+    
+    function mettreAJourSuivi() {
+        // Mettre à jour les étapes
+        for (let i = 1; i <= 5; i++) {
+            const step = document.getElementById('step' + i);
+            if (step) {
+                step.className = 'step-indicator';
+                if (i < etapeSuivi) {
+                    step.classList.add('completed');
+                } else if (i === etapeSuivi) {
+                    step.classList.add('current');
+                } else {
+                    step.classList.add('pending');
+                }
+            }
+        }
+        
+        // Mettre à jour la position du livreur sur la carte
+        const marker = document.getElementById('livreurMarker');
+        if (marker && etapeSuivi <= 5) {
+            const pos = positionsSimulees[etapeSuivi - 1];
+            marker.style.top = pos.top + '%';
+            marker.style.left = pos.left + '%';
+        }
+        
+        // Mettre à jour le texte
+        const etapes = [
+            "Préparation de votre colis",
+            "Colis pris en charge par le livreur",
+            "En route vers votre adresse",
+            "Arrivée imminente",
+            "Livré !"
+        ];
+        
+        document.getElementById('positionActuelle').innerText = 'Statut: ' + etapes[etapeSuivi - 1];
+        
+        if (etapeSuivi === 3) {
+            document.getElementById('tempsEstime').innerHTML = '🚚 Délai estimé: 20-30 min';
+        } else if (etapeSuivi === 4) {
+            document.getElementById('tempsEstime').innerHTML = '🚚 Arrivée dans: 5-10 min';
+        } else if (etapeSuivi === 5) {
+            document.getElementById('tempsEstime').innerHTML = '✅ Livré ! Merci pour votre achat';
+        }
+    }
+    
+    function simulerAvancement() {
+        if (etapeSuivi < 5) {
+            etapeSuivi++;
+            mettreAJourSuivi();
+        } else {
+            clearInterval(suiviInterval);
+            suiviInterval = null;
+        }
+    }
+    
+    function actualiserSuivi() {
+        // Simuler une mise à jour manuelle
+        showToast("🔄 Suivi actualisé");
+        mettreAJourSuivi();
+    }
+    
+    // ==================== FONCTIONS PARRAINAGE ====================
+    function initialiserParrainage() {
+        const saved = localStorage.getItem('latyfa_parrainage');
+        if (saved) {
+            try {
+                parrainage = JSON.parse(saved);
+            } catch(e) {}
+        } else {
+            localStorage.setItem('latyfa_parrainage', JSON.stringify(parrainage));
+        }
+    }
+    
+    function genererCodeParrainage(clientId) {
+        const code = 'LATYFA-' + clientId + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+        
+        if (!parrainage.parrains[clientId]) {
+            parrainage.parrains[clientId] = {
+                code: code,
+                filleuls: [],
+                gains: 0
+            };
+        }
+        
+        localStorage.setItem('latyfa_parrainage', JSON.stringify(parrainage));
+        return code;
+    }
+    
+    function traiterParrainage(codeRef, nouveauClientId, nouveauClientNom) {
+        // Trouver le parrain
+        let parrainId = null;
+        for (const [id, data] of Object.entries(parrainage.parrains)) {
+            if (data.code === codeRef) {
+                parrainId = parseInt(id);
+                break;
+            }
+        }
+        
+        if (!parrainId) return false;
+        
+        // Ajouter le filleul
+        parrainage.parrains[parrainId].filleuls.push({
+            id: nouveauClientId,
+            nom: nouveauClientNom,
+            date: new Date().toLocaleDateString()
+        });
+        
+        // Calculer le gain
+        const nbFilleuls = parrainage.parrains[parrainId].filleuls.length;
+        let gain = 0;
+        
+        if (nbFilleuls >= 20) gain = "VIP";
+        else if (nbFilleuls >= 10) gain = 25000;
+        else if (nbFilleuls >= 5) gain = 10000;
+        else if (nbFilleuls >= 1) gain = 1000;
+        
+        parrainage.parrains[parrainId].gains = gain;
+        
+        // Enregistrer le filleul
+        parrainage.filleuls[nouveauClientId] = {
+            parrainId: parrainId,
+            date: new Date().toLocaleDateString()
+        };
+        
+        localStorage.setItem('latyfa_parrainage', JSON.stringify(parrainage));
+        
+        // Notifier le parrain
+        envoyerMessageAdmin([parrainId], "🎉 Nouveau filleul !", 
+            `Félicitations ! ${nouveauClientNom} s'est inscrit avec votre lien.`);
+        
+        return true;
+    }
+    
+    function voirParrainage() {
+        if (!utilisateurConnecte) {
+            ouvrirAuthModal();
+            return;
+        }
+        
+        // Générer un code si nécessaire
+        if (!parrainage.parrains[utilisateurConnecte.id]) {
+            genererCodeParrainage(utilisateurConnecte.id);
+        }
+        
+        const data = parrainage.parrains[utilisateurConnecte.id];
+        const nbFilleuls = data.filleuls.length;
+        
+        // Mettre à jour l'affichage
+        document.getElementById('nbFilleuls').innerText = nbFilleuls;
+        document.getElementById('gainTotal').innerText = (data.gains === "VIP" ? "VIP" : data.gains + ' F');
+        
+        // Calculer le prochain palier
+        let prochainSeuil = 1;
+        for (const palier of parrainage.paliers) {
+            if (nbFilleuls < palier.seuil) {
+                prochainSeuil = palier.seuil - nbFilleuls;
+                break;
+            }
+        }
+        document.getElementById('prochainPalier').innerText = prochainSeuil;
+        
+        // Mettre à jour les barres de progression
+        document.getElementById('progress1').style.width = Math.min(100, (nbFilleuls / 1) * 100) + '%';
+        document.getElementById('progress5').style.width = Math.min(100, (nbFilleuls / 5) * 100) + '%';
+        document.getElementById('progress10').style.width = Math.min(100, (nbFilleuls / 10) * 100) + '%';
+        document.getElementById('progress20').style.width = Math.min(100, (nbFilleuls / 20) * 100) + '%';
+        
+        // Afficher le lien
+        const lien = `https://latyfashop.com?ref=${data.code}`;
+        document.getElementById('lienParrainage').value = lien;
+        
+        // Afficher la liste des filleuls
+        const container = document.getElementById('listeFilleuls');
+        if (data.filleuls.length === 0) {
+            container.innerHTML = '<p class="text-[9px] text-gray-400 text-center py-2">Aucun filleul pour le moment</p>';
+        } else {
+            container.innerHTML = data.filleuls.map(f => `
+                <div class="flex justify-between items-center border-b pb-1 text-[9px]">
+                    <span>👤 ${f.nom}</span>
+                    <span class="text-gray-400">📅 ${f.date}</span>
+                </div>
+            `).join('');
+        }
+        
+        document.getElementById('parrainageModal').classList.add('active');
+    }
+    
+    function fermerParrainage() {
+        document.getElementById('parrainageModal').classList.remove('active');
+    }
+    
+    function copierLien() {
+        const input = document.getElementById('lienParrainage');
+        input.select();
+        document.execCommand('copy');
+        showToast("📋 Lien copié !");
+    }
+    
+    function partagerWhatsApp() {
+        const lien = document.getElementById('lienParrainage').value;
+        const msg = `✨ Découvrez Latyfa Shop, la boutique de luxe en Côte d'Ivoire ! Utilisez mon lien pour profiter de réductions : ${lien}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+    }
+    
+    function partagerFacebook() {
+        const lien = document.getElementById('lienParrainage').value;
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(lien)}`);
+    }
+    
+    function genererQRParrainage() {
+        const lien = document.getElementById('lienParrainage').value;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(lien)}`;
+        
+        document.getElementById('qrImage').src = qrUrl;
+        document.getElementById('qrMontant').innerText = 'Code parrainage';
+        document.getElementById('qrModal').classList.add('active');
+    }
+    
+    // ==================== FONCTIONS QR CODE ====================
+    function genererQRCode(montant, telephone) {
+        const cleanTel = telephone.toString().replace(/\s/g, '');
+        let fullNumber = cleanTel;
+        if (!cleanTel.startsWith('+')) {
+            if (cleanTel.startsWith('0')) {
+                fullNumber = '+225' + cleanTel.substring(1);
+            } else {
+                fullNumber = '+225' + cleanTel;
+            }
+        }
+        
+        const qrData = `Paiement Latyfa Shop: ${montant.toLocaleString()} FCFA vers ${fullNumber}`;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+        
+        document.getElementById('qrImage').src = qrUrl;
+        document.getElementById('qrMontant').innerText = montant.toLocaleString() + ' F';
+        document.getElementById('qrModal').classList.add('active');
+        
+        const sound = document.getElementById('cart-sound');
+        if (sound) sound.play().catch(() => {});
+    }
+    
+    function genererQRDepuisDetail() {
+        if (!currentProduct) return;
+        genererQRCode(currentProduct.price, "0709002881");
+    }
+    
+    function genererQRDepuisPanier() {
+        const total = parseInt(document.getElementById('total-display').innerText.replace(/\s/g, '')) || 0;
+        if (total === 0) {
+            alert("Votre panier est vide");
+            return;
+        }
+        genererQRCode(total, "0709002881");
+    }
+    
+    function fermerQR() {
+        document.getElementById('qrModal').classList.remove('active');
+    }
+    
+    // ==================== FONCTIONS CONNEXION RÉSEAUX SOCIAUX ====================
+    function loginWithFacebook() {
+        FB.login(function(response) {
+            if (response.authResponse) {
+                FB.api('/me', {fields: 'name,email'}, function(user) {
+                    let client = clients.find(c => c.email === user.email);
+                    
+                    if (client) {
+                        utilisateurConnecte = client;
+                    } else {
+                        client = {
+                            id: Date.now(),
+                            nom: user.name,
+                            email: user.email,
+                            tel: "",
+                            password: "facebook_" + Math.random().toString(36),
+                            dateInscription: new Date().toLocaleDateString('fr-FR'),
+                            source: "facebook"
+                        };
+                        clients.push(client);
+                        localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+                        utilisateurConnecte = client;
+                    }
+                    
+                    localStorage.setItem('latyfa_session', JSON.stringify(utilisateurConnecte));
+                    updateUserUI();
+                    fermerAuthModal();
+                    showToast(`👋 Bonjour ${utilisateurConnecte.nom} !`);
+                });
+            }
+        }, {scope: 'email'});
+    }
+    
+    function loginWithGoogle() {
+        google.accounts.id.initialize({
+            client_id: '123456789012-abc123def456.apps.googleusercontent.com',
+            callback: handleGoogleSignIn
+        });
+        google.accounts.id.prompt();
+    }
+    
+    function handleGoogleSignIn(response) {
+        const data = JSON.parse(atob(response.credential.split('.')[1]));
+        
+        let client = clients.find(c => c.email === data.email);
+        
+        if (client) {
+            utilisateurConnecte = client;
+        } else {
+            client = {
+                id: Date.now(),
+                nom: data.name,
+                email: data.email,
+                tel: "",
+                password: "google_" + Math.random().toString(36),
+                dateInscription: new Date().toLocaleDateString('fr-FR'),
+                source: "google"
+            };
+            clients.push(client);
+            localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+            utilisateurConnecte = client;
+        }
+        
+        localStorage.setItem('latyfa_session', JSON.stringify(utilisateurConnecte));
+        updateUserUI();
+        fermerAuthModal();
+        showToast(`👋 Bonjour ${utilisateurConnecte.nom} !`);
+    }
+    
     // ==================== FONCTIONS ADMIN MENU ====================
     function switchAdminSection(section) {
-        // Cacher toutes les sections
         document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.admin-menu-item').forEach(i => i.classList.remove('active'));
         
-        // Afficher la section sélectionnée
         document.getElementById(section + 'Section').classList.add('active');
         document.getElementById('menu' + section.charAt(0).toUpperCase() + section.slice(1)).classList.add('active');
     }
@@ -2321,14 +3282,7 @@
             localStorage.setItem('latyfa_messages', JSON.stringify(messages));
         }
         
-        const savedSMS = localStorage.getItem('latyfa_sms');
-        if (savedSMS) {
-            try {
-                smsEnvoyes = JSON.parse(savedSMS);
-            } catch(e) {
-                smsEnvoyes = [];
-            }
-        }
+        initialiserParrainage();
         
         const session = localStorage.getItem('latyfa_session');
         if (session) {
@@ -2427,195 +3381,7 @@
         messages.push(...nouveauxMessages);
         localStorage.setItem('latyfa_messages', JSON.stringify(messages));
         
-        try {
-            emailjs.send("service_latyfa", "template_message", {
-                to_email: clients.find(c => c.id === destinataireIds[0])?.email,
-                subject: objet,
-                message: contenu
-            });
-        } catch(e) {
-            console.log("EmailJS non disponible");
-        }
-        
         showToast(`✅ Message envoyé à ${destinataireIds.length} client(s)`);
-        updateMessagesEnvoyes();
-    }
-    
-    // ==================== FONCTIONS SMS ====================
-    function updateSmsCounter() {
-        const smsInput = document.getElementById('smsContenu');
-        const counter = document.getElementById('smsCount');
-        if (smsInput && counter) {
-            counter.textContent = smsInput.value.length;
-        }
-    }
-    
-    function selectAllTel() {
-        document.querySelectorAll('#telSelector .client-check').forEach(cb => cb.checked = true);
-    }
-    
-    function selectTestTel() {
-        document.querySelectorAll('#telSelector .client-check').forEach(cb => {
-            const tel = cb.value;
-            cb.checked = tel === "0709002881";
-        });
-    }
-    
-    function clearTelSelection() {
-        document.querySelectorAll('#telSelector .client-check').forEach(cb => cb.checked = false);
-    }
-    
-    function envoyerSMS(type) {
-        let numeros = [];
-        
-        if (type === 'test') {
-            numeros = ["0709002881"];
-        } else {
-            document.querySelectorAll('#telSelector .client-check:checked').forEach(cb => {
-                numeros.push(cb.value);
-            });
-        }
-        
-        const contenu = document.getElementById('smsContenu').value.trim();
-        
-        if (numeros.length === 0) {
-            alert("Sélectionnez au moins un numéro");
-            return;
-        }
-        
-        if (!contenu) {
-            alert("Écrivez un message SMS");
-            return;
-        }
-        
-        // Sauvegarder dans l'historique SMS
-        const smsLog = {
-            id: Date.now(),
-            numeros: numeros,
-            contenu: contenu,
-            date: new Date().toLocaleString('fr-FR'),
-            type: type
-        };
-        
-        smsEnvoyes.unshift(smsLog);
-        localStorage.setItem('latyfa_sms', JSON.stringify(smsEnvoyes));
-        
-        // Afficher dans l'historique
-        updateSmsEnvoyes();
-        
-        // Message de confirmation
-        showToast(`📨 SMS envoyé à ${numeros.length} numéro(s) (simulation)`);
-        
-        // Si c'est un test, on peut aussi envoyer un message interne
-        if (type === 'test' && utilisateurConnecte) {
-            envoyerMessageAdmin([utilisateurConnecte.id], "Test SMS", "Ceci est un test du service SMS :\n\n" + contenu);
-        }
-    }
-    
-    function updateSmsEnvoyes() {
-        const container = document.getElementById('smsEnvoyes');
-        if (!container) return;
-        
-        container.innerHTML = smsEnvoyes.slice(0, 5).map(s => `
-            <div class="text-[8px] border-b pb-1">
-                <span class="font-bold">${s.date}</span> - À ${s.numeros.length} numéro(s)
-            </div>
-        `).join('');
-    }
-    
-    // ==================== FONCTIONS SAUVEGARDE ====================
-    function sauvegarderToutesDonnees() {
-        const backup = {
-            date: new Date().toLocaleString('fr-FR'),
-            produits: products,
-            clients: clients,
-            commandes: JSON.parse(localStorage.getItem('latyfa_historique')) || [],
-            messages: messages,
-            sms: smsEnvoyes,
-            categories: categories,
-            avis: avis
-        };
-        
-        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        
-        link.setAttribute("href", url);
-        link.setAttribute("download", `sauvegarde_latyfa_${new Date().toISOString().slice(0,10)}.json`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        localStorage.setItem('latyfa_last_backup', new Date().toLocaleString('fr-FR'));
-        document.getElementById('lastBackup').innerText = new Date().toLocaleString('fr-FR');
-        
-        showToast("✅ Sauvegarde téléchargée");
-    }
-    
-    function restaurerDonnees() {
-        const fileInput = document.getElementById('restoreFile');
-        fileInput.click();
-        
-        fileInput.onchange = function(e) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                try {
-                    const backup = JSON.parse(e.target.result);
-                    
-                    if (confirm("⚠️ Restaurer cette sauvegarde écrasera toutes les données actuelles. Continuer ?")) {
-                        if (backup.produits) {
-                            products = backup.produits;
-                            localStorage.setItem('latyfa_db', JSON.stringify(products));
-                        }
-                        if (backup.clients) {
-                            clients = backup.clients;
-                            localStorage.setItem('latyfa_clients', JSON.stringify(clients));
-                        }
-                        if (backup.commandes) {
-                            localStorage.setItem('latyfa_historique', JSON.stringify(backup.commandes));
-                        }
-                        if (backup.messages) {
-                            messages = backup.messages;
-                            localStorage.setItem('latyfa_messages', JSON.stringify(messages));
-                        }
-                        if (backup.categories) {
-                            categories = backup.categories;
-                            localStorage.setItem('latyfa_categories', JSON.stringify(categories));
-                        }
-                        if (backup.avis) {
-                            avis = backup.avis;
-                            localStorage.setItem('latyfa_avis', JSON.stringify(avis));
-                        }
-                        
-                        showToast("✅ Données restaurées avec succès");
-                        setTimeout(() => location.reload(), 2000);
-                    }
-                } catch(err) {
-                    alert("Fichier de sauvegarde invalide");
-                }
-            };
-            
-            reader.readAsText(file);
-        };
-    }
-    
-    function toggleAutoBackup() {
-        const autoBackup = document.getElementById('autoBackup').checked;
-        localStorage.setItem('latyfa_auto_backup', autoBackup);
-        showToast(autoBackup ? "✅ Sauvegarde automatique activée" : "❌ Sauvegarde automatique désactivée");
-    }
-    
-    function effacerToutesDonnees() {
-        if (confirm("🚨 ATTENTION : Cette action supprimera TOUTES les données. Êtes-vous absolument sûr ?")) {
-            if (confirm("Dernière chance : voulez-vous vraiment tout effacer ?")) {
-                localStorage.clear();
-                showToast("💥 Toutes les données ont été effacées");
-                setTimeout(() => location.reload(), 2000);
-            }
-        }
     }
     
     // ==================== FONCTIONS AUTHENTIFICATION ====================
@@ -2655,6 +3421,10 @@
         const confirm = document.getElementById('registerConfirm').value;
         const accept = document.getElementById('registerAccept').checked;
         
+        // Vérifier s'il y a un code de parrainage dans l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const refCode = urlParams.get('ref');
+        
         if (!nom || !email || !tel || !password || !confirm) {
             alert("Veuillez remplir tous les champs");
             return;
@@ -2688,6 +3458,11 @@
         
         clients.push(nouveauClient);
         localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+        
+        // Traiter le parrainage si présent
+        if (refCode) {
+            traiterParrainage(refCode, nouveauClient.id, nouveauClient.nom);
+        }
         
         envoyerMessageAdmin([nouveauClient.id], "Bienvenue chez Latyfa Shop", 
             "Bonjour " + nom + ",\n\nMerci de votre inscription ! Nous sommes ravis de vous compter parmi nos clients.\n\n" +
@@ -3380,6 +4155,13 @@
         fermerPanier();
         
         showToast("✅ Commande envoyée !");
+        
+        // Ouvrir le suivi après commande
+        setTimeout(() => {
+            if (confirm("Voulez-vous suivre votre commande en direct ?")) {
+                ouvrirSuivi();
+            }
+        }, 2000);
     }
     
     // ==================== POINTS FIDÉLITÉ ====================
@@ -3907,71 +4689,17 @@
             sessionStorage.setItem('latyfa_admin_session', 'true');
             document.getElementById('adminModal').classList.add('active');
             
-            // Initialiser toutes les sections
             refreshAdminList();
             mettreAJourStats();
             initChart();
             updateClientsList();
             updateClientSelector();
-            updateMessagesEnvoyes();
-            updateTelSelector();
-            updateSmsEnvoyes();
-            updateBackupList();
             
             const maintenanceActif = localStorage.getItem('latyfa_maintenance') === 'true';
             setMaintenance(maintenanceActif);
         } else if (codeSaisi !== null) {
             alert("❌ Code incorrect");
         }
-    }
-    
-    function updateTelSelector() {
-        const selector = document.getElementById('telSelector');
-        if (!selector) return;
-        
-        selector.innerHTML = clients.filter(c => !c.isAdmin).map(c => `
-            <div class="client-checkbox">
-                <input type="checkbox" id="tel_${c.id}" value="${c.tel}" class="client-check">
-                <label for="tel_${c.id}" class="flex-1 text-[9px]">
-                    <strong>${c.nom}</strong> - ${c.tel}
-                </label>
-            </div>
-        `).join('');
-    }
-    
-    function updateBackupList() {
-        const container = document.getElementById('backupList');
-        if (!container) return;
-        
-        const lastBackup = localStorage.getItem('latyfa_last_backup');
-        if (lastBackup) {
-            container.innerHTML = `
-                <div class="flex justify-between items-center text-[9px] border-b pb-2">
-                    <span><i class="fa-regular fa-circle-check text-green-600 mr-2"></i> Sauvegarde manuelle</span>
-                    <span class="text-gray-400">${lastBackup}</span>
-                </div>
-            `;
-        } else {
-            container.innerHTML = '<p class="text-[9px] text-gray-400">Aucune sauvegarde</p>';
-        }
-    }
-    
-    function updateMessagesEnvoyes() {
-        const container = document.getElementById('messagesEnvoyes');
-        if (!container) return;
-        
-        const recents = messages.filter(m => m.expediteurId === 'admin')
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .slice(0, 5);
-        
-        container.innerHTML = recents.map(m => {
-            const destinataire = clients.find(c => c.id === m.destinataireId);
-            return `
-                <div class="text-[8px] border-b pb-1">
-                    <span class="font-bold">${m.date}</span> - À: ${destinataire?.nom || 'Client'} - ${m.objet}
-                </div>
-            `;
-        }).join('');
     }
     
     function updateClientSelector() {
@@ -4031,15 +4759,6 @@
         document.getElementById('messageObjet').value = '';
         document.getElementById('messageContenu').value = '';
         clearClientSelection();
-    }
-    
-    function previsualiserMessage() {
-        const contenu = document.getElementById('messageContenu').value;
-        if (!contenu) {
-            alert("Écrivez d'abord un message");
-            return;
-        }
-        alert("APERÇU DU MESSAGE :\n\n" + contenu);
     }
     
     function updateClientsList() {
@@ -4413,6 +5132,95 @@
         }
     }
     
+    function sauvegarderToutesDonnees() {
+        const backup = {
+            date: new Date().toLocaleString('fr-FR'),
+            produits: products,
+            clients: clients,
+            commandes: JSON.parse(localStorage.getItem('latyfa_historique')) || [],
+            messages: messages,
+            categories: categories,
+            avis: avis,
+            parrainage: parrainage
+        };
+        
+        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", `sauvegarde_latyfa_${new Date().toISOString().slice(0,10)}.json`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        showToast("✅ Sauvegarde téléchargée");
+    }
+    
+    function restaurerDonnees() {
+        const fileInput = document.getElementById('restoreFile');
+        fileInput.click();
+        
+        fileInput.onchange = function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    
+                    if (confirm("⚠️ Restaurer cette sauvegarde écrasera toutes les données actuelles. Continuer ?")) {
+                        if (backup.produits) {
+                            products = backup.produits;
+                            localStorage.setItem('latyfa_db', JSON.stringify(products));
+                        }
+                        if (backup.clients) {
+                            clients = backup.clients;
+                            localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+                        }
+                        if (backup.commandes) {
+                            localStorage.setItem('latyfa_historique', JSON.stringify(backup.commandes));
+                        }
+                        if (backup.messages) {
+                            messages = backup.messages;
+                            localStorage.setItem('latyfa_messages', JSON.stringify(messages));
+                        }
+                        if (backup.categories) {
+                            categories = backup.categories;
+                            localStorage.setItem('latyfa_categories', JSON.stringify(categories));
+                        }
+                        if (backup.avis) {
+                            avis = backup.avis;
+                            localStorage.setItem('latyfa_avis', JSON.stringify(avis));
+                        }
+                        if (backup.parrainage) {
+                            parrainage = backup.parrainage;
+                            localStorage.setItem('latyfa_parrainage', JSON.stringify(parrainage));
+                        }
+                        
+                        showToast("✅ Données restaurées avec succès");
+                        setTimeout(() => location.reload(), 2000);
+                    }
+                } catch(err) {
+                    alert("Fichier de sauvegarde invalide");
+                }
+            };
+            
+            reader.readAsText(file);
+        };
+    }
+    
+    function effacerToutesDonnees() {
+        if (confirm("🚨 ATTENTION : Cette action supprimera TOUTES les données. Êtes-vous absolument sûr ?")) {
+            if (confirm("Dernière chance : voulez-vous vraiment tout effacer ?")) {
+                localStorage.clear();
+                showToast("💥 Toutes les données ont été effacées");
+                setTimeout(() => location.reload(), 2000);
+            }
+        }
+    }
+    
     function changerMotDePasse() {
         const nouveauCode = prompt("Nouveau code d'accès admin :");
         if (nouveauCode && nouveauCode.trim() !== "") {
@@ -4455,7 +5263,21 @@
     }
     
     function suivreColis() {
-        alert("📦 Pour suivre votre colis, contactez-nous sur WhatsApp avec votre numéro de commande.");
+        if (!utilisateurConnecte) {
+            ouvrirAuthModal();
+            return;
+        }
+        
+        // Vérifier si l'utilisateur a des commandes
+        const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+        const mesCommandes = historique.filter(cmd => cmd.client === utilisateurConnecte.nom.toUpperCase() || cmd.tel === utilisateurConnecte.tel);
+        
+        if (mesCommandes.length === 0) {
+            alert("Vous n'avez pas encore de commande à suivre.");
+            return;
+        }
+        
+        ouvrirSuivi();
     }
     
     function ouvrirCGV() {
@@ -4618,9 +5440,6 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').catch(() => {});
         }
-        
-        // Écouteur pour le compteur SMS
-        document.getElementById('smsContenu')?.addEventListener('input', updateSmsCounter);
     });
 </script>
 
