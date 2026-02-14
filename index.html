@@ -10,7 +10,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
         <style>
-            #stat-ca {
+            taille-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    background: #fafafa;
+  }
+
+  .taille-box label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+  }
+
+  .taille-box input, .taille-box select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .taille-box button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+
+  #resultat-taille {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #008000;
+  }
+          #stat-ca {
     transition: color 0.3s ease;
     text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
             }
@@ -383,16 +422,26 @@ body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
                             <div id="size-helper-ui" class="hidden mb-4 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-300">
     <p class="text-[9px] font-black uppercase mb-2">Calculateur de taille</p>
     <div class="flex gap-2">
-        <input type="number" id="user-weight" placeholder="Poids (kg)" class="w-1/2 p-2 text-xs border rounded">
-        <button onclick="calculerTailleRec()" class="w-1/2 bg-black text-white text-[10px] font-bold rounded">CALCULER</button>
-    </div>
-    <p id="size-result" class="mt-2 text-[10px] font-bold text-green-600 uppercase"></p>
-</div>
+        <div class="taille-box">
+  <h3>🔍 Calculer ma taille</h3>
 
-<button onclick="document.getElementById('size-helper-ui').classList.toggle('hidden')" class="text-[9px] font-bold text-[#c5a059] uppercase underline mb-2">
-    <i class="fa-solid fa-wand-magic-sparkles"></i> Aide-moi à choisir ma taille
-</button>
-                    <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
+  <label>Taille (en cm)</label>
+  <input id="taille" type="number" placeholder="Ex: 170">
+
+  <label>Poids (en kg)</label>
+  <input id="poids" type="number" placeholder="Ex: 65">
+
+  <label>Coupe préférée</label>
+  <select id="coupe">
+    <option value="normale">Normale</option>
+    <option value="ajustée">Ajustée</option>
+    <option value="large">Large</option>
+  </select>
+
+  <button onclick="recommanderTaille()">Calculer ma taille</button>
+
+  <p id="resultat-taille"></p>
+</div>
                         </div>
                         <div id="color-area" class="hidden">
                             <label class="text-[10px] font-black uppercase text-gray-400">Couleur</label>
@@ -668,6 +717,43 @@ body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
     </div>
 </div>
 <script>
+    function calculerTaille(tailleCm, poidsKg, coupe) {
+    const indice = poidsKg / ((tailleCm / 100) ** 2);
+
+    let taille = "";
+
+    if (indice < 19) taille = "S";
+    else if (indice < 23) taille = "M";
+    else if (indice < 27) taille = "L";
+    else taille = "XL";
+
+    if (coupe === "ajustée" && taille !== "S") {
+      taille = taille === "M" ? "S" : taille === "L" ? "M" : "L";
+    }
+
+    if (coupe === "large" && taille !== "XL") {
+      taille = taille === "L" ? "XL" : taille === "M" ? "L" : "M";
+    }
+
+    return taille;
+  }
+
+  function recommanderTaille() {
+    const taille = parseInt(document.getElementById("taille").value);
+    const poids = parseInt(document.getElementById("poids").value);
+    const coupe = document.getElementById("coupe").value;
+
+    if (!taille || !poids) {
+      document.getElementById("resultat-taille").innerText =
+        "Veuillez entrer votre taille et votre poids.";
+      return;
+    }
+
+    const tailleRecommandee = calculerTaille(taille, poids, coupe);
+
+    document.getElementById("resultat-taille").innerText =
+      "👉 Taille recommandée : " + tailleRecommandee;
+  }
     let promoSonJoué = false; // Pour éviter que le son tourne en boucle
     function viderPanier() {
     if (confirm("Voulez-vous vraiment vider votre panier ?")) {
