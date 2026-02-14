@@ -8,7 +8,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-0HC6CY42YB');
 </script>
     <meta charset="UTF-8">
@@ -18,237 +17,162 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-        <style>
-            #stat-ca {
-    transition: color 0.3s ease;
-    text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
-            }
-         #main-detail-img, #main-detail-video {
-    animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.98); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-.thumb-active {
-    border-color: var(--latyfa-gold) !important;
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}   
-:root { 
-    /* MODIFIE CES 3 COULEURS ICI POUR TOUT CHANGER SUR LE SITE */
-    --latyfa-gold: #c5a059;   /* Doré Luxe */
-    --latyfa-dark: #1a1a1a;   /* Noir Profond */
-    --latyfa-accent: #ff6600; /* Couleur d'accent (Orange/Prix) */
-}
-           @keyframes pulse-gold {
-    0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(197, 160, 89, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
-}
-
-.ali-gradient {
-    background: linear-gradient(90deg, #c5a059 0%, #e2c286 100%);
-    animation: pulse-gold 2s infinite;
-} 
-
-body { 
-    background-color: #fcfcfc; 
-    font-family: 'Montserrat', sans-serif; 
-    margin: 0; 
-    scroll-behavior: smooth; 
-    /* Transition douce pour tous les changements de couleur */
-body {
-    transition: background-color 0.5s ease, color 0.5s ease !important;
-}
-
-/* On applique la transition aussi aux cartes et au header */
-header, aside, .product-card, .modal > div, button, div {
-    transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
-}
-}
-/* Application des couleurs via variables */
-.logo-font, .text-[#c5a059] { color: var(--latyfa-gold) !important; }
-.text-[#ff6600] { color: var(--latyfa-accent) !important; }
-.bg-[#ff6600], .bg-[#c5a059] { background-color: var(--latyfa-gold) !important; }
-.ali-gradient { 
-    background: linear-gradient(90deg, var(--latyfa-gold) 0%, #e2c286 100%); 
-}
-
-/* Style des liens de catégories */
-.category-link {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: #555;
-    transition: all 0.3s ease;
-    border-bottom: 1px solid #f0f0f0;
-    padding-bottom: 8px;
-}
-
-.category-link:hover {
-    color: var(--latyfa-gold);
-    padding-left: 5px;
-    border-bottom-color: var(--latyfa-gold);
-}
-
-/* Police de luxe */
-h1, h2, h3, .logo-font { font-family: 'Playfair Display', serif; }
-
-/* Cartes produits */
-.product-card { 
-    background: white; 
-    border-radius: 8px; 
-    border: 1px solid transparent; 
-    height: 100%; 
-    display: flex; 
-    flex-direction: column; 
-    cursor: pointer; 
-    transition: 0.2s; 
-}
-.product-card:hover { 
-    border-color: var(--latyfa-gold); 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-}
-
-/* Modales */
-.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: white; overflow-y: auto; padding: 20px; }
-.modal.active { display: block; }
-.btn-disabled { background: #cccccc !important; cursor: not-allowed; opacity: 0.6; }
-
-/* Roue de la fortune */
-.wheel-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-.wheel-mask.active { display: flex; }
-.wheel-box { background: white; padding: 30px; border-radius: 30px; text-align: center; position: relative; width: 95%; max-width: 400px; border: 5px solid var(--latyfa-gold); }
-#canvas { width: 280px; height: 280px; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); margin: 20px auto; }
-.spin-trigger { background: #000; color: #fff; padding: 15px 40px; border-radius: 50px; font-weight: 900; cursor: pointer; border: none; font-size: 14px; width: 100%; }
-
-/* Animations */
-@keyframes cart-shake {
-    0% { transform: scale(1); }
-    25% { transform: scale(1.3) rotate(15deg); }
-    50% { transform: scale(1.3) rotate(-15deg); }
-    100% { transform: scale(1); }
-}
-.animate-cart { animation: cart-shake 0.5s ease-in-out; }
-.no-scrollbar::-webkit-scrollbar { display: none; }
- @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-.animate-marquee {
-    display: inline-block;
-    padding-left: 100%;
-    animation: marquee 25s linear infinite;
-}
-/* Pause au survol pour que le client puisse lire tranquillement */
-.animate-marquee:hover {
-    animation-play-state: paused;
-}
-            @keyframes loading {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-/* Classe pour cacher le loader proprement */
-.loader-hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-            #canvas {
-    display: block;
-    margin: 20px auto;
-    border-radius: 50%;
-    border: 8px solid #1a1a1a;
-    box-shadow: 0 0 20px rgba(197, 160, 89, 0.5);
-            }
-           .bg-gold-gradient {
-    background: linear-gradient(135deg, #ffffff 0%, #fcf8f0 100%);
-}
-#wheel-notif {
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-} 
-            /* Styles pour le Mode Sombre */
-body.dark-theme {
-    background-color: #121212 !important;
-    color: #e0e0e0;
-}
-
-.dark-theme header, 
-.dark-theme aside, 
-.dark-theme .product-card,
-.dark-theme .modal > div {
-    background-color: #1e1e1e !important;
-    border-color: #333 !important;
-}
-
-.dark-theme .text-gray-800, 
-.dark-theme .text-gray-600,
-<style>
-/* 1. VARIABLES ET ANIMATIONS */
-:root {
-    --latyfa-gold: #c5a059;
-    --latyfa-dark: #1a1a1a;
-    --latyfa-accent: #ff6600;
-}
-
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-@keyframes pulse-gold { 
-    0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); } 
-    70% { box-shadow: 0 0 0 10px rgba(197, 160, 89, 0); } 
-    100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); } 
-}
-@keyframes loading { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-/* 2. BASE ET MODE SOMBRE */
-body {
-    background-color: #fcfcfc;
-    font-family: 'Montserrat', sans-serif;
-    margin: 0;
-    scroll-behavior: smooth;
-    transition: background-color 0.5s ease, color 0.5s ease;
-}
-
-body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
-
-.dark-theme header, .dark-theme aside, .dark-theme .product-card, .dark-theme .modal > div {
-    background-color: #1e1e1e !important;
-    border-color: #333 !important;
-}
-
-/* 3. COMPOSANTS */
-.logo-font { font-family: 'Playfair Display', serif; color: var(--latyfa-gold) !important; }
-
-.product-card {
-    background: white;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    transition: 0.3s ease;
-}
-.product-card:hover { border-color: var(--latyfa-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-
-.ali-gradient { 
-    background: linear-gradient(90deg, var(--latyfa-gold) 0%, #e2c286 100%) !important; 
-    animation: pulse-gold 2s infinite;
-}
-
-.modal { display: none; position: fixed; z-index: 1000; inset: 0; background: white; overflow-y: auto; padding: 20px; }
-.modal.active { display: block; }
-
-.mode-icon-spin { animation: spin-slow 0.5s ease-in-out; }
-
-/* Utilitaires */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.loader-hidden { opacity: 0; pointer-events: none; }
-</style>
-   
+    <style>
+        :root { 
+            --latyfa-gold: #c5a059;   
+            --latyfa-dark: #1a1a1a;   
+            --latyfa-accent: #ff6600; 
+        }
+        
+        body { 
+            background-color: #fcfcfc; 
+            font-family: 'Montserrat', sans-serif; 
+            margin: 0; 
+            scroll-behavior: smooth; 
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        
+        .logo-font { font-family: 'Playfair Display', serif; color: var(--latyfa-gold) !important; }
+        .text-latyfa-gold { color: var(--latyfa-gold) !important; }
+        .bg-latyfa-gold { background-color: var(--latyfa-gold) !important; }
+        
+        .category-link {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #555;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+        
+        .category-link:hover {
+            color: var(--latyfa-gold);
+            padding-left: 5px;
+            border-bottom-color: var(--latyfa-gold);
+        }
+        
+        .product-card { 
+            background: white; 
+            border-radius: 8px; 
+            border: 1px solid transparent; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            cursor: pointer; 
+            transition: 0.2s; 
+        }
+        
+        .product-card:hover { 
+            border-color: var(--latyfa-gold); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+        
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: white; 
+            overflow-y: auto; 
+            padding: 20px; 
+        }
+        
+        .modal.active { 
+            display: block; 
+        }
+        
+        .wheel-mask { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.9); 
+            z-index: 2000; 
+            align-items: center; 
+            justify-content: center; 
+            backdrop-filter: blur(8px); 
+        }
+        
+        .wheel-mask.active { 
+            display: flex; 
+        }
+        
+        .wheel-box { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 30px; 
+            text-align: center; 
+            position: relative; 
+            width: 95%; 
+            max-width: 400px; 
+            border: 5px solid var(--latyfa-gold); 
+        }
+        
+        #canvas { 
+            width: 280px; 
+            height: 280px; 
+            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); 
+            margin: 20px auto; 
+        }
+        
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .loader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .animate-marquee {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 25s linear infinite;
+        }
+        
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { 
+            display: none; 
+        }
+        
+        .thumb-active {
+            border-color: var(--latyfa-gold) !important;
+            transform: scale(1.05);
+        }
+        
+        body.dark-theme {
+            background-color: #121212 !important;
+            color: #e0e0e0;
+        }
+        
+        .dark-theme header, 
+        .dark-theme aside, 
+        .dark-theme .product-card,
+        .dark-theme .modal > div {
+            background-color: #1e1e1e !important;
+            border-color: #333 !important;
+        }
+    </style>
+    
     <audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
     <audio id="cart-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
-    <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
+</head>
+<body>
+
+<div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
     <div class="relative">
         <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-24 w-24 rounded-full border-2 border-[#c5a059] animate-pulse shadow-[0_0_20px_rgba(197,160,89,0.3)]">
     </div>
@@ -264,17 +188,17 @@ body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
     ✨ Produit ajouté au panier
 </div>
 
-    <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">
+<div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">
     ✨ Promo Exclusive -20% dès 20.000 F D'achat à partir du 14 fév au 28 fév 2026: <span id="countdown" class="text-white ml-1">--:--:--</span> ✨
 </div>
-    
+
 <div class="bg-white border-b border-gray-100 py-1 overflow-hidden whitespace-nowrap">
     <div class="inline-block animate-marquee text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400">
         ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE — 🚚 EXPÉDITION SOUS 48H DANS TOUTE LA CÔTE D'IVOIRE — ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE —
     </div>
 </div>
 
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+<header class="bg-white shadow-sm sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
         <div class="flex items-center gap-2">
             <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
@@ -289,8 +213,8 @@ body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
         </div>
         <div class="flex gap-6">
             <button onclick="toggleDarkMode()" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition-all ml-2" id="dark-mode-btn">
-    <i class="fa-solid fa-moon"></i>
-</button>
+                <i class="fa-solid fa-moon"></i>
+            </button>
             <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
                 <i class="fa-solid fa-truck text-gray-600"></i>
                 <p class="text-[9px] font-bold uppercase">Suivi</p>
@@ -303,311 +227,95 @@ body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
         </div>
     </div>
 </header>
-    <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-            <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none">La Boutique du 225</h1>
-            <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]">Bijoux, vêtements, parfum...</p>
-            <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg">Découvrir la Collection</a>
+
+<section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+        <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none">La Boutique du 225</h1>
+        <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]">Bijoux, vêtements, parfum...</p>
+        <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg">Découvrir la Collection</a>
+    </div>
+</section>
+
+<div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
+    <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border border-gray-100">
+        <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center">
+            Nos Univers
+        </h3>
+        <div class="flex flex-col gap-5" id="categories-container">
+            <!-- Les catégories seront insérées ici par JavaScript -->
         </div>
-    </section>
-
-    <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
-        <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border border-gray-100">
-    <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center">
-        Nos Univers
-    </h3>
-    <div class="flex flex-col gap-5">
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('tous')">
-            Tout voir <i class="fa-solid fa-crown text-[10px] text-[#c5a059]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('bijoux')">
-            Bijoux <i class="fa-solid fa-gem text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('vetements')">
-            Vêtements <i class="fa-solid fa-shirt text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('chaussures')">
-            Chaussures <i class="fa-solid fa-shoe-prints text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('sac')">
-            Sacs à main <i class="fa-solid fa-bag-shopping text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('parfum')">
-            Parfums <i class="fa-solid fa-spray-can-sparkles text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('hanche')">
-            Perles de hanche <i class="fa-solid fa-circle-nodes text-[10px]"></i>
-        </span>
-        <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('autres')">
-            Autres <i class="fa-solid fa-plus text-[10px]"></i>
-        </span>
-    </div>
-</aside>
-
-        <main class="flex-1">
-            <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
-        </main>
-    </div>
-
-    <button onclick="document.querySelector('.wheel-mask').classList.add('active')" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#ff6600]">
-        <i class="fa-solid fa-gift text-[#ff6600] text-2xl"></i>
-    </button>
-
-    <div class="wheel-mask">
-    <div class="wheel-box">
-        <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
-        
-        <h3 class="logo-font text-xl font-black italic uppercase text-gray-800">LATYFA LUCKY WHEEL</h3>
-        <p id="wheel-msg" class="text-[11px] font-black uppercase mt-2 text-blue-600"></p>
-        
-        <div class="relative">
-            <canvas id="canvas" width="300" height="300"></canvas>
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 text-3xl text-[#c5a059]">▼</div>
-        </div>
-        
-        <button id="spin" class="spin-trigger mt-4">TENTER MA CHANCE</button>
-    </div>
+    </aside>
+    
+    <main class="flex-1">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
+    </main>
 </div>
 
 <button onclick="document.querySelector('.wheel-mask').classList.add('active')" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce flex items-center justify-center border-2 border-[#c5a059]">
     <i class="fa-solid fa-gift text-[#c5a059] text-2xl"></i>
 </button>
 
-    <div id="productDetailModal" class="modal">
-        <div class="max-w-2xl mx-auto">
-            <button onclick="document.getElementById('productDetailModal').classList.remove('active')" class="mb-6 text-gray-500 font-bold uppercase text-[10px]"><i class="fa-solid fa-arrow-left"></i> Retour</button>
-            <div class="flex flex-col md:flex-row gap-8">
-                <div class="md:w-1/2">
-                    <img id="main-detail-img" src="" class="w-full h-80 object-cover rounded-xl shadow-md border">
-                    <div id="thumbnails" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
-                </div>
-                <div class="md:w-1/2">
-                    <h2 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800"></h2>
-                    <p id="detail-price" class="text-[#ff6600] font-black text-2xl mt-2"></p>
-                    <div class="my-4 border-t pt-4"><p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p></div>
-                    <div class="space-y-4 my-6">
-    <div id="size-area" class="block"> 
-        <label class="block text-[10px] font-black uppercase text-gray-400 mb-2">Taille / Pointure</label>
-        
-        <button id="btn-aide-taille" onclick="document.getElementById('size-helper-ui').classList.toggle('hidden')" 
-                class="text-[9px] font-bold text-[#c5a059] uppercase underline mb-3 block">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Aide-moi à choisir ma taille
-        </button>
-
-        <div id="size-helper-ui" class="hidden mb-4 p-4 bg-orange-50 rounded-xl border-2 border-dashed border-orange-200">
-            <p class="text-[10px] font-black uppercase mb-3 text-orange-800">Trouver ma taille idéale</p>
-            <div class="flex gap-2">
-                <input type="number" id="user-weight" placeholder="Ton poids (kg)" 
-                       class="w-1/2 p-3 text-sm border rounded-lg focus:ring-2 focus:ring-[#c5a059] outline-none">
-                <button onclick="calculerTailleRec()" 
-                        class="w-1/2 bg-black text-white text-[10px] font-black rounded-lg hover:bg-[#c5a059] transition-all">
-                    CALCULER
-                </button>
-            </div>
-            <p id="size-result" class="mt-3 text-[11px] font-bold text-green-600 uppercase tracking-wider"></p>
+<div class="wheel-mask">
+    <div class="wheel-box">
+        <button onclick="document.querySelector('.wheel-mask').classList.remove('active')" class="absolute top-4 right-4 text-gray-900 font-black text-xl">×</button>
+        <h3 class="logo-font text-xl font-black italic uppercase text-gray-800">LATYFA LUCKY WHEEL</h3>
+        <p id="wheel-msg" class="text-[11px] font-black uppercase mt-2 text-blue-600"></p>
+        <div class="relative">
+            <canvas id="canvas" width="300" height="300"></canvas>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 text-3xl text-[#c5a059]">▼</div>
         </div>
-
-        <div id="shoe-guide-ui" class="hidden mb-4 p-4 bg-blue-50 rounded-xl border-2 border-dashed border-blue-200">
-             <p class="text-[10px] font-black uppercase mb-2 text-blue-800">Guide des pointures</p>
-             <p class="text-[9px] text-blue-600 mb-2 italic">Mesurez votre pied du talon aux orteils.</p>
-             <table class="w-full text-[10px] text-left border-collapse">
-                <tr class="border-b border-blue-100">
-                    <th class="py-1">Taille</th><th class="py-1">CM</th>
-                </tr>
-                <tr><td>38-40</td><td>25.0 cm</td></tr>
-                <tr><td>41-43</td><td>26.5 cm</td></tr>
-                <tr><td>44-45</td><td>28.0 cm</td></tr>
-             </table>
-        </div>
-
-        <select id="select-size" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold outline-none focus:ring-2 focus:ring-black">
-            </select>
-    </div>
-</div>
-<button onclick="document.getElementById('size-helper-ui').classList.toggle('hidden')" class="text-[9px] font-bold text-[#c5a059] uppercase underline mb-2">
-    <i class="fa-solid fa-wand-magic-sparkles"></i> Aide-moi à choisir ma taille
- 
-                    <select id="select-size" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
-                        </div>
-                        <div id="color-area" class="hidden">
-                            <label class="text-[10px] font-black uppercase text-gray-400">Couleur</label>
-                            <select id="select-color" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
-                        </div>
-                    </div>
-                    <button onclick="ouvrirGuide()" class="text-[9px] font-bold text-gray-400 uppercase underline mb-2 hover:text-[#c5a059]">
-    <i class="fa-solid fa-ruler-combined"></i> Guide des tailles
-</button>
-                    <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-6">Ajouter au panier</button>
-                    <div class="mt-6 grid grid-cols-3 gap-2 border-t pt-4">
-    <div class="text-center">
-        <div class="text-[#c5a059] text-lg mb-1">
-            <i class="fa-solid fa-shield-check"></i>
-        </div>
-        <p class="text-[8px] font-black uppercase leading-tight text-gray-500">Qualité<br>Garantie</p>
-    </div>
-    <div class="text-center border-x border-gray-100">
-        <div class="text-[#c5a059] text-lg mb-1">
-            <i class="fa-solid fa-truck-fast"></i>
-        </div>
-        <p class="text-[8px] font-black uppercase leading-tight text-gray-500">Livraison<br>Express</p>
-    </div>
-    <div class="text-center">
-        <div class="text-[#c5a059] text-lg mb-1">
-            <i class="fa-solid fa-headset"></i>
-        </div>
-        <p class="text-[8px] font-black uppercase leading-tight text-gray-500">Support<br>WhatsApp 7j/7</p>
+        <button id="spin" class="bg-black text-white py-4 px-8 rounded-full font-black uppercase text-sm w-full mt-4 hover:bg-gray-800 transition">TENTER MA CHANCE</button>
     </div>
 </div>
 
-<div class="mt-4 flex items-center justify-center gap-3 bg-gray-50 p-2 rounded-lg border border-gray-100">
-    <span class="text-[7px] font-bold uppercase tracking-widest text-gray-400">Paiement sécurisé via</span>
-    <div class="flex gap-2 opacity-60 grayscale hover:grayscale-0 transition-all">
-        <img src="https://goamobile.com/logosent/wave@221@-P-2021-06-30_00-18-27wave_logo_2.png" class="h-4" alt="Wave">
-        <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/orange-money-logo.png" class="h-4" alt="Orange Money">
-        <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/mtn-mobile-money-logo.jpg" class="h-4" alt="MTN">
+<div id="productDetailModal" class="modal">
+    <div class="max-w-2xl mx-auto">
+        <button onclick="document.getElementById('productDetailModal').classList.remove('active')" class="mb-6 text-gray-500 font-bold uppercase text-[10px]"><i class="fa-solid fa-arrow-left"></i> Retour</button>
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="md:w-1/2">
+                <img id="main-detail-img" src="" class="w-full h-80 object-cover rounded-xl shadow-md border">
+                <div id="thumbnails" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
+            </div>
+            <div class="md:w-1/2">
+                <h2 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800"></h2>
+                <p id="detail-price" class="text-[#ff6600] font-black text-2xl mt-2"></p>
+                <div class="my-4 border-t pt-4"><p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p></div>
+                <div class="space-y-4 my-6">
+                    <div id="size-area" class="block"> 
+                        <label class="block text-[10px] font-black uppercase text-gray-400 mb-2">Taille / Pointure</label>
+                        <select id="select-size" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold outline-none focus:ring-2 focus:ring-black"></select>
+                    </div>
+                    <div id="color-area" class="hidden">
+                        <label class="text-[10px] font-black uppercase text-gray-400">Couleur</label>
+                        <select id="select-color" class="w-full border p-3 rounded-lg mt-1 text-sm bg-gray-50"></select>
+                    </div>
+                </div>
+                <button onclick="ajouterDepuisDetail()" class="w-full bg-[#c5a059] text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-6">Ajouter au panier</button>
+            </div>
+        </div>
     </div>
 </div>
 
-                    <div class="flex items-center justify-center gap-6 pt-4 border-t">
-                        <button id="share-wa" class="text-[#25D366] text-xl"><i class="fa-brands fa-whatsapp"></i></button>
-                        <button id="share-fb" class="text-[#1877F2] text-xl"><i class="fa-brands fa-facebook"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-<section class="bg-gray-50 py-12 border-t border-b border-gray-100">
-    <div class="container mx-auto px-4">
-        <h3 class="logo-font text-center text-xl font-black mb-8 uppercase italic tracking-widest text-gray-800">Elles adorent Latyfa Shop</h3>
-        <div class="flex overflow-x-auto gap-6 no-scrollbar pb-4">
-            <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex text-[#c5a059] mb-3 text-[10px]">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                </div>
-                <p class="text-[11px] italic text-gray-600 mb-4">"Qualité incroyable ! J'ai commandé mon sac lundi, reçu mardi à Cocody. Je recommande à 100%."</p>
-                <p class="text-[10px] font-black uppercase tracking-tighter">— Mariam K.</p>
-            </div>
-            <section class="container mx-auto px-4 py-10">
-    <div class="grid grid-cols-3 gap-4 text-center">
-        <div class="flex flex-col items-center">
-            <div class="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-[#c5a059] mb-3">
-                <i class="fa-solid fa-shield-heart text-xl"></i>
-            </div>
-            <h4 class="text-[9px] font-bold uppercase tracking-widest">Qualité Premium</h4>
-            <p class="text-[8px] text-gray-400 uppercase mt-1">Sélection Luxe</p>
-        </div>
-        <div class="flex flex-col items-center">
-            <div class="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-[#c5a059] mb-3">
-                <i class="fa-solid fa-bolt-lightning text-xl"></i>
-            </div>
-            <h4 class="text-[9px] font-bold uppercase tracking-widest">Livraison Rapide</h4>
-            <p class="text-[8px] text-gray-400 uppercase mt-1">Abidjan & Intérieur</p>
-        </div>
-        <div class="flex flex-col items-center">
-            <div class="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-[#c5a059] mb-3">
-                <i class="fa-solid fa-headset text-xl"></i>
-            </div>
-            <h4 class="text-[9px] font-bold uppercase tracking-widest">Service Client</h4>
-            <p class="text-[8px] text-gray-400 uppercase mt-1">7j/7 sur WhatsApp</p>
-        </div>
-    </div>
-</section>
-
-            <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex text-[#c5a059] mb-3 text-[10px]">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                </div>
-                <p class="text-[11px] italic text-gray-600 mb-4">"Les bijoux ne noircissent pas, la finition est vraiment top pour le prix. Très satisfaite."</p>
-                <p class="text-[10px] font-black uppercase tracking-tighter">— Sarah D.</p>
-            </div>
-            <div class="min-w-[280px] bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex text-[#c5a059] mb-3 text-[10px]">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                </div>
-                <p class="text-[11px] italic text-gray-600 mb-4">"Expédition rapide sur Bouaké. Le colis était très bien emballé. Merci Latyfa !"</p>
-                <p class="text-[10px] font-black uppercase tracking-tighter">— Amenan G.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-    <footer class="bg-white border-t pt-12 pb-6">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
-                <div class="text-center md:text-left">
-                    <div class="flex items-center justify-center md:justify-start gap-2 mb-4">
-                        <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-8 w-8 rounded-full">
-                        <span class="text-xl font-black italic text-[#ff6600]">LATYFA</span>
-                    </div>
-                    <p class="text-gray-500 text-[10px] uppercase font-bold">Votre satisfaction, notre priorité.</p>
-                </div>
-                <div class="text-center md:text-left">
-                    <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Aide</h4>
-                    <ul class="text-gray-500 text-[10px] space-y-2 uppercase font-bold">
-                        <li class="cursor-pointer hover:text-orange-600" onclick="ouvrirCGV()">Conditions de Vente</li>
-                        <li class="cursor-pointer hover:text-orange-600" onclick="suivreColis()">Suivi Colis</li>
-                    </ul>
-                </div>
-                <div class="text-center md:text-left">
-                    <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Boutique</h4>
-                    <p class="text-gray-500 text-[10px] uppercase font-bold">📍 Abidjan, Côte d'Ivoire</p>
-                </div>
-                <div class="text-center md:text-left">
-                    <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Suivez-nous</h4>
-                    <div class="flex justify-center md:justify-start gap-3">
-                        <a href="https://wa.me/2250709002881" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#25D366] hover:text-white transition"><i class="fa-brands fa-whatsapp"></i></a>
-                        <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#1877F2] hover:text-white transition"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition"><i class="fa-brands fa-tiktok"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t pt-6 text-center text-gray-400 text-[9px] font-bold uppercase tracking-widest">
-                <div class="flex flex-col items-center justify-center py-4 border-t border-gray-100 mt-6">
-    <div class="flex items-center gap-2 text-[#c5a059] mb-1">
-        <i class="fa-solid fa-eye text-[10px]"></i>
-        <span id="visitor-count" class="text-[12px] font-black tracking-widest">0000</span>
-    </div>
-    <p class="text-[8px] text-gray-400 uppercase font-bold tracking-[0.2em]">Visiteurs ont exploré l'univers Latyfa shop</p>
-</div>
-                © 2026 LATYFA BUSINESS | <button onclick="ouvrirCGV()" class="underline text-orange-600 uppercase">Juridique</button>
-            </div>
-        </div>
-    </footer>
-
-    <div id="cartModal" class="modal bg-black/40 backdrop-blur-sm">
+<div id="cartModal" class="modal bg-black/40 backdrop-blur-sm">
     <div class="max-w-md mx-auto bg-white rounded-t-3xl p-6 min-h-[85vh] mt-10 shadow-2xl relative">
-        
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <h2 class="text-lg font-black uppercase italic tracking-widest text-[#c5a059]">Mon Panier</h2>
             <button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-100 px-3 py-1 rounded-full hover:bg-red-50">
                 <i class="fa-solid fa-trash-can mr-1"></i> Vider
             </button>
         </div>
-
-        <div id="promo-congrats" class="hidden mb-4 p-3 bg-pink-500 text-white rounded-xl text-[10px] font-black uppercase text-center animate-bounce shadow-lg">
-            ✨ -20% DE RÉDUCTION ST VALENTIN APPLIQUÉS !
-        </div>
-
-        <div id="cart-items" class="space-y-4 mb-6 max-h-[30vh] overflow-y-auto no-scrollbar">
-            </div>
-
+        <div id="cart-items" class="space-y-4 mb-6 max-h-[30vh] overflow-y-auto no-scrollbar"></div>
         <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
-            
             <div class="flex gap-2 bg-gray-50 p-2 rounded-xl">
                 <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border-none bg-transparent p-2 text-sm uppercase font-bold focus:ring-0">
                 <button onclick="appliquerPromo()" class="bg-black text-white px-6 rounded-lg text-[10px] font-bold hover:bg-[#c5a059] transition-colors">OK</button>
             </div>
-            <div id="promo-msg" class="text-[9px] font-bold uppercase hidden px-2"></div>
-
             <input type="text" id="nom-client" placeholder="NOM COMPLET *" class="w-full border p-3 rounded-lg text-sm uppercase bg-gray-50 focus:border-[#c5a059] outline-none">
-            
             <div class="grid grid-cols-2 gap-2">
                 <input type="tel" id="tel-client" placeholder="WHATSAPP *" class="w-full border p-3 rounded-lg text-sm bg-gray-50 focus:border-[#c5a059] outline-none">
                 <input type="text" id="quartier-client" placeholder="QUARTIER *" class="w-full border p-3 rounded-lg text-sm bg-gray-50 focus:border-[#c5a059] outline-none">
             </div>
-
             <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm font-bold bg-blue-50 border-blue-200 outline-none">
                 <option value="">-- CHOISIR ZONE LIVRAISON --</option>
                 <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
@@ -615,7 +323,6 @@ body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
                 <option value="interieur">Intérieur pays (3.000 F)</option>
                 <option value="bouake">Retrait Boutique (Gratuit)</option>
             </select>
-
             <div class="bg-gray-50 p-4 rounded-xl space-y-2 border border-gray-100">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
@@ -624,162 +331,102 @@ body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
                     </div>
                     <input type="checkbox" id="check-cadeau" onchange="majResume()" class="h-4 w-4 accent-pink-500">
                 </div>
-                <hr class="border-gray-200">
-                <div id="resume-final" class="text-[10px] font-bold uppercase space-y-1 text-gray-600">
-                    </div>
+                <div id="resume-final" class="text-[10px] font-bold uppercase space-y-1 text-gray-600"></div>
             </div>
-
             <div class="text-xl font-black flex justify-between items-center p-3 bg-white border-2 border-black rounded-xl">
                 <span>TOTAL :</span>
-                <span id="total-display" class="text-red-600">0</span> <span class="text-red-600 ml-1">F</span>
+                <span id="total-display" class="text-red-600">0 F</span>
             </div>
-
             <div class="flex items-start gap-2 py-2">
                 <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-4 w-4 accent-black">
                 <label for="check-verif" class="text-[8px] font-bold uppercase text-gray-500 leading-tight">
                     Je confirme ma commande et j'accepte les conditions de vente de Latyfa Shop.
                 </label>
             </div>
-
             <button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 text-white py-4 rounded-full font-black uppercase shadow-xl pointer-events-none transition-all duration-300" disabled>
                 <i class="fa-brands fa-whatsapp mr-2"></i> Commander via WhatsApp
             </button>
         </div>
-
         <button onclick="document.getElementById('cartModal').classList.remove('active')" class="w-full mt-6 text-[10px] font-bold uppercase text-gray-400 hover:text-black transition-colors underline">
             Continuer mes achats
         </button>
     </div>
 </div>
 
-    <div id="cgvModal" class="modal bg-gray-100">
+<div id="cgvModal" class="modal bg-gray-100">
     <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-2xl my-6 border border-gray-200">
         <div class="flex justify-between items-center border-b pb-4 mb-6">
             <h2 class="text-xl font-black uppercase text-gray-800 italic">Conditions Générales de Vente</h2>
             <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="text-2xl font-bold">&times;</button>
         </div>
-        
         <div class="text-[11px] space-y-6 text-gray-700 leading-relaxed overflow-y-auto max-h-[60vh] pr-2 uppercase font-semibold">
             <section>
                 <h3 class="text-[#ff6600] font-black mb-2">1. OBJET ET ACCEPTATION</h3>
                 <p>Les présentes conditions régissent les ventes de la boutique LATYFA BOUTIQUE. Toute validation de commande sur WhatsApp après consultation du site implique l'adhésion totale à ces conditions.</p>
             </section>
-
             <section>
                 <h3 class="text-[#ff6600] font-black mb-2">2. PRIX ET PAIEMENT</h3>
-                <p>Les prix sont indiqués en FCFA. Le paiement est exigible en totalité au moment de la commande via Mobile Money (Wave, Orange Money, MTN). Aucune expédition ne sera effectuée sans confirmation de réception du paiement intégral.</p>
-            </section>
-
-            <section>
-                <h3 class="text-[#ff6600] font-black mb-2">3. LIVRAISONS ET DÉLAIS</h3>
-                <p>Abidjan : Livraison sous 24h à 48h. Intérieur : Expédition via les services de transport (UTB, AVS, etc.) sous 48h. Les frais de livraison sont à la charge du client et varient selon la zone géographique choisie lors de la commande.</p>
-            </section>
-
-            <section>
-                <h3 class="text-[#ff6600] font-black mb-2">4. RETRAITS EN BOUTIQUE</h3>
-                <p>Les clients résidant à Bouaké ont la possibilité de recevoir leurs articles physiquement via un représentant sans frais supplémentaires. Le paiement en espèces est accepté uniquement lors du retrait physique par le client lui même.</p>
-            </section>
-
-            <section>
-                <h3 class="text-[#ff6600] font-black mb-2">5. RETOURS ET ÉCHANGES</h3>
-                <p>Compte tenu de la nature de nos articles (Bijoux et Maroquinerie), aucun retour ou remboursement ne sera accepté après réception du colis. Le client est tenu de vérifier l'état du produit devant le livreur. En cas de défaut majeur constaté immédiatement, un échange par un article de valeur équivalente sera proposé.</p>
-            </section>
-
-            <section>
-                <h3 class="text-[#ff6600] font-black mb-2">6. RESPONSABILITÉ</h3>
-                <p>LATYFA BOUTIQUE ne saurait être tenue pour responsable des retards causés par les services de transport tiers ou des erreurs de coordonnées fournies par le client lors de la validation du panier.</p>
+                <p>Les prix sont indiqués en FCFA. Le paiement est exigible en totalité au moment de la commande via Mobile Money (Wave, Orange Money, MTN).</p>
             </section>
         </div>
+        <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 bg-[#c5a059] text-white py-4 rounded-xl font-black text-xs uppercase shadow-md">J'ai compris et j'accepte</button>
+    </div>
+</div>
 
-        <button onclick="document.getElementById('cgvModal').classList.remove('active')" class="w-full mt-8 ali-gradient text-white py-4 rounded-xl font-black text-xs uppercase shadow-md">J'ai compris et j'accepte</button>
+<div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
+
+<div id="adminModal" class="modal bg-gray-50">
+    <div class="max-w-xl mx-auto pb-20">
+        <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
+            <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
+            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
+            <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
+            <div class="grid grid-cols-1 gap-4">
+                <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
+                <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
+                <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
+                    <option value="bijoux">Bijoux</option>
+                    <option value="vetements">Vêtements</option>
+                    <option value="chaussures">Chaussures</option>
+                    <option value="sac">Sacs</option>
+                    <option value="parfum">Parfums</option>
+                    <option value="hanche">Perles de hanche</option>
+                    <option value="autres">Autres</option>
+                </select>
+                <textarea id="adm-img" placeholder="Liens images (séparés par des virgules)" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+                <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
+                <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
+            </div>
+        </div>
+        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
+        <div id="admin-list" class="space-y-2 mb-10"></div>
     </div>
 </div>
-<div id="social-proof" class="fixed bottom-5 left-5 bg-white shadow-2xl rounded-lg p-3 flex items-center gap-3 border-l-4 border-[#c5a059] transform translate-y-20 opacity-0 transition-all duration-700 z-[100] max-w-[280px]">
-    <div class="w-10 h-10 bg-gray-100 rounded-full flex-shrink-0 flex items-center justify-center text-[#c5a059]">
-        <i class="fa-solid fa-bag-shopping"></i>
-    </div>
-    <div>
-        <p id="proof-text" class="text-[11px] text-gray-800 font-medium leading-tight"></p>
-        <p class="text-[9px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Il y a quelques instants</p>
-    </div>
-</div>
+
 <script>
-    let promoSonJoué = false; // Pour éviter que le son tourne en boucle
-    function viderPanier() {
-    if (confirm("Voulez-vous vraiment vider votre panier ?")) {
-        cart = []; // On vide la variable
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart)); // On vide le stockage réel
-        
-        // Mise à jour immédiate de l'affichage
-        document.getElementById('cart-count').innerText = "0";
-        ouvrirPanier(); 
-        
-        // Optionnel : Fermer le panier après 1 seconde
-        setTimeout(() => {
-            document.getElementById('cartModal').classList.remove('active');
-        }, 500);
-    }
-}
+// --- VARIABLES GLOBALES ---
+let products = [
+    { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], enStock: true, description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
+    { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], enStock: true, description: "Finition Or 24K. Design exclusif." },
+    { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"], enStock: true, description: "Perles de hanche traditionnelles." },
+    { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], enStock: true, description: "Fragrance envoûtante." },
+    { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], enStock: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige." }
+];
 
-    function ouvrirGuide() {
-    document.getElementById('guideModal').classList.add('active');
-}
-    function rechercherProduit() {
-    const terme = document.getElementById('search-input').value.toLowerCase();
-    const grid = document.getElementById('product-grid');
-    
-    // On filtre les produits par nom
-    const produitsFiltrés = products.filter(p => 
-        p.name.toLowerCase().includes(terme) || 
-        p.cat.toLowerCase().includes(terme)
-    );
+let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+let currentProduct = null;
+let remiseCodePromo = 0;
 
-    if (produitsFiltrés.length === 0) {
-        grid.innerHTML = `
-            <div class="col-span-full text-center py-20">
-                <i class="fa-solid fa-box-open text-4xl text-gray-200 mb-4"></i>
-                <p class="text-gray-500 text-xs font-bold uppercase">Aucun résultat pour "${terme}"</p>
-            </div>`;
-    } else {
-        // On utilise ta fonction render existante mais avec les produits filtrés
-        // Note: Pour que cela fonctionne, on va légèrement modifier la logique de render
-        afficherResultatsRecherche(produitsFiltrés);
-    }
-}
+const tarifsLivraison = {
+    "abidjan_nord": { nom: "Abidjan Nord", prix: 1500 },
+    "abidjan_sud": { nom: "Abidjan Sud", prix: 2000 },
+    "interieur": { nom: "Intérieur CI", prix: 3000 },
+    "bouake": { nom: "Retrait Boutique", prix: 0 }
+};
 
-// Petite fonction helper pour ne pas casser ton système de catégories
-function afficherResultatsRecherche(liste) {
-    const grid = document.getElementById('product-grid');
-    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000;
-    
-    grid.innerHTML = liste.map(p => {
-        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
-        return `
-            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
-                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
-                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
-                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
-                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
-                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
-                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
-                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
-                </div>
-            </div>`;
-    }).join('');
-}
-
-    (function(){ emailjs.init("FT9CT6go4Kj1aFegB"); })();
-
-    // --- VARIABLES GLOBALES ---
-    const tarifsLivraison = {
-        "abidjan_nord": { nom: "Abidjan Nord", prix: 1500, detail: "Cocody, Abobo, Adjamé, Plateau, Yopougon..." },
-        "abidjan_sud": { nom: "Abidjan Sud", prix: 2000, detail: "Marcory, Koumassi, Treichville, Port-Bouët." },
-        "interieur": { nom: "Intérieur CI", prix: 3000, detail: "Toutes les villes de l'intérieur." },
-        "bouake": { nom: "Retrait Boutique", prix: 0, detail: "Retrait gratuit en boutique à Abidjan." }
-    };
-// --- GESTION DES CATÉGORIES ---
-let categories = JSON.parse(localStorage.getItem('latyfa_categories')) || [
+let categories = [
     { id: 'bijoux', nom: 'Bijoux', icone: 'fa-gem' },
     { id: 'vetements', nom: 'Vêtements', icone: 'fa-shirt' },
     { id: 'chaussures', nom: 'Chaussures', icone: 'fa-shoe-prints' },
@@ -789,272 +436,59 @@ let categories = JSON.parse(localStorage.getItem('latyfa_categories')) || [
     { id: 'autres', nom: 'Autres', icone: 'fa-plus' }
 ];
 
-function refreshCategoriesUI() {
-    // 1. Mise à jour de la barre latérale (Sidebar)
-    const sidebar = document.querySelector('aside .flex-col');
-    if (sidebar) {
-        let html = `<span class="category-link cursor-pointer flex justify-between items-center" onclick="render('tous')"> Tout voir <i class="fa-solid fa-crown text-[10px] text-[#c5a059]"></i> </span>`;
-        html += categories.map(cat => `
-            <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('${cat.id}')">
-                ${cat.nom} <i class="fa-solid ${cat.icone} text-[10px]"></i>
-            </span>
-        `).join('');
-        sidebar.innerHTML = html;
-    }
-    // 2. Mise à jour du menu déroulant dans l'Admin
-    const selectAdmin = document.getElementById('adm-cat');
-    if (selectAdmin) {
-        selectAdmin.innerHTML = categories.map(cat => `<option value="${cat.id}">${cat.nom}</option>`).join('');
-    }
-    }
-
-    let products = [
-        { id: 1, cat: "sac", name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],enStock: true, stockBas: true, couleurs: ["Noir", "Or", "Rouge"], description: "Élégance Signature Latyfa. Cuir Premium finition luxe." },
-        { id: 2, cat: "bijoux", name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],video:"https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Finition Or 24K. Design exclusif pour vos grandes occasions." },
-        { id: 3, cat: "hanche", name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Perles de hanche traditionnelles avec une touche de modernité." },
-        { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, description: "Une fragrance envoûtante qui tient toute la journée." },
-        { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],video: "https://www.exemple.com/ma-video.mp4", enStock: true, stockBas: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées." }
-    ];
-
-    let cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
-    let currentProduct = null;
-    let remiseCodePromo = 0; // Réduction en % via la roue
-    const MAX_TENTATIVES = 1; // 1 essai par jour
-const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
-const canva = document.getElementById('canvas');
-const ctx = canva.getContext('2d');
-
-// Fonction pour créer une catégorie (ex: "Saint Valentin")
-function ajouterNouvelleCategorie() {
-    const nom = prompt("Nom de la nouvelle catégorie (ex: Promo Valentin) :");
-    if (!nom || nom.trim() === "") return;
-
-    // On transforme le nom en ID (ex: "Promo Valentin" devient "promo_valentin")
-    const id = nom.toLowerCase().trim().replace(/\s+/g, '_');
-
-    // Vérifier si l'ID existe déjà
-    if (categories.find(c => c.id === id)) {
-        return alert("Cette catégorie existe déjà !");
-    }
-
-    const icone = prompt("Icône FontAwesome (ex: fa-heart, fa-star, fa-fire) :") || "fa-tag";
-
-    // Ajouter à la liste
-    categories.push({ id, nom, icone });
-    
-    // Sauvegarder
-    localStorage.setItem('latyfa_categories', JSON.stringify(categories));
-    
-    // Mettre à jour l'affichage
-    refreshCategoriesUI();
-    alert("Catégorie '" + nom + "' créée avec succès !");
-}
-
-// Fonction pour supprimer une catégorie
-function supprimerCategorie() {
-    const listeNoms = categories.map((c, index) => `${index + 1}. ${c.nom}`).join('\n');
-    const choix = prompt("Entrez le numéro de la catégorie à supprimer :\n" + listeNoms);
-    
-    if (choix) {
-        const index = parseInt(choix) - 1;
-        if (categories[index]) {
-            const catId = categories[index].id;
-            
-            // Sécurité : on vérifie si des produits sont encore dedans
-            const produitsLies = products.filter(p => p.cat === catId);
-            
-            if (produitsLies.length > 0) {
-                alert(`🚫 Erreur : Cette catégorie contient ${produitsLies.length} produit(s). Changez leur catégorie avant de supprimer.`);
-            } else {
-                if (confirm(`Voulez-vous vraiment supprimer "${categories[index].nom}" ?`)) {
-                    categories.splice(index, 1);
-                    localStorage.setItem('latyfa_categories', JSON.stringify(categories));
-                    refreshCategoriesUI();
-                    alert("Catégorie supprimée.");
-                }
-            }
-        } else {
-            alert("Numéro invalide.");
-        }
-    }
-    }
-    // --- BOUTIQUE ---
-    function render(filter = 'tous') {
+// --- FONCTIONS PRINCIPALES ---
+function render(filter = 'tous') {
     const grid = document.getElementById('product-grid');
-    const SEPT_JOURS = 7 * 24 * 60 * 60 * 1000; // 7 jours en millisecondes
-
-    grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => {
-        // Calcul pour le badge Nouveauté
-        const estNouveau = p.dateAjout && (Date.now() - p.dateAjout < SEPT_JOURS);
-        
-        return `
-${p.stockBas ? '<span class="absolute top-10 right-2 bg-red-600 text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-bounce">🔥 PLUS QUE 2 EN STOCK !</span>' : ''}
-
-            <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
-                
-                ${estNouveau ? '<span class="absolute top-2 right-2 bg-[#c5a059] text-white text-[8px] font-black px-2 py-1 rounded shadow-lg z-10 animate-pulse">NOUVEAU</span>' : ''}
-                
-                ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
-                
-                ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
-                
-                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
-                <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
-                <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-                
-                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
-                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
-                </div>
-            </div>`;
-    }).join('');
-        const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
-const badge = document.getElementById('cart-count'); // l'ID de ton petit rond rouge sur l'icône
-if(badge) {
-    badge.innerText = totalArticles;
-    badge.style.display = totalArticles > 0 ? 'flex' : 'none';}
+    if (!grid) return;
+    
+    grid.innerHTML = products.filter(p => filter === 'tous' || p.cat === filter).map(p => `
+        <div class="product-card p-3 relative ${p.enStock === false ? 'opacity-75' : ''}" onclick="${p.enStock === false ? '' : 'voirDetails('+p.id+')'}">
+            ${p.price > 30000 ? '<span class="absolute top-2 left-2 bg-black text-white text-[8px] px-2 py-1 rounded-full z-10 shadow-md">LUXE</span>' : ''}
+            ${p.enStock === false ? '<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-full z-20 rotate-[-15deg] shadow-xl border-2 border-white">SOLD OUT</span>' : ''}
+            <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3 border ${p.enStock === false ? 'grayscale' : ''}">
+            <h3 class="text-[11px] font-bold uppercase h-8 line-clamp-2 text-gray-800">${p.name}</h3>
+            <div class="${p.enStock === false ? 'text-gray-400' : 'text-[#c5a059]'} font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+            <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100">
+                ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
+            </div>
+        </div>
+    `).join('');
+    
+    updateCartCount();
 }
-    function voirDetails(id) {
-    const p = products.find(x => x.id === id); // On utilise 'p'
+
+function voirDetails(id) {
+    const p = products.find(x => x.id === id);
     if (!p) return;
     currentProduct = p;
     
     document.getElementById('productDetailModal').classList.add('active');
-
-    // --- SECTION COMPTEUR DE VUES ---
-    const vues = Math.floor(Math.random() * 17) + 8;
-    const oldVues = document.getElementById('view-counter');
-    if(oldVues) oldVues.remove();
-    
     document.getElementById('detail-name').innerText = p.name;
-    // Correction : Ajout des backticks autour du HTML
-    document.getElementById('detail-name').insertAdjacentHTML('afterend', `
-        <div id="view-counter" class="flex items-center gap-2 mt-2 bg-gray-50 w-fit px-3 py-1 rounded-full border border-gray-100">
-            <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-            </span>
-            <p class="text-[9px] font-black uppercase text-gray-500 tracking-tighter">
-                <span id="nb-vues-text" class="text-gray-900">${vues} personnes</span> consultent cet article
-            </p>
-        </div>
-    `);
-
-    // --- LOGIQUE GUIDE DES TAILLES (Vêtements vs Chaussures) ---
-    const aideTailleSection = document.getElementById('size-helper-ui');
-    const guideChaussureSection = document.getElementById('shoe-guide-ui');
-
-    if (aideTailleSection && guideChaussureSection) {
-        // Correction : On utilise 'p.categorie' (ton nom de variable)
-        if (p.categorie === 'chaussures') {
-            aideTailleSection.classList.add('hidden'); 
-            guideChaussureSection.classList.remove('hidden'); 
-        } else {
-            aideTailleSection.classList.remove('hidden'); 
-            guideChaussureSection.classList.add('hidden'); 
-        }
-    }
-
-    // --- GESTION DU STOCK ---
-    const oldStockMsg = document.getElementById('dynamic-stock-msg');
-    if(oldStockMsg) oldStockMsg.remove();
-
-    if(p.stockBas) {
-        document.getElementById('detail-price').insertAdjacentHTML('afterend', `
-            <p id="dynamic-stock-msg" class="text-[10px] font-bold text-red-500 mt-2 italic animate-pulse">
-                <i class="fa-solid fa-fire-flame-curved"></i> Plus que ${p.quantiteRestante || 2} articles en stock !
-            </p>
-        `);
-    }
-
-    // --- IMAGES ET MÉDIAS ---
-    const mediaContainer = document.getElementById('main-detail-img').parentElement;
-    mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
-    
-    let htmlMiniatures = p.images.map((img, index) => `
-        <img src="${img}" onclick="changerMedia('image', '${img}', this)" 
-        class="miniature-item h-16 w-16 object-cover rounded-lg cursor-pointer border-2 border-transparent transition-all ${index === 0 ? 'thumb-active' : ''}">
-    `).join('');
-
-    if(p.video) {
-        htmlMiniatures += `
-            <div onclick="changerMedia('video', '${p.video}', this)" 
-            class="miniature-item h-16 w-16 bg-black rounded-lg flex flex-col items-center justify-center cursor-pointer border-2 border-transparent text-[#c5a059] transition-all">
-                <i class="fa-solid fa-play text-xs"></i>
-                <span class="text-[7px] font-black mt-1 uppercase">Vidéo</span>
-            </div>
-        `;
-    }
-    document.getElementById('thumbnails').innerHTML = htmlMiniatures;
-
-    // --- PRIX ET DESCRIPTION ---
     document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
     document.getElementById('detail-desc').innerText = p.description;
-
-    // --- BANNIÈRE DE CONFIANCE ---
-    const existingBanner = document.getElementById('trust-banner-container');
-    if(existingBanner) existingBanner.remove();
-
-    document.getElementById('detail-desc').insertAdjacentHTML('afterend', `
-        <div id="trust-banner-container" class="mt-6">
-            <button onclick="ajouterDepuisDetail()" class="w-full ali-gradient text-white py-4 rounded-xl font-black uppercase text-[11px] shadow-lg mb-4 hover:scale-[1.02] transition-transform">
-                Ajouter au panier
-            </button>
-            <div class="flex items-center gap-3 bg-green-50 p-3 rounded-xl border border-green-100 mb-4">
-                <div class="h-8 w-8 bg-green-500 text-white rounded-full flex items-center justify-center shadow-sm">
-                    <i class="fa-solid fa-arrows-rotate text-xs"></i>
-                </div>
-                <div>
-                    <p class="text-[10px] font-black uppercase text-gray-800">Satisfait ou Échangé</p>
-                    <p class="text-[8px] text-gray-500 font-bold uppercase tracking-tighter">Vérifiez votre colis à la livraison</p>
-                </div>
-            </div>
-        </div>
-    `);
-
-    gererOptionsProduit(p);
-}
-function gererOptionsProduit(p) {
+    document.getElementById('main-detail-img').src = p.images[0];
+    
+    // Gestion des options
     const sizeArea = document.getElementById('size-area');
-    const colorArea = document.getElementById('color-area');
     const selectSize = document.getElementById('select-size');
-    const selectColor = document.getElementById('select-color');
-
-    // Gestion des Tailles / Pointures
+    
     if (p.pointures && p.pointures.length > 0) {
         sizeArea.classList.remove('hidden');
         selectSize.innerHTML = p.pointures.map(s => `<option value="${s}">${s}</option>`).join('');
-    } else if (p.tailles && p.tailles.length > 0) {
-        sizeArea.classList.remove('hidden');
-        selectSize.innerHTML = p.tailles.map(t => `<option value="${t}">${t}</option>`).join('');
     } else {
         sizeArea.classList.add('hidden');
-        selectSize.innerHTML = "";
-    }
-
-    // Gestion des Couleurs
-    if (p.couleurs && p.couleurs.length > 0) {
-        colorArea.classList.remove('hidden');
-        selectColor.innerHTML = p.couleurs.map(c => `<option value="${c}">${c}</option>`).join('');
-    } else {
-        colorArea.classList.add('hidden');
-        selectColor.innerHTML = "";
     }
 }
-    function ajouterDepuisDetail() {
-    if (!currentProduct) return; // Sécurité si aucun produit n'est sélectionné
 
+function ajouterDepuisDetail() {
+    if (!currentProduct) return;
+    
     const size = document.getElementById('select-size').value || "";
-    const color = document.getElementById('select-color').value || "";
-    const label = `${currentProduct.name} ${size ? '('+size+')' : ''} ${color ? '['+color+']' : ''}`;
-
-    // Gestion du son
+    const label = `${currentProduct.name} ${size ? '('+size+')' : ''}`;
+    
     const sound = document.getElementById('cart-sound');
-    if(sound) {
-        sound.currentTime = 0;
-        sound.play().catch(e => console.log("Son bloqué par le navigateur"));
-    }
-
-    // Mise à jour du tableau cart
+    if(sound) sound.play().catch(e => console.log("Son bloqué"));
+    
     const index = cart.findIndex(x => x.label === label);
     if(index > -1) {
         cart[index].qty++;
@@ -1067,19 +501,9 @@ function gererOptionsProduit(p) {
             images: currentProduct.images 
         });
     }
-
-    // MISE À JOUR VISUELLE DU COMPTEUR
-    const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
-    const badge = document.getElementById('cart-count');
-    if(badge) {
-        badge.innerText = totalArticles;
-        badge.style.display = totalArticles > 0 ? 'flex' : 'none';
-    }
-
-    // Sauvegarde locale
+    
+    updateCartCount();
     localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-
-    // Fermeture de la modale et animation
     document.getElementById('productDetailModal').classList.remove('active');
     
     const toast = document.getElementById('toast');
@@ -1089,290 +513,113 @@ function gererOptionsProduit(p) {
     }
 }
 
-
-function drawWheel() {
-    const arc = 2 * Math.PI / prizes.length;
-    ctx.clearRect(0, 0, 300, 300);
-    for (let i = 0; i < prizes.length; i++) {
-        ctx.beginPath();
-        // Alternance de couleurs Noir et Doré
-        ctx.fillStyle = i % 2 === 0 ? (prizes[i] === "REESSAYER" ? "#333" : "#c5a059") : "#000";
-        ctx.moveTo(150, 150);
-        ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
-        ctx.fill();
-        
-        ctx.save();
-        ctx.fillStyle = "white";
-        ctx.translate(150, 150);
-        ctx.rotate(i * arc + arc / 2);
-        ctx.font = "bold 10px Montserrat";
-        ctx.textAlign = "right";
-        ctx.fillText(prizes[i], 130, 5);
-        ctx.restore();
+function updateCartCount() {
+    const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
+    const badge = document.getElementById('cart-count');
+    if(badge) {
+        badge.innerText = totalArticles;
+        badge.style.display = totalArticles > 0 ? 'flex' : 'none';
     }
 }
-// APPEL IMMÉDIAT POUR DESSINER LA ROUE AU CHARGEMENT
-drawWheel();
 
-document.getElementById('spin').onclick = function() {
-    let stats = majAffichageChances();
-    if (stats.count >= MAX_TENTATIVES) {
-        alert("Vous avez déjà utilisé votre chance aujourd'hui !");
-        return;
-    }
-
-    const btn = this;
-    const sound = document.getElementById('wheel-sound');
-    const victorySound = document.getElementById('victory-sound');
-    btn.disabled = true;
-
-    // Calcul de la rotation
-    const randomExtra = Math.floor(Math.random() * 360);
-    const totalRotation = 3600 + randomExtra; // 10 tours pour plus de suspense
+function ouvrirPanier() {
+    document.getElementById('cartModal').classList.add('active');
+    const itemsDiv = document.getElementById('cart-items');
+    const form = document.getElementById('checkout-form');
     
-    // --- EFFET SONORE DE ROTATION ---
-    let soundInterval = setInterval(() => {
-        sound.currentTime = 0;
-        sound.play().catch(() => {});
-    }, 150);
-
-    // On ralentit le son à la fin
-    setTimeout(() => { clearInterval(soundInterval); }, 3500);
-
-    canva.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
-    canva.style.transform = `rotate(${totalRotation}deg)`;
-
-    setTimeout(() => {
-        const actualAngle = randomExtra % 360;
-        const segmentSize = 360 / prizes.length;
-        const resultIndex = Math.floor(((360 - actualAngle + 270) % 360) / segmentSize);
-        const resultat = prizes[resultIndex];
-
-        stats.count++;
-        localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
-        majAffichageChances();
-
-        if (resultat === "REESSAYER") {
-            alert("Mince ! Retentez demain. 😥");
-        } else {
-            // --- VICTOIRE ! ---
-            // 1. Son de victoire
-            if(victorySound) victorySound.play();
-
-            // 2. Explosion de confettis
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#c5a059', '#000000', '#ffffff'] // Couleurs Latyfa : Or, Noir, Blanc
-            });
-
-            const promoAmount = resultat.replace(/[^0-9]/g, "") || "5";
-            const promoCode = "LATYFA" + promoAmount;
-            
-            localStorage.setItem('latyfa_active_promo', JSON.stringify({
-                code: promoCode,
-                expires: Date.now() + (24 * 60 * 60 * 1000),
-                remise: promoAmount
-            }));
-
-            setTimeout(() => {
-                alert("🎉 MAGNIFIQUE !\nVous avez gagné : " + resultat + "\nVotre code promo : " + promoCode);
-            }, 500);
-        }
-        btn.disabled = false;
-    }, 4000);
-};
-
-    function majAffichageChances() {
-        const aujourdhui = new Date().toLocaleDateString();
-        let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: aujourdhui, count: 0 };
-        if (stats.date !== aujourdhui) stats = { date: aujourdhui, count: 0 };
-        
-        const reste = MAX_TENTATIVES - stats.count;
-        const msgZone = document.getElementById('wheel-msg');
-        if(reste <= 0) {
-            msgZone.innerHTML = `<span class="text-red-600">🚫 LIMITE ATTEINTE</span>`;
-            document.getElementById('spin').disabled = true;
-        } else {
-            msgZone.innerHTML = `<span class="text-blue-600">CHANCES RESTANTES : ${reste}/${MAX_TENTATIVES}</span>`;
-        }
-        return stats;
+    if(cart.length === 0) { 
+        itemsDiv.innerHTML = "<p class='text-center py-10 text-[10px] font-bold uppercase text-gray-400'>Panier Vide</p>"; 
+        form.style.display = "none"; 
+        return; 
     }
+    
+    form.style.display = "block";
+    itemsDiv.innerHTML = cart.map(item => `
+        <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
+            <div class="flex-1">${item.label}</div>
+            <div class="flex gap-2 items-center">
+                <button onclick="modifierQty('${item.label}',-1)" class="bg-gray-100 px-2 rounded">-</button>
+                <span>${item.qty}</span>
+                <button onclick="modifierQty('${item.label}',1)" class="bg-gray-100 px-2 rounded">+</button>
+            </div>
+        </div>
+    `).join('');
+    
+    majResume();
+}
 
-    // --- PANIER ET CALCULS ---
-    function ouvrirPanier() {
-        document.getElementById('cartModal').classList.add('active');
-        const itemsDiv = document.getElementById('cart-items');
-        const form = document.getElementById('checkout-form');
-        
-        if(cart.length === 0) { 
-            itemsDiv.innerHTML = "<p class='text-center py-10 text-[10px] font-bold uppercase text-gray-400'>Panier Vide</p>"; 
-            form.style.display = "none"; 
-            return; 
-        }
-        
-        form.style.display = "block";
-        itemsDiv.innerHTML = cart.map(item => `
-            <div class="flex justify-between items-center text-[10px] font-bold uppercase border-b pb-2">
-                <div class="flex-1">${item.label}</div>
-                <div class="flex gap-2 items-center">
-                    <button onclick="modifierQty('${item.label}',-1)" class="bg-gray-100 px-2 rounded">-</button>
-                    <span>${item.qty}</span>
-                    <button onclick="modifierQty('${item.label}',1)" class="bg-gray-100 px-2 rounded">+</button>
-                </div>
-            </div>`).join('');
-        
-        majResume();
+function modifierQty(label, d) {
+    const i = cart.find(x => x.label === label);
+    if(i) { 
+        i.qty += d; 
+        if(i.qty < 1) cart = cart.filter(x => x.label !== label); 
     }
+    updateCartCount();
+    ouvrirPanier();
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+}
 
-    function modifierQty(label, d) {
-        const i = cart.find(x => x.label === label);
-        if(i) { i.qty += d; if(i.qty < 1) cart = cart.filter(x => x.label !== label); }
-        document.getElementById('cart-count').innerText = cart.reduce((a, b) => a + b.qty, 0);
-        ouvrirPanier();
+function viderPanier() {
+    if (confirm("Voulez-vous vraiment vider votre panier ?")) {
+        cart = [];
         localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-
+        updateCartCount();
+        ouvrirPanier();
     }
+}
 
-    function appliquerPromo() {
-        const inputCode = document.getElementById('input-promo').value.toUpperCase().trim();
-        const msg = document.getElementById('promo-msg');
-        const savedPromo = JSON.parse(localStorage.getItem('latyfa_active_promo'));
-        const usedPromos = JSON.parse(localStorage.getItem('latyfa_used_promos')) || [];
-
-        msg.classList.remove('hidden');
-
-        if (usedPromos.includes(inputCode)) {
-            msg.innerText = "❌ Ce code a déjà été utilisé.";
-            msg.className = "text-[9px] font-bold text-red-600";
-            remiseCodePromo = 0;
-        } 
-        else if (savedPromo && inputCode === savedPromo.code) {
-            if (Date.now() > savedPromo.expires) {
-                msg.innerText = "⏰ Code expiré (24h).";
-                msg.className = "text-[9px] font-bold text-red-600";
-                remiseCodePromo = 0;
-            } else {
-                remiseCodePromo = parseInt(savedPromo.remise);
-                msg.innerText = "✅ Code -" + remiseCodePromo + "% appliqué !";
-                msg.className = "text-[9px] font-bold text-green-600";
-            }
-        } else {
-            msg.innerText = "❌ Code invalide.";
-            msg.className = "text-[9px] font-bold text-red-600";
-            remiseCodePromo = 0;
-        }
-        majResume();
-    }
-
-    function majResume() {
+function majResume() {
     const zoneKey = document.getElementById('zone-livraison').value;
     const isCadeau = document.getElementById('check-cadeau').checked;
     const containerResume = document.getElementById('resume-final');
-    const alertePromoValentin = document.getElementById('promo-congrats');
     
-    // 1. Calcul du Sous-total des articles
     let totalArticles = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    
-    // 2. Frais de livraison
-    let fraisLivraison = 0;
-    if (zoneKey && tarifsLivraison[zoneKey]) {
-        fraisLivraison = tarifsLivraison[zoneKey].prix;
-    }
-
-    // 3. Option Emballage Cadeau
+    let fraisLivraison = zoneKey && tarifsLivraison[zoneKey] ? tarifsLivraison[zoneKey].prix : 0;
     let fraisCadeau = isCadeau ? 1000 : 0;
-
-    // 4. Remise St Valentin (-20% si achat > 20.000 F entre le 14 et 28 fév)
-    let remiseValentin = 0;
-    const maintenant = new Date();
-    const debutPromo = new Date(2026, 1, 14); // 14 Février
-    const finPromo = new Date(2026, 1, 28);   // 28 Février
-
-    if (maintenant >= debutPromo && maintenant <= finPromo && totalArticles >= 20000) {
-        remiseValentin = totalArticles * 0.20;
-        alertePromoValentin.classList.remove('hidden');
-    } else {
-        alertePromoValentin.classList.add('hidden');
-    }
-
-    // 5. Remise Code Promo de la Roue (remiseCodePromo est une variable globale)
-    let remiseRoue = (remiseCodePromo > 0) ? (totalArticles * (remiseCodePromo / 100)) : 0;
-
-    // 6. CALCUL TOTAL FINAL
-    let totalFinal = totalArticles + fraisLivraison + fraisCadeau - remiseValentin - remiseRoue;
-    if (totalFinal < 0) totalFinal = 0; // Sécurité
-
-    // 7. AFFICHAGE DANS LE RÉSUMÉ
-    containerResume.innerHTML = `
-        <div class="flex justify-between"><span>Articles:</span> <span>${totalArticles.toLocaleString()} F</span></div>
-        ${fraisLivraison > 0 ? `<div class="flex justify-between"><span>Livraison (${tarifsLivraison[zoneKey].nom}):</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>` : ''}
-        ${fraisCadeau > 0 ? `<div class="flex justify-between text-pink-500 italic"><span>Option Cadeau Luxe:</span> <span>+1.000 F</span></div>` : ''}
-        ${remiseValentin > 0 ? `<div class="flex justify-between text-green-600 font-bold"><span>Remise Valentin (-20%):</span> <span>-${Math.round(remiseValentin).toLocaleString()} F</span></div>` : ''}
-        ${remiseRoue > 0 ? `<div class="flex justify-between text-blue-600 font-bold"><span>Remise Code Lucky (-${remiseCodePromo}%):</span> <span>-${Math.round(remiseRoue).toLocaleString()} F</span></div>` : ''}
-    `;
-
-    // Mise à jour du gros chiffre rouge
-    document.getElementById('total-display').innerText = Math.round(totalFinal).toLocaleString();
+    let totalFinal = totalArticles + fraisLivraison + fraisCadeau;
     
-    // On vérifie si le bouton de commande doit être activé
+    if(containerResume) {
+        containerResume.innerHTML = `
+            <div class="flex justify-between"><span>Articles:</span> <span>${totalArticles.toLocaleString()} F</span></div>
+            ${fraisLivraison > 0 ? `<div class="flex justify-between"><span>Livraison:</span> <span>+${fraisLivraison.toLocaleString()} F</span></div>` : ''}
+            ${fraisCadeau > 0 ? `<div class="flex justify-between text-pink-500"><span>Option Cadeau:</span> <span>+1.000 F</span></div>` : ''}
+        `;
+    }
+    
+    document.getElementById('total-display').innerText = totalFinal.toLocaleString() + " F";
     toggleBouton();
 }
-    function toggleBouton() {
+
+function toggleBouton() {
     const chk = document.getElementById('check-verif').checked;
     const nom = document.getElementById('nom-client').value.trim();
     const tel = document.getElementById('tel-client').value.trim();
     const zone = document.getElementById('zone-livraison').value;
     const btn = document.getElementById('btn-final');
 
-    // Le bouton s'active seulement si tout est rempli + case cochée
     if (chk && nom !== "" && tel !== "" && zone !== "") {
-        btn.classList.remove('bg-gray-300', 'btn-disabled', 'pointer-events-none');
-        btn.classList.add('ali-gradient', 'cursor-pointer');
+        btn.classList.remove('bg-gray-300', 'pointer-events-none');
+        btn.classList.add('bg-[#c5a059]', 'cursor-pointer');
         btn.disabled = false;
     } else {
-        btn.classList.add('bg-gray-300', 'btn-disabled', 'pointer-events-none');
-        btn.classList.remove('ali-gradient', 'cursor-pointer');
+        btn.classList.add('bg-gray-300', 'pointer-events-none');
+        btn.classList.remove('bg-[#c5a059]', 'cursor-pointer');
         btn.disabled = true;
     }
 }
-    function validerCommande() {
+
+function validerCommande() {
     const nom = document.getElementById('nom-client').value;
     const tel = document.getElementById('tel-client').value;
     const quartier = document.getElementById('quartier-client').value;
     const zone = document.getElementById('zone-livraison').value;
     const total = document.getElementById('total-display').innerText;
-    const isCadeau = document.getElementById('check-cadeau').checked;
-    const codeUtilise = document.getElementById('input-promo').value || "Aucun";
 
     if(!nom || !tel || !quartier || !zone) {
         alert("⚠️ Merci de remplir tous les champs obligatoires.");
         return;
     }
 
-    // 1. Préparation de la liste des articles pour WhatsApp et l'historique
-    let listArticles = cart.map(i => `${i.label} (x${i.qty})`).join(', ');
-    
-    // 2. Création de l'objet commande pour l'historique
-    const nouvelleCommande = {
-        date: new Date().toLocaleString('fr-FR'),
-        client: nom.toUpperCase(),
-        tel: tel,
-        lieu: `${quartier} (${tarifsLivraison[zone].nom})`,
-        articles: listArticles,
-        total: total,
-        promo: codeUtilise,
-        cadeau: isCadeau ? "OUI" : "NON"
-    };
-
-    // 3. Sauvegarde dans l'historique (localStorage)
-    let historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-     mettreAJourStats();
-    historique.unshift(nouvelleCommande); // Ajoute au début de la liste
-    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
-
-    // 4. Construction du message WhatsApp
     let listWA = cart.map(i => `• ${i.label} (x${i.qty})`).join('\n');
     let msg = `✨ *NOUVELLE COMMANDE - LATYFA SHOP*\n\n`;
     msg += `👤 *CLIENT:* ${nom}\n`;
@@ -1380,168 +627,70 @@ document.getElementById('spin').onclick = function() {
     msg += `📍 *QUARTIER:* ${quartier}\n`;
     msg += `🌍 *ZONE:* ${tarifsLivraison[zone].nom}\n\n`;
     msg += `📝 *ARTICLES:*\n${listWA}\n`;
-    if(isCadeau) msg += `🎁 *OPTION:* Emballage Cadeau Luxe (+1.000 F)\n`;
-    msg += `\n💰 *TOTAL À PAYER: ${total} F*`;
+    msg += `\n💰 *TOTAL À PAYER: ${total}*`;
 
-    // 5. Envoi
     window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
 }
-    // --- DIVERS ---
-    function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
-    function suivreColis() { alert("si votre commande à été validé sur WhatsApp alors vous serez contacté !"); }
-    function updateVisitorCount() {
-        let count = localStorage.getItem('latyfa_visitors') || 1250;
-        count = parseInt(count) + 1;
-        localStorage.setItem('latyfa_visitors', count);
-        if(document.getElementById('visitor-count')) document.getElementById('visitor-count').innerText = count.toLocaleString('fr-FR');
+
+function rechercherProduit() {
+    const terme = document.getElementById('search-input').value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(terme));
+    
+    const grid = document.getElementById('product-grid');
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-20 text-gray-500">Aucun résultat</div>`;
+    } else {
+        grid.innerHTML = filtered.map(p => `
+            <div class="product-card p-3" onclick="voirDetails(${p.id})">
+                <img src="${p.images[0]}" class="h-44 w-full object-cover rounded mb-3">
+                <h3 class="text-[11px] font-bold uppercase">${p.name}</h3>
+                <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+            </div>
+        `).join('');
     }
-
-    setInterval(() => {
-        const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
-        if(diff <= 0) { document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; return; }
-        const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-        document.getElementById('countdown').innerText = `${d}j ${h}h ${m}m ${s}s`;
-    }, 1000);
-
-    // Initialisation finale
-    drawWheel(); 
-    majAffichageChances(); 
-    render(); 
-    updateVisitorCount();
-    
-    // --- LOGIQUE DE PREUVE SOCIALE (Notifications de vente) ---
-const notifications = [
-    "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
-    "Nouveau colis expédié vers Yamoussoukro 📦",
-    "Une commande de Parfum Prestige vient d'être validée 🕯️",
-    "5 personnes consultent actuellement ce produit 🔥",
-    "Un ensemble de bijoux a été ajouté au panier à Bouaké 💎"
-];
-
-function showSocialProof() {
-    const box = document.getElementById('social-proof');
-    const text = document.getElementById('proof-text');
-    if(!box || !text) return;
-
-    text.innerText = notifications[Math.floor(Math.random() * notifications.length)];
-    box.classList.remove('translate-y-20', 'opacity-0');
-    
-    setTimeout(() => {
-        box.classList.add('translate-y-20', 'opacity-0');
-    }, 5000);
 }
 
-// Lancement de la preuve sociale
-setTimeout(() => {
-    showSocialProof();
-    setInterval(showSocialProof, 15000);
-}, 3000);
+function suivreColis() { 
+    alert("Si votre commande a été validée sur WhatsApp, vous serez contacté !"); 
+}
 
-// --- LOGIQUE ADMIN (Gestion du catalogue) ---
-// --- LOGIQUE ADMIN (Gestion du catalogue) ---
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-theme');
+    const btn = document.getElementById('dark-mode-btn');
+    const icon = btn.querySelector('i');
+    icon.classList.toggle('fa-moon');
+    icon.classList.toggle('fa-sun');
+}
+
+// --- ADMIN ---
 function ouvrirAdmin() {
-    const codeAttendu = localStorage.getItem('latyfa_admin_code') || "2026";
+    const codeAttendu = "2026";
     const codeSaisi = prompt("Veuillez entrer le code d'accès :");
-    
     if (codeSaisi === codeAttendu) {
-        const modal = document.getElementById('adminModal');
-        modal.classList.add('active'); // Utilise la logique de vos autres modales
+        document.getElementById('adminModal').classList.add('active');
         refreshAdminList();
-        mettreAJourStats();
-    } else {
-        alert("❌ Code incorrect. Accès refusé.");
-    }
-}
-function ajouterProduitAdmin() {
-    const name = document.getElementById('adm-name').value;
-    const price = document.getElementById('adm-price').value;
-    const imgInput = document.getElementById('adm-img').value;
-    if(!name || !price || !imgInput) return alert("Remplis les champs !");
-
-    const imagesArray = imgInput.split(',').map(link => link.trim()).filter(l => l !== "");
-    const donnees = {
-        name, price: parseInt(price), cat: document.getElementById('adm-cat').value,
-        images: imagesArray, description: document.getElementById('adm-desc').value,
-        quantiteRestante: document.getElementById('adm-stock-count').value,
-        stockBas: document.getElementById('adm-stock-bas').checked,
-        dateAjout: Date.now()
-    };
-    function modifPrixRapide(id) {
-    const p = products.find(x => x.id === id);
-    if (!p) return;
-
-    const nouveauPrix = prompt(`Modifier le prix de "${p.name}" (Prix actuel : ${p.price} F) :`, p.price);
-    
-    if (nouveauPrix !== null && !isNaN(nouveauPrix) && nouveauPrix.trim() !== "") {
-        p.price = parseInt(nouveauPrix);
-        
-        // Sauvegarde dans la base de données locale
-        localStorage.setItem('latyfa_db', JSON.stringify(products));
-        
-        // Mise à jour visuelle immédiate
-        refreshAdminList();
-        render(); // Met à jour la boutique en arrière-plan
-        
-        alert("💰 Prix mis à jour ! Nouveau prix : " + p.price + " F");
-    }
-}
-    if (idEnCoursDeModification) {
-        const idx = products.findIndex(p => p.id === idEnCoursDeModification);
-        products[idx] = { ...products[idx], ...donnees };
-        idEnCoursDeModification = null;
-    } else {
-        products.push({ id: Date.now(), enStock: true, ...donnees });
-    }
-
-    localStorage.setItem('latyfa_db', JSON.stringify(products));
-    location.reload(); // Plus simple pour tout rafraîchir d'un coup
-}
-
-function toggleStock(id) {
-    const p = products.find(x => x.id === id);
-    if(p) {
-        p.enStock = (p.enStock === undefined) ? false : !p.enStock;
-        localStorage.setItem('latyfa_db', JSON.stringify(products));
-        refreshAdminList();
-        render();
+    } else if (codeSaisi !== null) {
+        alert("❌ Code incorrect.");
     }
 }
 
-function supprimerProduit(id) {
-    if(confirm("Supprimer définitivement cet article ?")) {
-        products = products.filter(p => p.id !== id);
-        localStorage.setItem('latyfa_db', JSON.stringify(products));
-        refreshAdminList();
-        render();
-    }
-}
-
-let idEnCoursDeModification = null;
 function refreshAdminList() {
     const list = document.getElementById('admin-list');
     if (!list) return;
+    
     list.innerHTML = products.map(p => `
         <div class="flex justify-between items-center bg-white p-3 rounded-xl border border-gray-100 mb-2 shadow-sm">
             <div class="flex items-center gap-3">
-                <img src="${p.images[0]}" class="w-10 h-10 object-cover rounded-lg ${p.enStock === false ? 'grayscale' : ''}">
-                <div class="flex flex-col">
-                    <span class="font-black text-[10px] uppercase ${p.enStock === false ? 'text-red-300 line-through' : 'text-gray-800'}">${p.name}</span>
-                    <span class="text-[10px] font-bold text-[#c5a059]">${p.price.toLocaleString()} F</span>
+                <img src="${p.images[0]}" class="w-10 h-10 object-cover rounded-lg">
+                <div>
+                    <span class="font-black text-[10px] uppercase">${p.name}</span>
+                    <span class="text-[10px] font-bold text-[#c5a059] block">${p.price.toLocaleString()} F</span>
                 </div>
             </div>
             <div class="flex gap-1">
-                <button onclick="modifPrixRapide(${p.id})" class="bg-orange-50 text-orange-500 p-2 rounded-lg hover:bg-orange-500 hover:text-white transition-all">
-                    <i class="fa-solid fa-tags text-[10px]"></i>
+                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded-lg ${p.enStock ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}">
+                    ${p.enStock ? 'ON' : 'OFF'}
                 </button>
-                
-                <button onclick="preparerModification(${p.id})" class="bg-blue-50 text-blue-500 p-2 rounded-lg hover:bg-blue-500 hover:text-white transition-all">
-                    <i class="fa-solid fa-pen-to-square text-[10px]"></i>
-                </button>
-                
-                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded-lg ${p.enStock === false ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
-                    ${p.enStock === false ? 'OFF' : 'ON'}
-                </button>
-                
                 <button onclick="supprimerProduit(${p.id})" class="text-gray-300 hover:text-red-500 p-2">
                     <i class="fa-solid fa-trash-can text-[10px]"></i>
                 </button>
@@ -1550,145 +699,87 @@ function refreshAdminList() {
     `).join('');
 }
 
-    function preparerModification(id) {
+function ajouterProduitAdmin() {
+    const name = document.getElementById('adm-name').value;
+    const price = document.getElementById('adm-price').value;
+    const cat = document.getElementById('adm-cat').value;
+    const images = document.getElementById('adm-img').value.split(',').map(s => s.trim());
+    const desc = document.getElementById('adm-desc').value;
+
+    if(!name || !price || !images[0]) {
+        alert("Remplissez les champs obligatoires !");
+        return;
+    }
+
+    products.push({
+        id: Date.now(),
+        name: name,
+        price: parseInt(price),
+        cat: cat,
+        images: images,
+        description: desc || "Produit exclusif Latyfa",
+        enStock: true
+    });
+
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    render();
+    refreshAdminList();
+    
+    // Reset form
+    document.getElementById('adm-name').value = '';
+    document.getElementById('adm-price').value = '';
+    document.getElementById('adm-img').value = '';
+    document.getElementById('adm-desc').value = '';
+    
+    alert("Produit ajouté avec succès !");
+}
+
+function supprimerProduit(id) {
+    if(confirm("Supprimer définitivement cet article ?")) {
+        products = products.filter(p => p.id !== id);
+        localStorage.setItem('latyfa_db', JSON.stringify(products));
+        render();
+        refreshAdminList();
+    }
+}
+
+function toggleStock(id) {
     const p = products.find(x => x.id === id);
-    if (!p) return;
-    idEnCoursDeModification = id;
-    document.getElementById('adm-name').value = p.name;
-    document.getElementById('adm-price').value = p.price;
-    document.getElementById('adm-cat').value = p.cat;
-    document.getElementById('adm-img').value = p.images.join(', ');
-    document.getElementById('adm-desc').value = p.description || "";
-    document.getElementById('adm-stock-count').value = p.quantiteRestante || "2";
-    
-    const btn = document.querySelector("button[onclick='ajouterProduitAdmin()']");
-    btn.innerText = "ENREGISTRER LES MODIFICATIONS";
-    btn.classList.replace('bg-black', 'bg-blue-600');
-    }
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        const loader = document.getElementById('loader');
-        loader.classList.add('loader-hidden');
-    }, 1500); // 1.5 seconde pour un effet luxe bien dosé
-});
-    function toggleHistorique() {
-    const zone = document.getElementById('historique-zone');
-    if (zone.classList.contains('hidden')) {
-        zone.classList.remove('hidden');
-        chargerHistorique();
-    } else {
-        zone.classList.add('hidden');
+    if(p) {
+        p.enStock = !p.enStock;
+        localStorage.setItem('latyfa_db', JSON.stringify(p));
+        render();
+        refreshAdminList();
     }
 }
 
-function chargerHistorique() {
-    const zone = document.getElementById('historique-zone');
-    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-
-    if (historique.length === 0) {
-        zone.innerHTML = `
-            <div class="text-center py-10 opacity-50">
-                <i class="fa-solid fa-box-archive text-3xl mb-2"></i>
-                <p class="text-[10px] uppercase font-bold">Aucune vente enregistrée</p>
-            </div>`;
-        return;
-    }
-    zone.innerHTML = historique.map(cmd => `
-        <div class="bg-white p-4 rounded-xl border-l-4 border-[#c5a059] shadow-sm text-[10px] mb-3">
-            <div class="flex justify-between items-start mb-2">
-                <span class="font-black text-gray-400">📅 ${cmd.date}</span>
-                <span class="bg-green-100 text-green-700 px-2 py-1 rounded font-bold">${cmd.total} F</span>
-            </div>
-            <p class="mb-1"><strong>👤 CLIENT :</strong> ${cmd.client} (${cmd.tel})</p>
-            <p class="mb-1"><strong>📍 DESTINATION :</strong> ${cmd.lieu}</p>
-            <p class="mb-1"><strong>🛍️ PANIER :</strong> ${cmd.articles}</p>
-            <div class="flex gap-2 mt-2 pt-2 border-t border-gray-50 text-[8px] font-bold uppercase">
-                <span class="${cmd.promo !== 'Aucun' ? 'text-blue-500' : 'text-gray-300'}">🎟️ Code: ${cmd.promo}</span>
-                <span class="${cmd.cadeau === 'OUI' ? 'text-pink-500' : 'text-gray-300'}">🎁 Cadeau: ${cmd.cadeau}</span>
-            </div>
-        </div>
-    `).join('');
+// --- COMPTEUR ---
+function updateVisitorCount() {
+    let count = localStorage.getItem('latyfa_visitors') || 1250;
+    count = parseInt(count) + 1;
+    localStorage.setItem('latyfa_visitors', count);
+    const visitorElement = document.getElementById('visitor-count');
+    if(visitorElement) visitorElement.innerText = count.toLocaleString('fr-FR');
 }
-    function effacerToutLHistorique() {
-    // Premier avertissement
-    if (confirm("🚨 ATTENTION : Vous allez supprimer TOUTES les ventes de l'historique.")) {
-        
-        // Deuxième vérification de sécurité (le rappel de sauvegarde)
-        if (confirm("❓ Avez-vous bien téléchargé votre sauvegarde Excel (Fichier CSV) avant de continuer ?")) {
-            
-            // Si l'utilisateur confirme les deux, on efface
-            localStorage.removeItem('latyfa_historique');
-            
-            chargerHistorique();
-            mettreAJourStats();
-            
-            alert("✅ Historique réinitialisé avec succès.");
-        } else {
-            // Si l'utilisateur dit "Non" à la sauvegarde, on lui propose de le faire
-            alert("Sauvegarde annulée. Pensez à cliquer sur 'Sauvegarder (Excel)' avant d'effacer.");
-        }
-    }
-}
-    function changerMedia(type, source, element) {
-    const container = document.getElementById('main-detail-img').parentElement;
-    
-    // 1. Mise à jour visuelle des miniatures
-    document.querySelectorAll('.miniature-item').forEach(el => el.classList.remove('thumb-active'));
-    element.classList.add('thumb-active');
 
-    // 2. Changement du média avec animation
-    if(type === 'video') {
-        container.innerHTML = `
-            <video id="main-detail-video" src="${source}" controls autoplay loop muted
-            class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn"></video>
-        `;
-    } else {
-        container.innerHTML = `
-            <img id="main-detail-img" src="${source}" 
-            class="w-full h-80 object-cover rounded-xl shadow-md border animate-fadeIn">
-        `;
+// --- COUNTDOWN ---
+setInterval(() => {
+    const diff = new Date("Feb 14, 2026 00:00:00").getTime() - new Date().getTime();
+    if(diff <= 0) { 
+        document.getElementById('countdown').innerText = "PROMO ACTIVÉE !"; 
+        return; 
     }
-}
-function calculerTailleRec() {
-    const poids = parseFloat(document.getElementById('user-weight').value);
-    const resultZone = document.getElementById('size-result');
-    const selectSize = document.getElementById('select-size');
-    
-    if (!poids || poids < 30 || poids > 150) {
-        resultZone.innerText = "Veuillez entrer un poids réaliste (ex: 65).";
-        resultZone.classList.replace('text-green-600', 'text-red-500');
-        return;
-    }
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
+    document.getElementById('countdown').innerText = `${d}j ${h}h ${m}m ${s}s`;
+}, 1000);
 
-    let recommendation = "";
-    // Logique de recommandation basée sur le poids
-    if (poids < 55) recommendation = "S";
-    else if (poids < 68) recommendation = "M";
-    else if (poids < 80) recommendation = "L";
-    else if (poids < 95) recommendation = "XL";
-    else if (poids < 110) recommendation = "XXL";
-    else recommendation = "3XL";
-
-    // Affichage du résultat avec animation
-    resultZone.classList.replace('text-red-500', 'text-green-600');
-    resultZone.innerHTML = `✨ Taille conseillée : <strong>${recommendation}</strong>`;
-    
-    // --- AUTO-SÉLECTION ---
-    // Cette partie sélectionne automatiquement la taille dans le menu déroulant
-    if (selectSize) {
-        let found = false;
-        for (let i = 0; i < selectSize.options.length; i++) {
-            if (selectSize.options[i].value === recommendation) {
-                selectSize.selectedIndex = i;
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            resultZone.innerHTML += "<br><span class='text-[8px] text-orange-500'>Note: Cette taille n'est pas dispo pour cet article.</span>";
-        }
-    }
-}
+// --- ROUE DE LA FORTUNE ---
+const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
+const canvas = document.getElementById('canvas');
+let ctx = canvas ? canvas.getContext('2d') : null;
 
 function drawWheel() {
     if (!ctx) return;
@@ -1717,7 +808,7 @@ function lancerRoue() {
     if (!btn || !wheel) return;
 
     btn.disabled = true;
-    const randomRotation = Math.floor(Math.random() * 360) + 3600; // 10 tours + aléatoire
+    const randomRotation = Math.floor(Math.random() * 360) + 3600;
     wheel.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
     wheel.style.transform = `rotate(${randomRotation}deg)`;
 
@@ -1725,455 +816,43 @@ function lancerRoue() {
         btn.disabled = false;
         alert("🎉 Félicitations ! Vérifiez votre cadeau lors de la commande.");
         document.querySelector('.wheel-mask').classList.remove('active');
-    }, 4500);
+    }, 4000);
 }
 
-// Initialiser le dessin de la roue
-setTimeout(drawWheel, 100);
-
-// Lier le bouton spin s'il existe
-document.addEventListener('click', (e) => {
-    if(e.target && e.target.id === 'spin') lancerRoue();
-});
-       // --- 6. GESTION DE L'ESPACE ADMIN ---
-let idEnCoursDeModification = null;
-
-function toggleAdmin() {
-    const modal = document.getElementById('adminModal');
-    if (modal) {
-        modal.classList.toggle('active');
-        refreshAdminList();
-    }
-}
-
-function refreshAdminList() {
-    const list = document.getElementById('admin-list');
-    if (!list) return;
-    
-    list.innerHTML = products.map(p => `
-        <div class="flex justify-between items-center bg-white p-3 rounded-lg border mb-2 shadow-sm">
-            <div class="flex items-center gap-3">
-                <img src="${p.images[0]}" class="w-10 h-10 object-cover rounded shadow-sm">
-                <div>
-                    <p class="font-bold text-[11px] uppercase">${p.name}</p>
-                    <p class="text-[#c5a059] font-black text-[10px]">${p.price.toLocaleString()} F</p>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="preparerModification(${p.id})" class="text-blue-500 bg-blue-50 p-2 rounded"><i class="fa-solid fa-pen"></i></button>
-                <button onclick="toggleStock(${p.id})" class="text-[9px] font-black px-2 py-1 rounded ${p.enStock ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}">
-                    ${p.enStock ? 'STOCK OK' : 'OUT'}
-                </button>
-                <button onclick="supprimerProduit(${p.id})" class="text-red-500 bg-red-50 p-2 rounded"><i class="fa-solid fa-trash"></i></button>
-            </div>
-        </div>
-    `).join('');
-}
-
-function ajouterProduitAdmin() {
-    const name = document.getElementById('adm-name').value;
-    const price = document.getElementById('adm-price').value;
-    const imgInput = document.getElementById('adm-img').value;
-
-    if(!name || !price || !imgInput) return alert("Veuillez remplir les champs obligatoires !");
-
-    const imagesArray = imgInput.split(',').map(link => link.trim());
-
-    const donneesProduit = {
-        name: name,
-        price: parseInt(price),
-        cat: document.getElementById('adm-cat').value,
-        images: imagesArray,
-        description: document.getElementById('adm-desc').value || "Produit exclusif Latyfa Business",
-        enStock: true
-    };
-
-    if (idEnCoursDeModification) {
-        const index = products.findIndex(p => p.id === idEnCoursDeModification);
-        products[index] = { ...products[index], ...donneesProduit };
-        idEnCoursDeModification = null;
-        alert("Produit mis à jour avec succès !");
-    } else {
-        const newP = { id: Date.now(), ...donneesProduit };
-        products.unshift(newP); // Ajoute en haut de liste
-        alert("Nouveau produit en ligne !");
-    }
-
-    sauvegarderEtRelancer();
-    viderFormulaire();
-}
-
-function supprimerProduit(id) {
-    if(confirm("Supprimer définitivement cet article ?")) {
-        products = products.filter(p => p.id !== id);
-        sauvegarderEtRelancer();
-    }
-}
-
-function toggleStock(id) {
-    const p = products.find(x => x.id === id);
-    if(p) {
-        p.enStock = !p.enStock;
-        sauvegarderEtRelancer();
-    }
-}
-
-function sauvegarderEtRelancer() {
-    localStorage.setItem('latyfa_db', JSON.stringify(products));
-    render();
-    refreshAdminList();
-}
-
-function viderFormulaire() {
-    ['adm-name', 'adm-price', 'adm-img', 'adm-desc'].forEach(id => {
-        document.getElementById(id).value = "";
-    });
-    }
-    
-    document.getElementById('cart-count').innerText = count;
-});
-    // --- SIMULATEUR DE GAINS (PREUVE SOCIALE) ---
-const villesCI = ["Abidjan", "Bouaké", "Yamoussoukro", "San-Pédro", "Korhogo", "Daloa", "Man", "Gagnoa", "Abengourou", "Ferké", "Odiéné", "Touba", "Botro"];
-const gainsPossibles = ["-5%", "-10%", "-15%", "la LIVRAISON GRATUITE", "un CADEAU"];
-
-function lancerNotificationGain() {
-    const notif = document.getElementById('wheel-notif');
-    const texte = document.getElementById('notif-text');
-    
-    // Si la roue est déjà ouverte, on n'affiche pas la notif pour ne pas gêner
-    if (document.querySelector('.wheel-mask').classList.contains('active')) return;
-
-    const ville = villesCI[Math.floor(Math.random() * villesCI.length)];
-    const gain = gainsPossibles[Math.floor(Math.random() * gainsPossibles.length)];
-    
-    texte.innerHTML = `Une cliente de <span class="text-[#c5a059]">${ville}</span> vient de gagner <span class="text-black">${gain}</span> !`;
-    
-    // Apparition
-    notif.classList.remove('translate-x-[-120%]');
-    
-    // Disparition après 6 secondes
+// --- INITIALISATION ---
+window.addEventListener('load', () => {
     setTimeout(() => {
-        notif.classList.add('translate-x-[-120%]');
-    }, 6000);
-}
-
-// Lancer la première notif après 10 secondes, puis toutes les 35 secondes
-setTimeout(() => {
-    lancerNotificationGain();
-    setInterval(lancerNotificationGain, 35000);
-}, 10000);
-
-function selectPay(mode) {
-    const btnMobile = document.getElementById('pay-mobile');
-    const btnCash = document.getElementById('pay-cash');
-    const inputHidden = document.getElementById('mode-pay');
-
-    if (mode === 'TRANSFERT') {
-        inputHidden.value = "TRANSFERT MOBILE (WAVE/ORANGE/MTN)";
-        // Style Actif
-        btnMobile.classList.replace('border-gray-100', 'border-[#c5a059]');
-        btnMobile.classList.add('bg-orange-50');
-        btnMobile.style.opacity = "1";
-        // Style Inactif
-        btnCash.classList.replace('border-[#c5a059]', 'border-gray-100');
-        btnCash.classList.remove('bg-orange-50');
-        btnCash.style.opacity = "0.5";
-    } else {
-        inputHidden.value = "CASH / RETRAIT EN BOUTIQUE";
-        // Style Actif
-        btnCash.classList.replace('border-gray-100', 'border-[#c5a059]');
-        btnCash.classList.add('bg-orange-50');
-        btnCash.style.opacity = "1";
-        // Style Inactif
-        btnMobile.classList.replace('border-[#c5a059]', 'border-gray-100');
-        btnMobile.classList.remove('bg-orange-50');
-        btnMobile.style.opacity = "0.5";
-    }
-}
-    function ajouterAuPanier(id, label, price, img) {
-    // 1. Chercher si l'article est déjà là
-    const itemExistant = cart.find(item => item.id === id);
-
-    if (itemExistant) {
-        // 2. Si oui, on augmente juste la quantité
-        itemExistant.qty += 1;
-    } else {
-        // 3. Si non, on l'ajoute comme nouveau
-        cart.push({
-            id: id,
-            label: label,
-            price: price,
-            img: img,
-            qty: 1
-        });
-    }
-
-    // 4. Petit effet visuel pour confirmer l'ajout
-    notifierAjout(label);
+        const loader = document.getElementById('loader');
+        if(loader) loader.classList.add('loader-hidden');
+    }, 1500);
     
-    // 5. Mettre à jour l'affichage
-    ouvrirPanier();
-}
-
-function notifierAjout(nom) {
-    // Tu peux créer une petite notification temporaire ici
-    console.log(nom + " ajouté au panier !");
-}
-        function mettreAJourStats() {
-    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-    const zoneCA = document.getElementById('stat-ca');
-    const zoneNB = document.getElementById('stat-nb');
-
-    let totalCA = 0;
-    historique.forEach(cmd => {
-        let prixNettoyé = cmd.total.toString().replace(/\s/g, '').replace(/,/g, '');
-        totalCA += parseInt(prixNettoyé) || 0;
-    });
-
-    // --- LOGIQUE DE L'ANIMATION DU COMPTEUR ---
-    let depart = 0;
-    let fin = totalCA;
-    let duree = 1000; // L'animation dure 1 seconde
-    let debutTemps = null;
-
-    function animation(tempsActuel) {
-        if (!debutTemps) debutTemps = tempsActuel;
-        let progression = tempsActuel - debutTemps;
-        
-        // Calcul du chiffre actuel en fonction du temps écoulé
-        let valeurActuelle = Math.min(Math.floor((progression / duree) * (fin - depart) + depart), fin);
-        
-        zoneCA.innerText = valeurActuelle.toLocaleString('fr-FR') + " F";
-
-        if (progression < duree) {
-            requestAnimationFrame(animation);
-        }
-    }
-    // On lance l'animation
-    requestAnimationFrame(animation);   
-    // Mise à jour directe du nombre de commandes
-    zoneNB.innerText = historique.length;
-}
-    function changerMotDePasse() {
-    const nouveauCode = prompt("Entrez votre nouveau code secret :");
+    render();
+    drawWheel();
+    updateVisitorCount();
     
-    if (nouveauCode && nouveauCode.trim() !== "") {
-        localStorage.setItem('latyfa_admin_code', nouveauCode);
-        alert("✅ Nouveau code enregistré avec succès !");
-    } else {
-        alert("⚠️ Le code ne peut pas être vide.");
+    // Remplir les catégories
+    const categoriesContainer = document.getElementById('categories-container');
+    if(categoriesContainer) {
+        categoriesContainer.innerHTML = `
+            <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('tous')">
+                Tout voir <i class="fa-solid fa-crown text-[10px] text-[#c5a059]"></i>
+            </span>
+            ${categories.map(c => `
+                <span class="category-link cursor-pointer flex justify-between items-center" onclick="render('${c.id}')">
+                    ${c.nom} <i class="fa-solid ${c.icone} text-[10px]"></i>
+                </span>
+            `).join('')}
+        `;
     }
-    }
-    function sauvegarderHistorique() {
-    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-
-    if (historique.length === 0) {
-        alert("Rien à sauvegarder pour le moment.");
-        return;
-    }
-
-    // Création de l'en-tête du fichier CSV
-    let csvContent = "Date;Client;Telephone;Lieu;Articles;Total;Promo;Cadeau\n";
-
-    // Ajout des lignes
-    historique.forEach(cmd => {
-        let ligne = `${cmd.date};${cmd.client};${cmd.tel};${cmd.lieu};${cmd.articles};${cmd.total};${cmd.promo};${cmd.cadeau}`;
-        csvContent += ligne + "\n";
-    });
-
-    // Création du fichier et téléchargement
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
     
-    link.setAttribute("href", url);
-    link.setAttribute("download", `Ventes_LatyfaShop_${new Date().toLocaleDateString()}.csv`);
-    link.style.visibility = 'hidden';
+    // Attacher l'événement de la roue
+    document.getElementById('spin').addEventListener('click', lancerRoue);
     
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-        }
-    // Relance la vérification dès que l'utilisateur écrit dans les champs
-document.getElementById('nom-client').addEventListener('input', toggleBouton);
-document.getElementById('tel-client').addEventListener('input', toggleBouton);
-    refreshCategoriesUI();
-    // À mettre tout en bas de ton code JS
-updateVisitorCount();
-render();
-drawWheel();
-refreshCategoriesUI(); // <--- C'est cette ligne qui lancera tes catégories au chargement
-    function toggleDarkMode() {
-    const body = document.body;
-    const btn = document.getElementById('dark-mode-btn');
-    const icon = btn.querySelector('i');
-    
-    // Ajouter l'animation de rotation à l'icône
-    icon.classList.add('mode-icon-spin');
-    setTimeout(() => icon.classList.remove('mode-icon-spin'), 500);
-
-    const isDark = body.classList.toggle('dark-theme');
-    
-    if (isDark) {
-        btn.innerHTML = '<i class="fa-solid fa-sun mode-icon-spin"></i>';
-        btn.style.backgroundColor = "#fbbf24"; // Jaune soleil
-        btn.style.color = "#000";
-        localStorage.setItem('latyfa_theme', 'dark');
-    } else {
-        btn.innerHTML = '<i class="fa-solid fa-moon mode-icon-spin"></i>';
-        btn.style.backgroundColor = "#f3f4f6"; // Gris clair
-        btn.style.color = "#4b5563";
-        localStorage.setItem('latyfa_theme', 'light');
-    }
-}
+    // Input listeners pour le bouton de validation
+    document.getElementById('nom-client')?.addEventListener('input', toggleBouton);
+    document.getElementById('tel-client')?.addEventListener('input', toggleBouton);
+});
 </script>
-<div onclick="ouvrirAdmin()" class="fixed bottom-2 left-2 w-10 h-10 cursor-pointer z-[100] opacity-0 hover:opacity-20 flex items-center justify-center text-[10px] text-gray-400">ADM</div>
 
-<div id="adminModal" class="modal bg-gray-50">
-    <div class="max-w-xl mx-auto pb-20">
-        <div class="flex justify-between items-center mb-8 sticky top-0 bg-gray-50 py-4 z-10">
-            <h2 class="text-2xl font-black uppercase italic">Gestion Boutique</h2>
-            <button onclick="document.getElementById('adminModal').classList.remove('active')" class="text-gray-400 text-2xl">&times;</button>
-        </div>
-<div class="flex gap-2 mb-4">
-    <button onclick="ajouterNouvelleCategorie()" class="flex-1 bg-orange-100 text-orange-600 py-2 rounded-xl text-[10px] font-black uppercase">
-        <i class="fa-solid fa-folder-plus mr-1"></i> Créer Catégorie
-    </button>
-    <button onclick="supprimerCategorie()" class="bg-red-50 text-red-500 px-3 py-2 rounded-xl text-[10px]">
-        <i class="fa-solid fa-trash"></i>
-    </button>
-</div>
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
-            <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
-            <div class="grid grid-cols-1 gap-4">
-                <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
-                <div class="grid grid-cols-2 gap-4 mb-4">
-    <div class="flex flex-col">
-        <label class="text-[9px] font-bold text-gray-400 uppercase">Alerte Stock (Ex: 2)</label>
-        <input type="number" id="adm-stock-count" placeholder="Ex: 3" class="w-full border p-3 rounded-lg text-sm">
-    </div>
-    <div class="flex items-center gap-2 mt-4">
-        <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-        <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">Afficher l'alerte</label>
-    </div>
-</div>
-                    <input type="number" id="adm-price" placeholder="Prix (ex: 15000) *" class="w-full border p-3 rounded-lg text-sm">
-                    <select id="adm-cat" class="w-full border p-3 rounded-lg text-sm">
-                        <option value="bijoux">Bijoux</option>
-                        <option value="vetements">Vêtements</option>
-                        <option value="chaussures">Chaussures</option>
-                        <option value="sac">Sacs</option>
-                        <option value="parfum">Parfums</option>
-                        <option value="hanche">Perles de hanche</option>
-                        <option value="autres">Autres</option>
-                    </select>
-                </div>
-               <div class="space-y-1">
-    <label class="text-[9px] font-bold text-gray-400 uppercase">Images (Séparez les liens par une virgule si plusieurs)</label>
-    <textarea id="adm-img" placeholder="https://lien1.jpg, https://lien2.jpg" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-</div> 
-                <input type="text" id="adm-video" placeholder="Lien Vidéo (Optionnel)" class="w-full border p-3 rounded-lg text-sm mt-2">
-                <textarea id="adm-desc" placeholder="Description courte" class="w-full border p-3 rounded-lg text-sm h-20"></textarea>
-                <div class="flex items-center gap-2 mb-4">
-    <input type="checkbox" id="adm-stock-bas" class="w-4 h-4">
-    <label for="adm-stock-bas" class="text-[10px] font-bold uppercase text-red-600 italic">🔥 Activer l'alerte "Stock Limité"</label>
-</div>
-                <button onclick="ajouterProduitAdmin()" class="bg-black text-white py-4 rounded-xl font-black uppercase text-xs hover:bg-gray-800 transition">Mettre en ligne</button>
-            </div>
-        </div>
-
-        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
-        <div id="admin-list" class="space-y-2 mb-10">
-            </div>
-    
-<div class="grid grid-cols-2 gap-4 mb-8">
-    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
-        <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Chiffre d'Affaires</p>
-        <div id="stat-ca" class="text-xl font-black text-blue-700">0 F</div>
-    </div>
-    <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
-        <p class="text-[9px] font-black uppercase text-green-400 mb-1">Commandes</p>
-        <div id="stat-nb" class="text-xl font-black text-green-700">0</div>
-    </div>
-</div>
-        <div class="pt-8 border-t-2 border-dashed border-gray-200">
-    <div class="flex flex-col gap-4 mb-4">
-        <h3 class="font-black uppercase text-[11px] italic text-blue-600 tracking-wider">
-            <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Journal des ventes
-        </h3>
-        
-        <div class="flex gap-2">
-            <button onclick="sauvegarderHistorique()" 
-                    class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md active:scale-95 transition-all">
-                <i class="fa-solid fa-file-export mr-2"></i> Sauvegarder (Excel)
-            </button>
-            
-            <button onclick="effacerToutLHistorique()" 
-                    class="bg-red-100 text-red-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-red-600 hover:text-white transition-all">
-                <i class="fa-solid fa-trash-can"></i>
-            </button>
-        </div>
-    </div>
-    
-    <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md">
-        <i class="fa-solid fa-clock-rotate-left mr-2"></i> Voir l'historique complet
-    </button>
-
-    <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2 pb-10">
-        </div>
-</div>
-    <div class="text-center mt-6">
-    <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest">
-        <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
-    </button>
-    </div>
-    <div class="mt-6 border-t border-gray-100 pt-4">
-    <button onclick="document.getElementById('adminModal').classList.remove('active')" class="w-full bg-gray-50 text-gray-500 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[2px] hover:bg-gray-100 active:scale-95 transition-all">
-    <i class="fa-solid fa-xmark mr-2"></i> Quitter l'Espace Admin
-    </button>
-<div id="guideModal" class="modal bg-black/50 backdrop-blur-sm z-[2000]">
-    <div class="max-w-md mx-auto bg-white rounded-2xl p-6 mt-20 shadow-2xl border-t-4 border-[#c5a059]">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-black uppercase text-sm italic">📏 Guide des Tailles</h3>
-            <button onclick="document.getElementById('guideModal').classList.remove('active')" class="text-xl">&times;</button>
-        </div>
-        
-        <div class="space-y-6">
-            <div>
-                <p class="text-[10px] font-bold text-[#c5a059] uppercase mb-2">Bagues & Bijoux</p>
-                <table class="w-full text-[10px] border-collapse">
-                    <tr class="bg-gray-100 uppercase">
-                        <th class="p-2 border">Taille</th>
-                        <th class="p-2 border">Circonférence</th>
-                    </tr>
-                    <tr><td class="p-2 border text-center">6</td><td class="p-2 border text-center">52 mm</td></tr>
-                    <tr><td class="p-2 border text-center">7</td><td class="p-2 border text-center">54 mm</td></tr>
-                    <tr><td class="p-2 border text-center">8</td><td class="p-2 border text-center">57 mm</td></tr>
-                </table>
-            </div>
-
-            <div>
-                <p class="text-[10px] font-bold text-[#c5a059] uppercase mb-2">Vêtements</p>
-                <div class="grid grid-cols-3 gap-2 text-center text-[9px] font-bold uppercase">
-                    <div class="bg-gray-50 p-2 rounded">S<br><span class="text-gray-400">36-38</span></div>
-                    <div class="bg-gray-50 p-2 rounded">M<br><span class="text-gray-400">40-42</span></div>
-                    <div class="bg-gray-50 p-2 rounded">L<br><span class="text-gray-400">44-46</span></div>
-                </div>
-            </div>
-            
-            <p class="text-[8px] text-gray-400 italic">Astuce : Si vous hésitez entre deux tailles, prenez la plus grande pour plus de confort.</p>
-        </div>
-    </div>
-</div>
-    <div id="wheel-notif" class="fixed bottom-28 left-5 bg-white shadow-2xl rounded-lg p-3 flex items-center gap-3 border-l-4 border-black transform translate-x-[-120%] transition-all duration-700 z-[100] max-w-[250px]">
-    <div class="w-10 h-10 bg-gold-gradient rounded-full flex-shrink-0 flex items-center justify-center text-[#c5a059] border border-gray-100">
-        <i class="fa-solid fa-star animate-pulse"></i>
-    </div>
-    <div>
-        <p id="notif-text" class="text-[10px] text-gray-800 font-bold leading-tight uppercase tracking-tighter"></p>
-        <p class="text-[8px] text-gray-400 mt-1 uppercase font-black">Il y a quelques secondes</p>
-    </div>
-</div>
-<audio id="sound-promo" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
-        </body>
-        </html>
+</body>
+</html>
