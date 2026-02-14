@@ -881,17 +881,20 @@ if(badge) {
     badge.style.display = totalArticles > 0 ? 'flex' : 'none';}
 }
     function voirDetails(id) {
-    const p = products.find(x => x.id === id);
+    const p = products.find(x => x.id === id); // On utilise 'p'
     if (!p) return;
     currentProduct = p;
+    
     document.getElementById('productDetailModal').classList.add('active');
 
+    // --- SECTION COMPTEUR DE VUES ---
     const vues = Math.floor(Math.random() * 17) + 8;
     const oldVues = document.getElementById('view-counter');
     if(oldVues) oldVues.remove();
     
     document.getElementById('detail-name').innerText = p.name;
-    document.getElementById('detail-name').insertAdjacentHTML('afterend', 
+    // Correction : Ajout des backticks autour du HTML
+    document.getElementById('detail-name').insertAdjacentHTML('afterend', `
         <div id="view-counter" class="flex items-center gap-2 mt-2 bg-gray-50 w-fit px-3 py-1 rounded-full border border-gray-100">
             <span class="relative flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -901,19 +904,24 @@ if(badge) {
                 <span id="nb-vues-text" class="text-gray-900">${vues} personnes</span> consultent cet article
             </p>
         </div>
-        const aideTailleSection = document.getElementById('size-helper-ui');
+    `);
+
+    // --- LOGIQUE GUIDE DES TAILLES (Vêtements vs Chaussures) ---
+    const aideTailleSection = document.getElementById('size-helper-ui');
     const guideChaussureSection = document.getElementById('shoe-guide-ui');
 
-    // On vérifie la catégorie pour afficher le bon outil
-    if (produit.categorie === 'chaussures') {
-        aideTailleSection.classList.add('hidden'); // Cache le calculateur de poids
-        guideChaussureSection.classList.remove('hidden'); // Affiche le guide des pointures
-    } else {
-        aideTailleSection.classList.remove('hidden'); // Affiche le calculateur de poids
-        guideChaussureSection.classList.add('hidden'); // Cache le guide des pointures
+    if (aideTailleSection && guideChaussureSection) {
+        // Correction : On utilise 'p.categorie' (ton nom de variable)
+        if (p.categorie === 'chaussures') {
+            aideTailleSection.classList.add('hidden'); 
+            guideChaussureSection.classList.remove('hidden'); 
+        } else {
+            aideTailleSection.classList.remove('hidden'); 
+            guideChaussureSection.classList.add('hidden'); 
+        }
     }
-}
 
+    // --- GESTION DU STOCK ---
     const oldStockMsg = document.getElementById('dynamic-stock-msg');
     if(oldStockMsg) oldStockMsg.remove();
 
@@ -925,6 +933,7 @@ if(badge) {
         `);
     }
 
+    // --- IMAGES ET MÉDIAS ---
     const mediaContainer = document.getElementById('main-detail-img').parentElement;
     mediaContainer.innerHTML = `<img id="main-detail-img" src="${p.images[0]}" class="w-full h-80 object-cover rounded-xl shadow-md border">`;
     
@@ -944,9 +953,11 @@ if(badge) {
     }
     document.getElementById('thumbnails').innerHTML = htmlMiniatures;
 
+    // --- PRIX ET DESCRIPTION ---
     document.getElementById('detail-price').innerText = p.price.toLocaleString() + " F";
     document.getElementById('detail-desc').innerText = p.description;
 
+    // --- BANNIÈRE DE CONFIANCE ---
     const existingBanner = document.getElementById('trust-banner-container');
     if(existingBanner) existingBanner.remove();
 
@@ -966,6 +977,7 @@ if(badge) {
             </div>
         </div>
     `);
+
     gererOptionsProduit(p);
 }
 function gererOptionsProduit(p) {
