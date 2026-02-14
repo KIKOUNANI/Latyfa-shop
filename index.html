@@ -1902,6 +1902,7 @@
         <button onclick="fermerRoue()" class="absolute top-4 right-4 text-gray-900 font-black text-xl hover:text-[#c5a059] transition-colors">×</button>
         <h3 class="logo-font text-xl font-black italic uppercase text-gray-800">LATYFA LUCKY WHEEL</h3>
         <p id="wheel-msg" class="text-[11px] font-black uppercase mt-2 text-blue-600"></p>
+        <p id="wheel-countdown" class="text-[10px] font-black uppercase mt-1 text-red-500"></p>
         <div class="relative">
             <canvas id="canvas" width="300" height="300"></canvas>
             <div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 text-3xl text-[#c5a059] drop-shadow-lg">▼</div>
@@ -2458,8 +2459,11 @@
             </div>
             
             <div class="flex gap-2 mb-6">
-                <button onclick="envoyerMessage()" class="btn-primary flex-1">
-                    <i class="fa-regular fa-paper-plane mr-2"></i> ENVOYER
+                <button onclick="envoyerMessageAdminSelection()" class="btn-primary flex-1">
+                    <i class="fa-regular fa-paper-plane mr-2"></i> ENVOYER (Message interne)
+                </button>
+                <button onclick="envoyerEmailMassif()" class="bg-blue-600 text-white flex-1 py-3 rounded-lg text-[10px] font-black uppercase hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-envelope mr-2"></i> ENVOYER PAR EMAIL
                 </button>
             </div>
         </div>
@@ -2626,7 +2630,7 @@
             © 2026 LATYFA BUSINESS | <button onclick="ouvrirCGV()" class="underline text-[#ff6600] hover:text-[#c5a059] transition-colors">Juridique</button>
         </div>
     </div>
-</div>
+</footer>
 
 <script>
     // ==================== INITIALISATION EMAILJS ====================
@@ -3381,6 +3385,15 @@
         messages.push(...nouveauxMessages);
         localStorage.setItem('latyfa_messages', JSON.stringify(messages));
         
+        // Envoyer aussi par email aux clients qui ont une adresse email
+        const clientsAvecEmail = clients.filter(c => 
+            destinataireIds.includes(c.id) && c.email && c.email.includes('@')
+        );
+        
+        clientsAvecEmail.forEach(client => {
+            envoyerEmail(client, objet, contenu);
+        });
+        
         showToast(`✅ Message envoyé à ${destinataireIds.length} client(s)`);
     }
     
@@ -4120,6 +4133,7 @@
         msg += `\n💰 *TOTAL À PAYER: ${total}*`;
         
         const nouvelleCommande = {
+            id: Date.now(),
             date: new Date().toLocaleString('fr-FR'),
             client: nom.toUpperCase(),
             tel: tel,
@@ -4138,13 +4152,22 @@
         const montantTotal = parseInt(total.replace(/\s/g, '')) || 0;
         ajouterPoints(montantTotal);
         
+        // Envoyer email de confirmation si client connecté
         if (utilisateurConnecte) {
+            envoyerConfirmationCommande(utilisateurConnecte, nouvelleCommande);
+            
             envoyerMessageAdmin([utilisateurConnecte.id], "Confirmation de commande", 
                 "Bonjour " + utilisateurConnecte.nom + ",\n\nVotre commande du " + nouvelleCommande.date + " a bien été enregistrée.\n\n" +
                 "Total : " + total + "\n" +
                 "Paiement : " + paymentNames[payment] + "\n\n" +
                 "Nous vous contacterons dès que votre colis sera expédié.\n\n" +
                 "Merci pour votre confiance !\nL'équipe Latyfa Shop");
+        } else {
+            // Chercher le client par téléphone
+            const client = clients.find(c => c.tel === tel);
+            if (client && client.email) {
+                envoyerConfirmationCommande(client, nouvelleCommande);
+            }
         }
         
         window.open("https://wa.me/2250709002881?text=" + encodeURIComponent(msg));
@@ -4381,6 +4404,7 @@
         document.getElementById('wheelModal').classList.add('active');
         drawWheel();
         majAffichageChances();
+        startWheelCountdown();
     }
     
     function fermerRoue() {
@@ -4411,6 +4435,35 @@
             ctx.textAlign = "right";
             ctx.fillText(prizes[i], 130, 5);
             ctx.restore();
+        }
+    }
+    
+    function startWheelCountdown() {
+        const countdownEl = document.getElementById('wheel-countdown');
+        const today = new Date().toLocaleDateString();
+        let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: today, count: 0 };
+        
+        if (stats.date !== today) {
+            stats = { date: today, count: 0 };
+        }
+        
+        if (stats.count >= MAX_TENTATIVES) {
+            // Calculer le temps jusqu'à minuit
+            const now = new Date();
+            const midnight = new Date(now);
+            midnight.setHours(24, 0, 0, 0);
+            const timeLeft = midnight - now;
+            
+            const hours = Math.floor(timeLeft / (60 * 60 * 1000));
+            const minutes = Math.floor((timeLeft % (60 * 60 * 1000)) / (60 * 1000));
+            const seconds = Math.floor((timeLeft % (60 * 1000)) / 1000);
+            
+            countdownEl.innerHTML = `⏳ Prochain tour dans: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Mettre à jour le countdown chaque seconde
+            setTimeout(startWheelCountdown, 1000);
+        } else {
+            countdownEl.innerHTML = '';
         }
     }
     
@@ -4452,6 +4505,7 @@
             stats.count++;
             localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
             majAffichageChances();
+            startWheelCountdown();
             
             if (resultat === "REESSAYER") {
                 alert("😥 Réessayez demain !");
@@ -4735,7 +4789,7 @@
         document.querySelectorAll('#clientsSelector .client-check').forEach(cb => cb.checked = false);
     }
     
-    function envoyerMessage() {
+    function envoyerMessageAdminSelection() {
         const selectedIds = [];
         document.querySelectorAll('#clientsSelector .client-check:checked').forEach(cb => {
             selectedIds.push(parseInt(cb.value));
@@ -5227,6 +5281,169 @@
             localStorage.setItem('latyfa_admin_code', nouveauCode);
             alert("✅ Code modifié !");
         }
+    }
+    
+    // ==================== FONCTIONS EMAIL ====================
+    function envoyerEmail(destinataire, objet, contenu) {
+        // Vérifier si EmailJS est disponible
+        if (typeof emailjs === 'undefined') {
+            console.log("EmailJS non disponible, sauvegarde en local");
+            sauvegarderEmailLocal(destinataire, objet, contenu);
+            return;
+        }
+
+        // Paramètres pour EmailJS
+        const templateParams = {
+            to_email: destinataire.email,
+            to_name: destinataire.nom,
+            from_name: "Latyfa Shop",
+            subject: objet,
+            message: contenu,
+            reply_to: "contact@latyfashop.com"
+        };
+
+        // Envoyer l'email via EmailJS avec vos identifiants
+        emailjs.send('Latyfa_shop', 'template_wv2g2s', templateParams)
+            .then(function(response) {
+                console.log('Email envoyé avec succès!', response.status, response.text);
+                showToast(`📧 Email envoyé à ${destinataire.nom}`);
+                
+                // Sauvegarder dans l'historique des emails
+                sauvegarderEmailLocal(destinataire, objet, contenu, 'envoye');
+            })
+            .catch(function(error) {
+                console.log('Erreur d\'envoi:', error);
+                showToast("❌ Erreur d'envoi d'email");
+                
+                // Sauvegarder en local en cas d'erreur
+                sauvegarderEmailLocal(destinataire, objet, contenu, 'erreur');
+            });
+    }
+
+    function sauvegarderEmailLocal(destinataire, objet, contenu, statut = 'local') {
+        const emailsEnvoyes = JSON.parse(localStorage.getItem('latyfa_emails')) || [];
+        
+        emailsEnvoyes.push({
+            id: Date.now() + Math.random(),
+            destinataire: {
+                id: destinataire.id,
+                nom: destinataire.nom,
+                email: destinataire.email
+            },
+            objet: objet,
+            contenu: contenu,
+            date: new Date().toLocaleString('fr-FR'),
+            statut: statut
+        });
+        
+        localStorage.setItem('latyfa_emails', JSON.stringify(emailsEnvoyes));
+    }
+
+    function envoyerEmailMassif() {
+        const selectedIds = [];
+        document.querySelectorAll('#clientsSelector .client-check:checked').forEach(cb => {
+            selectedIds.push(parseInt(cb.value));
+        });
+        
+        const objet = document.getElementById('messageObjet').value.trim();
+        const contenu = document.getElementById('messageContenu').value.trim();
+        
+        if (selectedIds.length === 0) {
+            alert("Sélectionnez au moins un destinataire");
+            return;
+        }
+        
+        if (!objet || !contenu) {
+            alert("Remplissez l'objet et le message");
+            return;
+        }
+        
+        // Récupérer les clients sélectionnés
+        const clientsSelectionnes = clients.filter(c => selectedIds.includes(c.id) && c.email);
+        
+        if (clientsSelectionnes.length === 0) {
+            alert("Aucun client valide avec email");
+            return;
+        }
+        
+        // Confirmation
+        if (!confirm(`Envoyer un email à ${clientsSelectionnes.length} client(s) ?`)) {
+            return;
+        }
+        
+        // Envoyer à chaque client
+        clientsSelectionnes.forEach(client => {
+            envoyerEmail(client, objet, contenu);
+        });
+        
+        // Sauvegarder aussi dans les messages internes
+        envoyerMessageAdmin(selectedIds, objet, contenu);
+        
+        document.getElementById('messageObjet').value = '';
+        document.getElementById('messageContenu').value = '';
+        clearClientSelection();
+    }
+
+    function envoyerConfirmationCommande(client, commande) {
+        const objet = `Confirmation de commande Latyfa Shop #${commande.id}`;
+        const contenu = `
+Bonjour ${client.nom},
+
+Nous confirmons la réception de votre commande du ${commande.date}.
+
+Récapitulatif de votre commande :
+${commande.articles}
+
+Total : ${commande.total}
+Mode de paiement : ${commande.paiement}
+Adresse de livraison : ${commande.lieu}
+
+Nous vous tiendrons informé dès l'expédition de votre colis.
+
+Merci de votre confiance !
+L'équipe Latyfa Shop
+        `;
+        
+        envoyerEmail(client, objet, contenu);
+    }
+
+    function envoyerEmailExpedition(client, commande, numeroSuivi) {
+        const objet = `Votre commande Latyfa Shop #${commande.id} est expédiée !`;
+        const contenu = `
+Bonjour ${client.nom},
+
+Bonne nouvelle ! Votre commande du ${commande.date} a été expédiée.
+
+Numéro de suivi : ${numeroSuivi}
+Vous pouvez suivre votre colis ici : https://latyfashop.com/suivi?num=${numeroSuivi}
+
+Livraison estimée : ${commande.lieu}
+
+Merci de votre confiance,
+L'équipe Latyfa Shop
+        `;
+        
+        envoyerEmail(client, objet, contenu);
+    }
+
+    function voirHistoriqueEmails() {
+        const emails = JSON.parse(localStorage.getItem('latyfa_emails')) || [];
+        
+        if (emails.length === 0) {
+            alert("Aucun email envoyé");
+            return;
+        }
+        
+        let historique = "Historique des emails :\n\n";
+        emails.slice(0, 10).forEach(email => {
+            historique += `📧 ${email.date}\n`;
+            historique += `À: ${email.destinataire.nom} (${email.destinataire.email})\n`;
+            historique += `Objet: ${email.objet}\n`;
+            historique += `Statut: ${email.statut}\n`;
+            historique += "------------------------\n";
+        });
+        
+        alert(historique);
     }
     
     // ==================== FONCTIONS UTILITAIRES ====================
