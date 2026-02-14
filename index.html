@@ -295,44 +295,105 @@
             margin-top: 5px;
         }
         
-        .admin-message-tabs {
+        /* ADMIN MENU */
+        .admin-menu {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            padding: 10px;
+            background: #f3f4f6;
+            border-radius: 50px;
         }
         
-        .admin-message-tab {
+        .admin-menu-item {
             flex: 1;
+            min-width: 80px;
             text-align: center;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px 5px;
+            border-radius: 40px;
             font-size: 10px;
             font-weight: 900;
             text-transform: uppercase;
             cursor: pointer;
-            background: #f3f4f6;
             transition: all 0.3s ease;
+            color: #6b7280;
         }
         
-        .admin-message-tab.active {
+        .admin-menu-item i {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .admin-menu-item:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        
+        .admin-menu-item.active {
             background: var(--latyfa-gold);
             color: white;
         }
         
-        .client-selector {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 10px;
+        .admin-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
         }
         
-        .client-checkbox {
+        .admin-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px;
-            border-bottom: 1px solid #f3f4f6;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 20px;
+        }
+        
+        .backup-option {
+            border: 2px dashed #e5e7eb;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .backup-option:hover {
+            border-color: var(--latyfa-gold);
+            background: #fef3c7;
+        }
+        
+        .sms-test {
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
         }
         
         .maintenance-toggle {
@@ -636,18 +697,16 @@
             opacity: 0.5;
         }
         
-        /* Animation pour le compteur */
+        .cart-count-pop {
+            animation: counterPop 0.3s ease;
+        }
+        
         @keyframes counterPop {
             0% { transform: scale(1); }
             50% { transform: scale(1.3); }
             100% { transform: scale(1); }
         }
         
-        .cart-count-pop {
-            animation: counterPop 0.3s ease;
-        }
-        
-        /* Style pour les badges de stock */
         .stock-alert {
             position: absolute;
             top: 40px;
@@ -667,7 +726,6 @@
             50% { transform: translateY(-5px); }
         }
 
-        /* Bouton retour en haut */
         .back-to-top {
             position: fixed;
             bottom: 100px;
@@ -710,7 +768,6 @@
             50% { transform: translateY(-5px); }
         }
         
-        /* Widget WhatsApp */
         .whatsapp-widget {
             position: fixed;
             bottom: 170px;
@@ -759,7 +816,6 @@
             box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
         }
         
-        /* Bouton comparateur */
         .comparateur-btn {
             position: fixed;
             bottom: 240px;
@@ -803,7 +859,6 @@
             justify-content: center;
         }
         
-        /* Flash sale */
         .flash-sale {
             background: linear-gradient(135deg, #ef4444, #ec4899);
             color: white;
@@ -820,7 +875,6 @@
             50% { opacity: 0.8; }
         }
         
-        /* Options de paiement */
         .payment-option {
             border: 2px solid #e5e7eb;
             border-radius: 12px;
@@ -842,7 +896,6 @@
             margin-bottom: 5px;
         }
         
-        /* Avis clients */
         .review-card {
             background: #f9fafb;
             border-radius: 12px;
@@ -855,7 +908,6 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         
-        /* Favoris */
         .favorite-btn {
             position: absolute;
             top: 10px;
@@ -882,7 +934,6 @@
             transform: scale(1.1);
         }
         
-        /* AR Try-on */
         .ar-button {
             background: #8b5cf6;
             color: white;
@@ -904,7 +955,6 @@
             transform: scale(1.05);
         }
         
-        /* Calendrier de l'avent */
         .advent-calendar {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -940,7 +990,6 @@
             color: white;
         }
         
-        /* Points fidélité */
         .loyalty-card {
             background: linear-gradient(135deg, #c5a059, #e2c286);
             border-radius: 20px;
@@ -1016,7 +1065,6 @@
             <span class="text-2xl font-black italic logo-font tracking-tighter">LATYFA SHOP</span>
         </div>
         
-        <!-- BARRE DE RECHERCHE -->
         <div class="flex-1 max-w-md hidden md:block">
             <div class="relative">
                 <input type="text" id="search-input" placeholder="Rechercher un article..." 
@@ -1025,15 +1073,12 @@
             </div>
         </div>
         
-        <!-- ICONES DROITE -->
         <div class="flex gap-3 items-center">
-            <!-- ICONE MESSAGERIE (visible si connecté) -->
             <div id="messageIcon" class="message-icon" onclick="ouvrirMessages()" style="display: none;">
                 <i class="fa-regular fa-envelope text-gray-600 text-xl hover:text-[#c5a059] transition"></i>
                 <span id="messageBadge" class="message-badge">0</span>
             </div>
         
-            <!-- MENU UTILISATEUR -->
             <div class="user-menu" id="userMenu" style="display: none;">
                 <div class="user-avatar" id="userAvatar">
                     <i class="fa-regular fa-user"></i>
@@ -1058,7 +1103,6 @@
                 </div>
             </div>
             
-            <!-- BOUTON CONNEXION -->
             <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-white transition">
                 Se connecter
             </button>
@@ -1094,13 +1138,11 @@
             <button onclick="fermerAuthModal()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
         </div>
         
-        <!-- TABS -->
         <div class="flex border-b mb-6">
             <div class="auth-tab active" onclick="switchAuthTab('login')" id="loginTab">Connexion</div>
             <div class="auth-tab" onclick="switchAuthTab('register')" id="registerTab">Inscription</div>
         </div>
         
-        <!-- FORMULAIRE CONNEXION -->
         <div id="loginForm" class="auth-form">
             <input type="email" id="loginEmail" placeholder="Email" class="auth-input">
             <input type="password" id="loginPassword" placeholder="Mot de passe" class="auth-input">
@@ -1108,7 +1150,6 @@
             <p class="text-[8px] text-center mt-4 text-gray-400">Mot de passe oublié ? Contactez-nous sur WhatsApp</p>
         </div>
         
-        <!-- FORMULAIRE INSCRIPTION -->
         <div id="registerForm" class="auth-form" style="display: none;">
             <input type="text" id="registerNom" placeholder="Nom complet" class="auth-input">
             <input type="email" id="registerEmail" placeholder="Email" class="auth-input">
@@ -1193,14 +1234,12 @@
 
 <!-- SECTION PRINCIPALE PRODUITS -->
 <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
-    <!-- SIDEBAR CATEGORIES -->
     <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border border-gray-100">
         <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center">
             Nos Univers
         </h3>
         <div class="flex flex-col gap-5" id="categories-container"></div>
         
-        <!-- CARTE FIDÉLITÉ DANS SIDEBAR -->
         <div class="mt-8 loyalty-card">
             <div class="relative z-10">
                 <p class="text-[8px] font-black uppercase opacity-80">Vos points</p>
@@ -1213,9 +1252,7 @@
         </div>
     </aside>
     
-    <!-- GRILLE PRODUITS -->
     <main class="flex-1">
-        <!-- CARROUSEL PRODUITS POPULAIRES -->
         <div class="mb-8">
             <h3 class="text-[10px] font-black uppercase mb-4 flex items-center gap-2">
                 <i class="fa-solid fa-fire text-[#ff6600]"></i> PRODUITS POPULAIRES
@@ -1227,7 +1264,6 @@
             </div>
         </div>
         
-        <!-- GRILLE PRINCIPALE -->
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid"></div>
     </main>
 </div>
@@ -1281,20 +1317,17 @@
         </div>
         
         <div class="flex flex-col md:flex-row gap-8">
-            <!-- COLONNE GAUCHE - MEDIAS -->
             <div class="md:w-1/2">
                 <div id="media-container" class="relative">
                     <img id="main-detail-img" src="" class="w-full h-80 object-cover rounded-xl shadow-md border">
                 </div>
                 <div id="thumbnails" class="flex gap-2 mt-4 overflow-x-auto no-scrollbar"></div>
                 
-                <!-- BOUTON ESSAYAGE AR -->
                 <button onclick="lancerAR(this)" class="ar-button w-full mt-4">
                     <i class="fa-solid fa-camera"></i> ESSAYER EN RÉALITÉ AUGMENTÉE
                 </button>
             </div>
             
-            <!-- COLONNE DROITE - INFOS -->
             <div class="md:w-1/2">
                 <div class="flex justify-between items-start">
                     <h3 id="detail-name" class="text-2xl font-black uppercase italic text-gray-800"></h3>
@@ -1304,7 +1337,6 @@
                 </div>
                 <p id="detail-price" class="text-[#ff6600] font-black text-2xl mt-2"></p>
                 
-                <!-- COMPTEUR DE VUES -->
                 <div id="view-counter" class="flex items-center gap-2 mt-3 bg-gray-50 w-fit px-3 py-1 rounded-full border border-gray-100">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -1315,26 +1347,21 @@
                     </p>
                 </div>
                 
-                <!-- DESCRIPTION -->
                 <div class="my-4 border-t pt-4">
                     <p id="detail-desc" class="text-xs text-gray-600 leading-relaxed"></p>
                 </div>
                 
-                <!-- OPTIONS -->
                 <div class="space-y-4 my-6">
-                    <!-- TAILLES -->
                     <div id="size-area" class="hidden">
                         <label class="block text-[10px] font-black uppercase text-gray-400 mb-2">Taille / Pointure</label>
                         <select id="select-size" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold outline-none focus:ring-2 focus:ring-[#c5a059]"></select>
                     </div>
                     
-                    <!-- COULEURS -->
                     <div id="color-area" class="hidden">
                         <label class="block text-[10px] font-black uppercase text-gray-400 mb-2">Couleur</label>
                         <select id="select-color" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold outline-none focus:ring-2 focus:ring-[#c5a059]"></select>
                     </div>
                     
-                    <!-- AIDE TAILLE (pour vêtements) -->
                     <div id="size-helper-ui" class="hidden p-4 bg-orange-50 rounded-xl border-2 border-dashed border-orange-200">
                         <p class="text-[10px] font-black uppercase mb-3 text-orange-800">Trouver ma taille idéale</p>
                         <div class="flex gap-2">
@@ -1348,7 +1375,6 @@
                         <p id="size-result" class="mt-3 text-[11px] font-bold text-green-600 uppercase tracking-wider"></p>
                     </div>
                     
-                    <!-- GUIDE CHAUSSURES -->
                     <div id="shoe-guide-ui" class="hidden p-4 bg-blue-50 rounded-xl border-2 border-dashed border-blue-200">
                         <p class="text-[10px] font-black uppercase mb-2 text-blue-800">Guide des pointures</p>
                         <p class="text-[9px] text-blue-600 mb-2 italic">Mesurez votre pied du talon aux orteils.</p>
@@ -1370,12 +1396,10 @@
                     </button>
                 </div>
                 
-                <!-- BOUTON AJOUTER -->
                 <button onclick="ajouterDepuisDetail()" class="btn-primary w-full mb-4">
                     <i class="fa-solid fa-cart-plus mr-2"></i> Ajouter au panier
                 </button>
                 
-                <!-- AVIS PRODUIT -->
                 <div class="mt-6">
                     <div class="flex items-center justify-between mb-3">
                         <h4 class="text-[10px] font-black uppercase">AVIS CLIENTS (24)</h4>
@@ -1393,7 +1417,7 @@
     </div>
 </div>
 
-<!-- MODALE PANIER (MODIFIÉE AVEC MOYENS DE PAIEMENT) -->
+<!-- MODALE PANIER -->
 <div id="cartModal" class="modal">
     <div class="modal-content">
         <div class="flex justify-between items-center mb-6 border-b pb-4">
@@ -1403,24 +1427,19 @@
             </button>
         </div>
 
-        <!-- PROMO VALENTIN -->
         <div id="promo-congrats" class="hidden mb-4 p-3 bg-pink-500 text-white rounded-xl text-[10px] font-black uppercase text-center animate-bounce shadow-lg">
             ✨ -20% DE RÉDUCTION ST VALENTIN APPLIQUÉS !
         </div>
 
-        <!-- LISTE ARTICLES -->
         <div id="cart-items" class="space-y-4 mb-6 max-h-[30vh] overflow-y-auto no-scrollbar"></div>
 
-        <!-- FORMULAIRE COMMANDE -->
         <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
-            <!-- CODE PROMO -->
             <div class="flex gap-2 bg-gray-50 p-2 rounded-xl">
                 <input type="text" id="input-promo" placeholder="CODE PROMO" class="flex-1 border-none bg-transparent p-2 text-sm uppercase font-bold focus:ring-0 outline-none">
                 <button onclick="appliquerPromo()" class="bg-black text-white px-6 rounded-lg text-[10px] font-bold hover:bg-[#c5a059] transition-colors">OK</button>
             </div>
             <div id="promo-msg" class="text-[9px] font-bold uppercase hidden px-2"></div>
 
-            <!-- INFOS CLIENT (pré-remplies si connecté) -->
             <input type="text" id="nom-client" placeholder="NOM COMPLET *" class="w-full border p-3 rounded-lg text-sm uppercase bg-gray-50 focus:border-[#c5a059] outline-none">
             
             <div class="grid grid-cols-2 gap-2">
@@ -1428,7 +1447,6 @@
                 <input type="text" id="quartier-client" placeholder="QUARTIER *" class="w-full border p-3 rounded-lg text-sm bg-gray-50 focus:border-[#c5a059] outline-none">
             </div>
 
-            <!-- ZONE LIVRAISON -->
             <select id="zone-livraison" onchange="majResume()" class="w-full border p-3 rounded-lg text-sm font-bold bg-blue-50 border-blue-200 outline-none">
                 <option value="">-- CHOISIR ZONE LIVRAISON --</option>
                 <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
@@ -1437,29 +1455,24 @@
                 <option value="bouake">Retrait Boutique (Gratuit)</option>
             </select>
 
-            <!-- MOYENS DE PAIEMENT -->
             <div class="space-y-3">
                 <p class="text-[9px] font-black uppercase">Moyen de paiement *</p>
                 <div class="grid grid-cols-2 gap-2">
-                    <!-- Wave -->
                     <div class="payment-option" onclick="selectPayment('wave')" id="payment-wave">
                         <img src="https://goamobile.com/logosent/wave@221@-P-2021-06-30_00-18-27wave_logo_2.png" class="h-8 mx-auto mb-1" alt="Wave">
                         <span class="text-[8px] font-bold">Wave</span>
                     </div>
                     
-                    <!-- Orange Money -->
                     <div class="payment-option" onclick="selectPayment('orange')" id="payment-orange">
                         <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/orange-money-logo.png" class="h-8 mx-auto mb-1" alt="Orange Money">
                         <span class="text-[8px] font-bold">Orange Money</span>
                     </div>
                     
-                    <!-- MTN Money -->
                     <div class="payment-option" onclick="selectPayment('mtn')" id="payment-mtn">
                         <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/mtn-mobile-money-logo.jpg" class="h-8 mx-auto mb-1" alt="MTN Money">
                         <span class="text-[8px] font-bold">MTN Money</span>
                     </div>
                     
-                    <!-- Cash à la livraison -->
                     <div class="payment-option" onclick="selectPayment('cash')" id="payment-cash">
                         <i class="fa-solid fa-money-bill-wave text-2xl text-green-600 mb-1"></i>
                         <span class="text-[8px] font-bold">Cash livraison</span>
@@ -1468,7 +1481,6 @@
                 <input type="hidden" id="selected-payment" value="">
             </div>
 
-            <!-- OPTION CADEAU -->
             <div class="bg-gray-50 p-4 rounded-xl space-y-2 border border-gray-100">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
@@ -1481,13 +1493,11 @@
                 <div id="resume-final" class="text-[10px] font-bold uppercase space-y-1 text-gray-600"></div>
             </div>
 
-            <!-- TOTAL -->
             <div class="text-xl font-black flex justify-between items-center p-3 bg-white border-2 border-black rounded-xl">
                 <span>TOTAL :</span>
                 <span id="total-display" class="text-red-600">0 F</span>
             </div>
 
-            <!-- CONFIRMATION -->
             <div class="flex items-start gap-2 py-2">
                 <input type="checkbox" id="check-verif" onchange="toggleBouton()" class="mt-1 h-4 w-4 accent-black">
                 <label for="check-verif" class="text-[8px] font-bold uppercase text-gray-500 leading-tight">
@@ -1495,7 +1505,6 @@
                 </label>
             </div>
 
-            <!-- BOUTON COMMANDE -->
             <button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 text-white py-4 rounded-full font-black uppercase shadow-xl pointer-events-none transition-all duration-300" disabled>
                 <i class="fa-brands fa-whatsapp mr-2"></i> Commander via WhatsApp
             </button>
@@ -1640,122 +1649,114 @@
     </div>
 </div>
 
-<!-- MODALE ADMIN (AMÉLIORÉE AVEC MESSAGERIE) -->
+<!-- ==================== MODALE ADMIN AVEC MENUS ==================== -->
 <div id="adminModal" class="modal">
-    <div class="modal-content max-w-4xl">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-black uppercase italic text-[#c5a059]">Gestion Boutique</h2>
+    <div class="modal-content max-w-4xl" style="max-width: 900px;">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-black uppercase italic text-[#c5a059]">
+                <i class="fa-solid fa-crown mr-2"></i> Administration Latyfa
+            </h2>
             <button onclick="fermerAdmin()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
         </div>
 
-        <!-- TABS ADMIN -->
-        <div class="admin-message-tabs">
-            <div class="admin-message-tab active" onclick="switchAdminTab('dashboard')" id="tabDashboard">Tableau de bord</div>
-            <div class="admin-message-tab" onclick="switchAdminTab('messages')" id="tabMessages">Messagerie</div>
-            <div class="admin-message-tab" onclick="switchAdminTab('clients')" id="tabClients">Clients</div>
-            <div class="admin-message-tab" onclick="switchAdminTab('produits')" id="tabProduits">Produits</div>
+        <!-- MENU ADMIN AVEC ICÔNES -->
+        <div class="admin-menu">
+            <div class="admin-menu-item active" onclick="switchAdminSection('dashboard')" id="menuDashboard">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminSection('produits')" id="menuProduits">
+                <i class="fa-solid fa-box"></i>
+                <span>Produits</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminSection('commandes')" id="menuCommandes">
+                <i class="fa-solid fa-truck"></i>
+                <span>Commandes</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminSection('clients')" id="menuClients">
+                <i class="fa-solid fa-users"></i>
+                <span>Clients</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminSection('messagerie')" id="menuMessagerie">
+                <i class="fa-regular fa-envelope"></i>
+                <span>Messagerie</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminSection('sms')" id="menuSMS">
+                <i class="fa-solid fa-message"></i>
+                <span>SMS</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminSection('sauvegarde')" id="menuSauvegarde">
+                <i class="fa-solid fa-database"></i>
+                <span>Sauvegarde</span>
+            </div>
+            <div class="admin-menu-item" onclick="switchAdminSection('maintenance')" id="menuMaintenance">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+                <span>Maintenance</span>
+            </div>
         </div>
 
-        <!-- SECTION TABLEAU DE BORD -->
-        <div id="dashboardSection">
-            <!-- MODE MAINTENANCE -->
-            <div class="maintenance-toggle">
-                <span class="text-[10px] font-black uppercase flex-1">Mode maintenance</span>
-                <button id="maintenanceOn" onclick="setMaintenance(true)" class="px-4 py-2 rounded-lg font-black text-[10px] uppercase">ACTIVER</button>
-                <button id="maintenanceOff" onclick="setMaintenance(false)" class="px-4 py-2 rounded-lg font-black text-[10px] uppercase bg-[#c5a059] text-white">DÉSACTIVER</button>
+        <!-- SECTION DASHBOARD -->
+        <div id="dashboardSection" class="admin-section active">
+            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-chart-line text-[#c5a059]"></i> Tableau de bord
+            </h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue-100 text-blue-600">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                    <p class="text-[8px] font-black uppercase text-gray-400 mb-1">CA Total</p>
+                    <div id="stat-ca" class="text-xl font-black text-blue-600">0 F</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon bg-green-100 text-green-600">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+                    <p class="text-[8px] font-black uppercase text-gray-400 mb-1">Commandes</p>
+                    <div id="stat-nb" class="text-xl font-black text-green-600">0</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple-100 text-purple-600">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+                    <p class="text-[8px] font-black uppercase text-gray-400 mb-1">Conversion</p>
+                    <div id="stat-conversion" class="text-xl font-black text-purple-600">3.2%</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon bg-orange-100 text-orange-600">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                    </div>
+                    <p class="text-[8px] font-black uppercase text-gray-400 mb-1">Panier moyen</p>
+                    <div id="stat-panier-moyen" class="text-xl font-black text-orange-600">0 F</div>
+                </div>
             </div>
 
-            <!-- STATISTIQUES AVANCÉES -->
-            <div class="grid grid-cols-4 gap-4 mb-8">
-                <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-center">
-                    <p class="text-[8px] font-black uppercase text-blue-400 mb-1">CA Total</p>
-                    <div id="stat-ca" class="text-lg font-black text-blue-700">0 F</div>
-                </div>
-                <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
-                    <p class="text-[8px] font-black uppercase text-green-400 mb-1">Commandes</p>
-                    <div id="stat-nb" class="text-lg font-black text-green-700">0</div>
-                </div>
-                <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100 text-center">
-                    <p class="text-[8px] font-black uppercase text-purple-400 mb-1">Taux conversion</p>
-                    <div id="stat-conversion" class="text-lg font-black text-purple-700">3.2%</div>
-                </div>
-                <div class="bg-orange-50 p-4 rounded-2xl border border-orange-100 text-center">
-                    <p class="text-[8px] font-black uppercase text-orange-400 mb-1">Panier moyen</p>
-                    <div id="stat-panier-moyen" class="text-lg font-black text-orange-700">0 F</div>
-                </div>
-            </div>
-
-            <!-- GRAPHIQUE VENTES -->
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 mb-8">
-                <h3 class="text-[10px] font-black uppercase mb-4">Évolution des ventes</h3>
+            <!-- GRAPHIQUE -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 mb-6">
+                <h4 class="text-[10px] font-black uppercase mb-4">Évolution des ventes (7 derniers jours)</h4>
                 <canvas id="salesChart" style="height: 200px;"></canvas>
             </div>
 
             <!-- PRODUITS POPULAIRES -->
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 mb-8">
-                <h3 class="text-[10px] font-black uppercase mb-4">🔥 Produits populaires</h3>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200">
+                <h4 class="text-[10px] font-black uppercase mb-4">🔥 Produits les plus vendus</h4>
                 <div id="popular-products-list" class="space-y-2"></div>
             </div>
         </div>
 
-        <!-- SECTION MESSAGERIE -->
-        <div id="messagesSection" style="display: none;">
-            <h3 class="text-[10px] font-black uppercase mb-4">📨 Envoyer un message</h3>
-            
-            <div class="mb-4">
-                <label class="text-[9px] font-bold uppercase block mb-2">Destinataires</label>
-                <div class="flex gap-2 mb-3">
-                    <button onclick="selectAllClients()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full">Tous les clients</button>
-                    <button onclick="selectClientsAvecCommandes()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full">Clients actifs</button>
-                    <button onclick="clearClientSelection()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full">Effacer</button>
-                </div>
-                <div id="clientsSelector" class="client-selector">
-                    <!-- Les clients avec cases à cocher seront injectés ici -->
-                </div>
-            </div>
-            
-            <div class="mb-4">
-                <label class="text-[9px] font-bold uppercase block mb-2">Objet</label>
-                <input type="text" id="messageObjet" placeholder="Objet du message" class="w-full border p-3 rounded-lg text-sm">
-            </div>
-            
-            <div class="mb-4">
-                <label class="text-[9px] font-bold uppercase block mb-2">Message</label>
-                <textarea id="messageContenu" rows="6" placeholder="Votre message..." class="w-full border p-3 rounded-lg text-sm"></textarea>
-            </div>
-            
-            <div class="flex gap-2">
-                <button onclick="envoyerMessage()" class="btn-primary flex-1">
-                    <i class="fa-regular fa-paper-plane mr-2"></i> ENVOYER LE MESSAGE
-                </button>
-                <button onclick="previsualiserMessage()" class="bg-gray-100 px-6 rounded-lg text-[10px] font-black uppercase">
-                    APERÇU
-                </button>
-            </div>
-            
-            <div class="mt-6 border-t pt-4">
-                <h4 class="text-[9px] font-black uppercase mb-3">Messages envoyés</h4>
-                <div id="messagesEnvoyes" class="space-y-2 max-h-40 overflow-y-auto"></div>
-            </div>
-        </div>
-
-        <!-- SECTION CLIENTS -->
-        <div id="clientsSection" style="display: none;">
-            <h3 class="text-[10px] font-black uppercase mb-4">👥 Liste des clients</h3>
-            <div id="clients-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
-            
-            <div class="mt-4">
-                <button onclick="exporterClients()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase">
-                    <i class="fa-solid fa-download mr-2"></i> Exporter clients
-                </button>
-            </div>
-        </div>
-
         <!-- SECTION PRODUITS -->
-        <div id="produitsSection" style="display: none;">
+        <div id="produitsSection" class="admin-section">
+            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-box text-[#c5a059]"></i> Gestion des produits
+            </h3>
+            
             <!-- AJOUT PRODUIT -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-8">
-                <h3 class="text-[10px] font-black uppercase tracking-widest text-[#c5a059] mb-4">Ajouter un nouvel article</h3>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-6">
+                <h4 class="text-[10px] font-black uppercase text-[#c5a059] mb-4">➕ Ajouter un nouvel article</h4>
                 <div class="grid grid-cols-1 gap-4">
                     <input type="text" id="adm-name" placeholder="Nom du produit *" class="w-full border p-3 rounded-lg text-sm">
                     
@@ -1790,29 +1791,221 @@
             </div>
 
             <!-- LISTE PRODUITS -->
-            <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Articles en ligne</h3>
-            <div id="admin-list" class="space-y-2 mb-10 max-h-[300px] overflow-y-auto"></div>
+            <h4 class="text-[10px] font-black uppercase mb-3">📦 Articles en ligne</h4>
+            <div id="admin-list" class="space-y-2 mb-4 max-h-[300px] overflow-y-auto pr-2"></div>
         </div>
 
-        <!-- HISTORIQUE VENTES -->
-        <div class="pt-8 border-t-2 border-dashed border-gray-200 mt-8">
+        <!-- SECTION COMMANDES -->
+        <div id="commandesSection" class="admin-section">
+            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-truck text-[#c5a059]"></i> Gestion des commandes
+            </h3>
+            
             <div class="flex gap-2 mb-4">
                 <button onclick="sauvegarderHistorique()" class="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md hover:bg-blue-700 transition-all">
-                    <i class="fa-solid fa-file-export mr-2"></i> Sauvegarder (Excel)
+                    <i class="fa-solid fa-file-export mr-2"></i> Exporter (Excel)
                 </button>
-                <button onclick="effacerHistorique()" class="bg-red-100 text-red-600 px-4 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-red-600 hover:text-white transition-all">
-                    <i class="fa-solid fa-trash-can"></i>
+                <button onclick="toggleHistorique()" class="bg-gray-900 text-white px-4 py-3 rounded-xl text-[10px] font-black uppercase">
+                    <i class="fa-solid fa-clock-rotate-left mr-2"></i> Historique
+                </button>
+            </div>
+
+            <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
+            
+            <div id="commandes-en-cours" class="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                <!-- Les commandes récentes apparaîtront ici -->
+            </div>
+        </div>
+
+        <!-- SECTION CLIENTS -->
+        <div id="clientsSection" class="admin-section">
+            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-users text-[#c5a059]"></i> Gestion des clients
+            </h3>
+            
+            <div class="flex gap-2 mb-4">
+                <button onclick="exporterClients()" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase">
+                    <i class="fa-solid fa-download mr-2"></i> Exporter clients
+                </button>
+                <button onclick="refreshClientsList()" class="bg-gray-100 px-4 py-2 rounded-lg text-[10px] font-black uppercase">
+                    <i class="fa-solid fa-rotate"></i> Rafraîchir
                 </button>
             </div>
             
-            <button onclick="toggleHistorique()" class="w-full bg-gray-900 text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-widest mb-4 shadow-md hover:bg-gray-800 transition-colors">
-                <i class="fa-solid fa-clock-rotate-left mr-2"></i> Voir l'historique complet
-            </button>
-
-            <div id="historique-zone" class="hidden space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
+            <div id="clients-list" class="space-y-2 max-h-[400px] overflow-y-auto pr-2"></div>
         </div>
 
-        <div class="text-center mt-6">
+        <!-- SECTION MESSAGERIE (Email) -->
+        <div id="messagerieSection" class="admin-section">
+            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fa-regular fa-envelope text-[#c5a059]"></i> Messagerie Email
+            </h3>
+            
+            <div class="mb-4">
+                <label class="text-[9px] font-bold uppercase block mb-2">Destinataires</label>
+                <div class="flex gap-2 mb-3 flex-wrap">
+                    <button onclick="selectAllClients()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Tous les clients</button>
+                    <button onclick="selectClientsAvecCommandes()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Clients actifs</button>
+                    <button onclick="clearClientSelection()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Effacer</button>
+                </div>
+                <div id="clientsSelector" class="client-selector border rounded-lg p-3 max-h-40 overflow-y-auto">
+                    <!-- Les clients avec cases à cocher seront injectés ici -->
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label class="text-[9px] font-bold uppercase block mb-2">Objet</label>
+                <input type="text" id="messageObjet" placeholder="Objet du message" class="w-full border p-3 rounded-lg text-sm">
+            </div>
+            
+            <div class="mb-4">
+                <label class="text-[9px] font-bold uppercase block mb-2">Message</label>
+                <textarea id="messageContenu" rows="6" placeholder="Votre message..." class="w-full border p-3 rounded-lg text-sm"></textarea>
+            </div>
+            
+            <div class="flex gap-2 mb-6">
+                <button onclick="envoyerMessage()" class="btn-primary flex-1">
+                    <i class="fa-regular fa-paper-plane mr-2"></i> ENVOYER PAR EMAIL
+                </button>
+                <button onclick="previsualiserMessage()" class="bg-gray-100 px-6 rounded-lg text-[10px] font-black uppercase hover:bg-gray-200">
+                    APERÇU
+                </button>
+            </div>
+            
+            <div class="border-t pt-4">
+                <h4 class="text-[9px] font-black uppercase mb-3 flex items-center gap-2">
+                    <i class="fa-regular fa-clock"></i> Derniers emails envoyés
+                </h4>
+                <div id="messagesEnvoyes" class="space-y-2 max-h-32 overflow-y-auto text-[8px]"></div>
+            </div>
+        </div>
+
+        <!-- SECTION SMS (NOUVEAU) -->
+        <div id="smsSection" class="admin-section">
+            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-message text-[#c5a059]"></i> Messagerie SMS
+            </h3>
+            
+            <div class="bg-blue-50 p-4 rounded-xl mb-4 text-[10px] border border-blue-200">
+                <i class="fa-solid fa-circle-info text-blue-500 mr-2"></i>
+                Les SMS seront envoyés via un service SMS (configuration requise). Pour l'instant, ils apparaîtront dans la messagerie interne.
+            </div>
+            
+            <div class="mb-4">
+                <label class="text-[9px] font-bold uppercase block mb-2">Numéros de téléphone</label>
+                <div class="flex gap-2 mb-3 flex-wrap">
+                    <button onclick="selectAllTel()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Tous les numéros</button>
+                    <button onclick="selectTestTel()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Téléphone test</button>
+                    <button onclick="clearTelSelection()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Effacer</button>
+                </div>
+                <div id="telSelector" class="client-selector border rounded-lg p-3 max-h-40 overflow-y-auto">
+                    <!-- Les numéros de téléphone avec cases à cocher -->
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label class="text-[9px] font-bold uppercase block mb-2">Message SMS (160 caractères max)</label>
+                <textarea id="smsContenu" maxlength="160" rows="3" placeholder="Votre message SMS..." class="w-full border p-3 rounded-lg text-sm"></textarea>
+                <div class="text-right text-[8px] text-gray-400 mt-1">
+                    <span id="smsCount">0</span>/160 caractères
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                <button onclick="envoyerSMS('test')" class="bg-green-600 text-white py-3 rounded-lg text-[10px] font-black uppercase hover:bg-green-700 transition">
+                    <i class="fa-solid fa-flask mr-2"></i> TEST (à moi-même)
+                </button>
+                <button onclick="envoyerSMS('reel')" class="btn-primary py-3">
+                    <i class="fa-solid fa-paper-plane mr-2"></i> ENVOYER SMS
+                </button>
+            </div>
+            
+            <div class="sms-test">
+                <h4 class="text-[9px] font-black uppercase mb-2">🔄 Intégration SMS (à configurer)</h4>
+                <p class="text-[8px] text-gray-600 mb-2">Services supportés :</p>
+                <div class="flex gap-2 flex-wrap">
+                    <span class="bg-gray-100 px-2 py-1 rounded text-[8px]">Twilio</span>
+                    <span class="bg-gray-100 px-2 py-1 rounded text-[8px]">Orange SMS API</span>
+                    <span class="bg-gray-100 px-2 py-1 rounded text-[8px]">MTN SMS API</span>
+                    <span class="bg-gray-100 px-2 py-1 rounded text-[8px]">Wave SMS</span>
+                </div>
+            </div>
+            
+            <div class="border-t pt-4 mt-4">
+                <h4 class="text-[9px] font-black uppercase mb-3">📤 Derniers SMS envoyés</h4>
+                <div id="smsEnvoyes" class="space-y-2 max-h-32 overflow-y-auto text-[8px]"></div>
+            </div>
+        </div>
+
+        <!-- SECTION SAUVEGARDE -->
+        <div id="sauvegardeSection" class="admin-section">
+            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-database text-[#c5a059]"></i> Sauvegarde des données
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="backup-option" onclick="sauvegarderToutesDonnees()">
+                    <i class="fa-solid fa-cloud-arrow-down text-4xl text-[#c5a059] mb-3"></i>
+                    <h4 class="text-[10px] font-black uppercase mb-2">Sauvegarder toutes les données</h4>
+                    <p class="text-[8px] text-gray-400">Produits, clients, commandes, messages</p>
+                </div>
+                
+                <div class="backup-option" onclick="restaurerDonnees()">
+                    <i class="fa-solid fa-cloud-arrow-up text-4xl text-[#c5a059] mb-3"></i>
+                    <h4 class="text-[10px] font-black uppercase mb-2">Restaurer une sauvegarde</h4>
+                    <p class="text-[8px] text-gray-400">Choisir un fichier JSON</p>
+                    <input type="file" id="restoreFile" accept=".json" style="display: none;">
+                </div>
+            </div>
+            
+            <div class="bg-white p-4 rounded-xl border border-gray-200 mb-4">
+                <h4 class="text-[10px] font-black uppercase mb-3 flex items-center gap-2">
+                    <i class="fa-regular fa-clock"></i> Sauvegardes automatiques
+                </h4>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[9px]">Sauvegarde automatique quotidienne</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="autoBackup" class="sr-only peer" onchange="toggleAutoBackup()">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#c5a059]"></div>
+                    </label>
+                </div>
+                <p class="text-[8px] text-gray-400">Dernière sauvegarde : <span id="lastBackup">Jamais</span></p>
+            </div>
+            
+            <div class="bg-gray-50 p-4 rounded-xl">
+                <h4 class="text-[10px] font-black uppercase mb-3">📋 Sauvegardes disponibles</h4>
+                <div id="backupList" class="space-y-2 max-h-40 overflow-y-auto">
+                    <!-- Liste des sauvegardes -->
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION MAINTENANCE -->
+        <div id="maintenanceSection" class="admin-section">
+            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-screwdriver-wrench text-[#c5a059]"></i> Mode maintenance
+            </h3>
+            
+            <div class="maintenance-toggle mb-6">
+                <span class="text-[10px] font-black uppercase flex-1">État du site</span>
+                <button id="maintenanceOn" onclick="setMaintenance(true)" class="px-6 py-3 rounded-lg font-black text-[10px] uppercase bg-gray-200">ACTIVER</button>
+                <button id="maintenanceOff" onclick="setMaintenance(false)" class="px-6 py-3 rounded-lg font-black text-[10px] uppercase bg-[#c5a059] text-white">DÉSACTIVER</button>
+            </div>
+            
+            <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                <h4 class="text-[10px] font-black uppercase mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-yellow-600"></i>
+                    Zone de danger
+                </h4>
+                <p class="text-[9px] text-gray-600 mb-3">Actions irréversibles</p>
+                <button onclick="effacerToutesDonnees()" class="bg-red-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase hover:bg-red-700 transition">
+                    <i class="fa-solid fa-trash-can mr-2"></i> EFFACER TOUTES LES DONNÉES
+                </button>
+            </div>
+        </div>
+
+        <!-- PIED DE PAGE ADMIN -->
+        <div class="text-center mt-6 pt-4 border-t">
             <button onclick="changerMotDePasse()" class="text-[9px] text-gray-400 hover:text-[#c5a059] uppercase font-bold tracking-widest transition-colors">
                 <i class="fa-solid fa-key mr-1"></i> Modifier le code d'accès
             </button>
@@ -1917,7 +2110,6 @@
             </div>
         </div>
         
-        <!-- COMPTEUR VISITEURS -->
         <div class="flex flex-col items-center justify-center py-4 border-t border-gray-100 mt-6">
             <div class="flex items-center gap-2 text-[#c5a059] mb-1">
                 <i class="fa-solid fa-eye text-[10px]"></i>
@@ -1955,9 +2147,9 @@
     let currentRating = 0;
     let cadeauMystere = null;
     
-    // ==================== VARIABLES CLIENTS ET MESSAGES ====================
     let clients = [];
     let messages = [];
+    let smsEnvoyes = [];
     let utilisateurConnecte = null;
     
     const tarifsLivraison = {
@@ -1980,7 +2172,6 @@
     const MAX_TENTATIVES = 1;
     const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
     
-    // Avis prédéfinis
     const avisPredefinis = [
         { nom: "Mariam K.", note: 5, commentaire: "Super qualité, livraison rapide !", date: "2026-02-10", photo: "https://randomuser.me/api/portraits/women/44.jpg" },
         { nom: "Aminata D.", note: 5, commentaire: "Les bijoux sont magnifiques, je recommande !", date: "2026-02-09", photo: "https://randomuser.me/api/portraits/women/45.jpg" },
@@ -1988,7 +2179,6 @@
         { nom: "Kadiatou B.", note: 5, commentaire: "Livraison express, colis bien emballé", date: "2026-02-07", photo: "https://randomuser.me/api/portraits/women/47.jpg" }
     ];
     
-    // Notifications preuve sociale
     const notifications = [
         "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨",
         "Nouveau colis expédié vers Yamoussoukro 📦",
@@ -1998,6 +2188,17 @@
         "Livraison express pour un client à Marcory 🚚",
         "Nouvelle cliente fidèle - Merci Mariam ! 🌟"
     ];
+    
+    // ==================== FONCTIONS ADMIN MENU ====================
+    function switchAdminSection(section) {
+        // Cacher toutes les sections
+        document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.admin-menu-item').forEach(i => i.classList.remove('active'));
+        
+        // Afficher la section sélectionnée
+        document.getElementById(section + 'Section').classList.add('active');
+        document.getElementById('menu' + section.charAt(0).toUpperCase() + section.slice(1)).classList.add('active');
+    }
     
     // ==================== MODE MAINTENANCE ====================
     function checkMaintenance() {
@@ -2025,14 +2226,16 @@
         
         if (actif) {
             btnOn.classList.add('active', 'bg-[#c5a059]', 'text-white');
-            btnOn.classList.remove('inactive');
+            btnOn.classList.remove('inactive', 'bg-gray-200');
             btnOff.classList.remove('active', 'bg-[#c5a059]', 'text-white');
-            btnOff.classList.add('inactive');
+            btnOff.classList.add('inactive', 'bg-gray-200');
+            btnOff.style.opacity = '0.5';
         } else {
             btnOff.classList.add('active', 'bg-[#c5a059]', 'text-white');
-            btnOff.classList.remove('inactive');
+            btnOff.classList.remove('inactive', 'bg-gray-200');
             btnOn.classList.remove('active', 'bg-[#c5a059]', 'text-white');
-            btnOn.classList.add('inactive');
+            btnOn.classList.add('inactive', 'bg-gray-200');
+            btnOn.style.opacity = '0.5';
         }
         
         checkMaintenance();
@@ -2041,7 +2244,6 @@
     
     // ==================== CHARGEMENT DES DONNEES ====================
     function chargerDonnees() {
-        // Charger produits
         const savedProducts = localStorage.getItem('latyfa_db');
         if (savedProducts) {
             try {
@@ -2054,7 +2256,6 @@
             localStorage.setItem('latyfa_db', JSON.stringify(products));
         }
         
-        // Charger panier
         const savedCart = localStorage.getItem('latyfa_cart');
         if (savedCart) {
             try {
@@ -2064,7 +2265,6 @@
             }
         }
         
-        // Charger catégories
         const savedCategories = localStorage.getItem('latyfa_categories');
         if (savedCategories) {
             try {
@@ -2072,19 +2272,16 @@
             } catch(e) {}
         }
         
-        // Charger points fidélité
         const savedPoints = localStorage.getItem('latyfa_points');
         if (savedPoints) {
             pointsFidelite = parseInt(savedPoints);
         }
         
-        // Charger wishlist
         const savedWishlist = localStorage.getItem('latyfa_wishlist');
         if (savedWishlist) {
             wishlist = JSON.parse(savedWishlist);
         }
         
-        // Charger avis
         const savedAvis = localStorage.getItem('latyfa_avis');
         if (savedAvis) {
             avis = JSON.parse(savedAvis);
@@ -2093,13 +2290,11 @@
             localStorage.setItem('latyfa_avis', JSON.stringify(avis));
         }
         
-        // Charger comparateur
         const savedComparateur = localStorage.getItem('latyfa_comparateur');
         if (savedComparateur) {
             comparateur = JSON.parse(savedComparateur);
         }
         
-        // ========== CHARGER CLIENTS ==========
         const savedClients = localStorage.getItem('latyfa_clients');
         if (savedClients) {
             try {
@@ -2108,14 +2303,12 @@
                 clients = [];
             }
         } else {
-            // Client admin par défaut
             clients = [
                 { id: 1, nom: "Admin", email: "admin@latyfa.com", tel: "0709002881", password: "admin2026", isAdmin: true, dateInscription: new Date().toLocaleDateString('fr-FR') }
             ];
             localStorage.setItem('latyfa_clients', JSON.stringify(clients));
         }
         
-        // ========== CHARGER MESSAGES ==========
         const savedMessages = localStorage.getItem('latyfa_messages');
         if (savedMessages) {
             try {
@@ -2128,7 +2321,15 @@
             localStorage.setItem('latyfa_messages', JSON.stringify(messages));
         }
         
-        // Vérifier session
+        const savedSMS = localStorage.getItem('latyfa_sms');
+        if (savedSMS) {
+            try {
+                smsEnvoyes = JSON.parse(savedSMS);
+            } catch(e) {
+                smsEnvoyes = [];
+            }
+        }
+        
         const session = localStorage.getItem('latyfa_session');
         if (session) {
             try {
@@ -2226,7 +2427,6 @@
         messages.push(...nouveauxMessages);
         localStorage.setItem('latyfa_messages', JSON.stringify(messages));
         
-        // Envoyer email via EmailJS (simulation)
         try {
             emailjs.send("service_latyfa", "template_message", {
                 to_email: clients.find(c => c.id === destinataireIds[0])?.email,
@@ -2239,6 +2439,183 @@
         
         showToast(`✅ Message envoyé à ${destinataireIds.length} client(s)`);
         updateMessagesEnvoyes();
+    }
+    
+    // ==================== FONCTIONS SMS ====================
+    function updateSmsCounter() {
+        const smsInput = document.getElementById('smsContenu');
+        const counter = document.getElementById('smsCount');
+        if (smsInput && counter) {
+            counter.textContent = smsInput.value.length;
+        }
+    }
+    
+    function selectAllTel() {
+        document.querySelectorAll('#telSelector .client-check').forEach(cb => cb.checked = true);
+    }
+    
+    function selectTestTel() {
+        document.querySelectorAll('#telSelector .client-check').forEach(cb => {
+            const tel = cb.value;
+            cb.checked = tel === "0709002881";
+        });
+    }
+    
+    function clearTelSelection() {
+        document.querySelectorAll('#telSelector .client-check').forEach(cb => cb.checked = false);
+    }
+    
+    function envoyerSMS(type) {
+        let numeros = [];
+        
+        if (type === 'test') {
+            numeros = ["0709002881"];
+        } else {
+            document.querySelectorAll('#telSelector .client-check:checked').forEach(cb => {
+                numeros.push(cb.value);
+            });
+        }
+        
+        const contenu = document.getElementById('smsContenu').value.trim();
+        
+        if (numeros.length === 0) {
+            alert("Sélectionnez au moins un numéro");
+            return;
+        }
+        
+        if (!contenu) {
+            alert("Écrivez un message SMS");
+            return;
+        }
+        
+        // Sauvegarder dans l'historique SMS
+        const smsLog = {
+            id: Date.now(),
+            numeros: numeros,
+            contenu: contenu,
+            date: new Date().toLocaleString('fr-FR'),
+            type: type
+        };
+        
+        smsEnvoyes.unshift(smsLog);
+        localStorage.setItem('latyfa_sms', JSON.stringify(smsEnvoyes));
+        
+        // Afficher dans l'historique
+        updateSmsEnvoyes();
+        
+        // Message de confirmation
+        showToast(`📨 SMS envoyé à ${numeros.length} numéro(s) (simulation)`);
+        
+        // Si c'est un test, on peut aussi envoyer un message interne
+        if (type === 'test' && utilisateurConnecte) {
+            envoyerMessageAdmin([utilisateurConnecte.id], "Test SMS", "Ceci est un test du service SMS :\n\n" + contenu);
+        }
+    }
+    
+    function updateSmsEnvoyes() {
+        const container = document.getElementById('smsEnvoyes');
+        if (!container) return;
+        
+        container.innerHTML = smsEnvoyes.slice(0, 5).map(s => `
+            <div class="text-[8px] border-b pb-1">
+                <span class="font-bold">${s.date}</span> - À ${s.numeros.length} numéro(s)
+            </div>
+        `).join('');
+    }
+    
+    // ==================== FONCTIONS SAUVEGARDE ====================
+    function sauvegarderToutesDonnees() {
+        const backup = {
+            date: new Date().toLocaleString('fr-FR'),
+            produits: products,
+            clients: clients,
+            commandes: JSON.parse(localStorage.getItem('latyfa_historique')) || [],
+            messages: messages,
+            sms: smsEnvoyes,
+            categories: categories,
+            avis: avis
+        };
+        
+        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", `sauvegarde_latyfa_${new Date().toISOString().slice(0,10)}.json`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        localStorage.setItem('latyfa_last_backup', new Date().toLocaleString('fr-FR'));
+        document.getElementById('lastBackup').innerText = new Date().toLocaleString('fr-FR');
+        
+        showToast("✅ Sauvegarde téléchargée");
+    }
+    
+    function restaurerDonnees() {
+        const fileInput = document.getElementById('restoreFile');
+        fileInput.click();
+        
+        fileInput.onchange = function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    
+                    if (confirm("⚠️ Restaurer cette sauvegarde écrasera toutes les données actuelles. Continuer ?")) {
+                        if (backup.produits) {
+                            products = backup.produits;
+                            localStorage.setItem('latyfa_db', JSON.stringify(products));
+                        }
+                        if (backup.clients) {
+                            clients = backup.clients;
+                            localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+                        }
+                        if (backup.commandes) {
+                            localStorage.setItem('latyfa_historique', JSON.stringify(backup.commandes));
+                        }
+                        if (backup.messages) {
+                            messages = backup.messages;
+                            localStorage.setItem('latyfa_messages', JSON.stringify(messages));
+                        }
+                        if (backup.categories) {
+                            categories = backup.categories;
+                            localStorage.setItem('latyfa_categories', JSON.stringify(categories));
+                        }
+                        if (backup.avis) {
+                            avis = backup.avis;
+                            localStorage.setItem('latyfa_avis', JSON.stringify(avis));
+                        }
+                        
+                        showToast("✅ Données restaurées avec succès");
+                        setTimeout(() => location.reload(), 2000);
+                    }
+                } catch(err) {
+                    alert("Fichier de sauvegarde invalide");
+                }
+            };
+            
+            reader.readAsText(file);
+        };
+    }
+    
+    function toggleAutoBackup() {
+        const autoBackup = document.getElementById('autoBackup').checked;
+        localStorage.setItem('latyfa_auto_backup', autoBackup);
+        showToast(autoBackup ? "✅ Sauvegarde automatique activée" : "❌ Sauvegarde automatique désactivée");
+    }
+    
+    function effacerToutesDonnees() {
+        if (confirm("🚨 ATTENTION : Cette action supprimera TOUTES les données. Êtes-vous absolument sûr ?")) {
+            if (confirm("Dernière chance : voulez-vous vraiment tout effacer ?")) {
+                localStorage.clear();
+                showToast("💥 Toutes les données ont été effacées");
+                setTimeout(() => location.reload(), 2000);
+            }
+        }
     }
     
     // ==================== FONCTIONS AUTHENTIFICATION ====================
@@ -2312,7 +2689,6 @@
         clients.push(nouveauClient);
         localStorage.setItem('latyfa_clients', JSON.stringify(clients));
         
-        // Message de bienvenue automatique
         envoyerMessageAdmin([nouveauClient.id], "Bienvenue chez Latyfa Shop", 
             "Bonjour " + nom + ",\n\nMerci de votre inscription ! Nous sommes ravis de vous compter parmi nos clients.\n\n" +
             "Découvrez nos dernières collections et profitez de vos avantages fidélité.\n\n" +
@@ -2365,7 +2741,6 @@
             messageIcon.style.display = 'block';
             document.getElementById('userAvatar').innerHTML = `<i class="fa-regular fa-user"></i>`;
             
-            // Pré-remplir le formulaire de commande
             document.getElementById('nom-client').value = utilisateurConnecte.nom;
             document.getElementById('tel-client').value = utilisateurConnecte.tel;
         } else {
@@ -2467,6 +2842,10 @@
             return;
         }
         toggleWishlistModal();
+    }
+    
+    function voirMessages() {
+        ouvrirMessages();
     }
     
     // ==================== FONCTIONS D'AFFICHAGE ====================
@@ -2984,7 +3363,6 @@
         const montantTotal = parseInt(total.replace(/\s/g, '')) || 0;
         ajouterPoints(montantTotal);
         
-        // Envoyer confirmation par message interne et email
         if (utilisateurConnecte) {
             envoyerMessageAdmin([utilisateurConnecte.id], "Confirmation de commande", 
                 "Bonjour " + utilisateurConnecte.nom + ",\n\nVotre commande du " + nouvelleCommande.date + " a bien été enregistrée.\n\n" +
@@ -3528,12 +3906,17 @@
         if (codeSaisi === codeAttendu) {
             sessionStorage.setItem('latyfa_admin_session', 'true');
             document.getElementById('adminModal').classList.add('active');
+            
+            // Initialiser toutes les sections
             refreshAdminList();
             mettreAJourStats();
             initChart();
             updateClientsList();
             updateClientSelector();
             updateMessagesEnvoyes();
+            updateTelSelector();
+            updateSmsEnvoyes();
+            updateBackupList();
             
             const maintenanceActif = localStorage.getItem('latyfa_maintenance') === 'true';
             setMaintenance(maintenanceActif);
@@ -3542,15 +3925,53 @@
         }
     }
     
-    function switchAdminTab(tab) {
-        const tabs = ['dashboard', 'messages', 'clients', 'produits'];
-        tabs.forEach(t => {
-            document.getElementById(t + 'Section').style.display = 'none';
-            document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.remove('active');
-        });
+    function updateTelSelector() {
+        const selector = document.getElementById('telSelector');
+        if (!selector) return;
         
-        document.getElementById(tab + 'Section').style.display = 'block';
-        document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+        selector.innerHTML = clients.filter(c => !c.isAdmin).map(c => `
+            <div class="client-checkbox">
+                <input type="checkbox" id="tel_${c.id}" value="${c.tel}" class="client-check">
+                <label for="tel_${c.id}" class="flex-1 text-[9px]">
+                    <strong>${c.nom}</strong> - ${c.tel}
+                </label>
+            </div>
+        `).join('');
+    }
+    
+    function updateBackupList() {
+        const container = document.getElementById('backupList');
+        if (!container) return;
+        
+        const lastBackup = localStorage.getItem('latyfa_last_backup');
+        if (lastBackup) {
+            container.innerHTML = `
+                <div class="flex justify-between items-center text-[9px] border-b pb-2">
+                    <span><i class="fa-regular fa-circle-check text-green-600 mr-2"></i> Sauvegarde manuelle</span>
+                    <span class="text-gray-400">${lastBackup}</span>
+                </div>
+            `;
+        } else {
+            container.innerHTML = '<p class="text-[9px] text-gray-400">Aucune sauvegarde</p>';
+        }
+    }
+    
+    function updateMessagesEnvoyes() {
+        const container = document.getElementById('messagesEnvoyes');
+        if (!container) return;
+        
+        const recents = messages.filter(m => m.expediteurId === 'admin')
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, 5);
+        
+        container.innerHTML = recents.map(m => {
+            const destinataire = clients.find(c => c.id === m.destinataireId);
+            return `
+                <div class="text-[8px] border-b pb-1">
+                    <span class="font-bold">${m.date}</span> - À: ${destinataire?.nom || 'Client'} - ${m.objet}
+                </div>
+            `;
+        }).join('');
     }
     
     function updateClientSelector() {
@@ -3568,14 +3989,14 @@
     }
     
     function selectAllClients() {
-        document.querySelectorAll('.client-check').forEach(cb => cb.checked = true);
+        document.querySelectorAll('#clientsSelector .client-check').forEach(cb => cb.checked = true);
     }
     
     function selectClientsAvecCommandes() {
         const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
         const clientsActifs = [...new Set(historique.map(cmd => cmd.tel))];
         
-        document.querySelectorAll('.client-check').forEach(cb => {
+        document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
             const clientId = parseInt(cb.value);
             const client = clients.find(c => c.id === clientId);
             cb.checked = clientsActifs.includes(client?.tel);
@@ -3583,12 +4004,12 @@
     }
     
     function clearClientSelection() {
-        document.querySelectorAll('.client-check').forEach(cb => cb.checked = false);
+        document.querySelectorAll('#clientsSelector .client-check').forEach(cb => cb.checked = false);
     }
     
     function envoyerMessage() {
         const selectedIds = [];
-        document.querySelectorAll('.client-check:checked').forEach(cb => {
+        document.querySelectorAll('#clientsSelector .client-check:checked').forEach(cb => {
             selectedIds.push(parseInt(cb.value));
         });
         
@@ -3621,24 +4042,6 @@
         alert("APERÇU DU MESSAGE :\n\n" + contenu);
     }
     
-    function updateMessagesEnvoyes() {
-        const container = document.getElementById('messagesEnvoyes');
-        if (!container) return;
-        
-        const recents = messages.filter(m => m.expediteurId === 'admin')
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .slice(0, 5);
-        
-        container.innerHTML = recents.map(m => {
-            const destinataire = clients.find(c => c.id === m.destinataireId);
-            return `
-                <div class="text-[8px] border-b pb-1">
-                    <span class="font-bold">${m.date}</span> - À: ${destinataire?.nom || 'Client'} - ${m.objet}
-                </div>
-            `;
-        }).join('');
-    }
-    
     function updateClientsList() {
         const list = document.getElementById('clients-list');
         if (!list) return;
@@ -3649,6 +4052,11 @@
                 <span class="text-gray-400">📞 ${c.tel}</span>
             </div>
         `).join('');
+    }
+    
+    function refreshClientsList() {
+        updateClientsList();
+        showToast("✅ Liste des clients actualisée");
     }
     
     function exporterClients() {
@@ -4210,6 +4618,9 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').catch(() => {});
         }
+        
+        // Écouteur pour le compteur SMS
+        document.getElementById('smsContenu')?.addEventListener('input', updateSmsCounter);
     });
 </script>
 
