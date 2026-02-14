@@ -125,6 +125,158 @@
             to { opacity: 1; transform: scale(1); }
         }
         
+        /* MODE MAINTENANCE */
+        .maintenance-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+        
+        .maintenance-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(197, 160, 89, 0.3);
+            border-top-color: var(--latyfa-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+        
+        .maintenance-icon {
+            font-size: 60px;
+            color: var(--latyfa-gold);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        /* FORMULAIRES AUTH */
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .auth-tab.active {
+            border-bottom-color: var(--latyfa-gold);
+            color: var(--latyfa-gold);
+        }
+        
+        .auth-form {
+            transition: all 0.3s ease;
+        }
+        
+        .auth-input {
+            width: 100%;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+        
+        .auth-input:focus {
+            border-color: var(--latyfa-gold);
+            box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.2);
+        }
+        
+        .user-menu {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            min-width: 200px;
+            padding: 10px 0;
+            margin-top: 10px;
+            display: none;
+            z-index: 100;
+        }
+        
+        .user-menu:hover .user-dropdown {
+            display: block;
+        }
+        
+        .user-dropdown-item {
+            padding: 10px 15px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-dropdown-item:hover {
+            background: #f3f4f6;
+            color: var(--latyfa-gold);
+        }
+        
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--latyfa-gold);
+        }
+        
+        .maintenance-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .maintenance-toggle button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 10px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        
+        .maintenance-toggle button.active {
+            background: var(--latyfa-gold);
+            color: white;
+        }
+        
+        .maintenance-toggle button.inactive {
+            background: #9ca3af;
+            color: white;
+            opacity: 0.5;
+        }
+        
         .wheel-mask { 
             display: none; 
             position: fixed; 
@@ -722,6 +874,17 @@
 </head>
 <body>
 
+<!-- OVERLAY MAINTENANCE -->
+<div id="maintenanceOverlay" class="maintenance-overlay" style="display: none;">
+    <div class="maintenance-spinner"></div>
+    <div class="maintenance-icon">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+    </div>
+    <h2 class="text-2xl font-black uppercase mb-4">Site en maintenance</h2>
+    <p class="text-sm mb-8 opacity-80">Nous effectuons des améliorations pour mieux vous servir</p>
+    <div class="text-[#c5a059] animate-pulse">⏳ Merci de votre patience ⏳</div>
+</div>
+
 <!-- LOADER -->
 <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
     <div class="relative">
@@ -774,18 +937,47 @@
         </div>
         
         <!-- ICONES DROITE -->
-        <div class="flex gap-6">
+        <div class="flex gap-4 items-center">
+            <!-- MENU UTILISATEUR -->
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+                <div class="user-dropdown">
+                    <div class="user-dropdown-item" onclick="voirProfil()">
+                        <i class="fa-regular fa-user"></i> Mon profil
+                    </div>
+                    <div class="user-dropdown-item" onclick="voirCommandes()">
+                        <i class="fa-regular fa-clock"></i> Mes commandes
+                    </div>
+                    <div class="user-dropdown-item" onclick="voirFavoris()">
+                        <i class="fa-regular fa-heart"></i> Mes favoris
+                    </div>
+                    <div class="user-dropdown-item" onclick="deconnexion()">
+                        <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BOUTON CONNEXION -->
+            <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-white transition">
+                Se connecter
+            </button>
+            
             <div class="relative" onclick="toggleWishlistModal()">
                 <i class="fa-regular fa-heart text-gray-600 cursor-pointer hover:text-[#ff6600] text-xl"></i>
                 <span id="wishlist-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
             </div>
+            
             <button onclick="toggleDarkMode()" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition-all" id="dark-mode-btn">
                 <i class="fa-solid fa-moon"></i>
             </button>
+            
             <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
                 <i class="fa-solid fa-truck text-gray-600"></i>
                 <p class="text-[9px] font-bold uppercase">Suivi</p>
             </div>
+            
             <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
                 <i class="fa-solid fa-cart-shopping text-gray-600"></i>
                 <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold flex items-center justify-center min-w-[18px] h-[18px]">0</span>
@@ -794,6 +986,79 @@
         </div>
     </div>
 </header>
+
+<!-- MODALE AUTHENTIFICATION -->
+<div id="authModal" class="modal">
+    <div class="modal-content max-w-md">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black uppercase italic text-[#c5a059]">Compte client</h2>
+            <button onclick="fermerAuthModal()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+        </div>
+        
+        <!-- TABS -->
+        <div class="flex border-b mb-6">
+            <div class="auth-tab active" onclick="switchAuthTab('login')" id="loginTab">Connexion</div>
+            <div class="auth-tab" onclick="switchAuthTab('register')" id="registerTab">Inscription</div>
+        </div>
+        
+        <!-- FORMULAIRE CONNEXION -->
+        <div id="loginForm" class="auth-form">
+            <input type="email" id="loginEmail" placeholder="Email" class="auth-input">
+            <input type="password" id="loginPassword" placeholder="Mot de passe" class="auth-input">
+            <button onclick="connexion()" class="btn-primary w-full">SE CONNECTER</button>
+            <p class="text-[8px] text-center mt-4 text-gray-400">Mot de passe oublié ? Contactez-nous sur WhatsApp</p>
+        </div>
+        
+        <!-- FORMULAIRE INSCRIPTION -->
+        <div id="registerForm" class="auth-form" style="display: none;">
+            <input type="text" id="registerNom" placeholder="Nom complet" class="auth-input">
+            <input type="email" id="registerEmail" placeholder="Email" class="auth-input">
+            <input type="tel" id="registerTel" placeholder="Téléphone WhatsApp" class="auth-input">
+            <input type="password" id="registerPassword" placeholder="Mot de passe" class="auth-input">
+            <input type="password" id="registerConfirm" placeholder="Confirmer mot de passe" class="auth-input">
+            <div class="flex items-start gap-2 mb-4">
+                <input type="checkbox" id="registerAccept" class="mt-1">
+                <label for="registerAccept" class="text-[8px] text-gray-500">J'accepte les conditions générales de vente</label>
+            </div>
+            <button onclick="inscription()" class="btn-primary w-full">S'INSCRIRE</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE PROFIL CLIENT -->
+<div id="profilModal" class="modal">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black uppercase italic text-[#c5a059]">Mon profil</h2>
+            <button onclick="fermerProfil()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+        </div>
+        
+        <div class="space-y-4" id="profilInfo"></div>
+        
+        <div class="border-t pt-4 mt-4">
+            <h3 class="text-[10px] font-black uppercase mb-3">Modifier mes informations</h3>
+            <input type="text" id="editNom" placeholder="Nom" class="auth-input">
+            <input type="email" id="editEmail" placeholder="Email" class="auth-input">
+            <input type="tel" id="editTel" placeholder="Téléphone" class="auth-input">
+            <button onclick="modifierProfil()" class="btn-primary w-full text-[10px] py-3">ENREGISTRER</button>
+        </div>
+        
+        <button onclick="deconnexion()" class="w-full mt-4 text-red-500 text-[10px] font-bold uppercase border border-red-200 py-3 rounded-lg hover:bg-red-50 transition">
+            <i class="fa-solid fa-right-from-bracket mr-2"></i> SE DÉCONNECTER
+        </button>
+    </div>
+</div>
+
+<!-- MODALE MES COMMANDES -->
+<div id="commandesModal" class="modal">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black uppercase italic text-[#c5a059]">Mes commandes</h2>
+            <button onclick="fermerCommandes()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+        </div>
+        <div id="commandesList" class="space-y-3 max-h-[60vh] overflow-y-auto"></div>
+    </div>
+</div>
 
 <!-- SECTION HERO -->
 <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
@@ -1125,7 +1390,7 @@
 <div id="wishlistModal" class="modal">
     <div class="modal-content">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-black uppercase italic text-[#c5a059">❤️ Mes Favoris</h2>
+            <h2 class="text-lg font-black uppercase italic text-[#c5a059]">❤️ Mes Favoris</h2>
             <button onclick="fermerWishlist()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
         </div>
         <div id="wishlist-items" class="space-y-3 max-h-[60vh] overflow-y-auto"></div>
@@ -1139,7 +1404,7 @@
 <div id="comparateurModal" class="modal">
     <div class="modal-content max-w-3xl">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-black uppercase italic text-[#c5a059">⚖️ Comparateur</h2>
+            <h2 class="text-lg font-black uppercase italic text-[#c5a059]">⚖️ Comparateur</h2>
             <button onclick="fermerComparateur()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
         </div>
         <div id="comparateur-items" class="grid grid-cols-2 gap-4"></div>
@@ -1153,7 +1418,7 @@
 <div id="avisModal" class="modal">
     <div class="modal-content">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-black uppercase italic text-[#c5a059">⭐ Avis clients</h2>
+            <h2 class="text-lg font-black uppercase italic text-[#c5a059]">⭐ Avis clients</h2>
             <button onclick="fermerAvis()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
         </div>
         <div id="all-reviews" class="space-y-4 max-h-[60vh] overflow-y-auto"></div>
@@ -1167,7 +1432,7 @@
 <div id="depotAvisModal" class="modal">
     <div class="modal-content">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-black uppercase italic text-[#c5a059">📝 Donner mon avis</h2>
+            <h2 class="text-lg font-black uppercase italic text-[#c5a059]">📝 Donner mon avis</h2>
             <button onclick="fermerDepotAvis()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
         </div>
         
@@ -1207,7 +1472,7 @@
 <div id="adventModal" class="modal">
     <div class="modal-content">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-black uppercase italic text-[#c5a059">📅 Calendrier de l'Avent</h2>
+            <h2 class="text-lg font-black uppercase italic text-[#c5a059]">📅 Calendrier de l'Avent</h2>
             <button onclick="fermerAdvent()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
         </div>
         <div class="advent-calendar" id="advent-calendar"></div>
@@ -1254,12 +1519,19 @@
     </div>
 </div>
 
-<!-- MODALE ADMIN (AMÉLIORÉE AVEC GRAPHIQUES) -->
+<!-- MODALE ADMIN (AMÉLIORÉE AVEC MODE MAINTENANCE) -->
 <div id="adminModal" class="modal">
     <div class="modal-content max-w-4xl">
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-2xl font-black uppercase italic text-[#c5a059]">Gestion Boutique</h2>
             <button onclick="fermerAdmin()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+        </div>
+
+        <!-- MODE MAINTENANCE -->
+        <div class="maintenance-toggle">
+            <span class="text-[10px] font-black uppercase flex-1">Mode maintenance</span>
+            <button id="maintenanceOn" onclick="setMaintenance(true)" class="px-4 py-2 rounded-lg font-black text-[10px] uppercase">ACTIVER</button>
+            <button id="maintenanceOff" onclick="setMaintenance(false)" class="px-4 py-2 rounded-lg font-black text-[10px] uppercase bg-[#c5a059] text-white">DÉSACTIVER</button>
         </div>
 
         <!-- STATISTIQUES AVANCÉES -->
@@ -1280,6 +1552,12 @@
                 <p class="text-[8px] font-black uppercase text-orange-400 mb-1">Panier moyen</p>
                 <div id="stat-panier-moyen" class="text-lg font-black text-orange-700">0 F</div>
             </div>
+        </div>
+
+        <!-- GESTION CLIENTS -->
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 mb-8">
+            <h3 class="text-[10px] font-black uppercase mb-4">👥 Clients inscrits</h3>
+            <div id="clients-list" class="space-y-2 max-h-40 overflow-y-auto"></div>
         </div>
 
         <!-- GRAPHIQUE VENTES -->
@@ -1470,7 +1748,7 @@
             © 2026 LATYFA BUSINESS | <button onclick="ouvrirCGV()" class="underline text-[#ff6600] hover:text-[#c5a059] transition-colors">Juridique</button>
         </div>
     </div>
-</footer>
+</div>
 
 <script>
     // ==================== INITIALISATION EMAILJS ====================
@@ -1494,6 +1772,10 @@
     let avis = [];
     let currentRating = 0;
     let cadeauMystere = null;
+    
+    // ==================== NOUVELLES VARIABLES CLIENTS ====================
+    let clients = [];
+    let utilisateurConnecte = null;
     
     const tarifsLivraison = {
         "abidjan_nord": { nom: "Abidjan Nord", prix: 1500 },
@@ -1533,6 +1815,49 @@
         "Livraison express pour un client à Marcory 🚚",
         "Nouvelle cliente fidèle - Merci Mariam ! 🌟"
     ];
+    
+    // ==================== MODE MAINTENANCE ====================
+    function checkMaintenance() {
+        const maintenance = localStorage.getItem('latyfa_maintenance') === 'true';
+        const overlay = document.getElementById('maintenanceOverlay');
+        
+        if (maintenance && !estAdmin()) {
+            overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        } else {
+            overlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    }
+    
+    function estAdmin() {
+        // L'admin est celui qui a ouvert la modale admin (code saisi)
+        // On utilise un flag temporaire dans la session
+        return sessionStorage.getItem('latyfa_admin_session') === 'true';
+    }
+    
+    function setMaintenance(actif) {
+        localStorage.setItem('latyfa_maintenance', actif ? 'true' : 'false');
+        
+        // Mettre à jour l'UI des boutons
+        const btnOn = document.getElementById('maintenanceOn');
+        const btnOff = document.getElementById('maintenanceOff');
+        
+        if (actif) {
+            btnOn.classList.add('active', 'bg-[#c5a059]', 'text-white');
+            btnOn.classList.remove('inactive');
+            btnOff.classList.remove('active', 'bg-[#c5a059]', 'text-white');
+            btnOff.classList.add('inactive');
+        } else {
+            btnOff.classList.add('active', 'bg-[#c5a059]', 'text-white');
+            btnOff.classList.remove('inactive');
+            btnOn.classList.remove('active', 'bg-[#c5a059]', 'text-white');
+            btnOn.classList.add('inactive');
+        }
+        
+        checkMaintenance();
+        showToast(actif ? "🔧 Mode maintenance activé" : "✅ Site accessible à tous");
+    }
     
     // ==================== CHARGEMENT DES DONNEES ====================
     function chargerDonnees() {
@@ -1593,6 +1918,31 @@
         if (savedComparateur) {
             comparateur = JSON.parse(savedComparateur);
         }
+        
+        // ========== NOUVEAU : CHARGER CLIENTS ==========
+        const savedClients = localStorage.getItem('latyfa_clients');
+        if (savedClients) {
+            try {
+                clients = JSON.parse(savedClients);
+            } catch(e) {
+                clients = [];
+            }
+        } else {
+            // Client admin par défaut
+            clients = [
+                { id: 1, nom: "Admin", email: "admin@latyfa.com", tel: "0709002881", password: "admin2026", isAdmin: true }
+            ];
+            localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+        }
+        
+        // Vérifier session
+        const session = localStorage.getItem('latyfa_session');
+        if (session) {
+            try {
+                utilisateurConnecte = JSON.parse(session);
+                updateUserUI();
+            } catch(e) {}
+        }
     }
     
     function getDefaultProducts() {
@@ -1603,6 +1953,223 @@
             { id: 4, cat: "parfum", name: "Oud Mystique - 100ml", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], enStock: true, description: "Une fragrance envoûtante qui tient toute la journée.", dateAjout: Date.now() - 15*24*60*60*1000, ventes: 27 },
             { id: 5, cat: "chaussures", name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], enStock: true, pointures: ["37", "38", "39", "40"], description: "Confort et prestige pour vos soirées.", dateAjout: Date.now() - 3*24*60*60*1000, ventes: 31 }
         ];
+    }
+    
+    // ==================== FONCTIONS AUTHENTIFICATION ====================
+    function ouvrirAuthModal() {
+        document.getElementById('authModal').classList.add('active');
+        switchAuthTab('login');
+    }
+    
+    function fermerAuthModal() {
+        document.getElementById('authModal').classList.remove('active');
+    }
+    
+    function switchAuthTab(tab) {
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        
+        if (tab === 'login') {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        } else {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.style.display = 'block';
+            loginForm.style.display = 'none';
+        }
+    }
+    
+    function inscription() {
+        const nom = document.getElementById('registerNom').value.trim();
+        const email = document.getElementById('registerEmail').value.trim();
+        const tel = document.getElementById('registerTel').value.trim();
+        const password = document.getElementById('registerPassword').value;
+        const confirm = document.getElementById('registerConfirm').value;
+        const accept = document.getElementById('registerAccept').checked;
+        
+        if (!nom || !email || !tel || !password || !confirm) {
+            alert("Veuillez remplir tous les champs");
+            return;
+        }
+        
+        if (password !== confirm) {
+            alert("Les mots de passe ne correspondent pas");
+            return;
+        }
+        
+        if (!accept) {
+            alert("Vous devez accepter les conditions générales");
+            return;
+        }
+        
+        // Vérifier si l'email existe déjà
+        if (clients.find(c => c.email === email)) {
+            alert("Cet email est déjà utilisé");
+            return;
+        }
+        
+        const nouveauClient = {
+            id: Date.now(),
+            nom: nom,
+            email: email,
+            tel: tel,
+            password: password,
+            dateInscription: new Date().toLocaleDateString('fr-FR'),
+            commandes: [],
+            points: 0
+        };
+        
+        clients.push(nouveauClient);
+        localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+        
+        alert("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+        switchAuthTab('login');
+    }
+    
+    function connexion() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        
+        const client = clients.find(c => c.email === email && c.password === password);
+        
+        if (client) {
+            utilisateurConnecte = client;
+            localStorage.setItem('latyfa_session', JSON.stringify(client));
+            updateUserUI();
+            fermerAuthModal();
+            showToast(`👋 Bonjour ${client.nom} !`);
+            
+            // Si c'est l'admin, on active la session admin
+            if (client.isAdmin) {
+                sessionStorage.setItem('latyfa_admin_session', 'true');
+            }
+        } else {
+            alert("Email ou mot de passe incorrect");
+        }
+    }
+    
+    function deconnexion() {
+        utilisateurConnecte = null;
+        localStorage.removeItem('latyfa_session');
+        sessionStorage.removeItem('latyfa_admin_session');
+        updateUserUI();
+        fermerProfil();
+        fermerCommandes();
+        showToast("👋 À bientôt !");
+    }
+    
+    function updateUserUI() {
+        const userMenu = document.getElementById('userMenu');
+        const loginBtn = document.getElementById('loginBtn');
+        
+        if (utilisateurConnecte) {
+            userMenu.style.display = 'block';
+            loginBtn.style.display = 'none';
+            document.getElementById('userAvatar').innerHTML = `<i class="fa-regular fa-user"></i>`;
+        } else {
+            userMenu.style.display = 'none';
+            loginBtn.style.display = 'block';
+        }
+    }
+    
+    function voirProfil() {
+        if (!utilisateurConnecte) {
+            ouvrirAuthModal();
+            return;
+        }
+        
+        const profilInfo = document.getElementById('profilInfo');
+        profilInfo.innerHTML = `
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-[10px] font-bold mb-2">👤 ${utilisateurConnecte.nom}</p>
+                <p class="text-[9px] text-gray-600">📧 ${utilisateurConnecte.email}</p>
+                <p class="text-[9px] text-gray-600">📞 ${utilisateurConnecte.tel}</p>
+                <p class="text-[9px] text-gray-600">📅 Inscrit le ${utilisateurConnecte.dateInscription}</p>
+                <p class="text-[9px] text-[#c5a059] mt-2">⭐ Points fidélité: ${pointsFidelite}</p>
+            </div>
+        `;
+        
+        document.getElementById('editNom').value = utilisateurConnecte.nom;
+        document.getElementById('editEmail').value = utilisateurConnecte.email;
+        document.getElementById('editTel').value = utilisateurConnecte.tel;
+        
+        document.getElementById('profilModal').classList.add('active');
+    }
+    
+    function fermerProfil() {
+        document.getElementById('profilModal').classList.remove('active');
+    }
+    
+    function modifierProfil() {
+        const nom = document.getElementById('editNom').value.trim();
+        const email = document.getElementById('editEmail').value.trim();
+        const tel = document.getElementById('editTel').value.trim();
+        
+        if (!nom || !email || !tel) {
+            alert("Veuillez remplir tous les champs");
+            return;
+        }
+        
+        utilisateurConnecte.nom = nom;
+        utilisateurConnecte.email = email;
+        utilisateurConnecte.tel = tel;
+        
+        // Mettre à jour dans la liste des clients
+        const index = clients.findIndex(c => c.id === utilisateurConnecte.id);
+        if (index !== -1) {
+            clients[index] = utilisateurConnecte;
+            localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+            localStorage.setItem('latyfa_session', JSON.stringify(utilisateurConnecte));
+        }
+        
+        voirProfil(); // Rafraîchir l'affichage
+        showToast("✅ Profil mis à jour");
+    }
+    
+    function voirCommandes() {
+        if (!utilisateurConnecte) {
+            ouvrirAuthModal();
+            return;
+        }
+        
+        const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+        const mesCommandes = historique.filter(cmd => cmd.client === utilisateurConnecte.nom.toUpperCase() || cmd.tel === utilisateurConnecte.tel);
+        
+        const container = document.getElementById('commandesList');
+        
+        if (mesCommandes.length === 0) {
+            container.innerHTML = '<p class="text-center text-gray-400 text-[10px] py-10">Aucune commande pour le moment</p>';
+        } else {
+            container.innerHTML = mesCommandes.map(cmd => `
+                <div class="border rounded-lg p-3 text-[9px]">
+                    <div class="flex justify-between mb-1">
+                        <span class="font-bold">📅 ${cmd.date}</span>
+                        <span class="text-[#c5a059] font-black">${cmd.total}</span>
+                    </div>
+                    <p class="text-gray-600">${cmd.articles.substring(0, 50)}...</p>
+                    <p class="text-[8px] text-gray-400 mt-1">🚚 ${cmd.lieu}</p>
+                </div>
+            `).join('');
+        }
+        
+        document.getElementById('commandesModal').classList.add('active');
+    }
+    
+    function fermerCommandes() {
+        document.getElementById('commandesModal').classList.remove('active');
+    }
+    
+    function voirFavoris() {
+        if (!utilisateurConnecte) {
+            ouvrirAuthModal();
+            return;
+        }
+        toggleWishlistModal();
     }
     
     // ==================== FONCTIONS D'AFFICHAGE ====================
@@ -2662,13 +3229,31 @@
         const codeSaisi = prompt("Code d'accès admin :");
         
         if (codeSaisi === codeAttendu) {
+            sessionStorage.setItem('latyfa_admin_session', 'true');
             document.getElementById('adminModal').classList.add('active');
             refreshAdminList();
             mettreAJourStats();
             initChart();
+            updateClientsList();
+            
+            // Mettre à jour l'état des boutons maintenance
+            const maintenanceActif = localStorage.getItem('latyfa_maintenance') === 'true';
+            setMaintenance(maintenanceActif);
         } else if (codeSaisi !== null) {
             alert("❌ Code incorrect");
         }
+    }
+    
+    function updateClientsList() {
+        const list = document.getElementById('clients-list');
+        if (!list) return;
+        
+        list.innerHTML = clients.map(c => `
+            <div class="flex justify-between items-center text-[9px] border-b pb-1">
+                <span><strong>${c.nom}</strong> (${c.email})</span>
+                <span class="text-gray-400">📅 ${c.dateInscription || 'N/A'}</span>
+            </div>
+        `).join('');
     }
     
     function fermerAdmin() {
@@ -2679,7 +3264,6 @@
         const ctx = document.getElementById('salesChart')?.getContext('2d');
         if (!ctx) return;
         
-        // Détruire le graphique existant s'il y en a un
         if (window.salesChart) {
             window.salesChart.destroy();
         }
@@ -2914,7 +3498,6 @@
         if (zoneNB) zoneNB.innerText = historique.length;
         if (zonePanierMoyen) zonePanierMoyen.innerText = panierMoyen.toLocaleString('fr-FR') + " F";
         
-        // Produits populaires
         const popularList = document.getElementById('popular-products-list');
         if (popularList) {
             const populaires = [...products].sort((a, b) => (b.ventes || 0) - (a.ventes || 0)).slice(0, 5);
@@ -3115,8 +3698,7 @@
         
         const endTime = localStorage.getItem('latyfa_flash_end');
         if (!endTime) {
-            // Nouvelle flash sale
-            const newEnd = Date.now() + (2 * 60 * 60 * 1000); // 2 heures
+            const newEnd = Date.now() + (2 * 60 * 60 * 1000);
             localStorage.setItem('latyfa_flash_end', newEnd);
         }
         
@@ -3169,6 +3751,9 @@
         document.getElementById('loyalty-points').innerText = pointsFidelite;
         document.getElementById('loyalty-progress').style.width = Math.min(100, (pointsFidelite / 100) * 100) + '%';
         
+        // Vérifier maintenance
+        checkMaintenance();
+        
         setTimeout(() => {
             const loader = document.getElementById('loader');
             if (loader) loader.classList.add('loader-hidden');
@@ -3206,7 +3791,7 @@
             }, 10000);
         }
         
-        // PWA - Demander installation
+        // PWA
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').catch(() => {});
         }
