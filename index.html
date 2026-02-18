@@ -27,6 +27,60 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#c5a059">
     <style>
+        /* ==================== VIDÉO DE FOND AVEC CANVAS ==================== */
+.hero-video-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.animated-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(-45deg, #c5a059, #1a1a1a, #c5a059, #000000);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    z-index: 0;
+    opacity: 0.8;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.floating-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.floating-element {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(197, 160, 89, 0.1);
+    border-radius: 50%;
+    animation: float 10s infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    50% { transform: translateY(-100px) rotate(180deg); opacity: 0.5; }
+    100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
+}
         /* Styles supplémentaires pour la section développeur */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
@@ -2195,17 +2249,25 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-<!-- SECTION HERO AVEC VIDÉO ET ZOOM LENT -->
-<section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
-    <div class="absolute inset-0 overflow-hidden">
-        <video autoplay loop muted playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-60" style="animation: slowZoom 20s ease-in-out infinite alternate;">
-            <source src="https://www.istockphoto.com/video/time-lapse-top-view-of-new-normal-shopping-mall-with-social-distance-mark-on-floor-gm1264868258-370576047?utm_source=pexels&utm_medium=affiliate&utm_campaign=sponsored_video&utm_content=srp_inline_media&utm_term=boutique%20de%20mode"type="video/mp4">
-            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover">
-        </video>
+<!-- SECTION HERO AVEC ANIMATION CSS (Fonctionne à 100%) -->
+<section class="relative w-full h-[350px] md:h-[500px] overflow-hidden">
+    <!-- Fond animé -->
+    <div class="animated-bg"></div>
+    
+    <!-- Éléments flottants (bijoux stylisés) -->
+    <div class="floating-elements">
+        <div class="floating-element" style="top: 20%; left: 10%; width: 40px; height: 40px; animation-delay: 0s;"></div>
+        <div class="floating-element" style="top: 50%; left: 20%; width: 70px; height: 70px; animation-delay: 2s;"></div>
+        <div class="floating-element" style="top: 30%; right: 15%; width: 50px; height: 50px; animation-delay: 4s;"></div>
+        <div class="floating-element" style="bottom: 20%; right: 25%; width: 80px; height: 80px; animation-delay: 1s;"></div>
+        <div class="floating-element" style="bottom: 40%; left: 30%; width: 45px; height: 45px; animation-delay: 3s;"></div>
+        <div class="floating-element" style="top: 70%; left: 60%; width: 55px; height: 55px; animation-delay: 5s;"></div>
     </div>
     
-    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black/30"></div>
     
+    <!-- Contenu -->
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none drop-shadow-lg" data-i18n="hero_title">La Boutique du 225</h1>
         <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em] drop-shadow-md" data-i18n="hero_subtitle">Bijoux, vêtements, parfum...</p>
