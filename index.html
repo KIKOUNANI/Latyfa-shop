@@ -2499,20 +2499,30 @@
         </div>
 
         <!-- SECTION MESSAGERIE -->
-        <div id="messagerieSection" class="admin-section">
-            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
-                <i class="fa-regular fa-envelope text-[#c5a059]"></i> Messagerie
-            </h3>
-            
-            <div class="mb-4">
-                <label class="text-[9px] font-bold uppercase block mb-2">Destinataires</label>
-                <div class="flex gap-2 mb-3 flex-wrap">
-                    <button onclick="selectAllClients()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Tous les clients</button>
-                    <button onclick="selectClientsAvecCommandes()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Clients actifs</button>
-                    <button onclick="clearClientSelection()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Effacer</button>
-                </div>
-                <div id="clientsSelector" class="border rounded-lg p-3 max-h-40 overflow-y-auto"></div>
-            </div>
+        <!-- Dans la section messagerie, après le titre -->
+<div id="messagerieSection" class="admin-section">
+    <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+        <i class="fa-regular fa-envelope text-[#c5a059]"></i> Messagerie
+    </h3>
+    
+    <!-- AJOUTER CE BOUTON DE RAFRAÎCHISSEMENT -->
+    <div class="flex justify-end mb-2">
+        <button onclick="refreshClientSelector()" class="bg-gray-100 hover:bg-gray-200 text-[9px] font-black uppercase px-3 py-1 rounded-full flex items-center gap-1">
+            <i class="fa-solid fa-rotate"></i> Rafraîchir la liste
+        </button>
+    </div>
+    
+    <div class="mb-4">
+        <label class="text-[9px] font-bold uppercase block mb-2">Destinataires</label>
+        <div class="flex gap-2 mb-3 flex-wrap">
+            <button onclick="selectAllClients()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Tous les clients</button>
+            <button onclick="selectClientsAvecCommandes()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Clients actifs</button>
+            <button onclick="clearClientSelection()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Effacer</button>
+        </div>
+        <div id="clientsSelector" class="border rounded-lg p-3 max-h-60 overflow-y-auto bg-white">
+            <!-- Les clients apparaîtront ici -->
+        </div>
+    </div>
             
             <div class="mb-4">
                 <label class="text-[9px] font-bold uppercase block mb-2">Objet</label>
@@ -3636,6 +3646,19 @@
             loginBtn.style.display = 'block';
             messageIcon.style.display = 'none';
         }
+        // Dans la fonction updateUserUI(), ajoutez cette ligne pour mettre à jour le badge
+function updateClientCountBadge() {
+    const clientsNonAdmin = clients.filter(c => !c.isAdmin);
+    const menuMessagerie = document.getElementById('menuMessagerie');
+    if (menuMessagerie) {
+        const badge = menuMessagerie.querySelector('.client-count-badge') || document.createElement('span');
+        if (!badge.classList.contains('client-count-badge')) {
+            badge.className = 'client-count-badge ml-1 bg-red-500 text-white px-1.5 rounded-full text-[8px]';
+            menuMessagerie.appendChild(badge);
+        }
+        badge.innerText = clientsNonAdmin.length;
+    }
+}
     }
     
     function voirProfil() {
@@ -4852,39 +4875,66 @@
         }
     }
     
-    function updateClientSelector() {
-        const selector = document.getElementById('clientsSelector');
-        if (!selector) return;
-        
-        selector.innerHTML = clients.filter(c => !c.isAdmin).map(c => `
-            <div class="client-checkbox">
-                <input type="checkbox" id="client_${c.id}" value="${c.id}" class="client-check">
-                <label for="client_${c.id}" class="flex-1 text-[9px]">
-                    <strong>${c.nom}</strong> - ${c.email} (📞 ${c.tel})
-                </label>
-            </div>
-        `).join('');
+    // ==================== FONCTIONS MESSAGERIE CORRIGÉES ====================
+function updateClientSelector() {
+    const selector = document.getElementById('clientsSelector');
+    if (!selector) return;
+    
+    // Filtrer pour exclure les admins
+    const clientsNonAdmin = clients.filter(c => !c.isAdmin);
+    
+    if (clientsNonAdmin.length === 0) {
+        selector.innerHTML = '<p class="text-center text-gray-400 text-[10px] py-4">Aucun client inscrit pour le moment</p>';
+        return;
     }
     
-    function selectAllClients() {
-        document.querySelectorAll('#clientsSelector .client-check').forEach(cb => cb.checked = true);
-    }
+    selector.innerHTML = clientsNonAdmin.map(c => `
+        <div class="flex items-center gap-2 p-2 border-b border-gray-100 hover:bg-gray-50">
+            <input type="checkbox" id="client_${c.id}" value="${c.id}" class="client-check w-4 h-4 accent-[#c5a059]">
+            <label for="client_${c.id}" class="flex-1 text-[9px] cursor-pointer">
+                <span class="font-bold block">${c.nom}</span>
+                <span class="text-gray-500">${c.email} | 📞 ${c.tel || 'Non renseigné'}</span>
+                <span class="text-[8px] text-[#c5a059] block">Inscrit le: ${c.dateInscription || 'N/A'}</span>
+            </label>
+        </div>
+    `).join('');
     
-    function selectClientsAvecCommandes() {
-        const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-        const clientsActifs = [...new Set(historique.map(cmd => cmd.tel))];
-        
-        document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
-            const clientId = parseInt(cb.value);
-            const client = clients.find(c => c.id === clientId);
-            cb.checked = clientsActifs.includes(client?.tel);
-        });
-    }
+    console.log(`✅ ${clientsNonAdmin.length} client(s) chargé(s) dans le sélecteur`);
+}
+
+function selectAllClients() {
+    document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
+        cb.checked = true;
+    });
+    showToast(`✅ Tous les clients sélectionnés (${document.querySelectorAll('#clientsSelector .client-check:checked').length})`);
+}
+
+function selectClientsAvecCommandes() {
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    const clientsActifs = [...new Set(historique.map(cmd => cmd.tel))];
     
-    function clearClientSelection() {
-        document.querySelectorAll('#clientsSelector .client-check').forEach(cb => cb.checked = false);
-    }
+    document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
+        const clientId = parseInt(cb.value);
+        const client = clients.find(c => c.id === clientId);
+        cb.checked = clientsActifs.includes(client?.tel);
+    });
     
+    const count = document.querySelectorAll('#clientsSelector .client-check:checked').length;
+    showToast(`✅ ${count} client(s) actif(s) sélectionné(s)`);
+}
+
+function clearClientSelection() {
+    document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
+        cb.checked = false;
+    });
+    showToast("🔄 Sélection effacée");
+}
+
+// Ajouter cette fonction pour rafraîchir manuellement la liste
+function refreshClientSelector() {
+    updateClientSelector();
+    showToast("📋 Liste des clients actualisée");
+}
     function envoyerMessageAdminSelection() {
         const selectedIds = [];
         document.querySelectorAll('#clientsSelector .client-check:checked').forEach(cb => {
