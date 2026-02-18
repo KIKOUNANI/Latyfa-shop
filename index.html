@@ -2195,10 +2195,20 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-<!-- SECTION HERO -->
+<!-- SECTION HERO AVEC VIDÉO DE FOND -->
 <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
-    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+    <!-- Vidéo de fond -->
+    <video autoplay loop muted playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-60">
+        <source src="https://player.vimeo.com/external/371619483.sd.mp4?s=8f1c9b5a9b5d5c5b5a9b5d5c5b5a9b5d5c5b5a9b5&profile_id=139&oauth2_token_id=57447761" type="video/mp4">
+        <!-- Fallback image si la vidéo ne charge pas -->
+        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover">
+    </video>
+    
+    <!-- Overlay sombre pour améliorer la lisibilité du texte -->
+    <div class="absolute inset-0 bg-black/30"></div>
+    
+    <!-- Contenu texte -->
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none" data-i18n="hero_title">La Boutique du 225</h1>
         <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]" data-i18n="hero_subtitle">Bijoux, vêtements, parfum...</p>
         <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg" data-i18n="hero_btn">Découvrir la Collection</a>
