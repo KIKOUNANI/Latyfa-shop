@@ -2249,31 +2249,82 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-<!-- SECTION HERO AVEC ANIMATION CSS (Fonctionne à 100%) -->
-<section class="relative w-full h-[350px] md:h-[500px] overflow-hidden">
-    <!-- Fond animé -->
-    <div class="animated-bg"></div>
+<!-- SECTION HERO AVEC CANVAS ANIMÉ -->
+<section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
+    <canvas id="heroCanvas" class="absolute top-0 left-0 w-full h-full"></canvas>
     
-    <!-- Éléments flottants (bijoux stylisés) -->
-    <div class="floating-elements">
-        <div class="floating-element" style="top: 20%; left: 10%; width: 40px; height: 40px; animation-delay: 0s;"></div>
-        <div class="floating-element" style="top: 50%; left: 20%; width: 70px; height: 70px; animation-delay: 2s;"></div>
-        <div class="floating-element" style="top: 30%; right: 15%; width: 50px; height: 50px; animation-delay: 4s;"></div>
-        <div class="floating-element" style="bottom: 20%; right: 25%; width: 80px; height: 80px; animation-delay: 1s;"></div>
-        <div class="floating-element" style="bottom: 40%; left: 30%; width: 45px; height: 45px; animation-delay: 3s;"></div>
-        <div class="floating-element" style="top: 70%; left: 60%; width: 55px; height: 55px; animation-delay: 5s;"></div>
-    </div>
-    
-    <!-- Overlay -->
     <div class="absolute inset-0 bg-black/30"></div>
     
-    <!-- Contenu -->
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none drop-shadow-lg" data-i18n="hero_title">La Boutique du 225</h1>
         <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em] drop-shadow-md" data-i18n="hero_subtitle">Bijoux, vêtements, parfum...</p>
         <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl" data-i18n="hero_btn">Découvrir la Collection</a>
     </div>
 </section>
+
+<script>
+// Animation canvas pour la section hero
+window.addEventListener('load', function() {
+    const canvas = document.getElementById('heroCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = document.querySelector('.relative.w-full.h-\\[350px\\]').offsetHeight;
+    
+    // Particules
+    const particles = [];
+    const particleCount = 50;
+    
+    for (let i = 0; i < particleCount; i++) {
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            size: Math.random() * 3 + 1,
+            speedX: (Math.random() - 0.5) * 0.5,
+            speedY: (Math.random() - 0.5) * 0.5,
+            color: `rgba(197, 160, 89, ${Math.random() * 0.5 + 0.2})`
+        });
+    }
+    
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        
+        // Fond
+        const gradient = ctx.createLinearGradient(0, 0, width, height);
+        gradient.addColorStop(0, '#1a1a1a');
+        gradient.addColorStop(0.5, '#c5a059');
+        gradient.addColorStop(1, '#1a1a1a');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+        
+        // Dessiner les particules
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+            
+            // Déplacer
+            p.x += p.speedX;
+            p.y += p.speedY;
+            
+            // Rebond
+            if (p.x < 0 || p.x > width) p.speedX *= -1;
+            if (p.y < 0 || p.y > height) p.speedY *= -1;
+        });
+        
+        requestAnimationFrame(animate);
+    }
+    
+    animate();
+    
+    window.addEventListener('resize', function() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = document.querySelector('.relative.w-full.h-\\[350px\\]').offsetHeight;
+    });
+});
+</script>
 
 <style>
 @keyframes slowZoom {
