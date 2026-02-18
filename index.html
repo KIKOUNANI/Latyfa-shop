@@ -27,6 +27,48 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#c5a059">
     <style>
+        /* Styles supplémentaires pour la section développeur */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.floating {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Effet de brillance sur les cartes */
+.glow-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(197,160,89,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.glow-card:hover::before {
+    opacity: 1;
+}
+
+/* Animation des boutons */
+.pulse-button {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(197,160,89,0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(197,160,89,0); }
+    100% { box-shadow: 0 0 0 0 rgba(197,160,89,0); }
+        }
         :root { 
             --latyfa-gold: #c5a059;   
             --latyfa-dark: #1a1a1a;   
@@ -2666,7 +2708,97 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- BOUTON ADMIN CACHE -->
 <div onclick="ouvrirAdmin()" class="admin-btn">ADM</div>
-
+<!-- ==================== SECTION DÉVELOPPEUR ==================== -->
+<section class="py-16 bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-[#c5a059]/30 shadow-2xl">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <!-- Photo du développeur -->
+                <div class="relative group">
+                    <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-[#c5a059] shadow-xl transform transition-transform group-hover:scale-105">
+                        <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" alt="Développeur Latyfa" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-2 -right-2 bg-[#c5a059] text-black px-4 py-2 rounded-full font-black text-xs shadow-lg">
+                        👨‍💻 DEV
+                    </div>
+                </div>
+                
+                <!-- Infos et message -->
+                <div class="flex-1 text-center md:text-left">
+                    <h3 class="text-2xl font-black uppercase tracking-wider mb-2">
+                        <span class="text-[#c5a059]">VOUS VOULEZ</span> VOTRE SITE ?
+                    </h3>
+                    <p class="text-3xl font-black italic text-white mb-4">
+                        "Je crée votre boutique en ligne"
+                    </p>
+                    <p class="text-gray-300 text-sm mb-6 max-w-lg">
+                        Vous avez aimé ce site ? Je peux créer le vôtre ! 
+                        Site e-commerce, boutique en ligne, landing page... 
+                        Design moderne, responsive, et adapté à vos besoins.
+                    </p>
+                    
+                    <!-- Statistiques -->
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="bg-white/10 rounded-xl p-3">
+                            <div class="text-[#c5a059] font-black text-xl">50+</div>
+                            <div class="text-[10px] uppercase">Sites créés</div>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-3">
+                            <div class="text-[#c5a059] font-black text-xl">24/7</div>
+                            <div class="text-[10px] uppercase">Support</div>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-3">
+                            <div class="text-[#c5a059] font-black text-xl">100%</div>
+                            <div class="text-[10px] uppercase">Satisfait</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Boutons de contact -->
+                    <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+                        <a href="https://wa.me/2250709002881?text=Bonjour%2C%20je%20souhaite%20créer%20un%20site%20internet%20comme%20Latyfa%20Shop" 
+                           target="_blank" 
+                           class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            WhatsApp
+                        </a>
+                        <a href="tel:+2250709002881" 
+                           class="bg-[#c5a059] hover:bg-[#b38d4a] text-black px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105">
+                            <i class="fa-solid fa-phone text-lg"></i>
+                            Appeler
+                        </a>
+                        <button onclick="contactDeveloppeur()" 
+                                class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105 border border-white/20">
+                            <i class="fa-regular fa-envelope text-lg"></i>
+                            Email
+                        </button>
+                    </div>
+                    
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-2 mt-6 justify-center md:justify-start">
+                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#HTML/CSS</span>
+                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#JavaScript</span>
+                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#E-commerce</span>
+                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#Responsive</span>
+                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#SEO</span>
+                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#PWA</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Badge de garantie -->
+            <div class="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-shield-halved text-[#c5a059] text-2xl"></i>
+                    <span class="text-[10px] uppercase font-bold">Paiement sécurisé • Livraison code • Garantie satisfait</span>
+                </div>
+                <div class="flex gap-2">
+                    <img src="https://goamobile.com/logosent/wave@221@-P-2021-06-30_00-18-27wave_logo_2.png" class="h-6 opacity-50 hover:opacity-100 transition">
+                    <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/orange-money-logo.png" class="h-6 opacity-50 hover:opacity-100 transition">
+                    <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/mtn-mobile-money-logo.jpg" class="h-6 opacity-50 hover:opacity-100 transition">
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
 <!-- FOOTER -->
 <footer class="bg-white border-t pt-12 pb-6">
     <div class="container mx-auto px-4">
@@ -2715,6 +2847,56 @@ document.addEventListener('DOMContentLoaded', function() {
 </footer>
 
 <script>
+    // ==================== FONCTION CONTACT DÉVELOPPEUR ====================
+function contactDeveloppeur(method) {
+    if (method === 'whatsapp') {
+        const projet = prompt("📝 Quel type de site voulez-vous créer ?\n(E-commerce, Vitrine, Blog, Application...)");
+        if (!projet) return;
+        
+        const budget = prompt("💰 Quel est votre budget approximatif ?");
+        if (!budget) return;
+        
+        const message = `👋 Bonjour Kader ! Je souhaite créer un site internet.
+        
+📋 Projet : ${projet}
+💰 Budget : ${budget}
+📅 Prise de contact : ${new Date().toLocaleDateString()}
+
+Merci de me contacter pour discuter de mon projet !`;
+        
+        window.open(`https://wa.me/2250506113292?text=${encodeURIComponent(message)}`);
+        showToast("✅ Message préparé ! Vous allez être redirigé vers WhatsApp");
+    }
+    
+    else if (method === 'facebook') {
+        window.open('https://www.facebook.com/kader.traore.1848');
+        showToast("👋 Vous allez être redirigé vers Facebook");
+    }
+    
+    else if (method === 'email') {
+        const sujet = prompt("📧 Sujet de votre message :", "Création de site internet");
+        if (!sujet) return;
+        
+        const message = prompt("📝 Votre message :", "Bonjour Kader, je souhaite discuter de la création d'un site internet.");
+        if (!message) return;
+        
+        // Ouvrir le client mail par défaut
+        window.location.href = `mailto:kadertraore224@gmail.com?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(message)}`;
+        showToast("📧 Ouverture de votre application mail...");
+    }
+}
+
+// Fonction pour copier l'email
+function copierEmail() {
+    navigator.clipboard.writeText('kadertraore224@gmail.com');
+    showToast("📧 Email copié !");
+}
+
+// Fonction pour copier le numéro
+function copierNumero() {
+    navigator.clipboard.writeText('0506113292');
+    showToast("📋 Numéro copié !");
+    }
     // ==================== INITIALISATION EMAILJS ====================
     (function() {
         try {
