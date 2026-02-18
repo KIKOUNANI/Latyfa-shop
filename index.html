@@ -1437,18 +1437,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- BANNIERE PROMO -->
 <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">
-    ✨ Promo Exclusive -20% dès 20.000 F d'achat du 14 au 28 fév 2026: <span id="countdown" class="text-white ml-1">--:--:--</span> ✨
+    <span data-i18n="promo_text">✨ Promo Exclusive -20% dès 20.000 F d'achat du 14 au 28 fév 2026:</span> <span id="countdown" class="text-white ml-1">--:--:--</span>
 </div>
 
 <!-- FLASH SALE -->
 <div class="flash-sale" id="flashSale">
-    ⚡ FLASH SALE : -30% SUR LES BIJOUX - FIN DANS <span id="flashCountdown">02:00:00</span> ⚡
+    <span data-i18n="flash_sale">⚡ FLASH SALE : -30% SUR LES BIJOUX - FIN DANS</span> <span id="flashCountdown">02:00:00</span>
 </div>
 
 <!-- BANDE DEFILANTE -->
 <div class="bg-white border-b border-gray-100 py-1 overflow-hidden whitespace-nowrap">
-    <div class="inline-block animate-marquee text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400">
-        ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE — 🚚 EXPÉDITION SOUS 48H DANS TOUTE LA CÔTE D'IVOIRE — ✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE —
+    <div class="inline-block animate-marquee text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400" data-i18n="marquee">
+        ✨ BON MOIS DE RAMADAN À TOUS LES MUSULMANS ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE — 🚚 EXPÉDITION SOUS 48H DANS TOUTE LA CÔTE D'IVOIRE —
     </div>
 </div>
 
@@ -1500,7 +1500,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             </div>
-            
+            <!-- SÉLECTEUR DE LANGUE -->
+<div class="language-selector">
+    <div class="language-btn" id="currentLanguageBtn">
+        <i class="fa-solid fa-globe"></i>
+        <span id="currentLanguageText">FR</span>
+        <i class="fa-solid fa-chevron-down text-[8px]"></i>
+    </div>
+    <div class="language-dropdown">
+        <div class="language-option active" onclick="changeLanguage('fr')" data-lang="fr">
+            <img src="https://flagcdn.com/w20/fr.png" alt="Français">
+            <span>Français</span>
+        </div>
+        <div class="language-option" onclick="changeLanguage('en')" data-lang="en">
+            <img src="https://flagcdn.com/w20/gb.png" alt="English">
+            <span>English</span>
+        </div>
+        <div class="language-option" onclick="changeLanguage('es')" data-lang="es">
+            <img src="https://flagcdn.com/w20/es.png" alt="Español">
+            <span>Español</span>
+        </div>
+    </div>
+</div>   
             <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-white transition">
                 Se connecter
             </button>
@@ -1515,15 +1536,15 @@ document.addEventListener('DOMContentLoaded', function() {
             </button>
             
             <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
-                <i class="fa-solid fa-truck text-gray-600"></i>
-                <p class="text-[9px] font-bold uppercase">Suivi</p>
-            </div>
-            
-            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
-                <i class="fa-solid fa-cart-shopping text-gray-600"></i>
-                <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold flex items-center justify-center min-w-[18px] h-[18px]">0</span>
-                <p class="text-[9px] font-bold uppercase">Panier</p>
-            </div>
+    <i class="fa-solid fa-truck text-gray-600"></i>
+    <p class="text-[9px] font-bold uppercase" data-i18n="track">Suivi</p>
+</div>
+
+<div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
+    <i class="fa-solid fa-cart-shopping text-gray-600"></i>
+    <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold flex items-center justify-center min-w-[18px] h-[18px]">0</span>
+    <p class="text-[9px] font-bold uppercase" data-i18n="cart">Panier</p>
+</div>
         </div>
     </div>
 </header>
@@ -1876,37 +1897,38 @@ document.addEventListener('DOMContentLoaded', function() {
 <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
     <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover opacity-70">
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-        <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none">La Boutique du 225</h1>
-        <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]">Bijoux, vêtements, parfum...</p>
-        <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg">Découvrir la Collection</a>
+        <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none" data-i18n="hero_title">La Boutique du 225</h1>
+        <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]" data-i18n="hero_subtitle">Bijoux, vêtements, parfum...</p>
+        <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg" data-i18n="hero_btn">Découvrir la Collection</a>
     </div>
 </section>
 
 <!-- SECTION PRINCIPALE PRODUITS -->
 <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
     <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border border-gray-100">
-        <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center">
-            Nos Univers
-        </h3>
+        <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center" data-i18n="our_universes">
+    Nos Univers
+</h3>
         <div class="flex flex-col gap-5" id="categories-container"></div>
         
         <div class="mt-8 loyalty-card">
-            <div class="relative z-10">
-                <p class="text-[8px] font-black uppercase opacity-80">Vos points</p>
-                <div class="loyalty-points" id="loyalty-points">0</div>
-                <div class="w-full bg-white/30 h-2 rounded-full mt-2 overflow-hidden">
-                    <div class="bg-white h-full" id="loyalty-progress" style="width: 0%"></div>
-                </div>
-                <p class="text-[8px] font-black uppercase mt-2 opacity-80">Prochain palier: 100 pts = -10%</p>
-            </div>
+    <div class="relative z-10">
+        <p class="text-[8px] font-black uppercase opacity-80" data-i18n="your_points">Vos points</p>
+        <div class="loyalty-points" id="loyalty-points">0</div>
+        <div class="w-full bg-white/30 h-2 rounded-full mt-2 overflow-hidden">
+            <div class="bg-white h-full" id="loyalty-progress" style="width: 0%"></div>
         </div>
+        <p class="text-[8px] font-black uppercase mt-2 opacity-80" data-i18n="next_level">Prochain palier: 100 pts = -10%</p>
+    </div>
+</div>
     </aside>
     
     <main class="flex-1">
         <div class="mb-8">
             <h3 class="text-[10px] font-black uppercase mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-fire text-[#ff6600]"></i> PRODUITS POPULAIRES
-            </h3>
+    <i class="fa-solid fa-fire text-[#ff6600]"></i>
+    <span data-i18n="popular_products">PRODUITS POPULAIRES</span>
+</h3>
             <div class="relative overflow-hidden">
                 <div class="flex gap-4 animate-slide" id="popular-products">
                     <!-- Les produits populaires seront injectés ici -->
@@ -2755,50 +2777,200 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <!-- Boutons de contact -->
                     <div class="flex flex-wrap gap-3 justify-center md:justify-start">
-                        <a href="https://wa.me/2250709002881?text=Bonjour%2C%20je%20souhaite%20créer%20un%20site%20internet%20comme%20Latyfa%20Shop" 
+                        <a href="https://wa.me/2250506113292?text=Bonjour%2C%20je%20souhaite%20créer%20un%20site%20internet%20comme%20Latyfa%20Shop" 
                            target="_blank" 
                            class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105">
                             <i class="fa-brands fa-whatsapp text-lg"></i>
                             WhatsApp
                         </a>
-                        <a href="tel:+2250709002881" 
+                        <a href="tel:+2250506113292" 
                            class="bg-[#c5a059] hover:bg-[#b38d4a] text-black px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105">
                             <i class="fa-solid fa-phone text-lg"></i>
                             Appeler
-                        </a>
-                        <button onclick="contactDeveloppeur()" 
-                                class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105 border border-white/20">
-                            <i class="fa-regular fa-envelope text-lg"></i>
-                            Email
-                        </button>
+<!-- ==================== SECTION DÉVELOPPEUR ==================== -->
+<section class="py-16 bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-5xl mx-auto">
+            <!-- Badge "Développeur" -->
+            <div class="text-center mb-8">
+                <span class="bg-[#c5a059] text-black px-6 py-2 rounded-full text-xs font-black uppercase tracking-wider inline-flex items-center gap-2 animate-pulse" data-i18n="dev_title">
+                    <i class="fa-solid fa-code"></i>
+                    VOUS VOULEZ CRÉER VOTRE SITE INTERNET ?
+                </span>
+            </div>
+
+            <!-- Carte principale -->
+            <div class="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-[#c5a059]/30 shadow-2xl relative overflow-hidden">
+                <!-- Éléments décoratifs -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-[#c5a059]/10 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-[#c5a059]/10 rounded-full blur-3xl"></div>
+                
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                    <!-- Photo du développeur -->
+                    <div class="relative group">
+                        <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-[#c5a059] shadow-xl transform transition-transform group-hover:scale-105 group-hover:rotate-3">
+                            <img src="https://i.postimg.cc/zBK26VKr/1770095562940.png" 
+                                 alt="Traore Aboudramane Kader" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 bg-[#c5a059] text-black px-4 py-2 rounded-full font-black text-xs shadow-lg flex items-center gap-1">
+                            <i class="fa-solid fa-crown"></i>
+                            DEV
+                        </div>
+                        <div class="absolute -top-2 -left-2 bg-green-500 text-white px-3 py-1 rounded-full text-[8px] font-black animate-pulse">
+                            DISPO
+                        </div>
                     </div>
                     
-                    <!-- Tags -->
-                    <div class="flex flex-wrap gap-2 mt-6 justify-center md:justify-start">
-                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#HTML/CSS</span>
-                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#JavaScript</span>
-                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#E-commerce</span>
-                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#Responsive</span>
-                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#SEO</span>
-                        <span class="text-[8px] bg-white/10 px-3 py-1 rounded-full">#PWA</span>
+                    <!-- Infos et message -->
+                    <div class="flex-1 text-center md:text-left">
+                        <!-- Nom -->
+                        <h3 class="text-3xl font-black uppercase tracking-wider mb-2" data-i18n="dev_name">
+                            <span class="text-[#c5a059]">TRAORE ABOUBAMANE</span> KADER
+                        </h3>
+                        
+                        <!-- Titre -->
+                        <p class="text-xl font-bold text-white/80 mb-4 flex items-center justify-center md:justify-start gap-2" data-i18n="dev_role">
+                            <i class="fa-solid fa-laptop-code text-[#c5a059]"></i>
+                            Développeur Web & Mobile
+                        </p>
+                        
+                        <!-- Description -->
+                        <p class="text-gray-300 text-sm mb-6 max-w-lg" data-i18n="dev_desc">
+                            Vous avez aimé ce site ? Je peux créer le vôtre ! 
+                            Site e-commerce, boutique en ligne, landing page, application mobile...
+                            Design moderne, responsive, et adapté à vos besoins.
+                        </p>
+                        
+                        <!-- Statistiques -->
+                        <div class="grid grid-cols-3 gap-3 mb-6">
+                            <div class="bg-white/10 rounded-xl p-3 hover:bg-[#c5a059]/20 transition-colors">
+                                <div class="text-[#c5a059] font-black text-xl">5+</div>
+                                <div class="text-[8px] uppercase font-bold" data-i18n="dev_stats_sites">Sites créés</div>
+                            </div>
+                            <div class="bg-white/10 rounded-xl p-3 hover:bg-[#c5a059]/20 transition-colors">
+                                <div class="text-[#c5a059] font-black text-xl">24/7</div>
+                                <div class="text-[8px] uppercase font-bold" data-i18n="dev_stats_support">Support</div>
+                            </div>
+                            <div class="bg-white/10 rounded-xl p-3 hover:bg-[#c5a059]/20 transition-colors">
+                                <div class="text-[#c5a059] font-black text-xl">100%</div>
+                                <div class="text-[8px] uppercase font-bold" data-i18n="dev_stats_satisfait">Satisfait</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Contacts -->
+                        <div class="space-y-3 mb-6">
+                            <!-- WhatsApp -->
+                            <a href="https://wa.me/2250506113292?text=Bonjour%20Kader%2C%20je%20souhaite%20créer%20un%20site%20internet%20comme%20Latyfa%20Shop" 
+                               target="_blank" 
+                               class="flex items-center gap-3 p-3 bg-green-500/10 hover:bg-green-500/20 rounded-xl transition-all group">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white text-xl group-hover:scale-110 transition">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </div>
+                                <div class="flex-1 text-left">
+                                    <div class="text-[10px] uppercase text-gray-400" data-i18n="dev_contact_whatsapp">WhatsApp</div>
+                                    <div class="font-bold text-sm">05 06 11 32 92</div>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-green-500 group-hover:translate-x-1 transition"></i>
+                            </a>
+                            
+                            <!-- Facebook -->
+                            <a href="https://www.facebook.com/kader.traore.1848" 
+                               target="_blank"
+                               class="flex items-center gap-3 p-3 bg-blue-500/10 hover:bg-blue-500/20 rounded-xl transition-all group">
+                                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white text-xl group-hover:scale-110 transition">
+                                    <i class="fa-brands fa-facebook-f"></i>
+                                </div>
+                                <div class="flex-1 text-left">
+                                    <div class="text-[10px] uppercase text-gray-400" data-i18n="dev_contact_facebook">Facebook</div>
+                                    <div class="font-bold text-sm">@kader.traore.1848</div>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-blue-600 group-hover:translate-x-1 transition"></i>
+                            </a>
+                            
+                            <!-- Email -->
+                            <a href="mailto:kadertraore224@gmail.com?subject=Création%20de%20site%20internet&body=Bonjour%20Kader%2C%20je%20souhaite%20discuter%20de%20la%20création%20d%27un%20site%20internet" 
+                               class="flex items-center gap-3 p-3 bg-red-500/10 hover:bg-red-500/20 rounded-xl transition-all group">
+                                <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white text-xl group-hover:scale-110 transition">
+                                    <i class="fa-regular fa-envelope"></i>
+                                </div>
+                                <div class="flex-1 text-left">
+                                    <div class="text-[10px] uppercase text-gray-400" data-i18n="dev_contact_email">Email</div>
+                                    <div class="font-bold text-sm">kadertraore224@gmail.com</div>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-red-500 group-hover:translate-x-1 transition"></i>
+                            </a>
+                        </div>
+                        
+                        <!-- Boutons d'action rapide -->
+                        <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+                            <button onclick="contactDeveloppeur('whatsapp')" 
+                                    class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105 shadow-lg">
+                                <i class="fa-brands fa-whatsapp text-lg"></i>
+                                <span data-i18n="dev_contact_whatsapp">WhatsApp</span>
+                            </button>
+                            <button onclick="contactDeveloppeur('facebook')" 
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105">
+                                <i class="fa-brands fa-facebook-f"></i>
+                                <span data-i18n="dev_contact_facebook">Facebook</span>
+                            </button>
+                            <button onclick="contactDeveloppeur('email')" 
+                                    class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105">
+                                <i class="fa-regular fa-envelope"></i>
+                                <span data-i18n="dev_contact_email">Email</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tags de compétences -->
+                <div class="mt-8 pt-6 border-t border-white/10">
+                    <div class="flex flex-wrap gap-2 justify-center">
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#HTML/CSS</span>
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#JavaScript</span>
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#React</span>
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#Node.js</span>
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#PHP</span>
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#MySQL</span>
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#E-commerce</span>
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#Responsive</span>
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#SEO</span>
+                        <span class="text-[8px] bg-[#c5a059]/20 text-[#c5a059] px-3 py-1 rounded-full border border-[#c5a059]/30 hover:bg-[#c5a059] hover:text-black transition-all cursor-default">#PWA</span>
+                    </div>
+                </div>
+                
+                <!-- Badges de garantie -->
+                <div class="mt-6 flex flex-wrap items-center justify-center gap-6 text-[10px] text-gray-400">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-[#c5a059]"></i>
+                        <span data-i18n="dev_guarantee_payment">Paiement sécurisé</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-[#c5a059]"></i>
+                        <span data-i18n="dev_guarantee_delivery">Livraison du code</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-[#c5a059]"></i>
+                        <span data-i18n="dev_guarantee_satisfaction">Garantie satisfait</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-[#c5a059]"></i>
+                        <span data-i18n="dev_guarantee_support">Support 24/7</span>
                     </div>
                 </div>
             </div>
-            <!-- Badge de garantie -->
-            <div class="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-shield-halved text-[#c5a059] text-2xl"></i>
-                    <span class="text-[10px] uppercase font-bold">Paiement sécurisé • Livraison code • Garantie satisfait</span>
-                </div>
-                <div class="flex gap-2">
-                    <img src="https://goamobile.com/logosent/wave@221@-P-2021-06-30_00-18-27wave_logo_2.png" class="h-6 opacity-50 hover:opacity-100 transition">
-                    <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/orange-money-logo.png" class="h-6 opacity-50 hover:opacity-100 transition">
-                    <img src="https://www.pigroup360.com/wp-content/uploads/2020/09/mtn-mobile-money-logo.jpg" class="h-6 opacity-50 hover:opacity-100 transition">
-                </div>
+            
+            <!-- Petite bannière flottante -->
+            <div class="mt-6 text-center">
+                <p class="text-[10px] text-gray-500">
+                    <i class="fa-solid fa-star text-[#c5a059]"></i>
+                    <span data-i18n="dev_footer">Déjà plus de 5 sites créés pour des clients satisfaits</span>
+                    <i class="fa-solid fa-star text-[#c5a059]"></i>
+                </p>
             </div>
         </div>
     </div>
-    </section>
+</section>
 <!-- FOOTER -->
 <footer class="bg-white border-t pt-12 pb-6">
     <div class="container mx-auto px-4">
@@ -2808,22 +2980,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-8 w-8 rounded-full">
                     <span class="text-xl font-black italic text-[#c5a059]">LATYFA</span>
                 </div>
-                <p class="text-gray-500 text-[10px] uppercase font-bold">Votre satisfaction, notre priorité.</p>
+                <p class="text-gray-500 text-[10px] uppercase font-bold" data-i18n="footer_satisfaction">Votre satisfaction, notre priorité.</p>
             </div>
             <div class="text-center md:text-left">
-                <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Aide</h4>
+                <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest" data-i18n="footer_help">Aide</h4>
                 <ul class="text-gray-500 text-[10px] space-y-2 uppercase font-bold">
-                    <li class="cursor-pointer hover:text-[#ff6600] transition-colors" onclick="ouvrirCGV()">Conditions de Vente</li>
-                    <li class="cursor-pointer hover:text-[#ff6600] transition-colors" onclick="suivreColis()">Suivi Colis</li>
-                    <li class="cursor-pointer hover:text-[#ff6600] transition-colors" onclick="ouvrirAdvent()">📅 Calendrier Avent</li>
+                    <li class="cursor-pointer hover:text-[#ff6600] transition-colors" onclick="ouvrirCGV()" data-i18n="footer_terms">Conditions de Vente</li>
+                    <li class="cursor-pointer hover:text-[#ff6600] transition-colors" onclick="suivreColis()" data-i18n="footer_track">Suivi Colis</li>
+                    <li class="cursor-pointer hover:text-[#ff6600] transition-colors" onclick="ouvrirAdvent()" data-i18n="footer_advent">📅 Calendrier Avent</li>
                 </ul>
             </div>
             <div class="text-center md:text-left">
-                <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Boutique</h4>
-                <p class="text-gray-500 text-[10px] uppercase font-bold">📍 Abidjan, Côte d'Ivoire</p>
+                <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest" data-i18n="footer_shop">Boutique</h4>
+                <p class="text-gray-500 text-[10px] uppercase font-bold" data-i18n="footer_location">📍 Abidjan, Côte d'Ivoire</p>
             </div>
             <div class="text-center md:text-left">
-                <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest">Suivez-nous</h4>
+                <h4 class="text-[11px] font-black uppercase text-gray-800 mb-4 tracking-widest" data-i18n="footer_follow">Suivez-nous</h4>
                 <div class="flex justify-center md:justify-start gap-3">
                     <a href="https://wa.me/2250709002881" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#25D366] hover:text-white transition"><i class="fa-brands fa-whatsapp"></i></a>
                     <a href="#" target="_blank" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-[#1877F2] hover:text-white transition"><i class="fa-brands fa-facebook-f"></i></a>
@@ -2837,16 +3009,112 @@ document.addEventListener('DOMContentLoaded', function() {
                 <i class="fa-solid fa-eye text-[10px]"></i>
                 <span id="visitor-count" class="text-[12px] font-black tracking-widest">0000</span>
             </div>
-            <p class="text-[8px] text-gray-400 uppercase font-bold tracking-[0.2em]">Visiteurs ont exploré l'univers Latyfa shop</p>
+            <p class="text-[8px] text-gray-400 uppercase font-bold tracking-[0.2em]" data-i18n="visitors">Visiteurs ont exploré l'univers Latyfa shop</p>
         </div>
         
         <div class="border-t pt-6 text-center text-gray-400 text-[9px] font-bold uppercase tracking-widest">
-            © 2026 LATYFA BUSINESS | <button onclick="ouvrirCGV()" class="underline text-[#ff6600] hover:text-[#c5a059] transition-colors">Juridique</button>
+            <span data-i18n="copyright">© 2026 LATYFA BUSINESS |</span> <button onclick="ouvrirCGV()" class="underline text-[#ff6600] hover:text-[#c5a059] transition-colors" data-i18n="legal">Juridique</button>
         </div>
     </div>
 </footer>
 
 <script>
+    // ==================== FONCTIONS DE TRADUCTION ====================
+
+// Fonction pour changer la langue
+function changeLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('latyfa_language', lang);
+    
+    // Mettre à jour le bouton
+    document.getElementById('currentLanguageText').innerText = lang.toUpperCase();
+    
+    // Mettre à jour la classe active dans le dropdown
+    document.querySelectorAll('.language-option').forEach(opt => {
+        opt.classList.remove('active');
+        if (opt.dataset.lang === lang) {
+            opt.classList.add('active');
+        }
+    });
+    
+    // Traduire tous les éléments
+    translatePage();
+    
+    // Re-rendre les produits pour mettre à jour les textes
+    render();
+    
+    showToast(`🌍 Langue changée en ${lang === 'fr' ? 'Français' : lang === 'en' ? 'Anglais' : 'Espagnol'}`);
+}
+
+// Fonction pour traduire la page
+function translatePage() {
+    const t = translations[currentLanguage];
+    
+    // Traduire les éléments avec des attributs data-i18n
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) {
+            el.innerText = t[key];
+        }
+    });
+    
+    // Traduire les placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key]) {
+            el.placeholder = t[key];
+        }
+    });
+    
+    // Traduire les catégories dans le sélecteur
+    document.querySelectorAll('.category-chip span').forEach(el => {
+        const catId = el.closest('.category-chip')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        if (catId && catId !== 'tous' && t.categories[catId]) {
+            el.innerText = t.categories[catId];
+        } else if (catId === 'tous') {
+            el.innerText = t.all;
+        }
+    });
+    
+    // Traduire le titre "Nos Univers"
+    const universTitle = document.querySelector('h3.logo-font');
+    if (universTitle) {
+        universTitle.innerText = t.our_universes;
+    }
+    
+    // Traduire la section développeur
+    const devSection = document.querySelector('.dev-title');
+    if (devSection) {
+        // Mettre à jour les textes du développeur
+        document.querySelectorAll('[data-i18n-dev]').forEach(el => {
+            const key = el.getAttribute('data-i18n-dev');
+            if (t[key]) {
+                el.innerText = t[key];
+            }
+        });
+    }
+}
+
+// Fonction pour initialiser la langue
+function initLanguage() {
+    const savedLang = localStorage.getItem('latyfa_language');
+    if (savedLang && ['fr', 'en', 'es'].includes(savedLang)) {
+        currentLanguage = savedLang;
+    } else {
+        currentLanguage = 'fr';
+    }
+    
+    document.getElementById('currentLanguageText').innerText = currentLanguage.toUpperCase();
+    
+    document.querySelectorAll('.language-option').forEach(opt => {
+        opt.classList.remove('active');
+        if (opt.dataset.lang === currentLanguage) {
+            opt.classList.add('active');
+        }
+    });
+    
+    translatePage();
+    }
     // ==================== FONCTION CONTACT DÉVELOPPEUR ====================
 function contactDeveloppeur(method) {
     if (method === 'whatsapp') {
@@ -2922,7 +3190,245 @@ function copierNumero() {
     let clients = [];
     let messages = [];
     let utilisateurConnecte = null;
+    // ==================== SYSTÈME DE TRADUCTION ====================
+let currentLanguage = 'fr'; // Langue par défaut
+
+const translations = {
+    fr: { 'hero_tilte':'La Boutique du 225',
+         'hero_subtitle':'Bijoux, vêtements, Parfum...',
+    'hero_btn': 'Découvrir la collection',
+        
+        // Header
+        'search_placeholder': 'Rechercher un article...',
+        'login': 'Se connecter',
+        'cart': 'Panier',
+        'track': 'Suivi',
+        
+        // Bannières
+        'promo_text': '✨ Promo Exclusive -20% dès 20.000 F d\'achat du 14 au 28 fév 2026:',
+        'flash_sale': '⚡ FLASH SALE : -30% SUR LES BIJOUX - FIN DANS',
+        'marquee': '✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE — 🚚 EXPÉDITION SOUS 48H DANS TOUTE LA CÔTE D\'IVOIRE —',
+        
+        // Sections
+        'popular_products': 'PRODUITS POPULAIRES',
+        'our_universes': 'Nos Univers',
+        'all': 'Tout voir',
+        'categories': {
+            'bijoux': 'Bijoux',
+            'vetements': 'Vêtements',
+            'chaussures': 'Chaussures',
+            'sac': 'Sacs à main',
+            'parfum': 'Parfums',
+            'hanche': 'Perles de hanche',
+            'autres': 'Autres'
+        },
+        
+        // Produits
+        'view_product': 'Voir l\'article',
+        'sold_out': 'INDISPONIBLE',
+        'new': 'NOUVEAU',
+        'luxe': 'LUXE',
+        'stock_alert': '🔥 PLUS QUE QUELQUES-UNS',
+        
+        // Boutons
+        'add_to_cart': 'Ajouter au panier',
+        'buy_now': 'Acheter maintenant',
+        'view_details': 'Voir détails',
+        
+        // Footer
+        'footer_help': 'Aide',
+        'footer_terms': 'Conditions de Vente',
+        'footer_track': 'Suivi Colis',
+        'footer_advent': '📅 Calendrier Avent',
+        'footer_shop': 'Boutique',
+        'footer_follow': 'Suivez-nous',
+        'visitors': 'Visiteurs ont exploré l\'univers Latyfa shop',
+        'copyright': '© 2026 LATYFA BUSINESS | Juridique',
+        
+        // Points fidélité
+        'your_points': 'Vos points',
+        'next_level': 'Prochain palier: 100 pts = -10%',
+        
+        // Développeur
+        'dev_title': 'VOUS VOULEZ CRÉER VOTRE SITE INTERNET ?',
+        'dev_name': 'TRAORE ABOUBAMANE KADER',
+        'dev_role': 'Développeur Web & Mobile',
+        'dev_desc': 'Vous avez aimé ce site ? Je peux créer le vôtre ! Site e-commerce, boutique en ligne, landing page, application mobile... Design moderne, responsive, et adapté à vos besoins.',
+        'dev_stats': ['Sites créés', 'Support', 'Satisfait'],
+        'dev_contact_whatsapp': 'WhatsApp',
+        'dev_contact_facebook': 'Facebook',
+        'dev_contact_email': 'Email',
+        'dev_guarantee': ['Paiement sécurisé', 'Livraison du code', 'Garantie satisfait', 'Support 24/7']
+         'footer_satisfaction': 'Votre satisfaction, notre priorité.',
+'footer_location': '📍 Abidjan, Côte d\'Ivoire',
+'footer_follow': 'Suivez-nous',
+'legal': 'Juridique',
+'dev_footer': 'Déjà plus de 5 sites créés pour des clients satisfaits',
+'dev_stats_sites': 'Sites créés',
+'dev_stats_support': 'Support',
+'dev_stats_satisfait': 'Satisfait',
+'dev_guarantee_payment': 'Paiement sécurisé',
+'dev_guarantee_delivery': 'Livraison du code',
+'dev_guarantee_satisfaction': 'Garantie satisfait',
+'dev_guarantee_support': 'Support 24/7',
+    },
     
+    en: { 'hero_title': 'The Shop of 225',
+'hero_subtitle': 'Jewelry, clothing, perfume...',
+'hero_btn': 'Discover the Collection',
+        // Header
+        'search_placeholder': 'Search for an item...',
+        'login': 'Login',
+        'cart': 'Cart',
+        'track': 'Track',
+        
+        // Bannières
+        'promo_text': '✨ Exclusive Promo -20% from 20.000 F purchase Feb 14-28 2026:',
+        'flash_sale': '⚡ FLASH SALE : -30% ON JEWELRY - ENDS IN',
+        'marquee': '✨ FREE DELIVERY IN COCODY THIS WEEKEND! — 💎 NEW JEWELRY COLLECTION AVAILABLE — 🚚 SHIPPING WITHIN 48H ACROSS IVORY COAST —',
+        
+        // Sections
+        'popular_products': 'POPULAR PRODUCTS',
+        'our_universes': 'Our Universes',
+        'all': 'View all',
+        'categories': {
+            'bijoux': 'Jewelry',
+            'vetements': 'Clothing',
+            'chaussures': 'Shoes',
+            'sac': 'Handbags',
+            'parfum': 'Perfumes',
+            'hanche': 'Hip beads',
+            'autres': 'Others'
+        },
+        
+        // Produits
+        'view_product': 'View product',
+        'sold_out': 'SOLD OUT',
+        'new': 'NEW',
+        'luxe': 'LUXURY',
+        'stock_alert': '🔥 ONLY FEW LEFT',
+        
+        // Boutons
+        'add_to_cart': 'Add to cart',
+        'buy_now': 'Buy now',
+        'view_details': 'View details',
+        
+        // Footer
+        'footer_help': 'Help',
+        'footer_terms': 'Terms of Sale',
+        'footer_track': 'Track Order',
+        'footer_advent': '📅 Advent Calendar',
+        'footer_shop': 'Shop',
+        'footer_follow': 'Follow us',
+        'visitors': 'Visitors explored the Latyfa shop universe',
+        'copyright': '© 2026 LATYFA BUSINESS | Legal',
+        
+        // Points fidélité
+        'your_points': 'Your points',
+        'next_level': 'Next level: 100 pts = -10%',
+        
+        // Développeur
+        'dev_title': 'DO YOU WANT TO CREATE YOUR WEBSITE?',
+        'dev_name': 'TRAORE ABOUBAMANE KADER',
+        'dev_role': 'Web & Mobile Developer',
+        'dev_desc': 'Did you like this site? I can create yours! E-commerce site, online store, landing page, mobile app... Modern design, responsive, and tailored to your needs.',
+        'dev_stats': ['Sites created', 'Support', 'Satisfied'],
+        'dev_contact_whatsapp': 'WhatsApp',
+        'dev_contact_facebook': 'Facebook',
+        'dev_contact_email': 'Email',
+        'dev_guarantee': ['Secure payment', 'Code delivery', 'Satisfaction guarantee', '24/7 Support']
+         'footer_satisfaction': 'Your satisfaction, our priority.',
+'footer_location': '📍 Abidjan, Ivory Coast',
+'footer_follow': 'Follow us',
+'legal': 'Legal',
+'dev_footer': 'Already more than 5 sites created for satisfied customers',
+'dev_stats_sites': 'Sites created',
+'dev_stats_support': 'Support',
+'dev_stats_satisfait': 'Satisfied',
+'dev_guarantee_payment': 'Secure payment',
+'dev_guarantee_delivery': 'Code delivery',
+'dev_guarantee_satisfaction': 'Satisfaction guarantee',
+'dev_guarantee_support': '24/7 Support',
+    },
+    
+    es: { 'hero_title': 'La Tienda del 225',
+'hero_subtitle': 'Joyas, ropa, perfume...',
+'hero_btn': 'Descubrir la Colección',
+        // Header
+        'search_placeholder': 'Buscar artículo...',
+        'login': 'Iniciar sesión',
+        'cart': 'Carrito',
+        'track': 'Seguimiento',
+        
+        // Bannières
+        'promo_text': '✨ Promo Exclusiva -20% desde 20.000 F de compra del 14 al 28 feb 2026:',
+        'flash_sale': '⚡ VENTA FLASH : -30% EN JOYAS - TERMINA EN',
+        'marquee': '✨ ¡ENVÍO GRATIS EN COCODY ESTE FIN DE SEMANA! — 💎 NUEVA COLECCIÓN DE JOYAS DISPONIBLE — 🚚 ENVÍO EN 48H EN TODA COSTA DE MARFIL —',
+        
+        // Sections
+        'popular_products': 'PRODUCTOS POPULARES',
+        'our_universes': 'Nuestros Universos',
+        'all': 'Ver todo',
+        'categories': {
+            'bijoux': 'Joyas',
+            'vetements': 'Ropa',
+            'chaussures': 'Zapatos',
+            'sac': 'Bolsos',
+            'parfum': 'Perfumes',
+            'hanche': 'Abalorios de cadera',
+            'autres': 'Otros'
+        },
+        
+        // Produits
+        'view_product': 'Ver producto',
+        'sold_out': 'AGOTADO',
+        'new': 'NUEVO',
+        'luxe': 'LUJO',
+        'stock_alert': '🔥 SOLO QUEDAN POCOS',
+        
+        // Boutons
+        'add_to_cart': 'Añadir al carrito',
+        'buy_now': 'Comprar ahora',
+        'view_details': 'Ver detalles',
+        
+        // Footer
+        'footer_help': 'Ayuda',
+        'footer_terms': 'Condiciones de Venta',
+        'footer_track': 'Seguimiento de Pedido',
+        'footer_advent': '📅 Calendario de Adviento',
+        'footer_shop': 'Tienda',
+        'footer_follow': 'Síguenos',
+        'visitors': 'Visitantes exploraron el universo Latyfa shop',
+        'copyright': '© 2026 LATYFA BUSINESS | Legal',
+        
+        // Points fidélité
+        'your_points': 'Tus puntos',
+        'next_level': 'Siguiente nivel: 100 pts = -10%',
+        
+        // Développeur
+        'dev_title': '¿QUIERES CREAR TU SITIO WEB?',
+        'dev_name': 'TRAORE ABOUBAMANE KADER',
+        'dev_role': 'Desarrollador Web & Móvil',
+        'dev_desc': '¿Te gustó este sitio? ¡Puedo crear el tuyo! Sitio de e-commerce, tienda online, landing page, aplicación móvil... Diseño moderno, responsive y adaptado a tus necesidades.',
+        'dev_stats': ['Sitios creados', 'Soporte', 'Satisfecho'],
+        'dev_contact_whatsapp': 'WhatsApp',
+        'dev_contact_facebook': 'Facebook',
+        'dev_contact_email': 'Email',
+        'dev_guarantee': ['Pago seguro', 'Entrega del código', 'Garantía de satisfacción', 'Soporte 24/7']
+         'footer_satisfaction': 'Tu satisfacción, nuestra prioridad.',
+'footer_location': '📍 Abiyán, Costa de Marfil',
+'footer_follow': 'Síguenos',
+'legal': 'Legal',
+'dev_footer': 'Más de 5 sitios creados para clientes satisfechos',
+'dev_stats_sites': 'Sitios creados',
+'dev_stats_support': 'Soporte',
+'dev_stats_satisfait': 'Satisfecho',
+'dev_guarantee_payment': 'Pago seguro',
+'dev_guarantee_delivery': 'Entrega del código',
+'dev_guarantee_satisfaction': 'Garantía de satisfacción',
+'dev_guarantee_support': 'Soporte 24/7',
+    }
+}; 
     // ==================== VARIABLES PARRAINAGE ====================
     let parrainage = {
         parrains: {},
@@ -3990,10 +4496,9 @@ function updateClientCountBadge() {
                     </div>
                     <span class="text-[7px] text-gray-400">(24)</span>
                 </div>
-                
-                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100 hover:bg-[#c5a059] hover:text-white transition-colors">
-                    ${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}
-                </div>
+               '<div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100 hover:bg-[#c5a059] hover:text-white transition-colors" data-i18n="' + (p.enStock=== false ? 'sold_out' : 'view_product') + '">' +
+                    (p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article') +
+                '</div>'
             </div>`;
         }).join('');
         
@@ -6069,6 +6574,8 @@ L'équipe Latyfa Shop
     
     // ==================== INITIALISATION ====================
     window.addEventListener('load', () => {
+        // Initialiser la langue
+initLanguage();
         chargerDonnees();
         
         render();
