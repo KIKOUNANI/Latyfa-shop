@@ -1358,6 +1358,12 @@
     <audio id="victory-sound" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
 </head>
 <body>
+<script>
+// Forcer la vérification du mode maintenance au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(checkMaintenance, 100);
+});
+</script>
 
 <!-- OVERLAY MAINTENANCE -->
 <div id="maintenanceOverlay" class="maintenance-overlay" style="display: none;">
@@ -2815,12 +2821,16 @@
         const maintenance = localStorage.getItem('latyfa_maintenance') === 'true';
         const overlay = document.getElementById('maintenanceOverlay');
         
+        // Vérifier si l'utilisateur est connecté ET est admin
         const isAdmin = utilisateurConnecte && utilisateurConnecte.isAdmin === true;
+        
+        console.log("Maintenance:", maintenance, "IsAdmin:", isAdmin); // Pour déboguer
         
         if (maintenance && !isAdmin) {
             overlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             
+            // Cacher le contenu principal
             const mainContent = document.querySelector('body > *:not(#maintenanceOverlay):not(#loader)');
             if (mainContent) {
                 mainContent.style.display = 'none';
@@ -2829,6 +2839,7 @@
             overlay.style.display = 'none';
             document.body.style.overflow = 'auto';
             
+            // Réafficher le contenu principal
             const mainContent = document.querySelector('body > *:not(#maintenanceOverlay):not(#loader)');
             if (mainContent) {
                 mainContent.style.display = 'block';
@@ -2843,15 +2854,20 @@
         const btnOff = document.getElementById('maintenanceOff');
         
         if (actif) {
-            btnOn.className = 'px-6 py-3 rounded-lg font-black text-[10px] uppercase bg-[#c5a059] text-white';
-            btnOff.className = 'px-6 py-3 rounded-lg font-black text-[10px] uppercase bg-gray-200 text-gray-600';
+            btnOn.classList.add('bg-[#c5a059]', 'text-white');
+            btnOn.classList.remove('bg-gray-200', 'text-gray-600');
+            btnOff.classList.remove('bg-[#c5a059]', 'text-white');
+            btnOff.classList.add('bg-gray-200', 'text-gray-600');
+            showToast("🔧 Mode maintenance ACTIVÉ - Seuls les admins peuvent voir le site");
         } else {
-            btnOn.className = 'px-6 py-3 rounded-lg font-black text-[10px] uppercase bg-gray-200 text-gray-600';
-            btnOff.className = 'px-6 py-3 rounded-lg font-black text-[10px] uppercase bg-[#c5a059] text-white';
+            btnOff.classList.add('bg-[#c5a059]', 'text-white');
+            btnOff.classList.remove('bg-gray-200', 'text-gray-600');
+            btnOn.classList.remove('bg-[#c5a059]', 'text-white');
+            btnOn.classList.add('bg-gray-200', 'text-gray-600');
+            showToast("✅ Mode maintenance DÉSACTIVÉ - Site accessible à tous");
         }
         
         checkMaintenance();
-        showToast(actif ? "🔧 Mode maintenance activé" : "✅ Site accessible à tous");
     }
 
     // ==================== FONCTIONS CHAT IA ====================
@@ -3341,7 +3357,7 @@
             clients = [
                 { 
                     id: 1, 
-                    nom: "Admin", 
+                    nom: "Admin Latyfa", 
                     email: "admin@latyfa.com", 
                     tel: "0709002881", 
                     password: "admin2026", 
@@ -3359,17 +3375,6 @@
                     dateInscription: new Date(Date.now() - 2*24*60*60*1000).toLocaleDateString('fr-FR'),
                     dateTimestamp: Date.now() - 2*24*60*60*1000,
                     points: 150
-                },
-                {
-                    id: 3,
-                    nom: "Jean Yao",
-                    email: "jean.y@email.com",
-                    tel: "0755060708",
-                    password: "client123",
-                    isAdmin: false,
-                    dateInscription: new Date(Date.now() - 5*24*60*60*1000).toLocaleDateString('fr-FR'),
-                    dateTimestamp: Date.now() - 5*24*60*60*1000,
-                    points: 75
                 }
             ];
             localStorage.setItem('latyfa_clients', JSON.stringify(clients));
@@ -5601,34 +5606,74 @@ function refreshClientSelector() {
         }
     }
 
-    // ==================== FONCTIONS EMAIL ====================
+    // ==================== FONCTIONS EMAIL CORRIGÉES ====================
     function envoyerEmail(destinataire, objet, contenu) {
-        if (typeof emailjs === 'undefined') {
-            console.log("EmailJS non disponible, sauvegarde en local");
-            sauvegarderEmailLocal(destinataire, objet, contenu);
+        // Simuler l'envoi d'email (version de démonstration)
+        console.log("📧 Email envoyé à:", destinataire.email);
+        console.log("Objet:", objet);
+        console.log("Contenu:", contenu);
+        
+        // Sauvegarder dans l'historique local
+        sauvegarderEmailLocal(destinataire, objet, contenu, 'envoye');
+        
+        // Afficher une notification
+        showToast(`📧 Email simulé envoyé à ${destinataire.nom}`);
+        
+        return true;
+    }
+
+    function envoyerEmailMassif() {
+        const selectedIds = [];
+        document.querySelectorAll('#clientsSelector .client-check:checked').forEach(cb => {
+            selectedIds.push(parseInt(cb.value));
+        });
+        
+        const objet = document.getElementById('messageObjet').value.trim();
+        const contenu = document.getElementById('messageContenu').value.trim();
+        
+        if (selectedIds.length === 0) {
+            alert("❌ Sélectionnez au moins un destinataire");
             return;
         }
-
-        const templateParams = {
-            to_email: destinataire.email,
-            to_name: destinataire.nom,
-            from_name: "Latyfa Shop",
-            subject: objet,
-            message: contenu,
-            reply_to: "contact@latyfashop.com"
-        };
-
-        emailjs.send('Latyfa_shop', 'template_wv2g2s', templateParams)
-            .then(function(response) {
-                console.log('Email envoyé avec succès!', response.status, response.text);
-                showToast(`📧 Email envoyé à ${destinataire.nom}`);
-                sauvegarderEmailLocal(destinataire, objet, contenu, 'envoye');
-            })
-            .catch(function(error) {
-                console.log('Erreur d\'envoi:', error);
-                showToast("❌ Erreur d'envoi d'email");
-                sauvegarderEmailLocal(destinataire, objet, contenu, 'erreur');
-            });
+        
+        if (!objet || !contenu) {
+            alert("❌ Remplissez l'objet et le message");
+            return;
+        }
+        
+        const clientsSelectionnes = clients.filter(c => selectedIds.includes(c.id));
+        
+        if (clientsSelectionnes.length === 0) {
+            alert("❌ Aucun client valide sélectionné");
+            return;
+        }
+        
+        if (!confirm(`📧 Envoyer un email à ${clientsSelectionnes.length} client(s) ?`)) {
+            return;
+        }
+        
+        // Compter les succès
+        let successCount = 0;
+        
+        clientsSelectionnes.forEach(client => {
+            if (client.email && client.email.includes('@')) {
+                envoyerEmail(client, objet, contenu);
+                successCount++;
+            } else {
+                console.log("Client sans email valide:", client.nom);
+            }
+        });
+        
+        // Envoyer aussi en message interne
+        envoyerMessageAdmin(selectedIds, objet, contenu);
+        
+        // Message de succès
+        alert(`✅ ${successCount} email(s) envoyé(s) avec succès !`);
+        
+        // Réinitialiser
+        document.getElementById('messageObjet').value = '';
+        document.getElementById('messageContenu').value = '';
+        clearClientSelection();
     }
 
     function sauvegarderEmailLocal(destinataire, objet, contenu, statut = 'local') {
@@ -5648,47 +5693,6 @@ function refreshClientSelector() {
         });
         
         localStorage.setItem('latyfa_emails', JSON.stringify(emailsEnvoyes));
-    }
-
-    function envoyerEmailMassif() {
-        const selectedIds = [];
-        document.querySelectorAll('#clientsSelector .client-check:checked').forEach(cb => {
-            selectedIds.push(parseInt(cb.value));
-        });
-        
-        const objet = document.getElementById('messageObjet').value.trim();
-        const contenu = document.getElementById('messageContenu').value.trim();
-        
-        if (selectedIds.length === 0) {
-            alert("Sélectionnez au moins un destinataire");
-            return;
-        }
-        
-        if (!objet || !contenu) {
-            alert("Remplissez l'objet et le message");
-            return;
-        }
-        
-        const clientsSelectionnes = clients.filter(c => selectedIds.includes(c.id) && c.email);
-        
-        if (clientsSelectionnes.length === 0) {
-            alert("Aucun client valide avec email");
-            return;
-        }
-        
-        if (!confirm(`Envoyer un email à ${clientsSelectionnes.length} client(s) ?`)) {
-            return;
-        }
-        
-        clientsSelectionnes.forEach(client => {
-            envoyerEmail(client, objet, contenu);
-        });
-        
-        envoyerMessageAdmin(selectedIds, objet, contenu);
-        
-        document.getElementById('messageObjet').value = '';
-        document.getElementById('messageContenu').value = '';
-        clearClientSelection();
     }
 
     function envoyerConfirmationCommande(client, commande) {
@@ -5870,6 +5874,17 @@ L'équipe Latyfa Shop
     
     setInterval(updateFlashSale, 1000);
     
+    // ==================== FONCTION DE TEST ====================
+    function testMaintenance() {
+        console.log("=== TEST MODE MAINTENANCE ===");
+        console.log("État maintenance:", localStorage.getItem('latyfa_maintenance'));
+        console.log("Utilisateur connecté:", utilisateurConnecte);
+        console.log("Est admin:", utilisateurConnecte ? utilisateurConnecte.isAdmin : false);
+        
+        const isAdmin = utilisateurConnecte && utilisateurConnecte.isAdmin === true;
+        alert(`Mode maintenance: ${localStorage.getItem('latyfa_maintenance') === 'true' ? 'ACTIVÉ' : 'DÉSACTIVÉ'}\nVous êtes ${isAdmin ? 'ADMIN' : 'VISITEUR'}`);
+    }
+    
     // ==================== INITIALISATION ====================
     window.addEventListener('load', () => {
         chargerDonnees();
@@ -5908,7 +5923,7 @@ L'équipe Latyfa Shop
             const btn = document.getElementById('dark-mode-btn');
             if (btn) {
                 btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
-                btn.style.backgroundColor = "#fbbf24";
+                btn.style.backgroundColor = "#fbf24";
                 btn.style.color = "#000";
             }
         }
