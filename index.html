@@ -1634,6 +1634,40 @@
             font-weight: 900;
             line-height: 1;
         }
+        /* ==================== ANIMATION LOGO EFFET VAGUE ==================== */
+@keyframes gentleWave {
+    0% {
+        transform: translateY(0);
+        text-shadow: 0 2px 5px rgba(197, 160, 89, 0.2);
+    }
+    25% {
+        transform: translateY(-4px);
+        text-shadow: 0 6px 12px rgba(197, 160, 89, 0.4);
+    }
+    50% {
+        transform: translateY(0);
+        text-shadow: 0 2px 5px rgba(197, 160, 89, 0.2);
+    }
+    75% {
+        transform: translateY(4px);
+        text-shadow: 0 -4px 8px rgba(197, 160, 89, 0.3);
+    }
+    100% {
+        transform: translateY(0);
+        text-shadow: 0 2px 5px rgba(197, 160, 89, 0.2);
+    }
+}
+
+.logo-font {
+    display: inline-block;
+    animation: gentleWave 4s ease-in-out infinite;
+    transform-origin: center;
+}
+
+/* Animation douce pour l'image */
+header img {
+    animation: gentleWave 4.5s ease-in-out infinite;
+}
     </style>
     
     <audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
