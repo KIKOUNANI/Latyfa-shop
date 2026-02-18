@@ -2195,15 +2195,16 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-<!-- SECTION HERO AVEC VIDÉO DE MODE -->
+<!-- SECTION HERO AVEC VIDÉO ET ZOOM LENT -->
 <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
-    <video autoplay loop muted playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-60">
-        <!-- Vidéo de mode - défilé -->
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-young-woman-wearing-a-gold-necklace-12688-large.mp4" type="video/mp4">
-        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover">
-    </video>
+    <div class="absolute inset-0 overflow-hidden">
+        <video autoplay loop muted playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-60" style="animation: slowZoom 20s ease-in-out infinite alternate;">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-with-gold-jewelry-12424-large.mp4" type="video/mp4">
+            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200" class="w-full h-full object-cover">
+        </video>
+    </div>
     
-    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
     
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none drop-shadow-lg" data-i18n="hero_title">La Boutique du 225</h1>
@@ -2211,6 +2212,17 @@ document.addEventListener('DOMContentLoaded', function() {
         <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl" data-i18n="hero_btn">Découvrir la Collection</a>
     </div>
 </section>
+
+<style>
+@keyframes slowZoom {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
+</style>
 
 <!-- SECTION PRINCIPALE PRODUITS -->
 <div id="collection" class="container mx-auto px-4 py-8">
