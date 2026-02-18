@@ -28,47 +28,135 @@
     <meta name="theme-color" content="#c5a059">
     <style>
         /* Styles supplémentaires pour la section développeur */
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.floating {
-    animation: float 3s ease-in-out infinite;
-}
-
-/* Effet de brillance sur les cartes */
-.glow-card {
-    position: relative;
-    overflow: hidden;
-}
-
-.glow-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(197,160,89,0.1) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.glow-card:hover::before {
-    opacity: 1;
-}
-
-/* Animation des boutons */
-.pulse-button {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(197,160,89,0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(197,160,89,0); }
-    100% { box-shadow: 0 0 0 0 rgba(197,160,89,0); }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Effet de brillance sur les cartes */
+        .glow-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(197,160,89,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .glow-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Animation des boutons */
+        .pulse-button {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(197,160,89,0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(197,160,89,0); }
+            100% { box-shadow: 0 0 0 0 rgba(197,160,89,0); }
+        }
+
+        /* ==================== SÉLECTEUR DE LANGUE ==================== */
+        .language-selector {
+            position: relative;
+            margin-right: 15px;
+        }
+
+        .language-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            background: #f3f4f6;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .language-btn:hover {
+            background: var(--latyfa-gold);
+            color: white;
+            border-color: var(--latyfa-gold);
+        }
+
+        .language-btn i {
+            font-size: 14px;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            min-width: 150px;
+            padding: 8px 0;
+            margin-top: 5px;
+            display: none;
+            z-index: 100;
+            border: 1px solid #f0f0f0;
+        }
+
+        .language-selector:hover .language-dropdown {
+            display: block;
+        }
+
+        .language-option {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .language-option:hover {
+            background: #f3f4f6;
+            color: var(--latyfa-gold);
+        }
+
+        .language-option.active {
+            background: var(--latyfa-gold);
+            color: white;
+        }
+
+        .language-option img {
+            width: 20px;
+            height: 15px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+
+        .dark-theme .language-dropdown {
+            background: #1e1e1e;
+            border-color: #333;
+        }
+
+        .dark-theme .language-option:hover {
+            background: #2d2d2d;
+        }
+        
         :root { 
             --latyfa-gold: #c5a059;   
             --latyfa-dark: #1a1a1a;   
@@ -1501,27 +1589,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
             <!-- SÉLECTEUR DE LANGUE -->
-<div class="language-selector">
-    <div class="language-btn" id="currentLanguageBtn">
-        <i class="fa-solid fa-globe"></i>
-        <span id="currentLanguageText">FR</span>
-        <i class="fa-solid fa-chevron-down text-[8px]"></i>
-    </div>
-    <div class="language-dropdown">
-        <div class="language-option active" onclick="changeLanguage('fr')" data-lang="fr">
-            <img src="https://flagcdn.com/w20/fr.png" alt="Français">
-            <span>Français</span>
-        </div>
-        <div class="language-option" onclick="changeLanguage('en')" data-lang="en">
-            <img src="https://flagcdn.com/w20/gb.png" alt="English">
-            <span>English</span>
-        </div>
-        <div class="language-option" onclick="changeLanguage('es')" data-lang="es">
-            <img src="https://flagcdn.com/w20/es.png" alt="Español">
-            <span>Español</span>
-        </div>
-    </div>
-</div>   
+            <div class="language-selector">
+                <div class="language-btn" id="currentLanguageBtn">
+                    <i class="fa-solid fa-globe"></i>
+                    <span id="currentLanguageText">FR</span>
+                    <i class="fa-solid fa-chevron-down text-[8px]"></i>
+                </div>
+                <div class="language-dropdown">
+                    <div class="language-option active" onclick="changeLanguage('fr')" data-lang="fr">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="Français">
+                        <span>Français</span>
+                    </div>
+                    <div class="language-option" onclick="changeLanguage('en')" data-lang="en">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="English">
+                        <span>English</span>
+                    </div>
+                    <div class="language-option" onclick="changeLanguage('es')" data-lang="es">
+                        <img src="https://flagcdn.com/w20/es.png" alt="Español">
+                        <span>Español</span>
+                    </div>
+                </div>
+            </div>   
             <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-white transition">
                 Se connecter
             </button>
@@ -1536,15 +1624,15 @@ document.addEventListener('DOMContentLoaded', function() {
             </button>
             
             <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
-    <i class="fa-solid fa-truck text-gray-600"></i>
-    <p class="text-[9px] font-bold uppercase" data-i18n="track">Suivi</p>
-</div>
+                <i class="fa-solid fa-truck text-gray-600"></i>
+                <p class="text-[9px] font-bold uppercase" data-i18n="track">Suivi</p>
+            </div>
 
-<div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
-    <i class="fa-solid fa-cart-shopping text-gray-600"></i>
-    <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold flex items-center justify-center min-w-[18px] h-[18px]">0</span>
-    <p class="text-[9px] font-bold uppercase" data-i18n="cart">Panier</p>
-</div>
+            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
+                <i class="fa-solid fa-cart-shopping text-gray-600"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold flex items-center justify-center min-w-[18px] h-[18px]">0</span>
+                <p class="text-[9px] font-bold uppercase" data-i18n="cart">Panier</p>
+            </div>
         </div>
     </div>
 </header>
@@ -1907,28 +1995,28 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="collection" class="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
     <aside class="w-full md:w-64 bg-white rounded-xl p-6 shadow-sm h-fit md:sticky md:top-24 border border-gray-100">
         <h3 class="logo-font font-black border-b-2 border-[#c5a059] pb-3 mb-6 text-[13px] uppercase text-[#1a1a1a] tracking-widest text-center" data-i18n="our_universes">
-    Nos Univers
-</h3>
+            Nos Univers
+        </h3>
         <div class="flex flex-col gap-5" id="categories-container"></div>
         
         <div class="mt-8 loyalty-card">
-    <div class="relative z-10">
-        <p class="text-[8px] font-black uppercase opacity-80" data-i18n="your_points">Vos points</p>
-        <div class="loyalty-points" id="loyalty-points">0</div>
-        <div class="w-full bg-white/30 h-2 rounded-full mt-2 overflow-hidden">
-            <div class="bg-white h-full" id="loyalty-progress" style="width: 0%"></div>
+            <div class="relative z-10">
+                <p class="text-[8px] font-black uppercase opacity-80" data-i18n="your_points">Vos points</p>
+                <div class="loyalty-points" id="loyalty-points">0</div>
+                <div class="w-full bg-white/30 h-2 rounded-full mt-2 overflow-hidden">
+                    <div class="bg-white h-full" id="loyalty-progress" style="width: 0%"></div>
+                </div>
+                <p class="text-[8px] font-black uppercase mt-2 opacity-80" data-i18n="next_level">Prochain palier: 100 pts = -10%</p>
+            </div>
         </div>
-        <p class="text-[8px] font-black uppercase mt-2 opacity-80" data-i18n="next_level">Prochain palier: 100 pts = -10%</p>
-    </div>
-</div>
     </aside>
     
     <main class="flex-1">
         <div class="mb-8">
             <h3 class="text-[10px] font-black uppercase mb-4 flex items-center gap-2">
-    <i class="fa-solid fa-fire text-[#ff6600]"></i>
-    <span data-i18n="popular_products">PRODUITS POPULAIRES</span>
-</h3>
+                <i class="fa-solid fa-fire text-[#ff6600]"></i>
+                <span data-i18n="popular_products">PRODUITS POPULAIRES</span>
+            </h3>
             <div class="relative overflow-hidden">
                 <div class="flex gap-4 animate-slide" id="popular-products">
                     <!-- Les produits populaires seront injectés ici -->
@@ -2569,30 +2657,29 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         <!-- SECTION MESSAGERIE -->
-        <!-- Dans la section messagerie, après le titre -->
-<div id="messagerieSection" class="admin-section">
-    <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
-        <i class="fa-regular fa-envelope text-[#c5a059]"></i> Messagerie
-    </h3>
-    
-    <!-- AJOUTER CE BOUTON DE RAFRAÎCHISSEMENT -->
-    <div class="flex justify-end mb-2">
-        <button onclick="refreshClientSelector()" class="bg-gray-100 hover:bg-gray-200 text-[9px] font-black uppercase px-3 py-1 rounded-full flex items-center gap-1">
-            <i class="fa-solid fa-rotate"></i> Rafraîchir la liste
-        </button>
-    </div>
-    
-    <div class="mb-4">
-        <label class="text-[9px] font-bold uppercase block mb-2">Destinataires</label>
-        <div class="flex gap-2 mb-3 flex-wrap">
-            <button onclick="selectAllClients()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Tous les clients</button>
-            <button onclick="selectClientsAvecCommandes()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Clients actifs</button>
-            <button onclick="clearClientSelection()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Effacer</button>
-        </div>
-        <div id="clientsSelector" class="border rounded-lg p-3 max-h-60 overflow-y-auto bg-white">
-            <!-- Les clients apparaîtront ici -->
-        </div>
-    </div>
+        <div id="messagerieSection" class="admin-section">
+            <h3 class="text-[12px] font-black uppercase mb-4 flex items-center gap-2">
+                <i class="fa-regular fa-envelope text-[#c5a059]"></i> Messagerie
+            </h3>
+            
+            <!-- BOUTON DE RAFRAÎCHISSEMENT -->
+            <div class="flex justify-end mb-2">
+                <button onclick="refreshClientSelector()" class="bg-gray-100 hover:bg-gray-200 text-[9px] font-black uppercase px-3 py-1 rounded-full flex items-center gap-1">
+                    <i class="fa-solid fa-rotate"></i> Rafraîchir la liste
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <label class="text-[9px] font-bold uppercase block mb-2">Destinataires</label>
+                <div class="flex gap-2 mb-3 flex-wrap">
+                    <button onclick="selectAllClients()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Tous les clients</button>
+                    <button onclick="selectClientsAvecCommandes()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Clients actifs</button>
+                    <button onclick="clearClientSelection()" class="bg-gray-100 text-[9px] px-3 py-1 rounded-full hover:bg-[#c5a059] hover:text-white transition">Effacer</button>
+                </div>
+                <div id="clientsSelector" class="border rounded-lg p-3 max-h-60 overflow-y-auto bg-white">
+                    <!-- Les clients apparaîtront ici -->
+                </div>
+            </div>
             
             <div class="mb-4">
                 <label class="text-[9px] font-bold uppercase block mb-2">Objet</label>
@@ -2730,63 +2817,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- BOUTON ADMIN CACHE -->
 <div onclick="ouvrirAdmin()" class="admin-btn">ADM</div>
-<!-- ==================== SECTION DÉVELOPPEUR ==================== -->
-<section class="py-16 bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-[#c5a059]/30 shadow-2xl">
-            <div class="flex flex-col md:flex-row items-center gap-8">
-                <!-- Photo du développeur -->
-                <div class="relative group">
-                    <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-[#c5a059] shadow-xl transform transition-transform group-hover:scale-105">
-                        <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" alt="Développeur Latyfa" class="w-full h-full object-cover">
-                    </div>
-                    <div class="absolute -bottom-2 -right-2 bg-[#c5a059] text-black px-4 py-2 rounded-full font-black text-xs shadow-lg">
-                        👨‍💻 DEV
-                    </div>
-                </div>
-                
-                <!-- Infos et message -->
-                <div class="flex-1 text-center md:text-left">
-                    <h3 class="text-2xl font-black uppercase tracking-wider mb-2">
-                        <span class="text-[#c5a059]">VOUS VOULEZ</span> VOTRE SITE ?
-                    </h3>
-                    <p class="text-3xl font-black italic text-white mb-4">
-                        "Je crée votre boutique en ligne"
-                    </p>
-                    <p class="text-gray-300 text-sm mb-6 max-w-lg">
-                        Vous avez aimé ce site ? Je peux créer le vôtre ! 
-                        Site e-commerce, boutique en ligne, landing page... 
-                        Design moderne, responsive, et adapté à vos besoins.
-                    </p>
-                    
-                    <!-- Statistiques -->
-                    <div class="grid grid-cols-3 gap-4 mb-6">
-                        <div class="bg-white/10 rounded-xl p-3">
-                            <div class="text-[#c5a059] font-black text-xl">50+</div>
-                            <div class="text-[10px] uppercase">Sites créés</div>
-                        </div>
-                        <div class="bg-white/10 rounded-xl p-3">
-                            <div class="text-[#c5a059] font-black text-xl">24/7</div>
-                            <div class="text-[10px] uppercase">Support</div>
-                        </div>
-                        <div class="bg-white/10 rounded-xl p-3">
-                            <div class="text-[#c5a059] font-black text-xl">100%</div>
-                            <div class="text-[10px] uppercase">Satisfait</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Boutons de contact -->
-                    <div class="flex flex-wrap gap-3 justify-center md:justify-start">
-                        <a href="https://wa.me/2250506113292?text=Bonjour%2C%20je%20souhaite%20créer%20un%20site%20internet%20comme%20Latyfa%20Shop" 
-                           target="_blank" 
-                           class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105">
-                            <i class="fa-brands fa-whatsapp text-lg"></i>
-                            WhatsApp
-                        </a>
-                        <a href="tel:+2250506113292" 
-                           class="bg-[#c5a059] hover:bg-[#b38d4a] text-black px-6 py-3 rounded-full font-black text-xs uppercase flex items-center gap-2 transition-all hover:scale-105">
-                            <i class="fa-solid fa-phone text-lg"></i>
-                            Appeler
+
 <!-- ==================== SECTION DÉVELOPPEUR ==================== -->
 <section class="py-16 bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white">
     <div class="container mx-auto px-4">
@@ -2971,6 +3002,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </section>
+
 <!-- FOOTER -->
 <footer class="bg-white border-t pt-12 pb-6">
     <div class="container mx-auto px-4">
@@ -3021,150 +3053,140 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
     // ==================== FONCTIONS DE TRADUCTION ====================
 
-// Fonction pour changer la langue
-function changeLanguage(lang) {
-    currentLanguage = lang;
-    localStorage.setItem('latyfa_language', lang);
-    
-    // Mettre à jour le bouton
-    document.getElementById('currentLanguageText').innerText = lang.toUpperCase();
-    
-    // Mettre à jour la classe active dans le dropdown
-    document.querySelectorAll('.language-option').forEach(opt => {
-        opt.classList.remove('active');
-        if (opt.dataset.lang === lang) {
-            opt.classList.add('active');
-        }
-    });
-    
-    // Traduire tous les éléments
-    translatePage();
-    
-    // Re-rendre les produits pour mettre à jour les textes
-    render();
-    
-    showToast(`🌍 Langue changée en ${lang === 'fr' ? 'Français' : lang === 'en' ? 'Anglais' : 'Espagnol'}`);
-}
-
-// Fonction pour traduire la page
-function translatePage() {
-    const t = translations[currentLanguage];
-    
-    // Traduire les éléments avec des attributs data-i18n
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (t[key]) {
-            el.innerText = t[key];
-        }
-    });
-    
-    // Traduire les placeholders
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        if (t[key]) {
-            el.placeholder = t[key];
-        }
-    });
-    
-    // Traduire les catégories dans le sélecteur
-    document.querySelectorAll('.category-chip span').forEach(el => {
-        const catId = el.closest('.category-chip')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
-        if (catId && catId !== 'tous' && t.categories[catId]) {
-            el.innerText = t.categories[catId];
-        } else if (catId === 'tous') {
-            el.innerText = t.all;
-        }
-    });
-    
-    // Traduire le titre "Nos Univers"
-    const universTitle = document.querySelector('h3.logo-font');
-    if (universTitle) {
-        universTitle.innerText = t.our_universes;
+    // Fonction pour changer la langue
+    function changeLanguage(lang) {
+        currentLanguage = lang;
+        localStorage.setItem('latyfa_language', lang);
+        
+        // Mettre à jour le bouton
+        document.getElementById('currentLanguageText').innerText = lang.toUpperCase();
+        
+        // Mettre à jour la classe active dans le dropdown
+        document.querySelectorAll('.language-option').forEach(opt => {
+            opt.classList.remove('active');
+            if (opt.dataset.lang === lang) {
+                opt.classList.add('active');
+            }
+        });
+        
+        // Traduire tous les éléments
+        translatePage();
+        
+        // Re-rendre les produits pour mettre à jour les textes
+        render();
+        
+        showToast(`🌍 Langue changée en ${lang === 'fr' ? 'Français' : lang === 'en' ? 'Anglais' : 'Espagnol'}`);
     }
-    
-    // Traduire la section développeur
-    const devSection = document.querySelector('.dev-title');
-    if (devSection) {
-        // Mettre à jour les textes du développeur
-        document.querySelectorAll('[data-i18n-dev]').forEach(el => {
-            const key = el.getAttribute('data-i18n-dev');
+
+    // Fonction pour traduire la page
+    function translatePage() {
+        const t = translations[currentLanguage];
+        
+        // Traduire les éléments avec des attributs data-i18n
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
             if (t[key]) {
                 el.innerText = t[key];
             }
         });
-    }
-}
-
-// Fonction pour initialiser la langue
-function initLanguage() {
-    const savedLang = localStorage.getItem('latyfa_language');
-    if (savedLang && ['fr', 'en', 'es'].includes(savedLang)) {
-        currentLanguage = savedLang;
-    } else {
-        currentLanguage = 'fr';
-    }
-    
-    document.getElementById('currentLanguageText').innerText = currentLanguage.toUpperCase();
-    
-    document.querySelectorAll('.language-option').forEach(opt => {
-        opt.classList.remove('active');
-        if (opt.dataset.lang === currentLanguage) {
-            opt.classList.add('active');
+        
+        // Traduire les placeholders
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (t[key]) {
+                el.placeholder = t[key];
+            }
+        });
+        
+        // Traduire les catégories dans le sélecteur
+        document.querySelectorAll('.category-chip span').forEach(el => {
+            const catId = el.closest('.category-chip')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+            if (catId && catId !== 'tous' && t.categories && t.categories[catId]) {
+                el.innerText = t.categories[catId];
+            } else if (catId === 'tous') {
+                el.innerText = t.all;
+            }
+        });
+        
+        // Traduire le titre "Nos Univers"
+        const universTitle = document.querySelector('h3.logo-font');
+        if (universTitle) {
+            universTitle.innerText = t.our_universes;
         }
-    });
-    
-    translatePage();
     }
+
+    // Fonction pour initialiser la langue
+    function initLanguage() {
+        const savedLang = localStorage.getItem('latyfa_language');
+        if (savedLang && ['fr', 'en', 'es'].includes(savedLang)) {
+            currentLanguage = savedLang;
+        } else {
+            currentLanguage = 'fr';
+        }
+        
+        document.getElementById('currentLanguageText').innerText = currentLanguage.toUpperCase();
+        
+        document.querySelectorAll('.language-option').forEach(opt => {
+            opt.classList.remove('active');
+            if (opt.dataset.lang === currentLanguage) {
+                opt.classList.add('active');
+            }
+        });
+        
+        translatePage();
+    }
+    
     // ==================== FONCTION CONTACT DÉVELOPPEUR ====================
-function contactDeveloppeur(method) {
-    if (method === 'whatsapp') {
-        const projet = prompt("📝 Quel type de site voulez-vous créer ?\n(E-commerce, Vitrine, Blog, Application...)");
-        if (!projet) return;
-        
-        const budget = prompt("💰 Quel est votre budget approximatif ?");
-        if (!budget) return;
-        
-        const message = `👋 Bonjour Kader ! Je souhaite créer un site internet.
-        
-📋 Projet : ${projet}
-💰 Budget : ${budget}
-📅 Prise de contact : ${new Date().toLocaleDateString()}
+    function contactDeveloppeur(method) {
+        if (method === 'whatsapp') {
+            const projet = prompt("📝 Quel type de site voulez-vous créer ?\n(E-commerce, Vitrine, Blog, Application...)");
+            if (!projet) return;
+            
+            const budget = prompt("💰 Quel est votre budget approximatif ?");
+            if (!budget) return;
+            
+            const message = `👋 Bonjour Kader ! Je souhaite créer un site internet.
+            
+    📋 Projet : ${projet}
+    💰 Budget : ${budget}
+    📅 Prise de contact : ${new Date().toLocaleDateString()}
 
-Merci de me contacter pour discuter de mon projet !`;
+    Merci de me contacter pour discuter de mon projet !`;
+            
+            window.open(`https://wa.me/2250506113292?text=${encodeURIComponent(message)}`);
+            showToast("✅ Message préparé ! Vous allez être redirigé vers WhatsApp");
+        }
         
-        window.open(`https://wa.me/2250506113292?text=${encodeURIComponent(message)}`);
-        showToast("✅ Message préparé ! Vous allez être redirigé vers WhatsApp");
+        else if (method === 'facebook') {
+            window.open('https://www.facebook.com/kader.traore.1848');
+            showToast("👋 Vous allez être redirigé vers Facebook");
+        }
+        
+        else if (method === 'email') {
+            const sujet = prompt("📧 Sujet de votre message :", "Création de site internet");
+            if (!sujet) return;
+            
+            const message = prompt("📝 Votre message :", "Bonjour Kader, je souhaite discuter de la création d'un site internet.");
+            if (!message) return;
+            
+            // Ouvrir le client mail par défaut
+            window.location.href = `mailto:kadertraore224@gmail.com?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(message)}`;
+            showToast("📧 Ouverture de votre application mail...");
+        }
+    }
+
+    // Fonction pour copier l'email
+    function copierEmail() {
+        navigator.clipboard.writeText('kadertraore224@gmail.com');
+        showToast("📧 Email copié !");
+    }
+
+    // Fonction pour copier le numéro
+    function copierNumero() {
+        navigator.clipboard.writeText('0506113292');
+        showToast("📋 Numéro copié !");
     }
     
-    else if (method === 'facebook') {
-        window.open('https://www.facebook.com/kader.traore.1848');
-        showToast("👋 Vous allez être redirigé vers Facebook");
-    }
-    
-    else if (method === 'email') {
-        const sujet = prompt("📧 Sujet de votre message :", "Création de site internet");
-        if (!sujet) return;
-        
-        const message = prompt("📝 Votre message :", "Bonjour Kader, je souhaite discuter de la création d'un site internet.");
-        if (!message) return;
-        
-        // Ouvrir le client mail par défaut
-        window.location.href = `mailto:kadertraore224@gmail.com?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(message)}`;
-        showToast("📧 Ouverture de votre application mail...");
-    }
-}
-
-// Fonction pour copier l'email
-function copierEmail() {
-    navigator.clipboard.writeText('kadertraore224@gmail.com');
-    showToast("📧 Email copié !");
-}
-
-// Fonction pour copier le numéro
-function copierNumero() {
-    navigator.clipboard.writeText('0506113292');
-    showToast("📋 Numéro copié !");
-    }
     // ==================== INITIALISATION EMAILJS ====================
     (function() {
         try {
@@ -3190,245 +3212,244 @@ function copierNumero() {
     let clients = [];
     let messages = [];
     let utilisateurConnecte = null;
+    
     // ==================== SYSTÈME DE TRADUCTION ====================
-let currentLanguage = 'fr'; // Langue par défaut
+    let currentLanguage = 'fr'; // Langue par défaut
 
-const translations = {
-    fr: { 'hero_tilte':'La Boutique du 225',
-         'hero_subtitle':'Bijoux, vêtements, Parfum...',
-    'hero_btn': 'Découvrir la collection',
-        
-        // Header
-        'search_placeholder': 'Rechercher un article...',
-        'login': 'Se connecter',
-        'cart': 'Panier',
-        'track': 'Suivi',
-        
-        // Bannières
-        'promo_text': '✨ Promo Exclusive -20% dès 20.000 F d\'achat du 14 au 28 fév 2026:',
-        'flash_sale': '⚡ FLASH SALE : -30% SUR LES BIJOUX - FIN DANS',
-        'marquee': '✨ LIVRAISON GRATUITE SUR COCODY CE WEEK-END ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE — 🚚 EXPÉDITION SOUS 48H DANS TOUTE LA CÔTE D\'IVOIRE —',
-        
-        // Sections
-        'popular_products': 'PRODUITS POPULAIRES',
-        'our_universes': 'Nos Univers',
-        'all': 'Tout voir',
-        'categories': {
-            'bijoux': 'Bijoux',
-            'vetements': 'Vêtements',
-            'chaussures': 'Chaussures',
-            'sac': 'Sacs à main',
-            'parfum': 'Parfums',
-            'hanche': 'Perles de hanche',
-            'autres': 'Autres'
+    const translations = {
+        fr: {
+            // Hero section
+            'hero_title': 'La Boutique du 225',
+            'hero_subtitle': 'Bijoux, vêtements, parfum...',
+            'hero_btn': 'Découvrir la Collection',
+            
+            // Header
+            'search_placeholder': 'Rechercher un article...',
+            'login': 'Se connecter',
+            'cart': 'Panier',
+            'track': 'Suivi',
+            
+            // Bannières
+            'promo_text': '✨ Promo Exclusive -20% dès 20.000 F d\'achat du 14 au 28 fév 2026:',
+            'flash_sale': '⚡ FLASH SALE : -30% SUR LES BIJOUX - FIN DANS',
+            'marquee': '✨ BON MOIS DE RAMADAN À TOUS LES MUSULMANS ! — 💎 NOUVELLE COLLECTION DE BIJOUX DISPONIBLE — 🚚 EXPÉDITION SOUS 48H DANS TOUTE LA CÔTE D\'IVOIRE —',
+            
+            // Sections
+            'popular_products': 'PRODUITS POPULAIRES',
+            'our_universes': 'Nos Univers',
+            'all': 'Tout voir',
+            'categories': {
+                'bijoux': 'Bijoux',
+                'vetements': 'Vêtements',
+                'chaussures': 'Chaussures',
+                'sac': 'Sacs à main',
+                'parfum': 'Parfums',
+                'hanche': 'Perles de hanche',
+                'autres': 'Autres'
+            },
+            
+            // Produits
+            'view_product': 'Voir l\'article',
+            'sold_out': 'INDISPONIBLE',
+            'new': 'NOUVEAU',
+            'luxe': 'LUXE',
+            'stock_alert': '🔥 PLUS QUE QUELQUES-UNS',
+            
+            // Boutons
+            'add_to_cart': 'Ajouter au panier',
+            'buy_now': 'Acheter maintenant',
+            'view_details': 'Voir détails',
+            
+            // Footer
+            'footer_help': 'Aide',
+            'footer_terms': 'Conditions de Vente',
+            'footer_track': 'Suivi Colis',
+            'footer_advent': '📅 Calendrier Avent',
+            'footer_shop': 'Boutique',
+            'footer_follow': 'Suivez-nous',
+            'footer_satisfaction': 'Votre satisfaction, notre priorité.',
+            'footer_location': '📍 Abidjan, Côte d\'Ivoire',
+            'visitors': 'Visiteurs ont exploré l\'univers Latyfa shop',
+            'copyright': '© 2026 LATYFA BUSINESS |',
+            'legal': 'Juridique',
+            
+            // Points fidélité
+            'your_points': 'Vos points',
+            'next_level': 'Prochain palier: 100 pts = -10%',
+            
+            // Développeur
+            'dev_title': 'VOUS VOULEZ CRÉER VOTRE SITE INTERNET ?',
+            'dev_name': 'TRAORE ABOUBAMANE KADER',
+            'dev_role': 'Développeur Web & Mobile',
+            'dev_desc': 'Vous avez aimé ce site ? Je peux créer le vôtre ! Site e-commerce, boutique en ligne, landing page, application mobile... Design moderne, responsive, et adapté à vos besoins.',
+            'dev_stats_sites': 'Sites créés',
+            'dev_stats_support': 'Support',
+            'dev_stats_satisfait': 'Satisfait',
+            'dev_contact_whatsapp': 'WhatsApp',
+            'dev_contact_facebook': 'Facebook',
+            'dev_contact_email': 'Email',
+            'dev_guarantee_payment': 'Paiement sécurisé',
+            'dev_guarantee_delivery': 'Livraison du code',
+            'dev_guarantee_satisfaction': 'Garantie satisfait',
+            'dev_guarantee_support': 'Support 24/7',
+            'dev_footer': 'Déjà plus de 5 sites créés pour des clients satisfaits'
         },
         
-        // Produits
-        'view_product': 'Voir l\'article',
-        'sold_out': 'INDISPONIBLE',
-        'new': 'NOUVEAU',
-        'luxe': 'LUXE',
-        'stock_alert': '🔥 PLUS QUE QUELQUES-UNS',
+        en: {
+            'hero_title': 'The Shop of 225',
+            'hero_subtitle': 'Jewelry, clothing, perfume...',
+            'hero_btn': 'Discover the Collection',
+            
+            // Header
+            'search_placeholder': 'Search for an item...',
+            'login': 'Login',
+            'cart': 'Cart',
+            'track': 'Track',
+            
+            // Bannières
+            'promo_text': '✨ Exclusive Promo -20% from 20.000 F purchase Feb 14-28 2026:',
+            'flash_sale': '⚡ FLASH SALE : -30% ON JEWELRY - ENDS IN',
+            'marquee': '✨ RAMADAN MUBARAK TO ALL MUSLIMS! — 💎 NEW JEWELRY COLLECTION AVAILABLE — 🚚 SHIPPING WITHIN 48H ACROSS IVORY COAST —',
+            
+            // Sections
+            'popular_products': 'POPULAR PRODUCTS',
+            'our_universes': 'Our Universes',
+            'all': 'View all',
+            'categories': {
+                'bijoux': 'Jewelry',
+                'vetements': 'Clothing',
+                'chaussures': 'Shoes',
+                'sac': 'Handbags',
+                'parfum': 'Perfumes',
+                'hanche': 'Hip beads',
+                'autres': 'Others'
+            },
+            
+            // Produits
+            'view_product': 'View product',
+            'sold_out': 'SOLD OUT',
+            'new': 'NEW',
+            'luxe': 'LUXURY',
+            'stock_alert': '🔥 ONLY FEW LEFT',
+            
+            // Boutons
+            'add_to_cart': 'Add to cart',
+            'buy_now': 'Buy now',
+            'view_details': 'View details',
+            
+            // Footer
+            'footer_help': 'Help',
+            'footer_terms': 'Terms of Sale',
+            'footer_track': 'Track Order',
+            'footer_advent': '📅 Advent Calendar',
+            'footer_shop': 'Shop',
+            'footer_follow': 'Follow us',
+            'footer_satisfaction': 'Your satisfaction, our priority.',
+            'footer_location': '📍 Abidjan, Ivory Coast',
+            'visitors': 'Visitors explored the Latyfa shop universe',
+            'copyright': '© 2026 LATYFA BUSINESS |',
+            'legal': 'Legal',
+            
+            // Points fidélité
+            'your_points': 'Your points',
+            'next_level': 'Next level: 100 pts = -10%',
+            
+            // Développeur
+            'dev_title': 'DO YOU WANT TO CREATE YOUR WEBSITE?',
+            'dev_name': 'TRAORE ABOUBAMANE KADER',
+            'dev_role': 'Web & Mobile Developer',
+            'dev_desc': 'Did you like this site? I can create yours! E-commerce site, online store, landing page, mobile app... Modern design, responsive, and tailored to your needs.',
+            'dev_stats_sites': 'Sites created',
+            'dev_stats_support': 'Support',
+            'dev_stats_satisfait': 'Satisfied',
+            'dev_contact_whatsapp': 'WhatsApp',
+            'dev_contact_facebook': 'Facebook',
+            'dev_contact_email': 'Email',
+            'dev_guarantee_payment': 'Secure payment',
+            'dev_guarantee_delivery': 'Code delivery',
+            'dev_guarantee_satisfaction': 'Satisfaction guarantee',
+            'dev_guarantee_support': '24/7 Support',
+            'dev_footer': 'Already more than 5 sites created for satisfied customers'
+        },
         
-        // Boutons
-        'add_to_cart': 'Ajouter au panier',
-        'buy_now': 'Acheter maintenant',
-        'view_details': 'Voir détails',
-        
-        // Footer
-        'footer_help': 'Aide',
-        'footer_terms': 'Conditions de Vente',
-        'footer_track': 'Suivi Colis',
-        'footer_advent': '📅 Calendrier Avent',
-        'footer_shop': 'Boutique',
-        'footer_follow': 'Suivez-nous',
-        'visitors': 'Visiteurs ont exploré l\'univers Latyfa shop',
-        'copyright': '© 2026 LATYFA BUSINESS | Juridique',
-        
-        // Points fidélité
-        'your_points': 'Vos points',
-        'next_level': 'Prochain palier: 100 pts = -10%',
-        
-        // Développeur
-        'dev_title': 'VOUS VOULEZ CRÉER VOTRE SITE INTERNET ?',
-        'dev_name': 'TRAORE ABOUBAMANE KADER',
-        'dev_role': 'Développeur Web & Mobile',
-        'dev_desc': 'Vous avez aimé ce site ? Je peux créer le vôtre ! Site e-commerce, boutique en ligne, landing page, application mobile... Design moderne, responsive, et adapté à vos besoins.',
-        'dev_stats': ['Sites créés', 'Support', 'Satisfait'],
-        'dev_contact_whatsapp': 'WhatsApp',
-        'dev_contact_facebook': 'Facebook',
-        'dev_contact_email': 'Email',
-        'dev_guarantee': ['Paiement sécurisé', 'Livraison du code', 'Garantie satisfait', 'Support 24/7']
-         'footer_satisfaction': 'Votre satisfaction, notre priorité.',
-'footer_location': '📍 Abidjan, Côte d\'Ivoire',
-'footer_follow': 'Suivez-nous',
-'legal': 'Juridique',
-'dev_footer': 'Déjà plus de 5 sites créés pour des clients satisfaits',
-'dev_stats_sites': 'Sites créés',
-'dev_stats_support': 'Support',
-'dev_stats_satisfait': 'Satisfait',
-'dev_guarantee_payment': 'Paiement sécurisé',
-'dev_guarantee_delivery': 'Livraison du code',
-'dev_guarantee_satisfaction': 'Garantie satisfait',
-'dev_guarantee_support': 'Support 24/7',
-    },
+        es: {
+            'hero_title': 'La Tienda del 225',
+            'hero_subtitle': 'Joyas, ropa, perfume...',
+            'hero_btn': 'Descubrir la Colección',
+            
+            // Header
+            'search_placeholder': 'Buscar artículo...',
+            'login': 'Iniciar sesión',
+            'cart': 'Carrito',
+            'track': 'Seguimiento',
+            
+            // Bannières
+            'promo_text': '✨ Promo Exclusiva -20% desde 20.000 F de compra del 14 al 28 feb 2026:',
+            'flash_sale': '⚡ VENTA FLASH : -30% EN JOYAS - TERMINA EN',
+            'marquee': '✨ ¡FELIZ RAMADÁN A TODOS LOS MUSULMANES! — 💎 NUEVA COLECCIÓN DE JOYAS DISPONIBLE — 🚚 ENVÍO EN 48H EN TODA COSTA DE MARFIL —',
+            
+            // Sections
+            'popular_products': 'PRODUCTOS POPULARES',
+            'our_universes': 'Nuestros Universos',
+            'all': 'Ver todo',
+            'categories': {
+                'bijoux': 'Joyas',
+                'vetements': 'Ropa',
+                'chaussures': 'Zapatos',
+                'sac': 'Bolsos',
+                'parfum': 'Perfumes',
+                'hanche': 'Abalorios de cadera',
+                'autres': 'Otros'
+            },
+            
+            // Produits
+            'view_product': 'Ver producto',
+            'sold_out': 'AGOTADO',
+            'new': 'NUEVO',
+            'luxe': 'LUJO',
+            'stock_alert': '🔥 SOLO QUEDAN POCOS',
+            
+            // Boutons
+            'add_to_cart': 'Añadir al carrito',
+            'buy_now': 'Comprar ahora',
+            'view_details': 'Ver detalles',
+            
+            // Footer
+            'footer_help': 'Ayuda',
+            'footer_terms': 'Condiciones de Venta',
+            'footer_track': 'Seguimiento de Pedido',
+            'footer_advent': '📅 Calendario de Adviento',
+            'footer_shop': 'Tienda',
+            'footer_follow': 'Síguenos',
+            'footer_satisfaction': 'Tu satisfacción, nuestra prioridad.',
+            'footer_location': '📍 Abiyán, Costa de Marfil',
+            'visitors': 'Visitantes exploraron el universo Latyfa shop',
+            'copyright': '© 2026 LATYFA BUSINESS |',
+            'legal': 'Legal',
+            
+            // Points fidélité
+            'your_points': 'Tus puntos',
+            'next_level': 'Siguiente nivel: 100 pts = -10%',
+            
+            // Développeur
+            'dev_title': '¿QUIERES CREAR TU SITIO WEB?',
+            'dev_name': 'TRAORE ABOUBAMANE KADER',
+            'dev_role': 'Desarrollador Web & Móvil',
+            'dev_desc': '¿Te gustó este sitio? ¡Puedo crear el tuyo! Sitio de e-commerce, tienda online, landing page, aplicación móvil... Diseño moderno, responsive y adaptado a tus necesidades.',
+            'dev_stats_sites': 'Sitios creados',
+            'dev_stats_support': 'Soporte',
+            'dev_stats_satisfait': 'Satisfecho',
+            'dev_contact_whatsapp': 'WhatsApp',
+            'dev_contact_facebook': 'Facebook',
+            'dev_contact_email': 'Email',
+            'dev_guarantee_payment': 'Pago seguro',
+            'dev_guarantee_delivery': 'Entrega del código',
+            'dev_guarantee_satisfaction': 'Garantía de satisfacción',
+            'dev_guarantee_support': 'Soporte 24/7',
+            'dev_footer': 'Más de 5 sitios creados para clientes satisfechos'
+        }
+    };
     
-    en: { 'hero_title': 'The Shop of 225',
-'hero_subtitle': 'Jewelry, clothing, perfume...',
-'hero_btn': 'Discover the Collection',
-        // Header
-        'search_placeholder': 'Search for an item...',
-        'login': 'Login',
-        'cart': 'Cart',
-        'track': 'Track',
-        
-        // Bannières
-        'promo_text': '✨ Exclusive Promo -20% from 20.000 F purchase Feb 14-28 2026:',
-        'flash_sale': '⚡ FLASH SALE : -30% ON JEWELRY - ENDS IN',
-        'marquee': '✨ FREE DELIVERY IN COCODY THIS WEEKEND! — 💎 NEW JEWELRY COLLECTION AVAILABLE — 🚚 SHIPPING WITHIN 48H ACROSS IVORY COAST —',
-        
-        // Sections
-        'popular_products': 'POPULAR PRODUCTS',
-        'our_universes': 'Our Universes',
-        'all': 'View all',
-        'categories': {
-            'bijoux': 'Jewelry',
-            'vetements': 'Clothing',
-            'chaussures': 'Shoes',
-            'sac': 'Handbags',
-            'parfum': 'Perfumes',
-            'hanche': 'Hip beads',
-            'autres': 'Others'
-        },
-        
-        // Produits
-        'view_product': 'View product',
-        'sold_out': 'SOLD OUT',
-        'new': 'NEW',
-        'luxe': 'LUXURY',
-        'stock_alert': '🔥 ONLY FEW LEFT',
-        
-        // Boutons
-        'add_to_cart': 'Add to cart',
-        'buy_now': 'Buy now',
-        'view_details': 'View details',
-        
-        // Footer
-        'footer_help': 'Help',
-        'footer_terms': 'Terms of Sale',
-        'footer_track': 'Track Order',
-        'footer_advent': '📅 Advent Calendar',
-        'footer_shop': 'Shop',
-        'footer_follow': 'Follow us',
-        'visitors': 'Visitors explored the Latyfa shop universe',
-        'copyright': '© 2026 LATYFA BUSINESS | Legal',
-        
-        // Points fidélité
-        'your_points': 'Your points',
-        'next_level': 'Next level: 100 pts = -10%',
-        
-        // Développeur
-        'dev_title': 'DO YOU WANT TO CREATE YOUR WEBSITE?',
-        'dev_name': 'TRAORE ABOUBAMANE KADER',
-        'dev_role': 'Web & Mobile Developer',
-        'dev_desc': 'Did you like this site? I can create yours! E-commerce site, online store, landing page, mobile app... Modern design, responsive, and tailored to your needs.',
-        'dev_stats': ['Sites created', 'Support', 'Satisfied'],
-        'dev_contact_whatsapp': 'WhatsApp',
-        'dev_contact_facebook': 'Facebook',
-        'dev_contact_email': 'Email',
-        'dev_guarantee': ['Secure payment', 'Code delivery', 'Satisfaction guarantee', '24/7 Support']
-         'footer_satisfaction': 'Your satisfaction, our priority.',
-'footer_location': '📍 Abidjan, Ivory Coast',
-'footer_follow': 'Follow us',
-'legal': 'Legal',
-'dev_footer': 'Already more than 5 sites created for satisfied customers',
-'dev_stats_sites': 'Sites created',
-'dev_stats_support': 'Support',
-'dev_stats_satisfait': 'Satisfied',
-'dev_guarantee_payment': 'Secure payment',
-'dev_guarantee_delivery': 'Code delivery',
-'dev_guarantee_satisfaction': 'Satisfaction guarantee',
-'dev_guarantee_support': '24/7 Support',
-    },
-    
-    es: { 'hero_title': 'La Tienda del 225',
-'hero_subtitle': 'Joyas, ropa, perfume...',
-'hero_btn': 'Descubrir la Colección',
-        // Header
-        'search_placeholder': 'Buscar artículo...',
-        'login': 'Iniciar sesión',
-        'cart': 'Carrito',
-        'track': 'Seguimiento',
-        
-        // Bannières
-        'promo_text': '✨ Promo Exclusiva -20% desde 20.000 F de compra del 14 al 28 feb 2026:',
-        'flash_sale': '⚡ VENTA FLASH : -30% EN JOYAS - TERMINA EN',
-        'marquee': '✨ ¡ENVÍO GRATIS EN COCODY ESTE FIN DE SEMANA! — 💎 NUEVA COLECCIÓN DE JOYAS DISPONIBLE — 🚚 ENVÍO EN 48H EN TODA COSTA DE MARFIL —',
-        
-        // Sections
-        'popular_products': 'PRODUCTOS POPULARES',
-        'our_universes': 'Nuestros Universos',
-        'all': 'Ver todo',
-        'categories': {
-            'bijoux': 'Joyas',
-            'vetements': 'Ropa',
-            'chaussures': 'Zapatos',
-            'sac': 'Bolsos',
-            'parfum': 'Perfumes',
-            'hanche': 'Abalorios de cadera',
-            'autres': 'Otros'
-        },
-        
-        // Produits
-        'view_product': 'Ver producto',
-        'sold_out': 'AGOTADO',
-        'new': 'NUEVO',
-        'luxe': 'LUJO',
-        'stock_alert': '🔥 SOLO QUEDAN POCOS',
-        
-        // Boutons
-        'add_to_cart': 'Añadir al carrito',
-        'buy_now': 'Comprar ahora',
-        'view_details': 'Ver detalles',
-        
-        // Footer
-        'footer_help': 'Ayuda',
-        'footer_terms': 'Condiciones de Venta',
-        'footer_track': 'Seguimiento de Pedido',
-        'footer_advent': '📅 Calendario de Adviento',
-        'footer_shop': 'Tienda',
-        'footer_follow': 'Síguenos',
-        'visitors': 'Visitantes exploraron el universo Latyfa shop',
-        'copyright': '© 2026 LATYFA BUSINESS | Legal',
-        
-        // Points fidélité
-        'your_points': 'Tus puntos',
-        'next_level': 'Siguiente nivel: 100 pts = -10%',
-        
-        // Développeur
-        'dev_title': '¿QUIERES CREAR TU SITIO WEB?',
-        'dev_name': 'TRAORE ABOUBAMANE KADER',
-        'dev_role': 'Desarrollador Web & Móvil',
-        'dev_desc': '¿Te gustó este sitio? ¡Puedo crear el tuyo! Sitio de e-commerce, tienda online, landing page, aplicación móvil... Diseño moderno, responsive y adaptado a tus necesidades.',
-        'dev_stats': ['Sitios creados', 'Soporte', 'Satisfecho'],
-        'dev_contact_whatsapp': 'WhatsApp',
-        'dev_contact_facebook': 'Facebook',
-        'dev_contact_email': 'Email',
-        'dev_guarantee': ['Pago seguro', 'Entrega del código', 'Garantía de satisfacción', 'Soporte 24/7']
-         'footer_satisfaction': 'Tu satisfacción, nuestra prioridad.',
-'footer_location': '📍 Abiyán, Costa de Marfil',
-'footer_follow': 'Síguenos',
-'legal': 'Legal',
-'dev_footer': 'Más de 5 sitios creados para clientes satisfechos',
-'dev_stats_sites': 'Sitios creados',
-'dev_stats_support': 'Soporte',
-'dev_stats_satisfait': 'Satisfecho',
-'dev_guarantee_payment': 'Pago seguro',
-'dev_guarantee_delivery': 'Entrega del código',
-'dev_guarantee_satisfaction': 'Garantía de satisfacción',
-'dev_guarantee_support': 'Soporte 24/7',
-    }
-}; 
     // ==================== VARIABLES PARRAINAGE ====================
     let parrainage = {
         parrains: {},
@@ -4339,19 +4360,20 @@ const translations = {
             loginBtn.style.display = 'block';
             messageIcon.style.display = 'none';
         }
-        // Dans la fonction updateUserUI(), ajoutez cette ligne pour mettre à jour le badge
-function updateClientCountBadge() {
-    const clientsNonAdmin = clients.filter(c => !c.isAdmin);
-    const menuMessagerie = document.getElementById('menuMessagerie');
-    if (menuMessagerie) {
-        const badge = menuMessagerie.querySelector('.client-count-badge') || document.createElement('span');
-        if (!badge.classList.contains('client-count-badge')) {
-            badge.className = 'client-count-badge ml-1 bg-red-500 text-white px-1.5 rounded-full text-[8px]';
-            menuMessagerie.appendChild(badge);
-        }
-        badge.innerText = clientsNonAdmin.length;
     }
-}
+    
+    // Dans la fonction updateUserUI(), ajoutez cette ligne pour mettre à jour le badge
+    function updateClientCountBadge() {
+        const clientsNonAdmin = clients.filter(c => !c.isAdmin);
+        const menuMessagerie = document.getElementById('menuMessagerie');
+        if (menuMessagerie) {
+            const badge = menuMessagerie.querySelector('.client-count-badge') || document.createElement('span');
+            if (!badge.classList.contains('client-count-badge')) {
+                badge.className = 'client-count-badge ml-1 bg-red-500 text-white px-1.5 rounded-full text-[8px]';
+                menuMessagerie.appendChild(badge);
+            }
+            badge.innerText = clientsNonAdmin.length;
+        }
     }
     
     function voirProfil() {
@@ -4496,9 +4518,7 @@ function updateClientCountBadge() {
                     </div>
                     <span class="text-[7px] text-gray-400">(24)</span>
                 </div>
-               '<div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100 hover:bg-[#c5a059] hover:text-white transition-colors" data-i18n="' + (p.enStock=== false ? 'sold_out' : 'view_product') + '">' +
-                    (p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article') +
-                '</div>'
+                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-100 hover:bg-[#c5a059] hover:text-white transition-colors" data-i18n="${p.enStock === false ? 'sold_out' : 'view_product'}">${p.enStock === false ? 'INDISPONIBLE' : 'Voir l\'article'}</div>
             </div>`;
         }).join('');
         
@@ -5568,65 +5588,66 @@ function updateClientCountBadge() {
     }
     
     // ==================== FONCTIONS MESSAGERIE CORRIGÉES ====================
-function updateClientSelector() {
-    const selector = document.getElementById('clientsSelector');
-    if (!selector) return;
-    
-    // Filtrer pour exclure les admins
-    const clientsNonAdmin = clients.filter(c => !c.isAdmin);
-    
-    if (clientsNonAdmin.length === 0) {
-        selector.innerHTML = '<p class="text-center text-gray-400 text-[10px] py-4">Aucun client inscrit pour le moment</p>';
-        return;
+    function updateClientSelector() {
+        const selector = document.getElementById('clientsSelector');
+        if (!selector) return;
+        
+        // Filtrer pour exclure les admins
+        const clientsNonAdmin = clients.filter(c => !c.isAdmin);
+        
+        if (clientsNonAdmin.length === 0) {
+            selector.innerHTML = '<p class="text-center text-gray-400 text-[10px] py-4">Aucun client inscrit pour le moment</p>';
+            return;
+        }
+        
+        selector.innerHTML = clientsNonAdmin.map(c => `
+            <div class="flex items-center gap-2 p-2 border-b border-gray-100 hover:bg-gray-50">
+                <input type="checkbox" id="client_${c.id}" value="${c.id}" class="client-check w-4 h-4 accent-[#c5a059]">
+                <label for="client_${c.id}" class="flex-1 text-[9px] cursor-pointer">
+                    <span class="font-bold block">${c.nom}</span>
+                    <span class="text-gray-500">${c.email} | 📞 ${c.tel || 'Non renseigné'}</span>
+                    <span class="text-[8px] text-[#c5a059] block">Inscrit le: ${c.dateInscription || 'N/A'}</span>
+                </label>
+            </div>
+        `).join('');
+        
+        console.log(`✅ ${clientsNonAdmin.length} client(s) chargé(s) dans le sélecteur`);
+    }
+
+    function selectAllClients() {
+        document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
+            cb.checked = true;
+        });
+        showToast(`✅ Tous les clients sélectionnés (${document.querySelectorAll('#clientsSelector .client-check:checked').length})`);
+    }
+
+    function selectClientsAvecCommandes() {
+        const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+        const clientsActifs = [...new Set(historique.map(cmd => cmd.tel))];
+        
+        document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
+            const clientId = parseInt(cb.value);
+            const client = clients.find(c => c.id === clientId);
+            cb.checked = clientsActifs.includes(client?.tel);
+        });
+        
+        const count = document.querySelectorAll('#clientsSelector .client-check:checked').length;
+        showToast(`✅ ${count} client(s) actif(s) sélectionné(s)`);
+    }
+
+    function clearClientSelection() {
+        document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
+            cb.checked = false;
+        });
+        showToast("🔄 Sélection effacée");
+    }
+
+    // Ajouter cette fonction pour rafraîchir manuellement la liste
+    function refreshClientSelector() {
+        updateClientSelector();
+        showToast("📋 Liste des clients actualisée");
     }
     
-    selector.innerHTML = clientsNonAdmin.map(c => `
-        <div class="flex items-center gap-2 p-2 border-b border-gray-100 hover:bg-gray-50">
-            <input type="checkbox" id="client_${c.id}" value="${c.id}" class="client-check w-4 h-4 accent-[#c5a059]">
-            <label for="client_${c.id}" class="flex-1 text-[9px] cursor-pointer">
-                <span class="font-bold block">${c.nom}</span>
-                <span class="text-gray-500">${c.email} | 📞 ${c.tel || 'Non renseigné'}</span>
-                <span class="text-[8px] text-[#c5a059] block">Inscrit le: ${c.dateInscription || 'N/A'}</span>
-            </label>
-        </div>
-    `).join('');
-    
-    console.log(`✅ ${clientsNonAdmin.length} client(s) chargé(s) dans le sélecteur`);
-}
-
-function selectAllClients() {
-    document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
-        cb.checked = true;
-    });
-    showToast(`✅ Tous les clients sélectionnés (${document.querySelectorAll('#clientsSelector .client-check:checked').length})`);
-}
-
-function selectClientsAvecCommandes() {
-    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-    const clientsActifs = [...new Set(historique.map(cmd => cmd.tel))];
-    
-    document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
-        const clientId = parseInt(cb.value);
-        const client = clients.find(c => c.id === clientId);
-        cb.checked = clientsActifs.includes(client?.tel);
-    });
-    
-    const count = document.querySelectorAll('#clientsSelector .client-check:checked').length;
-    showToast(`✅ ${count} client(s) actif(s) sélectionné(s)`);
-}
-
-function clearClientSelection() {
-    document.querySelectorAll('#clientsSelector .client-check').forEach(cb => {
-        cb.checked = false;
-    });
-    showToast("🔄 Sélection effacée");
-}
-
-// Ajouter cette fonction pour rafraîchir manuellement la liste
-function refreshClientSelector() {
-    updateClientSelector();
-    showToast("📋 Liste des clients actualisée");
-}
     function envoyerMessageAdminSelection() {
         const selectedIds = [];
         document.querySelectorAll('#clientsSelector .client-check:checked').forEach(cb => {
@@ -6575,7 +6596,7 @@ L'équipe Latyfa Shop
     // ==================== INITIALISATION ====================
     window.addEventListener('load', () => {
         // Initialiser la langue
-initLanguage();
+        initLanguage();
         chargerDonnees();
         
         render();
@@ -6612,7 +6633,7 @@ initLanguage();
             const btn = document.getElementById('dark-mode-btn');
             if (btn) {
                 btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
-                btn.style.backgroundColor = "#fbf24";
+                btn.style.backgroundColor = "#fbbf24";
                 btn.style.color = "#000";
             }
         }
