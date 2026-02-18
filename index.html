@@ -11,7 +11,7 @@
         gtag('config', 'G-0HC6CY42YB');
     </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>LATYFA BOUTIQUE | Officiel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -73,18 +73,18 @@
         /* ==================== SÉLECTEUR DE LANGUE ==================== */
         .language-selector {
             position: relative;
-            margin-right: 15px;
+            margin-right: 5px;
         }
 
         .language-btn {
             display: flex;
             align-items: center;
-            gap: 5px;
-            padding: 8px 12px;
+            gap: 3px;
+            padding: 6px 8px;
             background: #f3f4f6;
             border-radius: 30px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             transition: all 0.3s;
@@ -98,7 +98,7 @@
         }
 
         .language-btn i {
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .language-dropdown {
@@ -108,26 +108,26 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
-            min-width: 150px;
+            min-width: 130px;
             padding: 8px 0;
             margin-top: 5px;
             display: none;
-            z-index: 100;
+            z-index: 1000;
             border: 1px solid #f0f0f0;
         }
 
-        .language-selector:hover .language-dropdown {
+        .language-dropdown.show {
             display: block;
         }
 
         .language-option {
-            padding: 10px 15px;
+            padding: 8px 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
         }
 
@@ -142,10 +142,10 @@
         }
 
         .language-option img {
-            width: 20px;
-            height: 15px;
+            width: 18px;
+            height: 12px;
             object-fit: cover;
-            border-radius: 3px;
+            border-radius: 2px;
         }
 
         .dark-theme .language-dropdown {
@@ -155,6 +155,60 @@
 
         .dark-theme .language-option:hover {
             background: #2d2d2d;
+        }
+
+        /* Menu hamburger pour mobile */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            border-top: 1px solid #eee;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dark-theme .mobile-menu {
+            background: #1e1e1e;
+            border-color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .desktop-items {
+                display: none !important;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .language-selector {
+                margin-right: 0;
+            }
         }
         
         :root { 
@@ -172,6 +226,7 @@
             font-family: 'Montserrat', sans-serif; 
             margin: 0; 
             scroll-behavior: smooth; 
+            overflow-x: hidden;
         }
         
         .logo-font { font-family: 'Playfair Display', serif; color: var(--latyfa-gold) !important; }
@@ -385,7 +440,7 @@
         .message-icon {
             position: relative;
             cursor: pointer;
-            margin-right: 10px;
+            margin-right: 5px;
         }
         
         .message-badge {
@@ -1542,10 +1597,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- HEADER -->
 <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-2">
         <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop()">
             <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
-            <span class="text-2xl font-black italic logo-font tracking-tighter">LATYFA SHOP</span>
+            <span class="text-xl md:text-2xl font-black italic logo-font tracking-tighter">LATYFA SHOP</span>
         </div>
         
         <div class="flex-1 max-w-md hidden md:block">
@@ -1556,7 +1611,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         
-        <div class="flex gap-3 items-center">
+        <div class="flex gap-1 md:gap-3 items-center">
             <div id="messageIcon" class="message-icon" onclick="ouvrirMessages()" style="display: none;">
                 <i class="fa-regular fa-envelope text-gray-600 text-xl hover:text-[#c5a059] transition"></i>
                 <span id="messageBadge" class="message-badge">0</span>
@@ -1588,14 +1643,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             </div>
+            
             <!-- SÉLECTEUR DE LANGUE -->
             <div class="language-selector">
-                <div class="language-btn" id="currentLanguageBtn">
+                <div class="language-btn" id="currentLanguageBtn" onclick="toggleLanguageDropdown()">
                     <i class="fa-solid fa-globe"></i>
                     <span id="currentLanguageText">FR</span>
                     <i class="fa-solid fa-chevron-down text-[8px]"></i>
                 </div>
-                <div class="language-dropdown">
+                <div class="language-dropdown" id="languageDropdown">
                     <div class="language-option active" onclick="changeLanguage('fr')" data-lang="fr">
                         <img src="https://flagcdn.com/w20/fr.png" alt="Français">
                         <span>Français</span>
@@ -1609,30 +1665,51 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span>Español</span>
                     </div>
                 </div>
-            </div>   
-            <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-white transition">
-                Se connecter
+            </div>
+            
+            <!-- Éléments desktop -->
+            <div class="desktop-items flex gap-1 md:gap-3 items-center">
+                <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-3 py-2 rounded-full hover:bg-[#c5a059] hover:text-white transition whitespace-nowrap">
+                    Se connecter
+                </button>
+                
+                <div class="relative" onclick="toggleWishlistModal()">
+                    <i class="fa-regular fa-heart text-gray-600 cursor-pointer hover:text-[#ff6600] text-xl"></i>
+                    <span id="wishlist-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                </div>
+                
+                <button onclick="toggleDarkMode()" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition-all" id="dark-mode-btn">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                
+                <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
+                    <i class="fa-solid fa-cart-shopping text-gray-600"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold flex items-center justify-center min-w-[18px] h-[18px]">0</span>
+                    <p class="text-[9px] font-bold uppercase hidden md:block" data-i18n="cart">Panier</p>
+                </div>
+            </div>
+            
+            <!-- Menu hamburger pour mobile -->
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
             </button>
-            
-            <div class="relative" onclick="toggleWishlistModal()">
-                <i class="fa-regular fa-heart text-gray-600 cursor-pointer hover:text-[#ff6600] text-xl"></i>
-                <span id="wishlist-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
-            </div>
-            
-            <button onclick="toggleDarkMode()" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition-all" id="dark-mode-btn">
-                <i class="fa-solid fa-moon"></i>
-            </button>
-            
-            <div onclick="suivreColis()" class="text-center cursor-pointer hover:text-[#ff6600]">
-                <i class="fa-solid fa-truck text-gray-600"></i>
-                <p class="text-[9px] font-bold uppercase" data-i18n="track">Suivi</p>
-            </div>
-
-            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative hover:text-[#ff6600]">
-                <i class="fa-solid fa-cart-shopping text-gray-600"></i>
-                <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold flex items-center justify-center min-w-[18px] h-[18px]">0</span>
-                <p class="text-[9px] font-bold uppercase" data-i18n="cart">Panier</p>
-            </div>
+        </div>
+    </div>
+    
+    <!-- Menu mobile -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-item" onclick="toggleWishlistModal(); closeMobileMenu()">
+            <i class="fa-regular fa-heart"></i>
+            <span>Mes favoris</span>
+            <span id="wishlist-count-mobile" class="ml-auto bg-[#ff6600] text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+        </div>
+        <div class="mobile-menu-item" onclick="toggleDarkMode(); closeMobileMenu()">
+            <i class="fa-solid fa-moon"></i>
+            <span>Mode sombre</span>
+        </div>
+        <div class="mobile-menu-item" onclick="ouvrirAuthModal(); closeMobileMenu()">
+            <i class="fa-regular fa-user"></i>
+            <span data-i18n="login">Se connecter</span>
         </div>
     </div>
 </header>
@@ -3053,6 +3130,33 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
     // ==================== FONCTIONS DE TRADUCTION ====================
 
+    // Fonction pour ouvrir/fermer le dropdown de langue
+    function toggleLanguageDropdown() {
+        const dropdown = document.getElementById('languageDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    // Fermer le dropdown si on clique ailleurs
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('languageDropdown');
+        const btn = document.getElementById('currentLanguageBtn');
+        
+        if (!btn.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+
+    // Fonction pour ouvrir/fermer le menu mobile
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('active');
+    }
+
+    function closeMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.remove('active');
+    }
+
     // Fonction pour changer la langue
     function changeLanguage(lang) {
         currentLanguage = lang;
@@ -3068,6 +3172,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 opt.classList.add('active');
             }
         });
+        
+        // Fermer le dropdown
+        document.getElementById('languageDropdown').classList.remove('show');
         
         // Traduire tous les éléments
         translatePage();
@@ -3227,7 +3334,6 @@ document.addEventListener('DOMContentLoaded', function() {
             'search_placeholder': 'Rechercher un article...',
             'login': 'Se connecter',
             'cart': 'Panier',
-            'track': 'Suivi',
             
             // Bannières
             'promo_text': '✨ Promo Exclusive -20% dès 20.000 F d\'achat du 14 au 28 fév 2026:',
@@ -3304,7 +3410,6 @@ document.addEventListener('DOMContentLoaded', function() {
             'search_placeholder': 'Search for an item...',
             'login': 'Login',
             'cart': 'Cart',
-            'track': 'Track',
             
             // Bannières
             'promo_text': '✨ Exclusive Promo -20% from 20.000 F purchase Feb 14-28 2026:',
@@ -3381,7 +3486,6 @@ document.addEventListener('DOMContentLoaded', function() {
             'search_placeholder': 'Buscar artículo...',
             'login': 'Iniciar sesión',
             'cart': 'Carrito',
-            'track': 'Seguimiento',
             
             // Bannières
             'promo_text': '✨ Promo Exclusiva -20% desde 20.000 F de compra del 14 al 28 feb 2026:',
