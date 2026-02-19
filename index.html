@@ -27,58 +27,6 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#c5a059">
     <style>
-        /* ==================== ANIMATION TITRE VAGUE MULTICOLORE ==================== */
-@keyframes waveColors {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        color: #ff6600; /* Orange */
-        text-shadow: 0 5px 15px rgba(255, 102, 0, 0.4),
-                     0 10px 25px rgba(255, 102, 0, 0.2);
-    }
-    16% {
-        transform: translateY(-6px) rotate(-1deg);
-        color: #ffffff; /* Blanc */
-        text-shadow: 0 8px 20px rgba(255, 255, 255, 0.5),
-                     0 15px 30px rgba(255, 255, 255, 0.3);
-    }
-    32% {
-        transform: translateY(0) rotate(0deg);
-        color: #00ff00; /* Vert */
-        text-shadow: 0 5px 15px rgba(0, 255, 0, 0.4),
-                     0 10px 25px rgba(0, 255, 0, 0.2);
-    }
-    48% {
-        transform: translateY(6px) rotate(1deg);
-        color: #ff6600; /* Orange */
-        text-shadow: 0 8px 20px rgba(255, 102, 0, 0.5),
-                     0 15px 30px rgba(255, 102, 0, 0.3);
-    }
-    64% {
-        transform: translateY(-3px) rotate(-0.5deg);
-        color: #ffffff; /* Blanc */
-        text-shadow: 0 6px 18px rgba(255, 255, 255, 0.4),
-                     0 12px 25px rgba(255, 255, 255, 0.2);
-    }
-    80% {
-        transform: translateY(3px) rotate(0.5deg);
-        color: #00ff00; /* Vert */
-        text-shadow: 0 6px 18px rgba(0, 255, 0, 0.4),
-                     0 12px 25px rgba(0, 255, 0, 0.2);
-    }
-    100% {
-        transform: translateY(0) rotate(0deg);
-        color: #ff6600; /* Orange */
-        text-shadow: 0 5px 15px rgba(255, 102, 0, 0.4),
-                     0 10px 25px rgba(255, 102, 0, 0.2);
-    }
-}
-
-.hero-title {
-    animation: waveColors 9s ease-in-out infinite;
-    display: inline-block;
-    font-weight: 900;
-    letter-spacing: 2px;
-}
         /* ==================== ANIMATION BOUTIQUE DE LUXE ==================== */
 .luxury-boutique-bg {
     position: absolute;
@@ -2042,6 +1990,58 @@ header img {
     font-weight: 900;
     letter-spacing: 2px;
 }
+       /* ==================== ANIMATION TITRE VAGUE MULTICOLORE ==================== */
+@keyframes waveColors {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        color: #ff6600 !important; /* Orange */
+        text-shadow: 0 5px 15px rgba(255, 102, 0, 0.8),
+                     0 10px 25px rgba(255, 102, 0, 0.5);
+    }
+    16% {
+        transform: translateY(-6px) rotate(-1deg);
+        color: #ffffff !important; /* Blanc */
+        text-shadow: 0 8px 20px rgba(255, 255, 255, 0.9),
+                     0 15px 30px rgba(255, 255, 255, 0.6);
+    }
+    32% {
+        transform: translateY(0) rotate(0deg);
+        color: #00ff00 !important; /* Vert */
+        text-shadow: 0 5px 15px rgba(0, 255, 0, 0.8),
+                     0 10px 25px rgba(0, 255, 0, 0.5);
+    }
+    48% {
+        transform: translateY(6px) rotate(1deg);
+        color: #ff6600 !important; /* Orange */
+        text-shadow: 0 8px 20px rgba(255, 102, 0, 0.9),
+                     0 15px 30px rgba(255, 102, 0, 0.6);
+    }
+    64% {
+        transform: translateY(-3px) rotate(-0.5deg);
+        color: #ffffff !important; /* Blanc */
+        text-shadow: 0 6px 18px rgba(255, 255, 255, 0.8),
+                     0 12px 25px rgba(255, 255, 255, 0.5);
+    }
+    80% {
+        transform: translateY(3px) rotate(0.5deg);
+        color: #00ff00 !important; /* Vert */
+        text-shadow: 0 6px 18px rgba(0, 255, 0, 0.8),
+                     0 12px 25px rgba(0, 255, 0, 0.5);
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+        color: #ff6600 !important; /* Orange */
+        text-shadow: 0 5px 15px rgba(255, 102, 0, 0.8),
+                     0 10px 25px rgba(255, 102, 0, 0.5);
+    }
+}
+
+.hero-title {
+    animation: waveColors 9s ease-in-out infinite;
+    display: inline-block;
+    font-weight: 900;
+    letter-spacing: 2px;
+} 
     </style>
     
     <audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
