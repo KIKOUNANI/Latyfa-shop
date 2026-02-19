@@ -2174,6 +2174,486 @@ header img {
 [data-theme] .flash-sale {
     background: var(--theme-gradient) !important;
 }
+       /* ==================== CHASSE AU TRÉSOR ==================== */
+.treasure-section {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border-radius: 24px;
+    padding: 24px;
+    color: white;
+    margin-top: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.treasure-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(197,160,89,0.1) 0%, transparent 70%);
+    animation: treasurePulse 10s ease-in-out infinite;
+}
+
+@keyframes treasurePulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.1); opacity: 0.6; }
+}
+
+.treasure-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.treasure-title {
+    font-size: 24px;
+    font-weight: 900;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.treasure-title i {
+    color: #c5a059;
+    animation: treasureSpin 3s linear infinite;
+}
+
+@keyframes treasureSpin {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+}
+
+.treasure-points {
+    background: #c5a059;
+    color: black;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-weight: 900;
+    font-size: 18px;
+    box-shadow: 0 0 20px rgba(197,160,89,0.5);
+}
+
+.progress-container {
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    margin-bottom: 8px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.progress-bar-bg {
+    height: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #cd7f32, #ffd700, #e5e4e2, #b9f2ff);
+    border-radius: 6px;
+    transition: width 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.progress-next {
+    text-align: right;
+    font-size: 10px;
+    margin-top: 4px;
+    color: #c5a059;
+}
+
+.missions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+.mission-card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 16px 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,0.1);
+    border-color: #c5a059;
+}
+
+.mission-card.completed {
+    background: rgba(197,160,89,0.2);
+    border-color: #c5a059;
+    opacity: 0.8;
+}
+
+.mission-card.completed::before {
+    content: '✓';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: #c5a059;
+    font-weight: 900;
+    font-size: 12px;
+}
+
+.mission-emoji {
+    font-size: 32px;
+    margin-bottom: 8px;
+    animation: missionBounce 2s ease-in-out infinite;
+}
+
+@keyframes missionBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.mission-title {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.mission-points {
+    color: #c5a059;
+    font-weight: 900;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.mission-button {
+    background: #c5a059;
+    color: black;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.mission-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(197,160,89,0.3);
+}
+
+.mission-button.completed {
+    background: #10b981;
+    color: white;
+}
+
+.weekly-challenges {
+    background: rgba(255,255,255,0.03);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+.weekly-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #c5a059;
+}
+
+.challenge-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.challenge-item:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.challenge-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.challenge-emoji {
+    font-size: 24px;
+}
+
+.challenge-text {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.challenge-subtext {
+    font-size: 9px;
+    color: #9ca3af;
+}
+
+.challenge-points {
+    color: #c5a059;
+    font-weight: 900;
+    font-size: 14px;
+    margin-right: 12px;
+}
+
+.challenge-progress {
+    width: 80px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.challenge-progress-fill {
+    height: 100%;
+    background: #c5a059;
+    transition: width 0.3s ease;
+}
+
+.treasure-chest {
+    background: linear-gradient(135deg, rgba(197,160,89,0.2), rgba(0,0,0,0.3));
+    border-radius: 20px;
+    padding: 20px;
+    border: 2px dashed #c5a059;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.treasure-chest:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(197,160,89,0.3);
+}
+
+.treasure-chest.active {
+    animation: treasureGlow 1s ease-in-out infinite alternate;
+}
+
+@keyframes treasureGlow {
+    from { box-shadow: 0 0 10px #c5a059; }
+    to { box-shadow: 0 0 30px #c5a059, 0 0 50px #c5a059; }
+}
+
+.treasure-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.treasure-emoji {
+    font-size: 48px;
+    animation: treasureFloat 3s ease-in-out infinite;
+}
+
+@keyframes treasureFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+.treasure-info h4 {
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 4px;
+}
+
+.treasure-info p {
+    font-size: 11px;
+    color: #c5a059;
+}
+
+.treasure-timer {
+    font-size: 24px;
+    font-weight: 900;
+    color: #c5a059;
+    text-shadow: 0 0 10px rgba(197,160,89,0.5);
+    margin-left: auto;
+}
+
+.treasure-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.treasure-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #c5a059;
+    border-radius: 50%;
+    animation: particleFloat 2s ease-out infinite;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-50px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Modale de récompense */
+.reward-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.reward-modal.active {
+    display: flex;
+}
+
+.reward-content {
+    background: white;
+    border-radius: 30px;
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    animation: rewardPop 0.5s ease;
+}
+
+@keyframes rewardPop {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.reward-emoji {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: rewardBounce 1s ease infinite alternate;
+}
+
+@keyframes rewardBounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20px); }
+}
+
+.reward-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: #c5a059;
+    margin-bottom: 10px;
+}
+
+.reward-text {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.reward-button {
+    background: #c5a059;
+    color: black;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-weight: 900;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reward-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(197,160,89,0.3);
+}
+
+/* Badges de niveau */
+.level-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-left: 8px;
+}
+
+.level-badge.bronze { background: #cd7f32; color: white; }
+.level-badge.argent { background: #c0c0c0; color: black; }
+.level-badge.or { background: #ffd700; color: black; }
+.level-badge.platine { background: #e5e4e2; color: black; }
+.level-badge.diamant { background: #b9f2ff; color: black; }
+
+/* Responsive */
+@media (min-width: 768px) {
+    .missions-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+} 
     </style>
     
     <audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
@@ -2766,6 +3246,492 @@ document.addEventListener('DOMContentLoaded', function() {
 </section>
 
 <script>
+    // ==================== SYSTÈME DE CHASSE AU TRÉSOR COMPLET ====================
+
+// Configuration des niveaux
+const treasureLevels = [
+    { name: 'Bronze', points: 0, color: '#cd7f32', discount: 5, icon: '🟤' },
+    { name: 'Argent', points: 500, color: '#c0c0c0', discount: 10, icon: '⚪' },
+    { name: 'Or', points: 1500, color: '#ffd700', discount: 15, icon: '🟡' },
+    { name: 'Platine', points: 3000, color: '#e5e4e2', discount: 20, icon: '🔘' },
+    { name: 'Diamant', points: 5000, color: '#b9f2ff', discount: 25, icon: '🔵' }
+];
+
+// Configuration des missions quotidiennes
+const dailyMissions = [
+    { id: 'visit', name: 'Visite du jour', emoji: '👋', points: 10, action: 'Se connecter', icon: 'fa-solid fa-hand' },
+    { id: 'share', name: 'Partager', emoji: '📤', points: 20, action: 'Partager sur WhatsApp', icon: 'fa-solid fa-share' },
+    { id: 'wishlist', name: 'Favoris', emoji: '❤️', points: 15, action: 'Ajouter 3 favoris', icon: 'fa-regular fa-heart', target: 3 },
+    { id: 'review', name: 'Avis', emoji: '⭐', points: 30, action: 'Donner son avis', icon: 'fa-regular fa-star' }
+];
+
+// Configuration des défis hebdomadaires
+const weeklyChallenges = [
+    { id: 'first_purchase', name: 'Premier achat', emoji: '🛍️', points: 100, action: 'Passer commande', icon: 'fa-solid fa-bag-shopping', target: 1 },
+    { id: 'three_purchases', name: '3 achats', emoji: '🎁', points: 300, action: '3 commandes', icon: 'fa-solid fa-gift', target: 3 },
+    { id: 'referral', name: 'Parrainer', emoji: '🤝', points: 150, action: '1 filleul', icon: 'fa-solid fa-handshake', target: 1 },
+    { id: 'five_reviews', name: '5 avis', emoji: '📝', points: 200, action: '5 avis', icon: 'fa-regular fa-pen-to-square', target: 5 }
+];
+
+// Configuration du coffre mystère
+const treasureRewards = [
+    { name: 'Bracelet Mystère', type: 'product', value: 'Bracelet Perle', emoji: '📿', proba: 30, points: 0 },
+    { name: 'Code -15%', type: 'promo', value: 15, emoji: '🏷️', proba: 25, points: 0 },
+    { name: '100 points', type: 'points', value: 100, emoji: '⭐', proba: 20, points: 100 },
+    { name: 'Livraison gratuite', type: 'shipping', value: true, emoji: '📦', proba: 15, points: 0 },
+    { name: 'Collier surprise', type: 'product', value: 'Collier Or', emoji: '📿', proba: 10, points: 0 }
+];
+
+// Variables globales
+let userTreasure = {
+    points: 0,
+    level: 'Bronze',
+    daily: {},
+    weekly: {},
+    lastReward: null
+};
+
+// Initialisation
+function initTreasure() {
+    // Charger les données sauvegardées
+    const saved = localStorage.getItem('latyfa_treasure');
+    const today = new Date().toDateString();
+    
+    if (saved) {
+        try {
+            userTreasure = JSON.parse(saved);
+            
+            // Réinitialiser les missions quotidiennes si nouveau jour
+            if (userTreasure.lastDaily !== today) {
+                userTreasure.daily = {};
+                userTreasure.lastDaily = today;
+            }
+            
+            // Réinitialiser les défis hebdomadaires si nouvelle semaine
+            const weekNumber = getWeekNumber();
+            if (userTreasure.lastWeek !== weekNumber) {
+                userTreasure.weekly = {};
+                userTreasure.lastWeek = weekNumber;
+            }
+        } catch(e) {
+            resetTreasure();
+        }
+    } else {
+        resetTreasure();
+    }
+    
+    // Sauvegarder et mettre à jour l'UI
+    saveTreasure();
+    updateTreasureUI();
+    startTreasureTimer();
+}
+
+function resetTreasure() {
+    userTreasure = {
+        points: 0,
+        level: 'Bronze',
+        daily: {},
+        weekly: {},
+        lastDaily: new Date().toDateString(),
+        lastWeek: getWeekNumber(),
+        lastReward: null
+    };
+}
+
+function getWeekNumber() {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 1);
+    const diff = now - start;
+    const oneWeek = 604800000;
+    return Math.floor(diff / oneWeek);
+}
+
+function saveTreasure() {
+    localStorage.setItem('latyfa_treasure', JSON.stringify(userTreasure));
+}
+
+function updateTreasureUI() {
+    // Mettre à jour les points
+    document.getElementById('treasurePoints').innerText = userTreasure.points.toLocaleString();
+    
+    // Calculer le niveau actuel
+    let currentLevel = treasureLevels[0];
+    let nextLevel = treasureLevels[1];
+    
+    for (let i = treasureLevels.length - 1; i >= 0; i--) {
+        if (userTreasure.points >= treasureLevels[i].points) {
+            currentLevel = treasureLevels[i];
+            nextLevel = treasureLevels[i + 1] || treasureLevels[i];
+            break;
+        }
+    }
+    
+    // Mettre à jour la barre de progression
+    const progress = ((userTreasure.points - currentLevel.points) / (nextLevel.points - currentLevel.points)) * 100;
+    document.getElementById('treasureProgress').style.width = Math.min(100, progress) + '%';
+    document.getElementById('treasureNext').innerHTML = `Prochain palier: ${nextLevel.name} (${nextLevel.points - userTreasure.points} points)`;
+    
+    // Mettre à jour les missions quotidiennes
+    renderDailyMissions();
+    
+    // Mettre à jour les défis hebdomadaires
+    renderWeeklyChallenges();
+}
+
+function renderDailyMissions() {
+    const container = document.getElementById('dailyMissions');
+    if (!container) return;
+    
+    container.innerHTML = dailyMissions.map(mission => {
+        const completed = userTreasure.daily[mission.id]?.completed || false;
+        const progress = userTreasure.daily[mission.id]?.progress || 0;
+        const target = mission.target || 1;
+        
+        return `
+            <div class="mission-card ${completed ? 'completed' : ''}" onclick="${!completed ? 'startMission(\'' + mission.id + '\')' : ''}">
+                <div class="mission-emoji">${mission.emoji}</div>
+                <div class="mission-title">${mission.name}</div>
+                <div class="mission-points">+${mission.points}</div>
+                ${mission.target ? `
+                    <div class="challenge-progress" style="margin: 8px auto; width: 80%;">
+                        <div class="challenge-progress-fill" style="width: ${(progress/target)*100}%"></div>
+                    </div>
+                ` : ''}
+                <button class="mission-button ${completed ? 'completed' : ''}" ${completed ? 'disabled' : ''}>
+                    ${completed ? '✓ Fait' : mission.action}
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderWeeklyChallenges() {
+    const container = document.getElementById('weeklyChallenges');
+    if (!container) return;
+    
+    container.innerHTML = weeklyChallenges.map(challenge => {
+        const progress = userTreasure.weekly[challenge.id]?.progress || 0;
+        const target = challenge.target;
+        const completed = progress >= target;
+        
+        return `
+            <div class="challenge-item">
+                <div class="challenge-info">
+                    <span class="challenge-emoji">${challenge.emoji}</span>
+                    <div>
+                        <div class="challenge-text">${challenge.name}</div>
+                        <div class="challenge-subtext">${challenge.action}</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="challenge-points">+${challenge.points}</span>
+                    <div class="challenge-progress">
+                        <div class="challenge-progress-fill" style="width: ${Math.min(100, (progress/target)*100)}%"></div>
+                    </div>
+                    ${completed ? '<span style="color: #10b981;">✓</span>' : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Démarrer une mission
+function startMission(missionId) {
+    const mission = dailyMissions.find(m => m.id === missionId);
+    if (!mission) return;
+    
+    switch(missionId) {
+        case 'visit':
+            // Mission visite - automatique
+            completeMission(missionId);
+            break;
+            
+        case 'share':
+            // Ouvrir WhatsApp pour partager
+            const product = products[Math.floor(Math.random() * products.length)];
+            const msg = `✨ Découvrez ce produit sur Latyfa Shop !\n${product.name} - ${product.price.toLocaleString()} F\nhttps://latyfashop.com/produit/${product.id}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+            
+            // Compter le partage
+            trackMission(missionId);
+            break;
+            
+        case 'wishlist':
+            // Ouvrir la wishlist
+            toggleWishlistModal();
+            showToast("❤️ Ajoutez 3 produits en favoris !");
+            break;
+            
+        case 'review':
+            // Ouvrir le formulaire d'avis
+            deposerAvis();
+            break;
+    }
+}
+
+function trackMission(missionId) {
+    if (!userTreasure.daily[missionId]) {
+        userTreasure.daily[missionId] = { progress: 0, completed: false };
+    }
+    
+    const mission = dailyMissions.find(m => m.id === missionId);
+    userTreasure.daily[missionId].progress++;
+    
+    if (userTreasure.daily[missionId].progress >= (mission.target || 1) && !userTreasure.daily[missionId].completed) {
+        completeMission(missionId);
+    }
+    
+    saveTreasure();
+    updateTreasureUI();
+}
+
+function completeMission(missionId) {
+    if (userTreasure.daily[missionId]?.completed) return;
+    
+    const mission = dailyMissions.find(m => m.id === missionId);
+    if (!mission) return;
+    
+    userTreasure.daily[missionId] = { progress: mission.target || 1, completed: true };
+    addTreasurePoints(mission.points, `Mission: ${mission.name}`);
+}
+
+function trackPurchase(amount) {
+    // Premier achat
+    if (!userTreasure.weekly.first_purchase) {
+        userTreasure.weekly.first_purchase = { progress: 0, completed: false };
+    }
+    userTreasure.weekly.first_purchase.progress++;
+    if (userTreasure.weekly.first_purchase.progress >= 1 && !userTreasure.weekly.first_purchase.completed) {
+        userTreasure.weekly.first_purchase.completed = true;
+        addTreasurePoints(100, 'Premier achat');
+    }
+    
+    // 3 achats
+    if (!userTreasure.weekly.three_purchases) {
+        userTreasure.weekly.three_purchases = { progress: 0, completed: false };
+    }
+    userTreasure.weekly.three_purchases.progress++;
+    if (userTreasure.weekly.three_purchases.progress >= 3 && !userTreasure.weekly.three_purchases.completed) {
+        userTreasure.weekly.three_purchases.completed = true;
+        addTreasurePoints(300, '3 achats');
+    }
+    
+    // Points basés sur le montant
+    const pointsGagnes = Math.floor(amount / 1000) * 10;
+    addTreasurePoints(pointsGagnes, 'Achat');
+}
+
+function trackReferral() {
+    if (!userTreasure.weekly.referral) {
+        userTreasure.weekly.referral = { progress: 0, completed: false };
+    }
+    userTreasure.weekly.referral.progress++;
+    if (userTreasure.weekly.referral.progress >= 1 && !userTreasure.weekly.referral.completed) {
+        userTreasure.weekly.referral.completed = true;
+        addTreasurePoints(150, 'Parrainage');
+    }
+}
+
+function trackReview() {
+    if (!userTreasure.weekly.five_reviews) {
+        userTreasure.weekly.five_reviews = { progress: 0, completed: false };
+    }
+    userTreasure.weekly.five_reviews.progress++;
+    if (userTreasure.weekly.five_reviews.progress >= 5 && !userTreasure.weekly.five_reviews.completed) {
+        userTreasure.weekly.five_reviews.completed = true;
+        addTreasurePoints(200, '5 avis');
+    }
+}
+
+function addTreasurePoints(points, reason) {
+    userTreasure.points += points;
+    
+    // Vérifier le changement de niveau
+    const oldLevel = userTreasure.level;
+    for (const level of treasureLevels) {
+        if (userTreasure.points >= level.points) {
+            userTreasure.level = level.name;
+        }
+    }
+    
+    // Notification de changement de niveau
+    if (oldLevel !== userTreasure.level) {
+        showRewardModal(
+            '🏆',
+            'NOUVEAU NIVEAU !',
+            `Vous êtes maintenant ${userTreasure.level}`,
+            'continuer'
+        );
+        
+        // Appliquer la réduction permanente
+        const level = treasureLevels.find(l => l.name === userTreasure.level);
+        if (level) {
+            localStorage.setItem('latyfa_permanent_discount', level.discount);
+        }
+    }
+    
+    showToast(`✨ +${points} points : ${reason}`);
+    saveTreasure();
+    updateTreasureUI();
+}
+
+// Gestion du coffre mystère
+let treasureInterval = null;
+let treasureTimeLeft = 165; // 2:45 en secondes
+
+function startTreasureTimer() {
+    if (treasureInterval) clearInterval(treasureInterval);
+    
+    treasureInterval = setInterval(() => {
+        treasureTimeLeft--;
+        
+        const minutes = Math.floor(treasureTimeLeft / 60);
+        const seconds = treasureTimeLeft % 60;
+        document.getElementById('treasureTimer').innerText = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        // Créer des particules
+        if (treasureTimeLeft % 10 === 0) {
+            createTreasureParticles();
+        }
+        
+        if (treasureTimeLeft <= 0) {
+            // Activer le coffre
+            document.getElementById('treasureChest').classList.add('active');
+            document.getElementById('treasureEmoji').innerHTML = '💎';
+            document.getElementById('treasureSubtext').innerHTML = 'Cliquez pour ouvrir !';
+            document.getElementById('treasureTimer').style.display = 'none';
+            
+            // Animation d'alerte
+            confetti({
+                particleCount: 50,
+                spread: 50,
+                origin: { y: 0.6 },
+                colors: ['#c5a059', '#ffd700', '#ffffff']
+            });
+            
+            clearInterval(treasureInterval);
+        }
+    }, 1000);
+}
+
+function createTreasureParticles() {
+    const container = document.getElementById('treasureParticles');
+    container.innerHTML = '';
+    
+    for (let i = 0; i < 10; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'treasure-particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 2 + 's';
+        container.appendChild(particle);
+        
+        setTimeout(() => particle.remove(), 2000);
+    }
+}
+
+function openTreasure() {
+    if (treasureTimeLeft > 0) {
+        showToast(`⏳ Prochain coffre dans ${document.getElementById('treasureTimer').innerText}`);
+        return;
+    }
+    
+    // Choisir une récompense aléatoire
+    const random = Math.random() * 100;
+    let cumulative = 0;
+    let selected = treasureRewards[0];
+    
+    for (const reward of treasureRewards) {
+        cumulative += reward.proba;
+        if (random <= cumulative) {
+            selected = reward;
+            break;
+        }
+    }
+    
+    // Appliquer la récompense
+    let rewardMessage = '';
+    
+    switch(selected.type) {
+        case 'product':
+            // Ajouter un produit gratuit au panier
+            cart.push({
+                id: 'treasure-' + Date.now(),
+                label: `🎁 TRÉSOR : ${selected.name}`,
+                qty: 1,
+                price: 0,
+                images: ['https://via.placeholder.com/100']
+            });
+            localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+            updateCartCount();
+            rewardMessage = `🎉 ${selected.name} ajouté à votre panier !`;
+            break;
+            
+        case 'promo':
+            localStorage.setItem('latyfa_active_promo', JSON.stringify({
+                code: `TRESOR${Math.floor(Math.random() * 1000)}`,
+                expires: Date.now() + (30 * 24 * 60 * 60 * 1000),
+                remise: selected.value
+            }));
+            rewardMessage = `🎟️ Code promo -${selected.value}% activé !`;
+            break;
+            
+        case 'points':
+            addTreasurePoints(selected.value, 'Coffre mystère');
+            rewardMessage = `✨ ${selected.value} points bonus !`;
+            break;
+            
+        case 'shipping':
+            localStorage.setItem('latyfa_livraison_gratuite', Date.now() + (30 * 24 * 60 * 60 * 1000));
+            rewardMessage = `📦 Livraison gratuite pour 30 jours !`;
+            break;
+    }
+    
+    // Afficher la modale
+    showRewardModal(
+        selected.emoji,
+        'TRÉSOR TROUVÉ !',
+        selected.name,
+        rewardMessage
+    );
+    
+    // Réinitialiser le coffre
+    resetTreasureChest();
+}
+
+function resetTreasureChest() {
+    treasureTimeLeft = 165;
+    document.getElementById('treasureChest').classList.remove('active');
+    document.getElementById('treasureEmoji').innerHTML = '🎁';
+    document.getElementById('treasureSubtext').innerHTML = 'Prochain coffre dans';
+    document.getElementById('treasureTimer').style.display = 'block';
+    startTreasureTimer();
+}
+
+function showRewardModal(emoji, title, text, subtitle) {
+    document.getElementById('rewardEmoji').innerHTML = emoji;
+    document.getElementById('rewardTitle').innerHTML = title;
+    document.getElementById('rewardText').innerHTML = text;
+    document.getElementById('rewardModal').classList.add('active');
+    
+    // Confettis
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#c5a059', '#ffd700', '#ffffff']
+    });
+}
+
+function closeReward() {
+    document.getElementById('rewardModal').classList.remove('active');
+}
+
+// Initialiser au chargement
+window.addEventListener('load', function() {
+    setTimeout(initTreasure, 1000);
+});
 // Animation canvas pour la section hero
 window.addEventListener('load', function() {
     const canvas = document.getElementById('heroCanvas');
@@ -2874,7 +3840,75 @@ window.addEventListener('load', function() {
         </main>
     </div>
 </div>
+<!-- ==================== SECTION CHASSE AU TRÉSOR ==================== -->
+<section class="treasure-section" id="treasureSection">
+    <div class="treasure-header">
+        <div class="treasure-title">
+            <i class="fa-solid fa-treasure-chest"></i>
+            <span>CHASSE AU TRÉSOR LATYFA</span>
+        </div>
+        <div class="treasure-points" id="treasurePoints">0</div>
+    </div>
+    
+    <!-- Barre de progression des niveaux -->
+    <div class="progress-container">
+        <div class="progress-labels">
+            <span>Bronze</span>
+            <span>Argent</span>
+            <span>Or</span>
+            <span>Platine</span>
+            <span>Diamant</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="treasureProgress" style="width: 0%"></div>
+        </div>
+        <div class="progress-next" id="treasureNext">Prochain palier: 500 points</div>
+    </div>
+    
+    <!-- Missions quotidiennes -->
+    <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-calendar-day" style="color: #c5a059;"></i>
+        MISSIONS DU JOUR
+    </h4>
+    
+    <div class="missions-grid" id="dailyMissions">
+        <!-- Les missions seront injectées par JavaScript -->
+    </div>
+    
+    <!-- Défis hebdomadaires -->
+    <div class="weekly-challenges">
+        <h4 class="weekly-title">
+            <i class="fa-solid fa-calendar-week"></i>
+            DÉFIS DE LA SEMAINE
+        </h4>
+        <div id="weeklyChallenges">
+            <!-- Les défis seront injectés par JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Coffre au trésor mystère -->
+    <div class="treasure-chest" id="treasureChest" onclick="openTreasure()">
+        <div class="treasure-content">
+            <div class="treasure-emoji" id="treasureEmoji">🎁</div>
+            <div class="treasure-info">
+                <h4>COFFRE MYSTÈRE</h4>
+                <p id="treasureSubtext">Prochain coffre dans</p>
+            </div>
+            <div class="treasure-timer" id="treasureTimer">02:45</div>
+        </div>
+        <div class="treasure-particles" id="treasureParticles"></div>
+    </div>
+</section>
 
+<!-- MODALE DE RÉCOMPENSE -->
+<div class="reward-modal" id="rewardModal">
+    <div class="reward-content">
+        <div class="reward-emoji" id="rewardEmoji">🎁</div>
+        <h2 class="reward-title" id="rewardTitle">FÉLICITATIONS !</h2>
+        <p class="reward-text" id="rewardText">Vous avez trouvé un trésor !</p>
+        <button class="reward-button" onclick="closeReward()">RÉCUPÉRER</button>
+    </div>
+</div>
 <!-- WIDGET WHATSAPP -->
 <div class="whatsapp-widget">
     <div class="tooltip">Besoin d'aide ?</div>
@@ -6116,6 +7150,7 @@ setInterval(checkAndUpdateTheme, 3600000);
                 ouvrirSuivi();
             }
         }, 2000);
+        trackPurchase():
     }
     
     // ==================== POINTS FIDÉLITÉ ====================
@@ -6175,6 +7210,7 @@ setInterval(checkAndUpdateTheme, 3600000);
         
         if (wishlist.length === 0) {
             container.innerHTML = '<p class="text-center text-gray-400 text-[10px] py-10">Aucun favori</p>';
+            trackMission('wishlist'):
         } else {
             const wishlistProducts = products.filter(p => wishlist.includes(p.id));
             container.innerHTML = wishlistProducts.map(p => `
@@ -6330,7 +7366,7 @@ setInterval(checkAndUpdateTheme, 3600000);
         
         fermerDepotAvis();
         showToast("✅ Merci pour votre avis !");
-        
+        trackReview():
         document.getElementById('avis-nom').value = '';
         document.getElementById('avis-comment').value = '';
         document.getElementById('avis-photo').value = '';
@@ -7323,6 +8359,7 @@ setInterval(checkAndUpdateTheme, 3600000);
         
         if (window.inscriptionsChart) {
             window.inscriptionsChart.destroy();
+            trackReferral():
         }
         
         window.inscriptionsChart = new Chart(ctx, {
