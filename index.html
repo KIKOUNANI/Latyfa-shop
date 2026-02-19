@@ -2169,74 +2169,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="language-option" onclick="changeLanguage('es')" data-lang="es">
                         <img src="https://flagcdn.com/w20/es.png" alt="Español">
                         <span>Español</span>
-<!-- HEADER -->
-<header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop()">
-            <img src="https://i.postimg.cc/qMqtFGM2/1770342273452.png" class="h-10 w-10 rounded-full border border-gray-200">
-            <span class="text-xl md:text-2xl font-black italic logo-font tracking-tighter">LATYFA SHOP</span>
-        </div>
-        
-        <div class="flex-1 max-w-md hidden md:block">
-            <div class="relative">
-                <input type="text" id="search-input" placeholder="Rechercher un article..." 
-                       class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-            </div>
-        </div>
-        
-        <div class="flex gap-1 md:gap-3 items-center">
-            <div id="messageIcon" class="message-icon" onclick="ouvrirMessages()" style="display: none;">
-                <i class="fa-regular fa-envelope text-gray-600 text-xl hover:text-[#c5a059] transition"></i>
-                <span id="messageBadge" class="message-badge">0</span>
-            </div>
-        
-            <div class="user-menu" id="userMenu" style="display: none;">
-                <div class="user-avatar" id="userAvatar">
-                    <i class="fa-regular fa-user"></i>
-                </div>
-                <div class="user-dropdown">
-                    <div class="user-dropdown-item" onclick="voirProfil()">
-                        <i class="fa-regular fa-user"></i> Mon profil
-                    </div>
-                    <div class="user-dropdown-item" onclick="voirMessages()">
-                        <i class="fa-regular fa-envelope"></i> Mes messages
-                        <span id="messageCountDropdown" class="ml-auto text-[8px] bg-red-500 text-white rounded-full px-1.5">0</span>
-                    </div>
-                    <div class="user-dropdown-item" onclick="voirCommandes()">
-                        <i class="fa-regular fa-clock"></i> Mes commandes
-                    </div>
-                    <div class="user-dropdown-item" onclick="voirFavoris()">
-                        <i class="fa-regular fa-heart"></i> Mes favoris
-                    </div>
-                    <div class="user-dropdown-item" onclick="voirParrainage()">
-                        <i class="fa-solid fa-handshake"></i> Parrainage
-                    </div>
-                    <div class="user-dropdown-item" onclick="deconnexion()">
-                        <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
-                    </div>
-                </div>
-            </div>
-            
-            <!-- SÉLECTEUR DE LANGUE -->
-            <div class="language-selector">
-                <div class="language-btn" id="currentLanguageBtn" onclick="toggleLanguageDropdown()">
-                    <i class="fa-solid fa-globe"></i>
-                    <span id="currentLanguageText">FR</span>
-                    <i class="fa-solid fa-chevron-down text-[8px]"></i>
-                </div>
-                <div class="language-dropdown" id="languageDropdown">
-                    <div class="language-option active" onclick="changeLanguage('fr')" data-lang="fr">
-                        <img src="https://flagcdn.com/w20/fr.png" alt="Français">
-                        <span>Français</span>
-                    </div>
-                    <div class="language-option" onclick="changeLanguage('en')" data-lang="en">
-                        <img src="https://flagcdn.com/w20/gb.png" alt="English">
-                        <span>English</span>
-                    </div>
-                    <div class="language-option" onclick="changeLanguage('es')" data-lang="es">
-                        <img src="https://flagcdn.com/w20/es.png" alt="Español">
-                        <span>Español</span>
                     </div>
                 </div>
             </div>
@@ -5606,33 +5538,33 @@ window.addEventListener('load', function() {
         showToast("✨ Produit ajouté au panier");
     }
     
-// Mettez à jour la fonction updateCartCount
-function updateCartCount() {
-    const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
-    
-    // Mettre à jour le compteur desktop
-    const badge = document.getElementById('cart-count');
-    if (badge) {
-        badge.innerText = totalArticles;
-        badge.style.display = totalArticles > 0 ? 'flex' : 'none';
-        badge.classList.add('cart-count-pop');
-        setTimeout(() => badge.classList.remove('cart-count-pop'), 300);
+    function updateCartCount() {
+        const totalArticles = cart.reduce((sum, item) => sum + item.qty, 0);
+        
+        // Mettre à jour le compteur desktop
+        const badge = document.getElementById('cart-count');
+        if (badge) {
+            badge.innerText = totalArticles;
+            badge.style.display = totalArticles > 0 ? 'flex' : 'none';
+            badge.classList.add('cart-count-pop');
+            setTimeout(() => badge.classList.remove('cart-count-pop'), 300);
+        }
+        
+        // Mettre à jour le compteur mobile (icône à côté du hamburger)
+        const mobileCount = document.getElementById('cart-count-mobile');
+        if (mobileCount) {
+            mobileCount.innerText = totalArticles;
+            mobileCount.style.display = totalArticles > 0 ? 'flex' : 'none';
+        }
+        
+        // Mettre à jour le compteur dans le menu mobile
+        const menuCount = document.getElementById('cart-count-menu');
+        if (menuCount) {
+            menuCount.innerText = totalArticles;
+            menuCount.style.display = totalArticles > 0 ? 'flex' : 'none';
+        }
     }
     
-    // Mettre à jour le compteur mobile (icône à côté du hamburger)
-    const mobileCount = document.getElementById('cart-count-mobile');
-    if (mobileCount) {
-        mobileCount.innerText = totalArticles;
-        mobileCount.style.display = totalArticles > 0 ? 'flex' : 'none';
-    }
-    
-    // Mettre à jour le compteur dans le menu mobile
-    const menuCount = document.getElementById('cart-count-menu');
-    if (menuCount) {
-        menuCount.innerText = totalArticles;
-        menuCount.style.display = totalArticles > 0 ? 'flex' : 'none';
-    }
-}    
     function showToast(message) {
         const toast = document.getElementById('toast');
         toast.innerText = message;
