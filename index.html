@@ -10,6 +10,8 @@
         gtag('js', new Date());
         gtag('config', 'G-0HC6CY42YB');
     </script>
+    <!-- Ajoutez cette ligne après vos autres scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>LATYFA BOUTIQUE | Officiel</title>
@@ -5178,7 +5180,10 @@ function voirChasseTresor() {
             console.log("EmailJS non initialisé");
         }
     })();
-
+// ==================== INITIALISATION SUPABASE ====================
+const supabaseUrl = 'VOTRE_URL_SUPABASE'; // Collez votre Project URL
+const supabaseAnonKey = 'VOTRE_CLE_ANON'; // Collez votre clé anon public
+const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
     // ==================== VARIABLES GLOBALES ====================
     let products = [];
     let cart = [];
@@ -5979,9 +5984,42 @@ function voirChasseTresor() {
         }
     }
     
-    // ==================== CHARGEMENT DES DONNEES ====================
-    function chargerDonnees() {
-        const savedProducts = localStorage.getItem('latyfa_db');
+    // REMPLACEZ votre ancienne fonction chargerDonnees
+async function chargerDonnees() {
+  try {
+    // 1. Charger les produits depuis Supabase
+    const { data: produitsData, error: produitsError } = await supabase
+      .from('products')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (produitsError) throw produitsError;
+    
+    // 2. Si Supabase renvoie des produits, on les utilise
+    if (produitsData && produitsData.length > 0) {
+      products = produitsData;
+    } else {
+      // 3. Sinon, on garde les produits par défaut
+      // (et plus tard on les ajoutera à Supabase)
+      products = getDefaultProducts();
+    }
+    
+    // 4. Sauvegarder dans localStorage pour le fallback (temporaire)
+    localStorage.setItem('latyfa_db', JSON.stringify(products));
+    
+    // 5. Afficher les produits
+    render();
+    
+  } catch (error) {
+    console.error('Erreur Supabase:', error);
+    // Fallback sur localStorage
+    const saved = localStorage.getItem('latyfa_db');
+    products = saved ? JSON.parse(saved) : getDefaultProducts();
+    render();
+  }
+  
+  // ... le reste de votre code de chargement (panier, etc.)
+}
         if (savedProducts) {
             try {
                 products = JSON.parse(savedProducts);
