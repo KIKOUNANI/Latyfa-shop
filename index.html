@@ -2249,9 +2249,15 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-<!-- SECTION HERO AVEC CANVAS ANIMÉ -->
+<!-- SECTION HERO AVEC VIDÉO (LIENS QUI MARCHENT) -->
 <section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
-    <canvas id="heroCanvas" class="absolute top-0 left-0 w-full h-full"></canvas>
+    <!-- Vidéo depuis Coverr (gratuit, fonctionne) -->
+    <video autoplay loop muted playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-60">
+        <source src="https://coverr.co/s3/mp4/Beautiful-Woman-in-Gold-Jewelry.mp4" type="video/mp4">
+        <source src="https://coverr.co/s3/mp4/Luxury-Watch.mp4" type="video/mp4">
+        <source src="https://coverr.co/s3/mp4/Gold-Chain.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas les vidéos.
+    </video>
     
     <div class="absolute inset-0 bg-black/30"></div>
     
