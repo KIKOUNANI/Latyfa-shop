@@ -1941,6 +1941,55 @@
 header img {
     animation: gentleWave 4.5s ease-in-out infinite;
 }
+        /* ==================== ANIMATION TITRE LUXE COMPLÈTE ==================== */
+@keyframes luxuryTitle {
+    0% {
+        transform: scale(1) translateY(0);
+        text-shadow: 0 5px 15px rgba(197, 160, 89, 0.3),
+                     0 0 20px rgba(197, 160, 89, 0.2);
+        color: #fff;
+    }
+    20% {
+        transform: scale(1.02) translateY(-2px);
+        text-shadow: 0 10px 25px rgba(255, 215, 0, 0.6),
+                     0 0 30px rgba(197, 160, 89, 0.5),
+                     0 0 40px rgba(197, 160, 89, 0.3);
+        color: #ffd700;
+    }
+    40% {
+        transform: scale(1) translateY(0);
+        text-shadow: 0 5px 15px rgba(197, 160, 89, 0.3),
+                     0 0 20px rgba(197, 160, 89, 0.2);
+        color: #fff;
+    }
+    60% {
+        transform: scale(1.02) translateY(2px);
+        text-shadow: 0 10px 25px rgba(255, 215, 0, 0.6),
+                     0 0 30px rgba(197, 160, 89, 0.5),
+                     0 0 40px rgba(197, 160, 89, 0.3);
+        color: #ffd700;
+    }
+    80% {
+        transform: scale(1) translateY(0);
+        text-shadow: 0 5px 15px rgba(197, 160, 89, 0.3),
+                     0 0 20px rgba(197, 160, 89, 0.2);
+        color: #fff;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        text-shadow: 0 5px 15px rgba(197, 160, 89, 0.3),
+                     0 0 20px rgba(197, 160, 89, 0.2);
+        color: #fff;
+    }
+}
+
+.hero-title {
+    animation: luxuryTitle 6s ease-in-out infinite;
+    display: inline-block;
+    transform-origin: center;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
     </style>
     
     <audio id="wheel-sound" src="https://assets.mixkit.co/active_storage/sfx/483/483-preview.mp3" preload="auto"></audio>
@@ -2514,7 +2563,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <!-- Contenu -->
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
-        <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none drop-shadow-lg" data-i18n="hero_title">La Boutique du 225</h1>
+        <h1 class="hero-title text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none drop-shadow-lg" data-i18n="hero_title">La Boutique du 225</h1>
         <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em] drop-shadow-md" data-i18n="hero_subtitle">Bijoux, vêtements, parfum...</p>
         <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl" data-i18n="hero_btn">Découvrir la Collection</a>
     </div>
