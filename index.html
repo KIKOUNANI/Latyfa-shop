@@ -27,34 +27,253 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#c5a059">
     <style>
-        /* ==================== VIDÉO DE FOND AVEC CANVAS ==================== */
-.hero-video-canvas {
+        /* ==================== ANIMATION BOUTIQUE DE LUXE ==================== */
+.luxury-boutique-bg {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    z-index: 0;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+    overflow: hidden;
 }
 
-.animated-bg {
+/* Étagères de produits */
+.product-shelf {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(197, 160, 89, 0.2), transparent);
+    border-top: 2px solid rgba(197, 160, 89, 0.3);
+    box-shadow: 0 -5px 20px rgba(197, 160, 89, 0.2);
+}
+
+/* Produits animés */
+.floating-product {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(197, 160, 89, 0.2);
+    animation: floatProduct 8s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--latyfa-gold);
+    font-size: 30px;
+    overflow: hidden;
+}
+
+.floating-product::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+.floating-product i {
+    filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.5));
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+/* Positions des produits */
+.product-1 { bottom: 15%; left: 5%; animation-delay: 0s; }
+.product-2 { bottom: 25%; left: 15%; animation-delay: 1s; width: 100px; height: 100px; }
+.product-3 { bottom: 10%; left: 25%; animation-delay: 2s; }
+.product-4 { bottom: 20%; left: 35%; animation-delay: 0.5s; width: 120px; height: 120px; }
+.product-5 { bottom: 5%; left: 45%; animation-delay: 1.5s; }
+.product-6 { bottom: 30%; left: 55%; animation-delay: 2.5s; width: 90px; height: 90px; }
+.product-7 { bottom: 15%; left: 65%; animation-delay: 0.2s; }
+.product-8 { bottom: 25%; left: 75%; animation-delay: 1.8s; width: 110px; height: 110px; }
+.product-9 { bottom: 8%; left: 85%; animation-delay: 2.2s; }
+.product-10 { bottom: 18%; left: 95%; animation-delay: 0.8s; }
+
+/* Lumières de boutique */
+.shop-light {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(197, 160, 89, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: lightPulse 4s ease-in-out infinite;
+}
+
+.light-1 { top: 10%; left: 20%; }
+.light-2 { top: 30%; right: 20%; animation-delay: 1s; }
+.light-3 { bottom: 40%; left: 50%; transform: translateX(-50%); animation-delay: 2s; }
+
+/* Étincelles */
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--latyfa-gold), 0 0 20px var(--latyfa-gold);
+    animation: sparkle 3s infinite;
+}
+
+.sparkle-1 { top: 15%; left: 30%; animation-delay: 0s; }
+.sparkle-2 { top: 45%; left: 60%; animation-delay: 1s; }
+.sparkle-3 { top: 70%; left: 20%; animation-delay: 2s; }
+.sparkle-4 { top: 25%; left: 80%; animation-delay: 0.5s; }
+.sparkle-5 { top: 60%; left: 40%; animation-delay: 1.5s; }
+.sparkle-6 { top: 80%; left: 70%; animation-delay: 2.5s; }
+
+/* Rouleau de tissu luxueux */
+.luxury-fabric {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(-45deg, #c5a059, #1a1a1a, #c5a059, #000000);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    z-index: 0;
-    opacity: 0.8;
+    height: 30%;
+    background: linear-gradient(to bottom, 
+        rgba(197, 160, 89, 0.2) 0%,
+        transparent 100%);
+    animation: fabricWave 6s ease-in-out infinite;
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* Clients qui passent (silhouettes) */
+.shopper {
+    position: absolute;
+    bottom: 10%;
+    width: 30px;
+    height: 60px;
+    background: rgba(197, 160, 89, 0.2);
+    border-radius: 15px 15px 5px 5px;
+    animation: walkBy 15s linear infinite;
+}
+
+.shopper::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    background: rgba(197, 160, 89, 0.3);
+    border-radius: 50%;
+}
+
+.shopper-1 { animation-delay: 0s; }
+.shopper-2 { animation-delay: 5s; }
+.shopper-3 { animation-delay: 10s; }
+
+/* Animations */
+@keyframes floatProduct {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-15px) rotate(2deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(-2deg);
+        box-shadow: 0 20px 40px rgba(197, 160, 89, 0.4);
+    }
+    75% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+    20% {
+        transform: translateX(100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) rotate(45deg);
+    }
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+@keyframes lightPulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+}
+
+@keyframes fabricWave {
+    0%, 100% {
+        transform: scaleY(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scaleY(1.2);
+        opacity: 0.6;
+    }
+}
+
+@keyframes walkBy {
+    0% {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateX(calc(100vw + 100px));
+        opacity: 0.5;
+    }
+    60% {
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(calc(100vw + 100px));
+        opacity: 0;
+    }
+}
+
+/* Pour mobile */
+@media (max-width: 768px) {
+    .floating-product {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    .product-4, .product-6, .product-8 {
+        width: 70px;
+        height: 70px;
+    }
 }
 
 .floating-elements {
@@ -2249,18 +2468,51 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-<!-- SECTION HERO AVEC VIDÉO (LIENS QUI MARCHENT) -->
-<section class="relative w-full h-[350px] md:h-[500px] bg-black overflow-hidden">
-    <!-- Vidéo depuis Coverr (gratuit, fonctionne) -->
-    <video autoplay loop muted playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-60">
-        <source src="https://coverr.co/s3/mp4/Beautiful-Woman-in-Gold-Jewelry.mp4" type="video/mp4">
-        <source src="https://coverr.co/s3/mp4/Luxury-Watch.mp4" type="video/mp4">
-        <source src="https://coverr.co/s3/mp4/Gold-Chain.mp4" type="video/mp4">
-        Votre navigateur ne supporte pas les vidéos.
-    </video>
+<!-- SECTION HERO AVEC ANIMATION BOUTIQUE DE LUXE -->
+<section class="relative w-full h-[350px] md:h-[500px] overflow-hidden">
+    <!-- Fond de la boutique -->
+    <div class="luxury-boutique-bg">
+        <!-- Lumières -->
+        <div class="shop-light light-1"></div>
+        <div class="shop-light light-2"></div>
+        <div class="shop-light light-3"></div>
+        
+        <!-- Rouleau de tissu luxueux -->
+        <div class="luxury-fabric"></div>
+        
+        <!-- Produits flottants (bijoux, sacs, parfums) -->
+        <div class="floating-product product-1"><i class="fa-solid fa-gem"></i></div>
+        <div class="floating-product product-2"><i class="fa-solid fa-bag-shopping"></i></div>
+        <div class="floating-product product-3"><i class="fa-solid fa-ring"></i></div>
+        <div class="floating-product product-4"><i class="fa-solid fa-crown"></i></div>
+        <div class="floating-product product-5"><i class="fa-solid fa-spray-can-sparkles"></i></div>
+        <div class="floating-product product-6"><i class="fa-solid fa-clock"></i></div>
+        <div class="floating-product product-7"><i class="fa-solid fa-ear-listen"></i></div>
+        <div class="floating-product product-8"><i class="fa-solid fa-shoe-prints"></i></div>
+        <div class="floating-product product-9"><i class="fa-solid fa-hand"></i></div>
+        <div class="floating-product product-10"><i class="fa-solid fa-star"></i></div>
+        
+        <!-- Étincelles -->
+        <div class="sparkle sparkle-1"></div>
+        <div class="sparkle sparkle-2"></div>
+        <div class="sparkle sparkle-3"></div>
+        <div class="sparkle sparkle-4"></div>
+        <div class="sparkle sparkle-5"></div>
+        <div class="sparkle sparkle-6"></div>
+        
+        <!-- Clients qui passent -->
+        <div class="shopper shopper-1"></div>
+        <div class="shopper shopper-2"></div>
+        <div class="shopper shopper-3"></div>
+        
+        <!-- Étagère de produits -->
+        <div class="product-shelf"></div>
+    </div>
     
+    <!-- Overlay sombre pour le texte -->
     <div class="absolute inset-0 bg-black/30"></div>
     
+    <!-- Contenu -->
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
         <h1 class="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-none drop-shadow-lg" data-i18n="hero_title">La Boutique du 225</h1>
         <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em] drop-shadow-md" data-i18n="hero_subtitle">Bijoux, vêtements, parfum...</p>
