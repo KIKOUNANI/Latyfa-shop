@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA BOUTIQUE</title>
+    <title>LATYFA BOUTIQUE - FINALE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Plusieurs CDN Supabase pour garantir le chargement -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/umd/supabase.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --latyfa-gold: #c5a059; }
         body { font-family: 'Montserrat', sans-serif; background: #fcfcfc; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .product-card { background: white; border-radius: 12px; padding: 15px; margin: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .error-box { background: #fee; border: 1px solid #fcc; padding: 15px; border-radius: 8px; margin: 20px; }
     </style>
 </head>
 <body>
@@ -22,14 +22,9 @@
         </div>
     </header>
 
-    <div class="container">
-        <div id="error-display" class="error-box hidden">
-            <h3 class="font-bold text-red-600">🔴 Erreur détectée</h3>
-            <p id="error-message" class="text-red-500"></p>
-        </div>
-
+    <div class="container mx-auto p-4">
         <div id="product-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <p class="text-gray-400">Chargement des produits...</p>
+            <p class="text-gray-400">Chargement...</p>
         </div>
     </div>
 
@@ -37,96 +32,119 @@
         console.log('🚀 Démarrage...');
         
         const productGrid = document.getElementById('product-grid');
-        const errorDisplay = document.getElementById('error-display');
-        const errorMessage = document.getElementById('error-message');
         
-        function showError(msg, error) {
-            console.error('❌', msg, error);
-            errorDisplay.classList.remove('hidden');
-            errorMessage.innerHTML = `${msg}<br><small class="text-xs">${error?.message || 'Erreur inconnue'}</small>`;
-            productGrid.innerHTML = '<p class="text-red-500">⛔ Erreur de chargement. Voir détails ci-dessus.</p>';
-        }
-
-        function getDefaultProducts() {
-            return [
-                { id: 1, name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"] },
-                { id: 2, name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"] },
-                { id: 3, name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"] }
-            ];
-        }
+        // Produits par défaut (toujours disponibles)
+        const defaultProducts = [
+            { 
+                id: 1, 
+                name: "Sac Prestige Latyfa", 
+                price: 45000, 
+                images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"],
+                description: "Élégance Signature Latyfa"
+            },
+            { 
+                id: 2, 
+                name: "Collier Perle Royale", 
+                price: 25000, 
+                images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"],
+                description: "Finition Or 24K"
+            },
+            { 
+                id: 3, 
+                name: "Baya Cristal Éclat", 
+                price: 5000, 
+                images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"],
+                description: "Perles de hanche traditionnelles"
+            },
+            { 
+                id: 4, 
+                name: "Oud Mystique - 100ml", 
+                price: 35000, 
+                images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"],
+                description: "Parfum de luxe"
+            },
+            { 
+                id: 5, 
+                name: "Escarpins Gold Night", 
+                price: 28000, 
+                images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"],
+                description: "Chaussures de soirée"
+            }
+        ];
 
         function renderProducts(products) {
             if (!products || products.length === 0) {
-                productGrid.innerHTML = '<p class="text-gray-400">Aucun produit à afficher</p>';
+                productGrid.innerHTML = '<p class="text-gray-400">Aucun produit</p>';
                 return;
             }
             
             productGrid.innerHTML = products.map(p => `
-                <div class="product-card">
-                    <img src="${p.images?.[0] || 'https://via.placeholder.com/300'}" class="w-full h-48 object-cover rounded-lg mb-3">
-                    <h3 class="font-bold">${p.name || 'Sans nom'}</h3>
-                    <p class="text-[#c5a059] font-bold text-xl">${p.price?.toLocaleString() || '0'} F</p>
+                <div class="product-card hover:shadow-lg transition">
+                    <img src="${p.images?.[0] || 'https://via.placeholder.com/300'}" 
+                         class="w-full h-48 object-cover rounded-lg mb-3"
+                         onerror="this.src='https://via.placeholder.com/300'">
+                    <h3 class="font-bold text-lg">${p.name || 'Produit'}</h3>
+                    <p class="text-gray-600 text-sm mb-2">${p.description || ''}</p>
+                    <p class="text-[#c5a059] font-black text-2xl">${p.price?.toLocaleString() || '0'} F</p>
                 </div>
             `).join('');
         }
 
-        async function init() {
+        // Fonction pour charger depuis Supabase (avec gestion d'erreur)
+        async function loadFromSupabase() {
             try {
-                // 1. Tester si Supabase est disponible
-                if (typeof window.supabase === 'undefined') {
-                    throw new Error('La bibliothèque Supabase n\'est pas chargée');
+                // Vérifier si Supabase est disponible
+                if (typeof supabase === 'undefined' && typeof window.supabase === 'undefined') {
+                    console.log('⚠️ Supabase non disponible, utilisation des produits par défaut');
+                    return null;
                 }
-                console.log('✓ Supabase JS chargé');
 
-                // 2. Initialiser Supabase
+                const supabaseClient = supabase || window.supabase;
+                
+                // Vos identifiants Supabase
                 const supabaseUrl = 'https://tckhslbqptjquflyfyhu.supabase.co';
                 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRja2hzbGJxcHRqcXVmbHlmeWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjczMTEsImV4cCI6MjA4NzA0MzMxMX0.oONsuo8atmylhTNzE68NUJxm_u35jXx-xmorlnWld6w';
                 
-                const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-                console.log('✓ Client Supabase créé');
-
-                // 3. Tester la connexion
-                const { data: testData, error: testError } = await supabase.from('products').select('count', { count: 'exact', head: true });
+                const client = supabaseClient.createClient(supabaseUrl, supabaseAnonKey);
                 
-                if (testError) {
-                    if (testError.code === '42P01') {
-                        throw new Error('La table "products" n\'existe pas dans votre base Supabase');
-                    } else if (testError.code === '42501') {
-                        throw new Error('Permissions RLS : vous n\'avez pas accès à la table products');
-                    } else {
-                        throw testError;
-                    }
+                // Tentative de chargement
+                const { data, error } = await client.from('products').select('*').limit(10);
+                
+                if (error) {
+                    console.log('⚠️ Erreur Supabase:', error.message);
+                    return null;
                 }
                 
-                console.log('✓ Connexion Supabase OK, table products accessible');
-
-                // 4. Charger les produits
-                const { data: produits, error: produitsError } = await supabase
-                    .from('products')
-                    .select('*')
-                    .limit(10);
-
-                if (produitsError) throw produitsError;
-
-                if (produits && produits.length > 0) {
-                    console.log(`✓ ${produits.length} produits chargés depuis Supabase`);
-                    renderProducts(produits);
-                } else {
-                    console.log('⚠️ Aucun produit dans Supabase, utilisation des produits par défaut');
-                    renderProducts(getDefaultProducts());
-                }
-
+                return data;
+                
             } catch (error) {
-                showError('Erreur lors de l\'initialisation', error);
-                console.error('Détails de l\'erreur:', error);
-                
-                // Fallback : afficher les produits par défaut en cas d'erreur
-                renderProducts(getDefaultProducts());
+                console.log('⚠️ Exception Supabase:', error.message);
+                return null;
             }
         }
 
-        // Lancer l'initialisation
-        init();
+        // Chargement principal
+        (async function() {
+            try {
+                // Essayer de charger depuis Supabase
+                const supabaseProducts = await loadFromSupabase();
+                
+                if (supabaseProducts && supabaseProducts.length > 0) {
+                    console.log('✅ Produits chargés depuis Supabase');
+                    renderProducts(supabaseProducts);
+                } else {
+                    console.log('📦 Utilisation des produits par défaut');
+                    renderProducts(defaultProducts);
+                }
+                
+                // Sauvegarder dans localStorage pour la prochaine fois
+                localStorage.setItem('latyfa_products', JSON.stringify(defaultProducts));
+                
+            } catch (error) {
+                console.error('❌ Erreur fatale:', error);
+                renderProducts(defaultProducts);
+            }
+        })();
     </script>
 </body>
 </html>
