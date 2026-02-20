@@ -2,41 +2,23 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>LATYFA BOUTIQUE - Diagnostic</title>
+    <title>LATYFA BOUTIQUE - Étape 1</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Votre CSS ici - copiez tout ce qui est entre les balises <style> de votre code original */
+        .test-css {
+            color: #c5a059;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto p-8">
-        <h1 class="text-3xl font-bold text-amber-600 mb-4">🔧 Diagnostic LATYFA</h1>
+        <h1 class="text-3xl font-bold text-amber-600 mb-4">🔧 Étape 1 - CSS ajouté</h1>
         
         <div class="bg-white rounded-lg shadow-lg p-6 mb-4">
-            <h2 class="text-xl font-semibold mb-2">Test JavaScript</h2>
-            <div id="test-result" class="p-4 bg-gray-50 rounded border">
-                Test en cours...
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-semibold mb-2">Informations</h2>
-            <pre id="info" class="bg-gray-50 p-4 rounded border text-sm"></pre>
+            <h2 class="text-xl font-semibold mb-2">Test CSS</h2>
+            <p class="test-css">Si ce texte est en doré (#c5a059), le CSS fonctionne</p>
         </div>
     </div>
-
-    <script>
-        // Test immédiat
-        document.getElementById('test-result').innerHTML = '✅ JavaScript fonctionne !';
-        
-        // Afficher les informations
-        document.getElementById('info').innerHTML = JSON.stringify({
-            'URL actuelle': window.location.href,
-            'User Agent': navigator.userAgent,
-            'Langue': navigator.language,
-            'Heure': new Date().toLocaleString()
-        }, null, 2);
-        
-        // Tester le chargement de Tailwind
-        console.log('✅ Diagnostic chargé avec succès');
-        alert('✅ Le JavaScript fonctionne !');
-    </script>
 </body>
 </html>
