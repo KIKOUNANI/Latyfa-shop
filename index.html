@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA BOUTIQUE - Test 4</title>
+    <title>LATYFA BOUTIQUE - Test 5</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
@@ -30,27 +31,23 @@
             border-radius: 10px;
         }
         
-        .treasure-section {
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-            border-radius: 24px;
-            padding: 24px;
-            color: white;
-            margin: 20px;
+        .product-card { 
+            background: white; 
+            border-radius: 12px; 
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            margin: 10px;
+            width: 200px;
         }
         
-        .mission-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 16px;
-            text-align: center;
-            margin: 10px;
-            cursor: pointer;
-        }
+        .status-success { color: #10b981; }
+        .status-error { color: #ef4444; }
+        .status-warning { color: #f59e0b; }
     </style>
 </head>
 <body>
     <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold">
-        TEST 4 - Chasse au trésor ajoutée
+        TEST 5 - Supabase + Chargement des données
     </div>
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
@@ -61,124 +58,126 @@
 
     <!-- SECTION DE TEST -->
     <div class="test-section">
-        <h2 class="text-xl font-bold text-[#c5a059] mb-4">✅ ÉTAPE 4 - CHASSE AU TRÉSOR</h2>
+        <h2 class="text-xl font-bold text-[#c5a059] mb-4">✅ ÉTAPE 5 - SUPABASE</h2>
         
-        <div class="mb-4 p-3 bg-gray-50 rounded">
-            <p class="font-bold mb-2">Statut du chargement :</p>
-            <div id="status" class="text-sm"></div>
+        <div class="mb-4 p-4 bg-gray-50 rounded">
+            <h3 class="font-bold mb-2">📊 Statut du chargement :</h3>
+            <div id="status" class="space-y-2 text-sm"></div>
         </div>
 
-        <!-- Section chasse au trésor simplifiée -->
-        <div class="treasure-section">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold">CHASSE AU TRÉSOR</h3>
-                <span id="treasurePoints" class="bg-[#c5a059] text-black px-4 py-2 rounded-full">0</span>
-            </div>
-            
-            <div class="missions-grid" id="dailyMissions">
-                <!-- Les missions apparaîtront ici -->
-            </div>
-            
-            <button onclick="testTreasure()" class="bg-[#c5a059] text-black px-4 py-2 rounded mt-4">
-                Tester l'ajout de points
-            </button>
+        <!-- Grille de produits -->
+        <h3 class="font-bold mb-2">🛍️ Produits :</h3>
+        <div id="product-grid" class="flex flex-wrap gap-4">
+            <!-- Les produits apparaîtront ici -->
         </div>
     </div>
 
     <script>
-        console.log('🚀 ÉTAPE 4 - Chargement...');
+        console.log('🚀 ÉTAPE 5 - Chargement...');
         
-        // ==================== SYSTÈME DE CHASSE AU TRÉSOR ====================
-        const treasureLevels = [
-            { name: 'Bronze', points: 0, discount: 5 },
-            { name: 'Argent', points: 500, discount: 10 },
-            { name: 'Or', points: 1500, discount: 15 },
-            { name: 'Platine', points: 3000, discount: 20 },
-            { name: 'Diamant', points: 5000, discount: 25 }
-        ];
-
-        const dailyMissions = [
-            { id: 'visit', name: 'Visite du jour', emoji: '👋', points: 10, action: 'Se connecter' },
-            { id: 'share', name: 'Partager', emoji: '📤', points: 20, action: 'Partager' },
-            { id: 'wishlist', name: 'Favoris', emoji: '❤️', points: 15, action: 'Ajouter 3 favoris' },
-            { id: 'review', name: 'Avis', emoji: '⭐', points: 30, action: 'Donner son avis' }
-        ];
-
-        const treasureRewards = [
-            { name: 'Bracelet Mystère', emoji: '📿', proba: 30 },
-            { name: 'Code -15%', emoji: '🏷️', proba: 25 },
-            { name: '100 points', emoji: '⭐', proba: 20 },
-            { name: 'Livraison gratuite', emoji: '📦', proba: 15 },
-            { name: 'Collier surprise', emoji: '💎', proba: 10 }
-        ];
-
-        // Variables globales
-        let userTreasure = {
-            points: 0,
-            level: 'Bronze',
-            daily: {}
-        };
-
-        // Fonctions
-        function initTreasure() {
-            console.log('Initialisation de la chasse au trésor...');
-            try {
-                const saved = localStorage.getItem('latyfa_treasure');
-                if (saved) {
-                    userTreasure = JSON.parse(saved);
-                }
-                updateTreasureUI();
-                document.getElementById('status').innerHTML += '<p class="text-green-600">✓ Chasse au trésor initialisée</p>';
-            } catch (e) {
-                console.error('Erreur initTreasure:', e);
-                document.getElementById('status').innerHTML += '<p class="text-red-600">❌ Erreur initTreasure</p>';
-            }
-        }
-
-        function updateTreasureUI() {
-            document.getElementById('treasurePoints').innerText = userTreasure.points;
+        let statusDiv = document.getElementById('status');
+        let productGrid = document.getElementById('product-grid');
+        let products = [];
+        
+        function addStatus(message, type = 'info') {
+            const color = {
+                success: 'text-green-600',
+                error: 'text-red-600',
+                warning: 'text-yellow-600',
+                info: 'text-blue-600'
+            }[type] || 'text-gray-600';
             
-            const container = document.getElementById('dailyMissions');
-            if (container) {
-                container.innerHTML = dailyMissions.map(mission => `
-                    <div class="mission-card" onclick="completeMission('${mission.id}')">
-                        <div class="text-3xl mb-2">${mission.emoji}</div>
-                        <div class="font-bold">${mission.name}</div>
-                        <div class="text-[#c5a059]">+${mission.points}</div>
-                        <div class="text-xs mt-2">${mission.action}</div>
-                    </div>
-                `).join('');
-            }
+            statusDiv.innerHTML += `<p class="${color}">${message}</p>`;
         }
 
-        function completeMission(missionId) {
-            const mission = dailyMissions.find(m => m.id === missionId);
-            if (mission) {
-                userTreasure.points += mission.points;
-                localStorage.setItem('latyfa_treasure', JSON.stringify(userTreasure));
-                updateTreasureUI();
-                alert(`✨ +${mission.points} points !`);
-                confetti({ particleCount: 50, spread: 50 });
-            }
-        }
-
-        function testTreasure() {
-            userTreasure.points += 100;
-            localStorage.setItem('latyfa_treasure', JSON.stringify(userTreasure));
-            updateTreasureUI();
-            alert('✨ 100 points ajoutés !');
-            confetti({ particleCount: 100, spread: 70 });
-        }
-
-        // Initialisation
+        // ==================== INITIALISATION SUPABASE ====================
+        let supabase = null;
         try {
-            document.getElementById('status').innerHTML = '<p class="text-green-600">✓ Variables chargées</p>';
-            initTreasure();
-            console.log('✅ ÉTAPE 4 - Terminé avec succès');
+            addStatus('🔄 Initialisation de Supabase...', 'info');
+            
+            const supabaseUrl = 'https://tckhslbqptjquflyfyhu.supabase.co';
+            const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRja2hzbGJxcHRqcXVmbHlmeWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjczMTEsImV4cCI6MjA4NzA0MzMxMX0.oONsuo8atmylhTNzE68NUJxm_u35jXx-xmorlnWld6w';
+            
+            if (typeof window.supabase !== 'undefined') {
+                supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+                addStatus('✅ Supabase initialisé avec succès', 'success');
+            } else {
+                addStatus('❌ Bibliothèque Supabase non trouvée', 'error');
+            }
         } catch (error) {
-            console.error('❌ Erreur:', error);
-            document.getElementById('status').innerHTML += `<p class="text-red-600">❌ Erreur: ${error.message}</p>`;
+            addStatus(`❌ Erreur Supabase: ${error.message}`, 'error');
+            console.error(error);
         }
+
+        // ==================== FONCTIONS ====================
+        function getDefaultProducts() {
+            return [
+                { id: 1, name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=200"] },
+                { id: 2, name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=200"] },
+                { id: 3, name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=200"] }
+            ];
+        }
+
+        function renderProducts(productsToShow) {
+            if (!productGrid) return;
+            
+            if (!productsToShow || productsToShow.length === 0) {
+                productGrid.innerHTML = '<p class="text-gray-400">Aucun produit à afficher</p>';
+                return;
+            }
+            
+            productGrid.innerHTML = productsToShow.map(p => `
+                <div class="product-card">
+                    <img src="${p.images?.[0] || 'https://via.placeholder.com/200'}" class="w-full h-32 object-cover rounded mb-2">
+                    <h3 class="font-bold text-sm">${p.name || 'Sans nom'}</h3>
+                    <p class="text-[#c5a059] font-bold">${p.price?.toLocaleString() || '0'} F</p>
+                </div>
+            `).join('');
+        }
+
+        async function chargerDonnees() {
+            addStatus('🔄 Chargement des données...', 'info');
+            
+            try {
+                if (supabase) {
+                    addStatus('📦 Tentative de chargement depuis Supabase...', 'info');
+                    
+                    const { data, error } = await supabase
+                        .from('products')
+                        .select('*')
+                        .limit(5);
+                    
+                    if (error) {
+                        addStatus(`❌ Erreur Supabase: ${error.message}`, 'error');
+                        throw error;
+                    }
+                    
+                    if (data && data.length > 0) {
+                        products = data;
+                        addStatus(`✅ ${data.length} produits chargés depuis Supabase`, 'success');
+                        console.log('Produits Supabase:', data);
+                    } else {
+                        addStatus('📦 Aucun produit dans Supabase, utilisation des produits par défaut', 'warning');
+                        products = getDefaultProducts();
+                    }
+                } else {
+                    addStatus('📦 Supabase non disponible, utilisation des produits par défaut', 'warning');
+                    products = getDefaultProducts();
+                }
+                
+                renderProducts(products);
+                addStatus(`✅ ${products.length} produits affichés`, 'success');
+                
+            } catch (error) {
+                addStatus(`❌ Erreur générale: ${error.message}`, 'error');
+                console.error('Erreur complète:', error);
+                products = getDefaultProducts();
+                renderProducts(products);
+            }
+        }
+
+        // Lancement
+        chargerDonnees();
     </script>
 </body>
 </html>
