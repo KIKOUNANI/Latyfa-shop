@@ -5179,10 +5179,12 @@ function voirChasseTresor() {
             console.log("EmailJS non initialisé");
         }
     })();
+
 // ==================== INITIALISATION SUPABASE ====================
-const supabaseUrl = 'VOTRE_URL_SUPABASE'; // Collez votre Project URL
-const supabaseAnonKey = 'VOTRE_CLE_ANON'; // Collez votre clé anon public
+const supabaseUrl = 'https://tckhslbqptjquflyfyhu.supabase.co'; // Remplacez par votre vraie URL
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRja2hzbGJxcHRqcXVmbHlmeWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjczMTEsImV4cCI6MjA4NzA0MzMxMX0.oONsuo8atmylhTNzE68NUJxm_u35jXx-xmorlnWld6w'; // Remplacez par votre vraie clé
 const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+
     // ==================== VARIABLES GLOBALES ====================
     let products = [];
     let cart = [];
@@ -5983,7 +5985,7 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
         }
     }
     
-    // REMPLACEZ votre ancienne fonction chargerDonnees
+    // ==================== FONCTION CHARGER DONNEES AVEC SUPABASE ====================
 async function chargerDonnees() {
   try {
     // 1. Charger les produits depuis Supabase
@@ -5997,9 +5999,10 @@ async function chargerDonnees() {
     // 2. Si Supabase renvoie des produits, on les utilise
     if (produitsData && produitsData.length > 0) {
       products = produitsData;
+      console.log('✅ Produits chargés depuis Supabase:', products.length);
     } else {
       // 3. Sinon, on garde les produits par défaut
-      // (et plus tard on les ajoutera à Supabase)
+      console.log('📦 Aucun produit dans Supabase, utilisation des produits par défaut');
       products = getDefaultProducts();
     }
     
@@ -6010,125 +6013,113 @@ async function chargerDonnees() {
     render();
     
   } catch (error) {
-    console.error('Erreur Supabase:', error);
+    console.error('❌ Erreur Supabase:', error);
     // Fallback sur localStorage
     const saved = localStorage.getItem('latyfa_db');
     products = saved ? JSON.parse(saved) : getDefaultProducts();
     render();
   }
   
-  // ... le reste de votre code de chargement (panier, etc.)
-}
-        if (savedProducts) {
-            try {
-                products = JSON.parse(savedProducts);
-            } catch(e) {
-                products = getDefaultProducts();
-            }
-        } else {
-            products = getDefaultProducts();
-            localStorage.setItem('latyfa_db', JSON.stringify(products));
-        }
-        
-        const savedCart = localStorage.getItem('latyfa_cart');
-        if (savedCart) {
-            try {
-                cart = JSON.parse(savedCart);
-            } catch(e) {
-                cart = [];
-            }
-        }
-        
-        const savedCategories = localStorage.getItem('latyfa_categories');
-        if (savedCategories) {
-            try {
-                categories = JSON.parse(savedCategories);
-            } catch(e) {}
-        }
-        
-        const savedPoints = localStorage.getItem('latyfa_points');
-        if (savedPoints) {
-            pointsFidelite = parseInt(savedPoints);
-        }
-        
-        const savedWishlist = localStorage.getItem('latyfa_wishlist');
-        if (savedWishlist) {
-            wishlist = JSON.parse(savedWishlist);
-        }
-        
-        const savedAvis = localStorage.getItem('latyfa_avis');
-        if (savedAvis) {
-            avis = JSON.parse(savedAvis);
-        } else {
-            avis = avisPredefinis;
-            localStorage.setItem('latyfa_avis', JSON.stringify(avis));
-        }
-        
-        const savedComparateur = localStorage.getItem('latyfa_comparateur');
-        if (savedComparateur) {
-            comparateur = JSON.parse(savedComparateur);
-        }
-        
-        const savedClients = localStorage.getItem('latyfa_clients');
-        if (savedClients) {
-            try {
-                clients = JSON.parse(savedClients);
-            } catch(e) {
-                clients = [];
-            }
-        } else {
-            const maintenant = new Date();
-            const dateActuelle = maintenant.toLocaleDateString('fr-FR');
-            
-            clients = [
-                { 
-                    id: 1, 
-                    nom: "Admin Latyfa", 
-                    email: "admin@latyfa.com", 
-                    tel: "0709002881", 
-                    password: "admin2026", 
-                    isAdmin: true, 
-                    dateInscription: dateActuelle,
-                    dateTimestamp: maintenant.getTime()
-                },
-                {
-                    id: 2,
-                    nom: "Marie Kouassi",
-                    email: "marie.k@email.com",
-                    tel: "0701020304",
-                    password: "client123",
-                    isAdmin: false,
-                    dateInscription: new Date(Date.now() - 2*24*60*60*1000).toLocaleDateString('fr-FR'),
-                    dateTimestamp: Date.now() - 2*24*60*60*1000,
-                    points: 150
-                }
-            ];
-            localStorage.setItem('latyfa_clients', JSON.stringify(clients));
-        }
-        
-        const savedMessages = localStorage.getItem('latyfa_messages');
-        if (savedMessages) {
-            try {
-                messages = JSON.parse(savedMessages);
-            } catch(e) {
-                messages = [];
-            }
-        } else {
-            messages = [];
-            localStorage.setItem('latyfa_messages', JSON.stringify(messages));
-        }
-        
-        initialiserParrainage();
-        
-        const session = localStorage.getItem('latyfa_session');
-        if (session) {
-            try {
-                utilisateurConnecte = JSON.parse(session);
-                updateUserUI();
-                updateMessageBadge();
-            } catch(e) {}
-        }
+  // LE RESTE DE VOS CHARGEMENTS (panier, clients, etc.)
+  const savedCart = localStorage.getItem('latyfa_cart');
+  if (savedCart) {
+    try {
+        cart = JSON.parse(savedCart);
+    } catch(e) {
+        cart = [];
     }
+  }
+  
+  const savedCategories = localStorage.getItem('latyfa_categories');
+  if (savedCategories) {
+    try {
+        categories = JSON.parse(savedCategories);
+    } catch(e) {}
+  }
+  
+  const savedPoints = localStorage.getItem('latyfa_points');
+  if (savedPoints) {
+    pointsFidelite = parseInt(savedPoints);
+  }
+  
+  const savedWishlist = localStorage.getItem('latyfa_wishlist');
+  if (savedWishlist) {
+    wishlist = JSON.parse(savedWishlist);
+  }
+  
+  const savedAvis = localStorage.getItem('latyfa_avis');
+  if (savedAvis) {
+    avis = JSON.parse(savedAvis);
+  } else {
+    avis = avisPredefinis;
+    localStorage.setItem('latyfa_avis', JSON.stringify(avis));
+  }
+  
+  const savedComparateur = localStorage.getItem('latyfa_comparateur');
+  if (savedComparateur) {
+    comparateur = JSON.parse(savedComparateur);
+  }
+  
+  const savedClients = localStorage.getItem('latyfa_clients');
+  if (savedClients) {
+    try {
+        clients = JSON.parse(savedClients);
+    } catch(e) {
+        clients = [];
+    }
+  } else {
+    const maintenant = new Date();
+    const dateActuelle = maintenant.toLocaleDateString('fr-FR');
+    
+    clients = [
+        { 
+            id: 1, 
+            nom: "Admin Latyfa", 
+            email: "admin@latyfa.com", 
+            tel: "0709002881", 
+            password: "admin2026", 
+            isAdmin: true, 
+            dateInscription: dateActuelle,
+            dateTimestamp: maintenant.getTime()
+        },
+        {
+            id: 2,
+            nom: "Marie Kouassi",
+            email: "marie.k@email.com",
+            tel: "0701020304",
+            password: "client123",
+            isAdmin: false,
+            dateInscription: new Date(Date.now() - 2*24*60*60*1000).toLocaleDateString('fr-FR'),
+            dateTimestamp: Date.now() - 2*24*60*60*1000,
+            points: 150
+        }
+    ];
+    localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+  }
+  
+  const savedMessages = localStorage.getItem('latyfa_messages');
+  if (savedMessages) {
+    try {
+        messages = JSON.parse(savedMessages);
+    } catch(e) {
+        messages = [];
+    }
+  } else {
+    messages = [];
+    localStorage.setItem('latyfa_messages', JSON.stringify(messages));
+  }
+  
+  initialiserParrainage();
+  
+  const session = localStorage.getItem('latyfa_session');
+  if (session) {
+    try {
+        utilisateurConnecte = JSON.parse(session);
+        updateUserUI();
+        updateMessageBadge();
+    } catch(e) {}
+  }
+}
     
     function getDefaultProducts() {
         return [
