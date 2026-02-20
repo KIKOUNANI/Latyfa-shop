@@ -9,8 +9,8 @@
         gtag('js', new Date());
         gtag('config', 'G-0HC6CY42YB');
     </script>
-    <!-- Ajoutez cette ligne après vos autres scripts -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Script Supabase - Déplacé APRÈS les autres scripts pour garantir le chargement -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>LATYFA BOUTIQUE | Officiel</title>
@@ -5180,10 +5180,23 @@ function voirChasseTresor() {
         }
     })();
 
-// ==================== INITIALISATION SUPABASE ====================
-const supabaseUrl = 'https://tckhslbqptjquflyfyhu.supabase.co'; // Remplacez par votre vraie URL
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRja2hzbGJxcHRqcXVmbHlmeWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjczMTEsImV4cCI6MjA4NzA0MzMxMX0.oONsuo8atmylhTNzE68NUJxm_u35jXx-xmorlnWld6w'; // Remplacez par votre vraie clé
-const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+// ==================== INITIALISATION SUPABASE (CORRIGÉE AVEC TRY/CATCH) ====================
+let supabase = null;
+try {
+    const supabaseUrl = 'https://tckhslbqptjquflyfyhu.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRja2hzbGJxcHRqcXVmbHlmeWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjczMTEsImV4cCI6MjA4NzA0MzMxMX0.oONsuo8atmylhTNzE68NUJxm_u35jXx-xmorlnWld6w';
+    
+    if (typeof window.supabase !== 'undefined' && window.supabase) {
+        supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+        console.log('✅ Supabase initialisé avec succès');
+    } else {
+        console.warn('⚠️ La bibliothèque Supabase n\'est pas chargée');
+        supabase = null;
+    }
+} catch (error) {
+    console.error('❌ Erreur lors de l\'initialisation de Supabase:', error);
+    supabase = null;
+}
 
     // ==================== VARIABLES GLOBALES ====================
     let products = [];
@@ -5985,38 +5998,51 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
         }
     }
     
-    // ==================== FONCTION CHARGER DONNEES AVEC SUPABASE ====================
+    // ==================== FONCTION CHARGER DONNEES AVEC SUPABASE (SÉCURISÉE) ====================
 async function chargerDonnees() {
   try {
-    // 1. Charger les produits depuis Supabase
-    const { data: produitsData, error: produitsError } = await supabase
-      .from('products')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (produitsError) throw produitsError;
-    
-    // 2. Si Supabase renvoie des produits, on les utilise
-    if (produitsData && produitsData.length > 0) {
-      products = produitsData;
-      console.log('✅ Produits chargés depuis Supabase:', products.length);
+    // Vérifier si Supabase est disponible
+    if (supabase) {
+      try {
+        // 1. Charger les produits depuis Supabase
+        const { data: produitsData, error: produitsError } = await supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (produitsError) throw produitsError;
+        
+        // 2. Si Supabase renvoie des produits, on les utilise
+        if (produitsData && produitsData.length > 0) {
+          products = produitsData;
+          console.log('✅ Produits chargés depuis Supabase:', products.length);
+        } else {
+          // 3. Sinon, on garde les produits par défaut
+          console.log('📦 Aucun produit dans Supabase, utilisation des produits par défaut');
+          products = getDefaultProducts();
+        }
+      } catch (supabaseError) {
+        console.error('❌ Erreur Supabase:', supabaseError);
+        // Fallback sur localStorage
+        const saved = localStorage.getItem('latyfa_db');
+        products = saved ? JSON.parse(saved) : getDefaultProducts();
+      }
     } else {
-      // 3. Sinon, on garde les produits par défaut
-      console.log('📦 Aucun produit dans Supabase, utilisation des produits par défaut');
-      products = getDefaultProducts();
+      console.log('📦 Supabase non disponible, utilisation des produits depuis localStorage');
+      const saved = localStorage.getItem('latyfa_db');
+      products = saved ? JSON.parse(saved) : getDefaultProducts();
     }
     
-    // 4. Sauvegarder dans localStorage pour le fallback (temporaire)
+    // 4. Sauvegarder dans localStorage pour le fallback
     localStorage.setItem('latyfa_db', JSON.stringify(products));
     
     // 5. Afficher les produits
     render();
     
   } catch (error) {
-    console.error('❌ Erreur Supabase:', error);
-    // Fallback sur localStorage
-    const saved = localStorage.getItem('latyfa_db');
-    products = saved ? JSON.parse(saved) : getDefaultProducts();
+    console.error('❌ Erreur générale dans chargerDonnees:', error);
+    // Fallback ultime
+    products = getDefaultProducts();
     render();
   }
   
