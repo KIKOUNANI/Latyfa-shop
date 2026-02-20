@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA BOUTIQUE - Test 6</title>
+    <title>LATYFA BOUTIQUE - Test 7</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --latyfa-gold: #c5a059; }
@@ -23,7 +22,7 @@
 </head>
 <body>
     <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold">
-        TEST 6 - Authentification et Clients
+        TEST 7 - Version complète (sans Supabase)
     </div>
 
     <header class="bg-white shadow-sm p-4">
@@ -38,31 +37,43 @@
     </header>
 
     <div class="test-section">
-        <h2 class="text-xl font-bold text-[#c5a059] mb-4">✅ ÉTAPE 6 - AUTHENTIFICATION</h2>
+        <h2 class="text-xl font-bold text-[#c5a059] mb-4">✅ TEST COMPLET</h2>
         
         <div class="mb-4 p-4 bg-gray-50 rounded">
             <h3 class="font-bold mb-2">📊 Statut :</h3>
             <div id="status" class="space-y-2 text-sm"></div>
         </div>
 
-        <!-- Modale d'authentification simplifiée -->
-        <div id="authModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center" style="display: none;">
-            <div class="bg-white p-6 rounded-lg max-w-md w-full">
-                <h3 class="text-xl font-bold mb-4">Connexion</h3>
-                <input type="email" id="loginEmail" placeholder="Email" class="w-full border p-2 mb-2 rounded">
-                <input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border p-2 mb-4 rounded">
-                <button onclick="connexion()" class="bg-[#c5a059] text-white px-4 py-2 rounded w-full">
-                    Se connecter
-                </button>
-                <p class="text-xs text-gray-400 mt-2">Test: admin@latyfa.com / admin2026</p>
-            </div>
+        <div class="flex gap-4">
+            <button onclick="testToutesFonctions()" class="bg-blue-500 text-white px-4 py-2 rounded">
+                Tester toutes les fonctions
+            </button>
+            <button onclick="clearLocalStorage()" class="bg-red-500 text-white px-4 py-2 rounded">
+                Effacer localStorage
+            </button>
+        </div>
+    </div>
+
+    <!-- Modale simplifiée -->
+    <div id="authModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center" style="display: none;">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+            <h3 class="text-xl font-bold mb-4">Connexion</h3>
+            <input type="email" id="loginEmail" placeholder="Email" class="w-full border p-2 mb-2 rounded">
+            <input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border p-2 mb-4 rounded">
+            <button onclick="connexion()" class="bg-[#c5a059] text-white px-4 py-2 rounded w-full">
+                Se connecter
+            </button>
+            <button onclick="fermerAuthModal()" class="text-gray-400 text-sm mt-2 w-full">
+                Fermer
+            </button>
         </div>
     </div>
 
     <script>
-        console.log('🚀 ÉTAPE 6 - Chargement...');
+        console.log('🚀 TEST COMPLET - Chargement...');
         
         let statusDiv = document.getElementById('status');
+        let errorCount = 0;
         
         function addStatus(message, type = 'info') {
             const color = {
@@ -75,12 +86,52 @@
             statusDiv.innerHTML += `<p class="${color}">${message}</p>`;
         }
 
-        // ==================== VARIABLES GLOBALES ====================
-        let clients = [];
-        let utilisateurConnecte = null;
-        let messages = [];
+        function clearLocalStorage() {
+            localStorage.clear();
+            addStatus('🧹 localStorage effacé', 'warning');
+            setTimeout(() => location.reload(), 1000);
+        }
 
-        // ==================== FONCTIONS AUTHENTIFICATION ====================
+        // ==================== VARIABLES GLOBALES ====================
+        addStatus('🔄 Chargement des variables...', 'info');
+        
+        let products = [];
+        let cart = [];
+        let currentProduct = null;
+        let remiseCodePromo = 0;
+        let idEnCoursDeModification = null;
+        let pointsFidelite = 0;
+        let wishlist = [];
+        let comparateur = [];
+        let avis = [];
+        let currentRating = 0;
+        let cadeauMystere = null;
+        let clients = [];
+        let messages = [];
+        let utilisateurConnecte = null;
+        
+        // ==================== CONFIGURATIONS ====================
+        const tarifsLivraison = {
+            "abidjan_nord": { nom: "Abidjan Nord", prix: 1500 },
+            "abidjan_sud": { nom: "Abidjan Sud", prix: 2000 },
+            "interieur": { nom: "Intérieur CI", prix: 3000 },
+            "bouake": { nom: "Retrait Boutique", prix: 0 }
+        };
+        
+        const categories = [
+            { id: 'bijoux', nom: 'Bijoux', icone: 'fa-gem' },
+            { id: 'vetements', nom: 'Vêtements', icone: 'fa-shirt' }
+        ];
+        
+        const avisPredefinis = [
+            { nom: "Mariam K.", note: 5, commentaire: "Super qualité", date: "2026-02-10" }
+        ];
+        
+        const notifications = [
+            "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨"
+        ];
+
+        // ==================== FONCTIONS AUTH ====================
         function ouvrirAuthModal() {
             document.getElementById('authModal').style.display = 'flex';
         }
@@ -93,72 +144,189 @@
             const email = document.getElementById('loginEmail')?.value;
             const password = document.getElementById('loginPassword')?.value;
             
-            addStatus(`Tentative de connexion: ${email}`, 'info');
-            
             const client = clients.find(c => c.email === email && c.password === password);
             
             if (client) {
                 utilisateurConnecte = client;
+                localStorage.setItem('latyfa_session', JSON.stringify(client));
                 addStatus(`✅ Connecté: ${client.nom}`, 'success');
                 fermerAuthModal();
+                document.getElementById('loginBtn').innerText = 'Déconnexion';
+                document.getElementById('loginBtn').onclick = deconnexion;
             } else {
-                addStatus('❌ Email ou mot de passe incorrect', 'error');
+                addStatus('❌ Identifiants incorrects', 'error');
             }
         }
 
         function deconnexion() {
             utilisateurConnecte = null;
+            localStorage.removeItem('latyfa_session');
             addStatus('👋 Déconnecté', 'warning');
+            document.getElementById('loginBtn').innerText = 'Se connecter';
+            document.getElementById('loginBtn').onclick = ouvrirAuthModal;
+        }
+
+        // ==================== FONCTIONS DE TEST ====================
+        function testToutesFonctions() {
+            addStatus('🔄 Test de toutes les fonctions...', 'info');
+            
+            try {
+                // Test 1: getDefaultProducts
+                const defaultProducts = getDefaultProducts();
+                addStatus(`✓ getDefaultProducts: ${defaultProducts.length} produits`, 'success');
+                
+                // Test 2: initialiserParrainage
+                initialiserParrainage();
+                addStatus('✓ initialiserParrainage OK', 'success');
+                
+                // Test 3: genererCodeParrainage
+                const code = genererCodeParrainage(1);
+                addStatus(`✓ genererCodeParrainage: ${code}`, 'success');
+                
+                // Test 4: envoyerMessageAdmin
+                envoyerMessageAdmin([1], "Test", "Message test");
+                addStatus('✓ envoyerMessageAdmin OK', 'success');
+                
+                // Test 5: ajouterPoints
+                ajouterPoints(5000);
+                addStatus(`✓ ajouterPoints: ${pointsFidelite} points`, 'success');
+                
+                // Test 6: toggleWishlist
+                toggleWishlist(1, null);
+                addStatus(`✓ toggleWishlist: ${wishlist.length} favoris`, 'success');
+                
+                // Test 7: ajouterComparateur
+                ajouterComparateur(1);
+                addStatus(`✓ ajouterComparateur: ${comparateur.length} comparaisons`, 'success');
+                
+                addStatus('✅ TOUS LES TESTS RÉUSSIS !', 'success');
+                
+            } catch (error) {
+                errorCount++;
+                addStatus(`❌ ERREUR: ${error.message}`, 'error');
+                console.error('Erreur détaillée:', error);
+            }
+        }
+
+        // ==================== FONCTIONS PRINCIPALES ====================
+        function getDefaultProducts() {
+            return [
+                { id: 1, name: "Sac Prestige Latyfa", price: 45000, images: ["https://via.placeholder.com/200"] },
+                { id: 2, name: "Collier Perle Royale", price: 25000, images: ["https://via.placeholder.com/200"] }
+            ];
+        }
+
+        // Parrainage
+        let parrainage = { parrains: {}, filleuls: {}, paliers: [] };
+        
+        function initialiserParrainage() {
+            const saved = localStorage.getItem('latyfa_parrainage');
+            if (saved) {
+                parrainage = JSON.parse(saved);
+            }
+        }
+        
+        function genererCodeParrainage(clientId) {
+            const code = 'LATYFA-' + clientId + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            if (!parrainage.parrains[clientId]) {
+                parrainage.parrains[clientId] = { code: code, filleuls: [], gains: 0 };
+            }
+            localStorage.setItem('latyfa_parrainage', JSON.stringify(parrainage));
+            return code;
+        }
+        
+        // Messagerie
+        function envoyerMessageAdmin(destinataireIds, objet, contenu) {
+            const nouveauxMessages = destinataireIds.map(id => ({
+                id: Date.now() + Math.random(),
+                expediteurId: 'admin',
+                destinataireId: id,
+                objet: objet,
+                contenu: contenu,
+                date: new Date().toLocaleString(),
+                lu: false
+            }));
+            messages.push(...nouveauxMessages);
+            localStorage.setItem('latyfa_messages', JSON.stringify(messages));
+        }
+        
+        // Points fidélité
+        function ajouterPoints(montant) {
+            const pointsGagnes = Math.floor(montant / 1000);
+            pointsFidelite += pointsGagnes;
+            localStorage.setItem('latyfa_points', pointsFidelite.toString());
+        }
+        
+        // Wishlist
+        function toggleWishlist(productId, btn) {
+            const index = wishlist.indexOf(productId);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+            } else {
+                wishlist.push(productId);
+            }
+            localStorage.setItem('latyfa_wishlist', JSON.stringify(wishlist));
+        }
+        
+        // Comparateur
+        function ajouterComparateur(productId) {
+            if (!comparateur.includes(productId)) {
+                comparateur.push(productId);
+                localStorage.setItem('latyfa_comparateur', JSON.stringify(comparateur));
+            }
         }
 
         // ==================== INITIALISATION ====================
         try {
-            addStatus('🔄 Initialisation...', 'info');
+            addStatus('🔄 Chargement des données...', 'info');
             
-            // Clients par défaut
-            clients = [
-                { 
-                    id: 1, 
-                    nom: "Admin Latyfa", 
-                    email: "admin@latyfa.com", 
-                    password: "admin2026", 
-                    isAdmin: true 
-                },
-                {
-                    id: 2,
-                    nom: "Marie Kouassi",
-                    email: "marie.k@email.com",
-                    password: "client123",
-                    isAdmin: false
-                }
-            ];
+            // Charger les clients
+            const savedClients = localStorage.getItem('latyfa_clients');
+            if (savedClients) {
+                clients = JSON.parse(savedClients);
+                addStatus(`✓ Clients chargés: ${clients.length}`, 'success');
+            } else {
+                clients = [
+                    { id: 1, nom: "Admin Latyfa", email: "admin@latyfa.com", password: "admin2026", isAdmin: true },
+                    { id: 2, nom: "Marie Kouassi", email: "marie.k@email.com", password: "client123", isAdmin: false }
+                ];
+                localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+                addStatus('✓ Clients par défaut créés', 'success');
+            }
             
-            addStatus(`✅ ${clients.length} clients chargés`, 'success');
-            
-            // Vérifier session existante
+            // Charger la session
             const session = localStorage.getItem('latyfa_session');
             if (session) {
                 utilisateurConnecte = JSON.parse(session);
                 addStatus(`👤 Session active: ${utilisateurConnecte.nom}`, 'success');
+                document.getElementById('loginBtn').innerText = 'Déconnexion';
+                document.getElementById('loginBtn').onclick = deconnexion;
+            }
+            
+            // Charger les produits
+            const savedProducts = localStorage.getItem('latyfa_db');
+            if (savedProducts) {
+                products = JSON.parse(savedProducts);
+                addStatus(`✓ Produits chargés: ${products.length}`, 'success');
             } else {
-                addStatus('👤 Aucune session active', 'info');
+                products = getDefaultProducts();
+                localStorage.setItem('latyfa_db', JSON.stringify(products));
+                addStatus('✓ Produits par défaut créés', 'success');
             }
             
-            // Ajouter bouton de déconnexion si connecté
-            if (utilisateurConnecte) {
-                const loginBtn = document.getElementById('loginBtn');
-                loginBtn.innerText = 'Déconnexion';
-                loginBtn.onclick = deconnexion;
-            }
+            // Charger les autres données
+            wishlist = JSON.parse(localStorage.getItem('latyfa_wishlist')) || [];
+            comparateur = JSON.parse(localStorage.getItem('latyfa_comparateur')) || [];
+            pointsFidelite = parseInt(localStorage.getItem('latyfa_points')) || 0;
+            messages = JSON.parse(localStorage.getItem('latyfa_messages')) || [];
             
-            // Gérer la fermeture de la modale au clic dehors
-            document.getElementById('authModal').addEventListener('click', function(e) {
-                if (e.target === this) fermerAuthModal();
-            });
+            initialiserParrainage();
+            
+            addStatus(`✅ Initialisation terminée avec ${errorCount} erreur(s)`, errorCount ? 'warning' : 'success');
             
         } catch (error) {
-            addStatus(`❌ Erreur: ${error.message}`, 'error');
-            console.error(error);
+            addStatus(`❌ Erreur fatale: ${error.message}`, 'error');
+            console.error('ERREUR FATALE:', error);
         }
     </script>
 </body>
