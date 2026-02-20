@@ -3,331 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA BOUTIQUE - Test 7</title>
+    <title>LATYFA BOUTIQUE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --latyfa-gold: #c5a059; }
         body { font-family: 'Montserrat', sans-serif; background: #fcfcfc; }
-        .test-section {
-            border: 2px solid var(--latyfa-gold);
-            padding: 20px;
-            margin: 20px;
-            border-radius: 10px;
-        }
-        .status-success { color: #10b981; }
-        .status-error { color: #ef4444; }
-        .status-warning { color: #f59e0b; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .product-card { background: white; border-radius: 12px; padding: 15px; margin: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .error-box { background: #fee; border: 1px solid #fcc; padding: 15px; border-radius: 8px; margin: 20px; }
     </style>
 </head>
 <body>
-    <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold">
-        TEST 7 - Version complète (sans Supabase)
-    </div>
-
     <header class="bg-white shadow-sm p-4">
-        <div class="container mx-auto flex justify-between">
-            <span class="text-xl font-black italic text-[#c5a059]">LATYFA SHOP</span>
-            <div>
-                <button id="loginBtn" onclick="ouvrirAuthModal()" class="border border-[#c5a059] px-4 py-2 rounded-full text-sm">
-                    Se connecter
-                </button>
-            </div>
+        <div class="container mx-auto">
+            <span class="text-2xl font-black italic text-[#c5a059]">LATYFA SHOP</span>
         </div>
     </header>
 
-    <div class="test-section">
-        <h2 class="text-xl font-bold text-[#c5a059] mb-4">✅ TEST COMPLET</h2>
-        
-        <div class="mb-4 p-4 bg-gray-50 rounded">
-            <h3 class="font-bold mb-2">📊 Statut :</h3>
-            <div id="status" class="space-y-2 text-sm"></div>
+    <div class="container">
+        <div id="error-display" class="error-box hidden">
+            <h3 class="font-bold text-red-600">🔴 Erreur détectée</h3>
+            <p id="error-message" class="text-red-500"></p>
         </div>
 
-        <div class="flex gap-4">
-            <button onclick="testToutesFonctions()" class="bg-blue-500 text-white px-4 py-2 rounded">
-                Tester toutes les fonctions
-            </button>
-            <button onclick="clearLocalStorage()" class="bg-red-500 text-white px-4 py-2 rounded">
-                Effacer localStorage
-            </button>
-        </div>
-    </div>
-
-    <!-- Modale simplifiée -->
-    <div id="authModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center" style="display: none;">
-        <div class="bg-white p-6 rounded-lg max-w-md w-full">
-            <h3 class="text-xl font-bold mb-4">Connexion</h3>
-            <input type="email" id="loginEmail" placeholder="Email" class="w-full border p-2 mb-2 rounded">
-            <input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border p-2 mb-4 rounded">
-            <button onclick="connexion()" class="bg-[#c5a059] text-white px-4 py-2 rounded w-full">
-                Se connecter
-            </button>
-            <button onclick="fermerAuthModal()" class="text-gray-400 text-sm mt-2 w-full">
-                Fermer
-            </button>
+        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <p class="text-gray-400">Chargement des produits...</p>
         </div>
     </div>
 
     <script>
-        console.log('🚀 TEST COMPLET - Chargement...');
+        console.log('🚀 Démarrage...');
         
-        let statusDiv = document.getElementById('status');
-        let errorCount = 0;
+        const productGrid = document.getElementById('product-grid');
+        const errorDisplay = document.getElementById('error-display');
+        const errorMessage = document.getElementById('error-message');
         
-        function addStatus(message, type = 'info') {
-            const color = {
-                success: 'text-green-600',
-                error: 'text-red-600',
-                warning: 'text-yellow-600',
-                info: 'text-blue-600'
-            }[type] || 'text-gray-600';
-            
-            statusDiv.innerHTML += `<p class="${color}">${message}</p>`;
+        function showError(msg, error) {
+            console.error('❌', msg, error);
+            errorDisplay.classList.remove('hidden');
+            errorMessage.innerHTML = `${msg}<br><small class="text-xs">${error?.message || 'Erreur inconnue'}</small>`;
+            productGrid.innerHTML = '<p class="text-red-500">⛔ Erreur de chargement. Voir détails ci-dessus.</p>';
         }
 
-        function clearLocalStorage() {
-            localStorage.clear();
-            addStatus('🧹 localStorage effacé', 'warning');
-            setTimeout(() => location.reload(), 1000);
-        }
-
-        // ==================== VARIABLES GLOBALES ====================
-        addStatus('🔄 Chargement des variables...', 'info');
-        
-        let products = [];
-        let cart = [];
-        let currentProduct = null;
-        let remiseCodePromo = 0;
-        let idEnCoursDeModification = null;
-        let pointsFidelite = 0;
-        let wishlist = [];
-        let comparateur = [];
-        let avis = [];
-        let currentRating = 0;
-        let cadeauMystere = null;
-        let clients = [];
-        let messages = [];
-        let utilisateurConnecte = null;
-        
-        // ==================== CONFIGURATIONS ====================
-        const tarifsLivraison = {
-            "abidjan_nord": { nom: "Abidjan Nord", prix: 1500 },
-            "abidjan_sud": { nom: "Abidjan Sud", prix: 2000 },
-            "interieur": { nom: "Intérieur CI", prix: 3000 },
-            "bouake": { nom: "Retrait Boutique", prix: 0 }
-        };
-        
-        const categories = [
-            { id: 'bijoux', nom: 'Bijoux', icone: 'fa-gem' },
-            { id: 'vetements', nom: 'Vêtements', icone: 'fa-shirt' }
-        ];
-        
-        const avisPredefinis = [
-            { nom: "Mariam K.", note: 5, commentaire: "Super qualité", date: "2026-02-10" }
-        ];
-        
-        const notifications = [
-            "Une cliente à Abidjan vient d'acheter des Perles de hanche ✨"
-        ];
-
-        // ==================== FONCTIONS AUTH ====================
-        function ouvrirAuthModal() {
-            document.getElementById('authModal').style.display = 'flex';
-        }
-
-        function fermerAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-        }
-
-        function connexion() {
-            const email = document.getElementById('loginEmail')?.value;
-            const password = document.getElementById('loginPassword')?.value;
-            
-            const client = clients.find(c => c.email === email && c.password === password);
-            
-            if (client) {
-                utilisateurConnecte = client;
-                localStorage.setItem('latyfa_session', JSON.stringify(client));
-                addStatus(`✅ Connecté: ${client.nom}`, 'success');
-                fermerAuthModal();
-                document.getElementById('loginBtn').innerText = 'Déconnexion';
-                document.getElementById('loginBtn').onclick = deconnexion;
-            } else {
-                addStatus('❌ Identifiants incorrects', 'error');
-            }
-        }
-
-        function deconnexion() {
-            utilisateurConnecte = null;
-            localStorage.removeItem('latyfa_session');
-            addStatus('👋 Déconnecté', 'warning');
-            document.getElementById('loginBtn').innerText = 'Se connecter';
-            document.getElementById('loginBtn').onclick = ouvrirAuthModal;
-        }
-
-        // ==================== FONCTIONS DE TEST ====================
-        function testToutesFonctions() {
-            addStatus('🔄 Test de toutes les fonctions...', 'info');
-            
-            try {
-                // Test 1: getDefaultProducts
-                const defaultProducts = getDefaultProducts();
-                addStatus(`✓ getDefaultProducts: ${defaultProducts.length} produits`, 'success');
-                
-                // Test 2: initialiserParrainage
-                initialiserParrainage();
-                addStatus('✓ initialiserParrainage OK', 'success');
-                
-                // Test 3: genererCodeParrainage
-                const code = genererCodeParrainage(1);
-                addStatus(`✓ genererCodeParrainage: ${code}`, 'success');
-                
-                // Test 4: envoyerMessageAdmin
-                envoyerMessageAdmin([1], "Test", "Message test");
-                addStatus('✓ envoyerMessageAdmin OK', 'success');
-                
-                // Test 5: ajouterPoints
-                ajouterPoints(5000);
-                addStatus(`✓ ajouterPoints: ${pointsFidelite} points`, 'success');
-                
-                // Test 6: toggleWishlist
-                toggleWishlist(1, null);
-                addStatus(`✓ toggleWishlist: ${wishlist.length} favoris`, 'success');
-                
-                // Test 7: ajouterComparateur
-                ajouterComparateur(1);
-                addStatus(`✓ ajouterComparateur: ${comparateur.length} comparaisons`, 'success');
-                
-                addStatus('✅ TOUS LES TESTS RÉUSSIS !', 'success');
-                
-            } catch (error) {
-                errorCount++;
-                addStatus(`❌ ERREUR: ${error.message}`, 'error');
-                console.error('Erreur détaillée:', error);
-            }
-        }
-
-        // ==================== FONCTIONS PRINCIPALES ====================
         function getDefaultProducts() {
             return [
-                { id: 1, name: "Sac Prestige Latyfa", price: 45000, images: ["https://via.placeholder.com/200"] },
-                { id: 2, name: "Collier Perle Royale", price: 25000, images: ["https://via.placeholder.com/200"] }
+                { id: 1, name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"] },
+                { id: 2, name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"] },
+                { id: 3, name: "Baya Cristal Éclat", price: 5000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"] }
             ];
         }
 
-        // Parrainage
-        let parrainage = { parrains: {}, filleuls: {}, paliers: [] };
-        
-        function initialiserParrainage() {
-            const saved = localStorage.getItem('latyfa_parrainage');
-            if (saved) {
-                parrainage = JSON.parse(saved);
+        function renderProducts(products) {
+            if (!products || products.length === 0) {
+                productGrid.innerHTML = '<p class="text-gray-400">Aucun produit à afficher</p>';
+                return;
             }
+            
+            productGrid.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <img src="${p.images?.[0] || 'https://via.placeholder.com/300'}" class="w-full h-48 object-cover rounded-lg mb-3">
+                    <h3 class="font-bold">${p.name || 'Sans nom'}</h3>
+                    <p class="text-[#c5a059] font-bold text-xl">${p.price?.toLocaleString() || '0'} F</p>
+                </div>
+            `).join('');
         }
-        
-        function genererCodeParrainage(clientId) {
-            const code = 'LATYFA-' + clientId + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-            if (!parrainage.parrains[clientId]) {
-                parrainage.parrains[clientId] = { code: code, filleuls: [], gains: 0 };
-            }
-            localStorage.setItem('latyfa_parrainage', JSON.stringify(parrainage));
-            return code;
-        }
-        
-        // Messagerie
-        function envoyerMessageAdmin(destinataireIds, objet, contenu) {
-            const nouveauxMessages = destinataireIds.map(id => ({
-                id: Date.now() + Math.random(),
-                expediteurId: 'admin',
-                destinataireId: id,
-                objet: objet,
-                contenu: contenu,
-                date: new Date().toLocaleString(),
-                lu: false
-            }));
-            messages.push(...nouveauxMessages);
-            localStorage.setItem('latyfa_messages', JSON.stringify(messages));
-        }
-        
-        // Points fidélité
-        function ajouterPoints(montant) {
-            const pointsGagnes = Math.floor(montant / 1000);
-            pointsFidelite += pointsGagnes;
-            localStorage.setItem('latyfa_points', pointsFidelite.toString());
-        }
-        
-        // Wishlist
-        function toggleWishlist(productId, btn) {
-            const index = wishlist.indexOf(productId);
-            if (index > -1) {
-                wishlist.splice(index, 1);
-            } else {
-                wishlist.push(productId);
-            }
-            localStorage.setItem('latyfa_wishlist', JSON.stringify(wishlist));
-        }
-        
-        // Comparateur
-        function ajouterComparateur(productId) {
-            if (!comparateur.includes(productId)) {
-                comparateur.push(productId);
-                localStorage.setItem('latyfa_comparateur', JSON.stringify(comparateur));
+
+        async function init() {
+            try {
+                // 1. Tester si Supabase est disponible
+                if (typeof window.supabase === 'undefined') {
+                    throw new Error('La bibliothèque Supabase n\'est pas chargée');
+                }
+                console.log('✓ Supabase JS chargé');
+
+                // 2. Initialiser Supabase
+                const supabaseUrl = 'https://tckhslbqptjquflyfyhu.supabase.co';
+                const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRja2hzbGJxcHRqcXVmbHlmeWh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0NjczMTEsImV4cCI6MjA4NzA0MzMxMX0.oONsuo8atmylhTNzE68NUJxm_u35jXx-xmorlnWld6w';
+                
+                const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+                console.log('✓ Client Supabase créé');
+
+                // 3. Tester la connexion
+                const { data: testData, error: testError } = await supabase.from('products').select('count', { count: 'exact', head: true });
+                
+                if (testError) {
+                    if (testError.code === '42P01') {
+                        throw new Error('La table "products" n\'existe pas dans votre base Supabase');
+                    } else if (testError.code === '42501') {
+                        throw new Error('Permissions RLS : vous n\'avez pas accès à la table products');
+                    } else {
+                        throw testError;
+                    }
+                }
+                
+                console.log('✓ Connexion Supabase OK, table products accessible');
+
+                // 4. Charger les produits
+                const { data: produits, error: produitsError } = await supabase
+                    .from('products')
+                    .select('*')
+                    .limit(10);
+
+                if (produitsError) throw produitsError;
+
+                if (produits && produits.length > 0) {
+                    console.log(`✓ ${produits.length} produits chargés depuis Supabase`);
+                    renderProducts(produits);
+                } else {
+                    console.log('⚠️ Aucun produit dans Supabase, utilisation des produits par défaut');
+                    renderProducts(getDefaultProducts());
+                }
+
+            } catch (error) {
+                showError('Erreur lors de l\'initialisation', error);
+                console.error('Détails de l\'erreur:', error);
+                
+                // Fallback : afficher les produits par défaut en cas d'erreur
+                renderProducts(getDefaultProducts());
             }
         }
 
-        // ==================== INITIALISATION ====================
-        try {
-            addStatus('🔄 Chargement des données...', 'info');
-            
-            // Charger les clients
-            const savedClients = localStorage.getItem('latyfa_clients');
-            if (savedClients) {
-                clients = JSON.parse(savedClients);
-                addStatus(`✓ Clients chargés: ${clients.length}`, 'success');
-            } else {
-                clients = [
-                    { id: 1, nom: "Admin Latyfa", email: "admin@latyfa.com", password: "admin2026", isAdmin: true },
-                    { id: 2, nom: "Marie Kouassi", email: "marie.k@email.com", password: "client123", isAdmin: false }
-                ];
-                localStorage.setItem('latyfa_clients', JSON.stringify(clients));
-                addStatus('✓ Clients par défaut créés', 'success');
-            }
-            
-            // Charger la session
-            const session = localStorage.getItem('latyfa_session');
-            if (session) {
-                utilisateurConnecte = JSON.parse(session);
-                addStatus(`👤 Session active: ${utilisateurConnecte.nom}`, 'success');
-                document.getElementById('loginBtn').innerText = 'Déconnexion';
-                document.getElementById('loginBtn').onclick = deconnexion;
-            }
-            
-            // Charger les produits
-            const savedProducts = localStorage.getItem('latyfa_db');
-            if (savedProducts) {
-                products = JSON.parse(savedProducts);
-                addStatus(`✓ Produits chargés: ${products.length}`, 'success');
-            } else {
-                products = getDefaultProducts();
-                localStorage.setItem('latyfa_db', JSON.stringify(products));
-                addStatus('✓ Produits par défaut créés', 'success');
-            }
-            
-            // Charger les autres données
-            wishlist = JSON.parse(localStorage.getItem('latyfa_wishlist')) || [];
-            comparateur = JSON.parse(localStorage.getItem('latyfa_comparateur')) || [];
-            pointsFidelite = parseInt(localStorage.getItem('latyfa_points')) || 0;
-            messages = JSON.parse(localStorage.getItem('latyfa_messages')) || [];
-            
-            initialiserParrainage();
-            
-            addStatus(`✅ Initialisation terminée avec ${errorCount} erreur(s)`, errorCount ? 'warning' : 'success');
-            
-        } catch (error) {
-            addStatus(`❌ Erreur fatale: ${error.message}`, 'error');
-            console.error('ERREUR FATALE:', error);
-        }
+        // Lancer l'initialisation
+        init();
     </script>
 </body>
 </html>
