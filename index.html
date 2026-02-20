@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA BOUTIQUE - Test 3</title>
+    <title>LATYFA BOUTIQUE - Test 4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     <style>
         :root { 
             --latyfa-gold: #c5a059;   
@@ -21,8 +22,6 @@
         }
         
         .logo-font { font-family: 'Playfair Display', serif; color: var(--latyfa-gold) !important; }
-        .text-gold { color: var(--latyfa-gold) !important; }
-        .bg-gold { background-color: var(--latyfa-gold) !important; }
         
         .test-section {
             border: 2px solid var(--latyfa-gold);
@@ -31,132 +30,155 @@
             border-radius: 10px;
         }
         
-        .product-card { 
-            background: white; 
-            border-radius: 12px; 
-            border: 1px solid #e5e7eb;
-            padding: 12px;
+        .treasure-section {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border-radius: 24px;
+            padding: 24px;
+            color: white;
+            margin: 20px;
+        }
+        
+        .mission-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
             margin: 10px;
-            width: 200px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <!-- BANNIERE PROMO -->
     <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold">
-        TEST 3 - Variables JavaScript chargées
+        TEST 4 - Chasse au trésor ajoutée
     </div>
 
-    <!-- HEADER -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="container mx-auto px-4 py-3">
             <span class="text-xl font-black italic logo-font">LATYFA SHOP</span>
-            <div class="flex gap-3">
-                <span id="cart-count" class="bg-[#ff6600] text-white px-2 py-1 rounded-full text-xs">0</span>
-            </div>
         </div>
     </header>
 
     <!-- SECTION DE TEST -->
     <div class="test-section">
-        <h2 class="text-xl font-bold text-[#c5a059] mb-4">✅ ÉTAPE 3 - VARIABLES CHARGÉES</h2>
+        <h2 class="text-xl font-bold text-[#c5a059] mb-4">✅ ÉTAPE 4 - CHASSE AU TRÉSOR</h2>
         
         <div class="mb-4 p-3 bg-gray-50 rounded">
-            <p class="font-bold">Variables initialisées :</p>
-            <div id="variables-list" class="mt-2 text-sm"></div>
+            <p class="font-bold mb-2">Statut du chargement :</p>
+            <div id="status" class="text-sm"></div>
         </div>
 
-        <!-- Produits de test -->
-        <div class="flex gap-4 mt-4">
-            <div class="product-card">
-                <div class="h-32 bg-gray-200 rounded mb-2"></div>
-                <p class="font-bold text-sm">Produit test 1</p>
-                <p class="text-[#c5a059] font-bold">15.000 F</p>
+        <!-- Section chasse au trésor simplifiée -->
+        <div class="treasure-section">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">CHASSE AU TRÉSOR</h3>
+                <span id="treasurePoints" class="bg-[#c5a059] text-black px-4 py-2 rounded-full">0</span>
             </div>
-            <div class="product-card">
-                <div class="h-32 bg-gray-200 rounded mb-2"></div>
-                <p class="font-bold text-sm">Produit test 2</p>
-                <p class="text-[#c5a059] font-bold">25.000 F</p>
+            
+            <div class="missions-grid" id="dailyMissions">
+                <!-- Les missions apparaîtront ici -->
             </div>
+            
+            <button onclick="testTreasure()" class="bg-[#c5a059] text-black px-4 py-2 rounded mt-4">
+                Tester l'ajout de points
+            </button>
         </div>
     </div>
 
     <script>
-        console.log('🚀 ÉTAPE 3 - Début du chargement...');
+        console.log('🚀 ÉTAPE 4 - Chargement...');
         
-        // ==================== VARIABLES GLOBALES ====================
-        let products = [];
-        let cart = [];
-        let currentProduct = null;
-        let remiseCodePromo = 0;
-        let idEnCoursDeModification = null;
-        let pointsFidelite = 0;
-        let wishlist = [];
-        let comparateur = [];
-        let avis = [];
-        let currentRating = 0;
-        let cadeauMystere = null;
-        let clients = [];
-        let messages = [];
-        let utilisateurConnecte = null;
-        
-        // ==================== CONFIGURATIONS ====================
-        const tarifsLivraison = {
-            "abidjan_nord": { nom: "Abidjan Nord", prix: 1500 },
-            "abidjan_sud": { nom: "Abidjan Sud", prix: 2000 },
-            "interieur": { nom: "Intérieur CI", prix: 3000 },
-            "bouake": { nom: "Retrait Boutique", prix: 0 }
-        };
-        
-        const categories = [
-            { id: 'bijoux', nom: 'Bijoux', icone: 'fa-gem' },
-            { id: 'vetements', nom: 'Vêtements', icone: 'fa-shirt' },
-            { id: 'chaussures', nom: 'Chaussures', icone: 'fa-shoe-prints' },
-            { id: 'sac', nom: 'Sacs à main', icone: 'fa-bag-shopping' },
-            { id: 'parfum', nom: 'Parfums', icone: 'fa-spray-can-sparkles' }
-        ];
-        
-        const notifications = [
-            "Test notification 1",
-            "Test notification 2"
+        // ==================== SYSTÈME DE CHASSE AU TRÉSOR ====================
+        const treasureLevels = [
+            { name: 'Bronze', points: 0, discount: 5 },
+            { name: 'Argent', points: 500, discount: 10 },
+            { name: 'Or', points: 1500, discount: 15 },
+            { name: 'Platine', points: 3000, discount: 20 },
+            { name: 'Diamant', points: 5000, discount: 25 }
         ];
 
-        // ==================== FONCTIONS SIMPLES ====================
-        function showToast(message) {
-            console.log('📢 Toast:', message);
-            alert(message); // Pour le test, on utilise alert
+        const dailyMissions = [
+            { id: 'visit', name: 'Visite du jour', emoji: '👋', points: 10, action: 'Se connecter' },
+            { id: 'share', name: 'Partager', emoji: '📤', points: 20, action: 'Partager' },
+            { id: 'wishlist', name: 'Favoris', emoji: '❤️', points: 15, action: 'Ajouter 3 favoris' },
+            { id: 'review', name: 'Avis', emoji: '⭐', points: 30, action: 'Donner son avis' }
+        ];
+
+        const treasureRewards = [
+            { name: 'Bracelet Mystère', emoji: '📿', proba: 30 },
+            { name: 'Code -15%', emoji: '🏷️', proba: 25 },
+            { name: '100 points', emoji: '⭐', proba: 20 },
+            { name: 'Livraison gratuite', emoji: '📦', proba: 15 },
+            { name: 'Collier surprise', emoji: '💎', proba: 10 }
+        ];
+
+        // Variables globales
+        let userTreasure = {
+            points: 0,
+            level: 'Bronze',
+            daily: {}
+        };
+
+        // Fonctions
+        function initTreasure() {
+            console.log('Initialisation de la chasse au trésor...');
+            try {
+                const saved = localStorage.getItem('latyfa_treasure');
+                if (saved) {
+                    userTreasure = JSON.parse(saved);
+                }
+                updateTreasureUI();
+                document.getElementById('status').innerHTML += '<p class="text-green-600">✓ Chasse au trésor initialisée</p>';
+            } catch (e) {
+                console.error('Erreur initTreasure:', e);
+                document.getElementById('status').innerHTML += '<p class="text-red-600">❌ Erreur initTreasure</p>';
+            }
         }
 
-        function getDefaultProducts() {
-            return [
-                { id: 1, name: "Produit Test 1", price: 15000, images: ["https://via.placeholder.com/200"] },
-                { id: 2, name: "Produit Test 2", price: 25000, images: ["https://via.placeholder.com/200"] }
-            ];
+        function updateTreasureUI() {
+            document.getElementById('treasurePoints').innerText = userTreasure.points;
+            
+            const container = document.getElementById('dailyMissions');
+            if (container) {
+                container.innerHTML = dailyMissions.map(mission => `
+                    <div class="mission-card" onclick="completeMission('${mission.id}')">
+                        <div class="text-3xl mb-2">${mission.emoji}</div>
+                        <div class="font-bold">${mission.name}</div>
+                        <div class="text-[#c5a059]">+${mission.points}</div>
+                        <div class="text-xs mt-2">${mission.action}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function completeMission(missionId) {
+            const mission = dailyMissions.find(m => m.id === missionId);
+            if (mission) {
+                userTreasure.points += mission.points;
+                localStorage.setItem('latyfa_treasure', JSON.stringify(userTreasure));
+                updateTreasureUI();
+                alert(`✨ +${mission.points} points !`);
+                confetti({ particleCount: 50, spread: 50 });
+            }
+        }
+
+        function testTreasure() {
+            userTreasure.points += 100;
+            localStorage.setItem('latyfa_treasure', JSON.stringify(userTreasure));
+            updateTreasureUI();
+            alert('✨ 100 points ajoutés !');
+            confetti({ particleCount: 100, spread: 70 });
         }
 
         // Initialisation
         try {
-            products = getDefaultProducts();
-            console.log('✅ Produits chargés:', products.length);
-            
-            // Afficher les variables dans la page
-            document.getElementById('variables-list').innerHTML = `
-                <p>✓ products: ${products.length} produits</p>
-                <p>✓ cart: ${cart.length} articles</p>
-                <p>✓ categories: ${categories.length} catégories</p>
-                <p>✓ tarifsLivraison: ${Object.keys(tarifsLivraison).length} zones</p>
-            `;
-            
-            showToast('✅ Test 3 réussi !');
-            
+            document.getElementById('status').innerHTML = '<p class="text-green-600">✓ Variables chargées</p>';
+            initTreasure();
+            console.log('✅ ÉTAPE 4 - Terminé avec succès');
         } catch (error) {
             console.error('❌ Erreur:', error);
-            document.getElementById('variables-list').innerHTML = `
-                <p class="text-red-500">❌ Erreur: ${error.message}</p>
-            `;
+            document.getElementById('status').innerHTML += `<p class="text-red-600">❌ Erreur: ${error.message}</p>`;
         }
-
-        console.log('✅ ÉTAPE 3 - Terminé');
     </script>
 </body>
 </html>
