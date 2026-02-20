@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATYFA BOUTIQUE - Test 2</title>
+    <title>LATYFA BOUTIQUE - Test 3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
@@ -24,64 +24,139 @@
         .text-gold { color: var(--latyfa-gold) !important; }
         .bg-gold { background-color: var(--latyfa-gold) !important; }
         
-        /* Styles de base pour les tests */
         .test-section {
             border: 2px solid var(--latyfa-gold);
             padding: 20px;
             margin: 20px;
             border-radius: 10px;
         }
+        
+        .product-card { 
+            background: white; 
+            border-radius: 12px; 
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            margin: 10px;
+            width: 200px;
+        }
     </style>
 </head>
 <body>
     <!-- BANNIERE PROMO -->
-    <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30">
-        TEST 2 - Bannière avec styles complets
+    <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold">
+        TEST 3 - Variables JavaScript chargées
     </div>
 
-    <!-- FLASH SALE -->
-    <div class="bg-gradient-to-r from-red-500 to-pink-500 text-white p-2 text-center text-[10px] font-bold">
-        ⚡ FLASH SALE TEST
-    </div>
-
-    <!-- HEADER COMPLET (sans JavaScript) -->
+    <!-- HEADER -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <span class="text-xl md:text-2xl font-black italic logo-font">LATYFA SHOP</span>
-            </div>
-            
-            <div class="flex gap-3 items-center">
-                <button class="text-[10px] font-black uppercase border border-[#c5a059] px-3 py-2 rounded-full">
-                    Se connecter
-                </button>
-                <i class="fa-regular fa-heart text-gray-600 text-xl"></i>
-                <i class="fa-solid fa-cart-shopping text-gray-600 text-xl"></i>
+            <span class="text-xl font-black italic logo-font">LATYFA SHOP</span>
+            <div class="flex gap-3">
+                <span id="cart-count" class="bg-[#ff6600] text-white px-2 py-1 rounded-full text-xs">0</span>
             </div>
         </div>
     </header>
 
     <!-- SECTION DE TEST -->
-    <div class="test-section text-center">
-        <h2 class="text-xl font-bold text-[#c5a059] mb-4">✅ ÉTAPE 2 RÉUSSIE</h2>
-        <p class="mb-2">Le CSS complet et la structure HTML sont chargés</p>
-        <p class="text-sm text-gray-600">Prochaine étape : ajout des premiers scripts</p>
-    </div>
+    <div class="test-section">
+        <h2 class="text-xl font-bold text-[#c5a059] mb-4">✅ ÉTAPE 3 - VARIABLES CHARGÉES</h2>
+        
+        <div class="mb-4 p-3 bg-gray-50 rounded">
+            <p class="font-bold">Variables initialisées :</p>
+            <div id="variables-list" class="mt-2 text-sm"></div>
+        </div>
 
-    <!-- CATÉGORIES (statiques pour test) -->
-    <div class="flex justify-center gap-2 p-4">
-        <div class="bg-gray-100 px-4 py-2 rounded-full text-xs">Bijoux</div>
-        <div class="bg-gray-100 px-4 py-2 rounded-full text-xs">Vêtements</div>
-        <div class="bg-gray-100 px-4 py-2 rounded-full text-xs">Sacs</div>
-        <div class="bg-gray-100 px-4 py-2 rounded-full text-xs">Parfums</div>
+        <!-- Produits de test -->
+        <div class="flex gap-4 mt-4">
+            <div class="product-card">
+                <div class="h-32 bg-gray-200 rounded mb-2"></div>
+                <p class="font-bold text-sm">Produit test 1</p>
+                <p class="text-[#c5a059] font-bold">15.000 F</p>
+            </div>
+            <div class="product-card">
+                <div class="h-32 bg-gray-200 rounded mb-2"></div>
+                <p class="font-bold text-sm">Produit test 2</p>
+                <p class="text-[#c5a059] font-bold">25.000 F</p>
+            </div>
+        </div>
     </div>
 
     <script>
-        console.log('✅ Étape 2 - CSS et HTML structurel chargés');
-        console.log('Styles chargés :', {
-            gold: getComputedStyle(document.documentElement).getPropertyValue('--latyfa-gold'),
-            font: document.body.style.fontFamily
-        });
+        console.log('🚀 ÉTAPE 3 - Début du chargement...');
+        
+        // ==================== VARIABLES GLOBALES ====================
+        let products = [];
+        let cart = [];
+        let currentProduct = null;
+        let remiseCodePromo = 0;
+        let idEnCoursDeModification = null;
+        let pointsFidelite = 0;
+        let wishlist = [];
+        let comparateur = [];
+        let avis = [];
+        let currentRating = 0;
+        let cadeauMystere = null;
+        let clients = [];
+        let messages = [];
+        let utilisateurConnecte = null;
+        
+        // ==================== CONFIGURATIONS ====================
+        const tarifsLivraison = {
+            "abidjan_nord": { nom: "Abidjan Nord", prix: 1500 },
+            "abidjan_sud": { nom: "Abidjan Sud", prix: 2000 },
+            "interieur": { nom: "Intérieur CI", prix: 3000 },
+            "bouake": { nom: "Retrait Boutique", prix: 0 }
+        };
+        
+        const categories = [
+            { id: 'bijoux', nom: 'Bijoux', icone: 'fa-gem' },
+            { id: 'vetements', nom: 'Vêtements', icone: 'fa-shirt' },
+            { id: 'chaussures', nom: 'Chaussures', icone: 'fa-shoe-prints' },
+            { id: 'sac', nom: 'Sacs à main', icone: 'fa-bag-shopping' },
+            { id: 'parfum', nom: 'Parfums', icone: 'fa-spray-can-sparkles' }
+        ];
+        
+        const notifications = [
+            "Test notification 1",
+            "Test notification 2"
+        ];
+
+        // ==================== FONCTIONS SIMPLES ====================
+        function showToast(message) {
+            console.log('📢 Toast:', message);
+            alert(message); // Pour le test, on utilise alert
+        }
+
+        function getDefaultProducts() {
+            return [
+                { id: 1, name: "Produit Test 1", price: 15000, images: ["https://via.placeholder.com/200"] },
+                { id: 2, name: "Produit Test 2", price: 25000, images: ["https://via.placeholder.com/200"] }
+            ];
+        }
+
+        // Initialisation
+        try {
+            products = getDefaultProducts();
+            console.log('✅ Produits chargés:', products.length);
+            
+            // Afficher les variables dans la page
+            document.getElementById('variables-list').innerHTML = `
+                <p>✓ products: ${products.length} produits</p>
+                <p>✓ cart: ${cart.length} articles</p>
+                <p>✓ categories: ${categories.length} catégories</p>
+                <p>✓ tarifsLivraison: ${Object.keys(tarifsLivraison).length} zones</p>
+            `;
+            
+            showToast('✅ Test 3 réussi !');
+            
+        } catch (error) {
+            console.error('❌ Erreur:', error);
+            document.getElementById('variables-list').innerHTML = `
+                <p class="text-red-500">❌ Erreur: ${error.message}</p>
+            `;
+        }
+
+        console.log('✅ ÉTAPE 3 - Terminé');
     </script>
 </body>
 </html>
