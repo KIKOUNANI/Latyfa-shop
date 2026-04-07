@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>LATYFA BOUTIQUE | Officiel</title>
+    <title>LATYFA BOUTIQUE | Officiel - Toutes fonctionnalités</title>
     
-    <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
-    <!-- Polices et icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -21,9 +20,9 @@
         .logo-font { font-family: 'Playfair Display', serif; color: var(--latyfa-gold) !important; }
         
         /* Product Cards */
-        .product-card { background: white; border-radius: 12px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.3s ease; overflow: hidden; }
+        .product-card { background: white; border-radius: 12px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.3s ease; overflow: hidden; position: relative; }
         .product-card:hover { border-color: var(--latyfa-gold); transform: translateY(-4px); box-shadow: 0 20px 30px rgba(0,0,0,0.1); }
-        .product-card img { transition: transform 0.5s ease; }
+        .product-card img { transition: transform 0.5s ease; width: 100%; height: 200px; object-fit: cover; }
         .product-card:hover img { transform: scale(1.05); }
         
         /* Badges */
@@ -52,7 +51,7 @@
         .dark-theme .product-card, .dark-theme .modal-content { background-color: #1e1e1e !important; border-color: #333 !important; }
         
         /* Hero animation */
-        @keyframes waveColors { 0%,100% { color: #ff6600; } 33% { color: #ffffff; } 66% { color: #00ff00; } }
+        @keyframes waveColors { 0%,100% { color: #ff6600; text-shadow: 0 5px 15px rgba(255,102,0,0.8); } 33% { color: #ffffff; } 66% { color: #00ff00; } }
         .hero-title { animation: waveColors 6s ease-in-out infinite; font-weight: 900; }
         
         /* Back to top */
@@ -61,7 +60,7 @@
         
         /* WhatsApp */
         .whatsapp-widget { position: fixed; bottom: 170px; left: 20px; z-index: 50; }
-        .whatsapp-widget a { display: flex; width: 60px; height: 60px; background: #25D366; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 30px; }
+        .whatsapp-widget a { display: flex; width: 60px; height: 60px; background: #25D366; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 30px; box-shadow: 0 4px 15px rgba(37,211,102,0.4); }
         .whatsapp-widget a:hover { transform: scale(1.1); }
         
         /* Roue de la fortune */
@@ -74,7 +73,7 @@
         .treasure-section { background: linear-gradient(135deg, #1a1a1a, #2d2d2d); border-radius: 24px; padding: 24px; color: white; margin: 40px 0; }
         .missions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 30px; }
         .mission-card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s; }
-        .mission-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.1); border-color: #c5a059; }
+        .mission-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.1); }
         .mission-card.completed { background: rgba(197,160,89,0.2); border-color: #c5a059; }
         .progress-bar-bg { height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #cd7f32, #ffd700, #e5e4e2); transition: width 0.5s; }
@@ -88,21 +87,46 @@
         .category-static-item { padding: 8px 16px; border-radius: 40px; background: #f5f5f5; font-size: 11px; font-weight: 700; cursor: pointer; }
         .category-static-item.active { background: var(--latyfa-gold); color: white; }
         
+        /* Social proof */
+        .social-proof { position: fixed; bottom: 20px; left: 20px; background: white; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; border-left: 4px solid var(--latyfa-gold); transform: translateY(100px); opacity: 0; transition: all 0.5s ease; z-index: 100; max-width: 280px; }
+        .social-proof.show { transform: translateY(0); opacity: 1; }
+        
+        /* Chat widget */
+        .chat-widget { position: fixed; bottom: 100px; right: 90px; z-index: 1000; }
+        .chat-button { width: 60px; height: 60px; background: var(--latyfa-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(197,160,89,0.4); }
+        .chat-window { position: absolute; bottom: 80px; right: 0; width: 320px; background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; display: none; }
+        .chat-window.active { display: block; }
+        .chat-header { background: var(--latyfa-gold); color: white; padding: 15px; display: flex; justify-content: space-between; }
+        .chat-messages { height: 300px; overflow-y: auto; padding: 15px; background: #f9fafb; }
+        .chat-message.user .message-bubble { background: var(--latyfa-gold); color: white; border-radius: 18px; padding: 10px 15px; max-width: 80%; margin-left: auto; }
+        .chat-message.support .message-bubble { background: white; border: 1px solid #e5e7eb; border-radius: 18px; padding: 10px 15px; max-width: 80%; }
+        .chat-footer { padding: 15px; display: flex; gap: 10px; }
+        .chat-footer input { flex: 1; border: 1px solid #e5e7eb; border-radius: 25px; padding: 10px 15px; outline: none; }
+        .chat-footer button { width: 40px; height: 40px; background: var(--latyfa-gold); border: none; border-radius: 50%; color: white; cursor: pointer; }
+        
+        /* Admin */
+        .admin-btn { position: fixed; bottom: 10px; left: 10px; width: 40px; height: 40px; background: transparent; border: none; cursor: pointer; opacity: 0.1; z-index: 100; }
+        .admin-menu { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .admin-menu-item { flex: 1; text-align: center; padding: 10px; background: #f3f4f6; border-radius: 40px; font-size: 10px; font-weight: 900; cursor: pointer; }
+        .admin-menu-item.active { background: var(--latyfa-gold); color: white; }
+        .admin-section { display: none; }
+        .admin-section.active { display: block; }
+        
+        /* Flash sale */
+        .flash-sale { animation: pulseFlash 1s infinite; }
+        @keyframes pulseFlash { 0%,100% { opacity: 1; } 50% { opacity: 0.8; } }
         @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         @keyframes spin { to { transform: rotate(360deg); } }
         
         .loader-hidden { opacity: 0; visibility: hidden; transition: opacity 0.5s; }
-        @media (max-width: 768px) { .missions-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .missions-grid { grid-template-columns: repeat(2, 1fr); } .chat-window { width: 280px; right: -40px; } }
     </style>
 </head>
 <body>
 
 <!-- LOADER -->
 <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
-    <div class="relative">
-        <div class="w-24 h-24 rounded-full border-4 border-transparent border-t-[#c5a059] animate-spin"></div>
-        <div class="absolute inset-0 flex items-center justify-center"><span class="logo-font text-2xl">LATYFA</span></div>
-    </div>
+    <div class="relative"><div class="w-24 h-24 rounded-full border-4 border-transparent border-t-[#c5a059] animate-spin"></div><div class="absolute inset-0 flex items-center justify-center"><span class="logo-font text-2xl">LATYFA</span></div></div>
 </div>
 
 <!-- TOAST -->
@@ -110,22 +134,22 @@
 
 <!-- BANDEAUX -->
 <div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold uppercase">✨ PROMO -20% DÈS 20.000 F - DU 14 AU 28 FÉV 2026</div>
-<div class="flash-sale bg-gradient-to-r from-red-500 to-pink-500 text-white py-2 text-center text-[10px] font-bold animate-pulse" id="flashSale">⚡ FLASH SALE : -30% SUR LES BIJOUX ⚡</div>
+<div class="flash-sale bg-gradient-to-r from-red-500 to-pink-500 text-white py-2 text-center text-[10px] font-bold" id="flashSale">⚡ FLASH SALE : -30% SUR LES BIJOUX - FIN DANS <span id="flashCountdown">02:00:00</span></div>
+<div class="bg-white border-b py-1 overflow-hidden whitespace-nowrap"><div class="inline-block animate-marquee text-[9px] font-bold uppercase text-gray-400" style="animation: marquee 25s linear infinite;">✨ BON RAMADAN — 💎 NOUVELLE COLLECTION — 🚚 LIVRAISON 48H —</div></div>
 
 <!-- HEADER -->
 <header class="bg-white shadow-sm sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop()">
-            <div class="h-10 w-10 rounded-full bg-[#c5a059] flex items-center justify-center text-white font-bold">L</div>
-            <span class="text-xl font-black italic logo-font">LATYFA SHOP</span>
-        </div>
-        
+        <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop()"><div class="h-10 w-10 rounded-full bg-[#c5a059] flex items-center justify-center text-white font-bold">L</div><span class="text-xl font-black italic logo-font">LATYFA SHOP</span></div>
+        <div class="flex-1 max-w-md hidden md:block"><input type="text" id="search-input" placeholder="Rechercher..." class="w-full bg-gray-100 rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i></div>
         <div class="flex gap-3 items-center">
             <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-white">Se connecter</button>
             <div class="relative cursor-pointer" onclick="toggleWishlistModal()"><i class="fa-regular fa-heart text-gray-600 text-xl"></i><span id="wishlist-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span></div>
+            <div class="relative cursor-pointer" onclick="ouvrirComparateur()"><i class="fa-solid fa-scale-balanced text-gray-600 text-xl"></i><span id="comparateur-count" class="absolute -top-2 -right-2 bg-blue-500 text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span></div>
             <button onclick="toggleDarkMode()" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center"><i class="fa-solid fa-moon"></i></button>
             <div onclick="ouvrirPanier()" class="relative cursor-pointer"><i class="fa-solid fa-cart-shopping text-gray-600 text-xl"></i><span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 min-w-[18px] h-[18px] flex items-center justify-center">0</span></div>
             <button onclick="document.getElementById('treasureSection').scrollIntoView({behavior:'smooth'})" class="hidden md:block"><i class="fa-solid fa-treasure-chest text-xl text-[#c5a059]"></i></button>
+            <div class="relative cursor-pointer" onclick="voirParrainage()"><i class="fa-solid fa-handshake text-gray-600 text-xl"></i></div>
         </div>
     </div>
 </header>
@@ -133,37 +157,49 @@
 <!-- CATÉGORIES -->
 <div class="categories-static" id="categories-static"></div>
 
-<!-- HERO -->
-<section class="relative w-full h-[350px] overflow-hidden bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d]">
+<!-- HERO AVEC ANIMATION BOUTIQUE -->
+<section class="relative w-full h-[400px] overflow-hidden bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d]">
     <div class="absolute inset-0 bg-black/30"></div>
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
         <h1 class="hero-title text-4xl md:text-6xl font-black italic uppercase">La Boutique du 225</h1>
-        <p class="text-orange-400 font-bold mt-3 uppercase text-xs tracking-[0.2em]">Bijoux, vêtements, parfums...</p>
-        <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition">Découvrir</a>
+        <p class="text-orange-400 font-bold mt-3 uppercase text-xs tracking-[0.2em]">✨ Bijoux • Sacs • Parfums • Chaussures ✨</p>
+        <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg">Découvrir la Collection</a>
+    </div>
+    <!-- Produits flottants -->
+    <div class="floating-products absolute inset-0 pointer-events-none">
+        <div class="absolute bottom-10 left-5 text-4xl animate-bounce">💎</div>
+        <div class="absolute bottom-20 left-20 text-3xl animate-pulse">👛</div>
+        <div class="absolute top-20 right-10 text-4xl animate-bounce">💍</div>
+        <div class="absolute bottom-40 right-20 text-3xl animate-pulse">👜</div>
     </div>
 </section>
 
-<!-- PRODUITS -->
+<!-- PRODUITS POPULAIRES -->
+<section class="container mx-auto px-4 py-8">
+    <h3 class="text-[10px] font-black uppercase mb-4"><i class="fa-solid fa-fire text-[#ff6600]"></i> PRODUITS POPULAIRES</h3>
+    <div class="flex gap-4 overflow-x-auto pb-4" id="popular-products"></div>
+</section>
+
+<!-- GRILLE PRODUITS -->
 <section id="collection" class="container mx-auto px-4 py-8">
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-6" id="product-grid"></div>
 </section>
 
 <!-- CHASSE AU TRÉSOR -->
 <section class="treasure-section container mx-auto px-4" id="treasureSection">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-black flex items-center gap-2"><i class="fa-solid fa-treasure-chest text-[#c5a059]"></i>CHASSE AU TRÉSOR</h2>
-        <div class="bg-[#c5a059] text-black px-6 py-2 rounded-full font-black text-xl" id="treasurePoints">0</div>
-    </div>
-    <div class="progress-container mb-6">
-        <div class="progress-labels flex justify-between text-[10px] mb-1"><span>Bronze</span><span>Argent</span><span>Or</span><span>Platine</span><span>Diamant</span></div>
-        <div class="progress-bar-bg"><div class="progress-bar-fill" id="treasureProgress" style="width:0%"></div></div>
-        <div class="progress-next text-right text-[10px] text-[#c5a059] mt-1" id="treasureNext">Prochain palier: 500 points</div>
-    </div>
+    <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-black flex items-center gap-2"><i class="fa-solid fa-treasure-chest text-[#c5a059]"></i>CHASSE AU TRÉSOR</h2><div class="bg-[#c5a059] text-black px-6 py-2 rounded-full font-black text-xl" id="treasurePoints">0</div></div>
+    <div class="progress-container mb-6"><div class="progress-labels flex justify-between text-[10px] mb-1"><span>Bronze</span><span>Argent</span><span>Or</span><span>Platine</span><span>Diamant</span></div><div class="progress-bar-bg"><div class="progress-bar-fill" id="treasureProgress" style="width:0%"></div></div><div class="progress-next text-right text-[10px] text-[#c5a059] mt-1" id="treasureNext">Prochain palier: 500 points</div></div>
     <div class="missions-grid" id="dailyMissions"></div>
-    <div class="treasure-chest bg-gradient-to-r from-[#c5a059]/20 to-transparent rounded-xl p-6 text-center cursor-pointer border-2 border-dashed border-[#c5a059]" onclick="openTreasure()">
-        <div class="text-5xl mb-2 animate-bounce">🎁</div>
-        <h3 class="font-black">COFFRE MYSTÈRE</h3>
-        <p id="treasureTimer" class="text-2xl font-black text-[#c5a059]">02:45</p>
+    <div class="treasure-chest bg-gradient-to-r from-[#c5a059]/20 to-transparent rounded-xl p-6 text-center cursor-pointer border-2 border-dashed border-[#c5a059]" onclick="openTreasure()"><div class="text-5xl mb-2 animate-bounce">🎁</div><h3 class="font-black">COFFRE MYSTÈRE</h3><p id="treasureTimer" class="text-2xl font-black text-[#c5a059]">02:45</p></div>
+</section>
+
+<!-- SECTION FIDÉLITÉ -->
+<section class="container mx-auto px-4 py-8">
+    <div class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] rounded-2xl p-6 text-white">
+        <p class="text-[10px] font-black uppercase">VOS POINTS FIDÉLITÉ</p>
+        <div class="text-5xl font-black" id="loyalty-points">0</div>
+        <div class="w-full bg-white/30 h-2 rounded-full mt-2 overflow-hidden"><div class="bg-white h-full" id="loyalty-progress" style="width:0%"></div></div>
+        <p class="text-[8px] font-black uppercase mt-2">100 pts = -10% sur prochaine commande</p>
     </div>
 </section>
 
@@ -174,83 +210,126 @@
         <div class="mt-8 bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-[#c5a059]/30 max-w-2xl mx-auto">
             <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-[#c5a059] mx-auto mb-4 bg-gray-700 flex items-center justify-center text-5xl">👨‍💻</div>
             <h3 class="text-2xl font-black"><span class="text-[#c5a059]">TRAORE ABOUBAMANE</span> KADER</h3>
-            <p class="text-gray-300 text-sm my-4">Développeur Web & Mobile - Création de sites e-commerce, boutiques en ligne, applications</p>
+            <p class="text-gray-300 text-sm my-4">Développeur Web & Mobile - 5+ sites créés</p>
             <div class="flex flex-wrap gap-3 justify-center">
                 <a href="https://wa.me/2250506113292" target="_blank" class="bg-green-500 px-6 py-3 rounded-full text-xs font-black flex items-center gap-2 hover:scale-105 transition"><i class="fa-brands fa-whatsapp"></i>WhatsApp</a>
                 <a href="mailto:kadertraore224@gmail.com" class="bg-red-500 px-6 py-3 rounded-full text-xs font-black flex items-center gap-2 hover:scale-105 transition"><i class="fa-regular fa-envelope"></i>Email</a>
+                <a href="https://www.facebook.com/kader.traore.1848" target="_blank" class="bg-blue-600 px-6 py-3 rounded-full text-xs font-black flex items-center gap-2 hover:scale-105 transition"><i class="fa-brands fa-facebook"></i>Facebook</a>
             </div>
         </div>
     </div>
 </section>
 
 <!-- WIDGETS -->
-<div class="whatsapp-widget"><a href="https://wa.me/2250709002881" target="_blank"><i class="fa-brands fa-whatsapp"></i></a></div>
+<div class="whatsapp-widget"><a href="https://wa.me/2250709002881" target="_blank"><i class="fa-brands fa-whatsapp"></i><span class="tooltip hidden md:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-black text-white text-[8px] px-2 py-1 rounded whitespace-nowrap">Service client</span></a></div>
 <button onclick="ouvrirRoue()" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce border-2 border-[#c5a059]"><i class="fa-solid fa-gift text-[#c5a059] text-2xl"></i></button>
 <div id="backToTop" class="back-to-top" onclick="scrollToTop()"><i class="fa-solid fa-arrow-up"></i></div>
 
+<!-- SOCIAL PROOF -->
+<div id="social-proof" class="social-proof"><div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center"><i class="fa-solid fa-bag-shopping text-[#c5a059]"></i></div><div><p id="proof-text" class="text-[10px] font-bold"></p><p class="text-[8px] text-gray-400">à l'instant</p></div></div>
+
+<!-- CHAT WIDGET -->
+<div class="chat-widget"><div class="chat-button" onclick="toggleChat()"><i class="fa-regular fa-comment-dots text-white text-2xl"></i><span class="chat-badge absolute -top-1 -right-1 bg-red-500 text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">1</span></div><div class="chat-window" id="chatWindow"><div class="chat-header"><h3 class="text-[12px] font-black">💬 Chat Latyfa</h3><button onclick="toggleChat()" class="text-white">×</button></div><div class="chat-messages" id="chatMessages"><div class="chat-message support"><div class="message-bubble">Bonjour ! 👋 Comment puis-je vous aider ?</div></div></div><div class="chat-footer"><input type="text" id="chatInput" placeholder="Votre message..." onkeypress="if(event.key==='Enter') sendChatMessage()"><button onclick="sendChatMessage()"><i class="fa-regular fa-paper-plane"></i></button></div></div></div>
+
 <!-- MODALES -->
-<div id="authModal" class="modal"><div class="modal-content max-w-md"><div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black italic text-[#c5a059]">Compte client</h2><button onclick="fermerAuthModal()" class="text-2xl">&times;</button></div><div class="flex border-b mb-6"><div class="flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase auth-tab active" onclick="switchAuthTab('login')">Connexion</div><div class="flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase auth-tab" onclick="switchAuthTab('register')">Inscription</div></div><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4"><button onclick="connexion()" class="btn-primary w-full">SE CONNECTER</button></div><div id="registerForm" style="display:none"><input type="text" id="registerNom" placeholder="Nom complet" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="email" id="registerEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="tel" id="registerTel" placeholder="Téléphone" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="registerPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="registerConfirm" placeholder="Confirmer" class="w-full border rounded-xl p-3 text-xs mb-4"><button onclick="inscription()" class="btn-primary w-full">S'INSCRIRE</button></div></div></div>
+<div id="authModal" class="modal"><div class="modal-content max-w-md"><div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black italic text-[#c5a059]">Compte client</h2><button onclick="fermerAuthModal()" class="text-2xl">&times;</button></div><div class="flex border-b mb-6"><div class="flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase auth-tab active" onclick="switchAuthTab('login')">Connexion</div><div class="flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase auth-tab" onclick="switchAuthTab('register')">Inscription</div></div><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4"><button onclick="connexion()" class="btn-primary w-full">SE CONNECTER</button><p class="text-[8px] text-center mt-4 text-gray-400">Mot de passe oublié ? Contactez-nous</p></div><div id="registerForm" style="display:none"><input type="text" id="registerNom" placeholder="Nom complet" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="email" id="registerEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="tel" id="registerTel" placeholder="Téléphone" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="registerPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="registerConfirm" placeholder="Confirmer" class="w-full border rounded-xl p-3 text-xs mb-4"><div class="flex items-start gap-2 mb-4"><input type="checkbox" id="registerAccept"><label class="text-[8px]">J'accepte les CGV</label></div><button onclick="inscription()" class="btn-primary w-full">S'INSCRIRE</button></div></div></div>
 
-<div id="cartModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black italic text-[#c5a059]">Mon Panier</h2><button onclick="viderPanier()" class="text-red-500 text-[9px]">Vider</button></div><div id="cart-items" class="space-y-4 mb-6 max-h-[40vh] overflow-y-auto"></div><div id="checkout-form" style="display:none"><input type="text" id="nom-client" placeholder="NOM" class="w-full border p-3 rounded-lg text-sm mb-3"><input type="tel" id="tel-client" placeholder="WHATSAPP" class="w-full border p-3 rounded-lg text-sm mb-3"><input type="text" id="quartier-client" placeholder="QUARTIER" class="w-full border p-3 rounded-lg text-sm mb-3"><select id="zone-livraison" class="w-full border p-3 rounded-lg text-sm mb-3"><option value="">Zone livraison</option><option value="abidjan_nord">Abidjan Nord (1.500 F)</option><option value="abidjan_sud">Abidjan Sud (2.000 F)</option><option value="interieur">Intérieur (3.000 F)</option></select><div class="flex justify-between text-xl font-black p-3 bg-gray-50 rounded-xl"><span>TOTAL:</span><span id="total-display">0 F</span></div><div class="flex items-center gap-2 my-3"><input type="checkbox" id="check-verif"><label class="text-[9px]">Je confirme ma commande</label></div><button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 py-4 rounded-full font-black pointer-events-none" disabled>Commander</button></div><button onclick="fermerPanier()" class="w-full mt-4 text-[10px] underline">Continuer</button></div></div>
+<div id="cartModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black italic text-[#c5a059]">Mon Panier</h2><button onclick="viderPanier()" class="text-red-500 text-[9px]"><i class="fa-solid fa-trash"></i> Vider</button></div><div id="cart-items" class="space-y-4 mb-6 max-h-[40vh] overflow-y-auto"></div><div id="checkout-form" style="display:none"><input type="text" id="nom-client" placeholder="NOM COMPLET" class="w-full border p-3 rounded-lg text-sm mb-3"><input type="tel" id="tel-client" placeholder="WHATSAPP" class="w-full border p-3 rounded-lg text-sm mb-3"><input type="text" id="quartier-client" placeholder="QUARTIER" class="w-full border p-3 rounded-lg text-sm mb-3"><select id="zone-livraison" class="w-full border p-3 rounded-lg text-sm mb-3"><option value="">Zone livraison</option><option value="abidjan_nord">Abidjan Nord (1.500 F)</option><option value="abidjan_sud">Abidjan Sud (2.000 F)</option><option value="interieur">Intérieur (3.000 F)</option><option value="bouake">Retrait Boutique (Gratuit)</option></select><div class="grid grid-cols-2 gap-2 mb-3"><div class="payment-option" onclick="selectPayment('wave')" id="payment-wave"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Wave_Logo_2021.svg/200px-Wave_Logo_2021.svg.png" class="h-6 mx-auto"><span class="text-[8px]">Wave</span></div><div class="payment-option" onclick="selectPayment('orange')" id="payment-orange"><i class="fa-solid fa-money-bill-wave text-orange-500 text-2xl"></i><span class="text-[8px]">Orange Money</span></div><div class="payment-option" onclick="selectPayment('mtn')" id="payment-mtn"><i class="fa-solid fa-signal text-yellow-500 text-2xl"></i><span class="text-[8px]">MTN Money</span></div><div class="payment-option" onclick="selectPayment('cash')" id="payment-cash"><i class="fa-solid fa-money-bill text-green-600 text-2xl"></i><span class="text-[8px]">Cash</span></div></div><div class="flex justify-between text-xl font-black p-3 bg-gray-50 rounded-xl"><span>TOTAL:</span><span id="total-display">0 F</span></div><div class="flex items-center gap-2 my-3"><input type="checkbox" id="check-verif"><label class="text-[9px]">Je confirme ma commande et j'accepte les CGV</label></div><button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 py-4 rounded-full font-black pointer-events-none" disabled><i class="fa-brands fa-whatsapp mr-2"></i> Commander via WhatsApp</button></div><button onclick="fermerPanier()" class="w-full mt-4 text-[10px] underline">Continuer mes achats</button></div></div>
 
-<div id="productDetailModal" class="modal"><div class="modal-content max-w-2xl"><div class="flex justify-between items-center mb-4"><h2 id="detail-name" class="text-xl font-black italic text-[#c5a059]"></h2><button onclick="fermerDetail()" class="text-2xl">&times;</button></div><img id="detail-img" class="w-full h-64 object-cover rounded-xl mb-4"><p id="detail-price" class="text-[#ff6600] font-black text-2xl mb-2"></p><p id="detail-desc" class="text-xs text-gray-600 mb-4"></p><button onclick="ajouterDepuisDetail()" class="btn-primary w-full mb-2">Ajouter au panier</button><button onclick="ajouterComparateur(currentProduct?.id)" class="w-full border border-[#c5a059] py-3 rounded-lg text-[10px] font-black">Comparer</button></div></div>
+<div id="productDetailModal" class="modal"><div class="modal-content max-w-2xl"><div class="flex justify-between items-center mb-4"><h2 id="detail-name" class="text-xl font-black italic text-[#c5a059]"></h2><button onclick="fermerDetail()" class="text-2xl">&times;</button></div><div class="flex flex-col md:flex-row gap-6"><div class="md:w-1/2"><img id="detail-img" class="w-full h-64 object-cover rounded-xl"><div id="detail-thumbnails" class="flex gap-2 mt-2"></div></div><div class="md:w-1/2"><p id="detail-price" class="text-[#ff6600] font-black text-2xl mb-2"></p><p id="detail-desc" class="text-xs text-gray-600 mb-4"></p><div id="size-area" class="hidden mb-3"><select id="select-size" class="w-full border p-2 rounded-lg text-xs"><option>Taille S</option><option>Taille M</option><option>Taille L</option></select></div><div class="flex gap-2 mb-4"><button onclick="ajouterDepuisDetail()" class="btn-primary flex-1">Ajouter au panier</button><button onclick="ajouterComparateur(currentProduct?.id)" class="border border-[#c5a059] px-4 rounded-lg text-[10px] font-black">Comparer</button></div><div class="flex items-center gap-2 text-[8px] text-gray-400"><i class="fa-regular fa-eye"></i><span id="view-counter">24 personnes consultent</span></div><button onclick="genererQRCodeDepuisDetail()" class="w-full mt-3 bg-green-600 text-white py-2 rounded-lg text-[10px] font-black"><i class="fa-solid fa-qrcode mr-2"></i> Payer par QR Code</button></div></div></div></div>
 
-<div id="wishlistModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black italic text-[#c5a059]">❤️ Favoris</h2><button onclick="fermerWishlist()">&times;</button></div><div id="wishlist-items" class="space-y-3"></div></div></div>
+<div id="wishlistModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black italic text-[#c5a059]">❤️ Mes Favoris</h2><button onclick="fermerWishlist()">&times;</button></div><div id="wishlist-items" class="space-y-3"></div></div></div>
 
-<div id="wheelModal" class="wheel-mask"><div class="wheel-box"><button onclick="fermerRoue()" class="float-right text-xl">&times;</button><h3 class="logo-font text-xl font-black">LATYFA LUCKY WHEEL</h3><canvas id="canvas" width="300" height="300"></canvas><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl text-[#c5a059] drop-shadow-lg">▼</div><button id="spin" onclick="lancerRoue()" class="btn-primary w-full mt-4">TENTER MA CHANCE</button><p id="wheel-msg" class="text-[10px] mt-2 text-blue-600"></p></div></div>
+<div id="comparateurModal" class="modal"><div class="modal-content max-w-3xl"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black italic text-[#c5a059]">⚖️ Comparateur</h2><button onclick="fermerComparateur()">&times;</button></div><div id="comparateur-items" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div></div></div>
 
-<div id="comparateurModal" class="modal"><div class="modal-content max-w-3xl"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black italic text-[#c5a059]">⚖️ Comparateur</h2><button onclick="fermerComparateur()">&times;</button></div><div id="comparateur-items" class="grid grid-cols-2 gap-4"></div></div></div>
+<div id="wheelModal" class="wheel-mask"><div class="wheel-box"><button onclick="fermerRoue()" class="float-right text-xl">&times;</button><h3 class="logo-font text-xl font-black">LATYFA LUCKY WHEEL</h3><canvas id="canvas" width="300" height="300"></canvas><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl text-[#c5a059] drop-shadow-lg">▼</div><button id="spin" onclick="lancerRoue()" class="btn-primary w-full mt-4">TENTER MA CHANCE</button><p id="wheel-msg" class="text-[10px] mt-2 text-blue-600"></p><p id="wheel-countdown" class="text-[9px] text-red-500"></p></div></div>
 
-<div id="parrainageModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-xl font-black italic text-[#c5a059]">🤝 Parrainage</h2><button onclick="fermerParrainage()">&times;</button></div><div class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] p-4 rounded-xl text-white"><div class="grid grid-cols-3 gap-2 text-center mb-4"><div><div class="text-2xl font-black" id="nbFilleuls">0</div><div class="text-[8px]">Filleuls</div></div><div><div class="text-2xl font-black" id="gainTotal">0 F</div><div class="text-[8px]">Gagné</div></div><div><div class="text-2xl font-black" id="prochainPalier">1</div><div class="text-[8px]">Prochain</div></div></div><div class="bg-white p-3 rounded-xl flex gap-2"><input type="text" id="lienParrainage" readonly class="flex-1 text-black text-[9px] p-2 rounded"><button onclick="copierLien()" class="bg-black text-white px-3 py-1 rounded text-[8px]">COPIER</button></div></div></div></div>
+<div id="parrainageModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-xl font-black italic text-[#c5a059]">🤝 Programme de parrainage</h2><button onclick="fermerParrainage()">&times;</button></div><div class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] p-4 rounded-xl text-white"><div class="grid grid-cols-3 gap-2 text-center mb-4"><div><div class="text-2xl font-black" id="nbFilleuls">0</div><div class="text-[8px]">Filleuls</div></div><div><div class="text-2xl font-black" id="gainTotal">0 F</div><div class="text-[8px]">Gagné</div></div><div><div class="text-2xl font-black" id="prochainPalier">1</div><div class="text-[8px]">Prochain palier</div></div></div><div class="bg-white p-3 rounded-xl flex gap-2"><input type="text" id="lienParrainage" readonly class="flex-1 text-black text-[9px] p-2 rounded"><button onclick="copierLien()" class="bg-black text-white px-3 py-1 rounded text-[8px]">COPIER</button></div><div class="flex gap-2 mt-3"><button onclick="partagerWhatsApp()" class="flex-1 bg-green-500 text-white py-1 rounded text-[8px]"><i class="fa-brands fa-whatsapp"></i> Partager</button><button onclick="genererQRParrainage()" class="flex-1 bg-gray-800 text-white py-1 rounded text-[8px]"><i class="fa-solid fa-qrcode"></i> QR Code</button></div></div><div class="mt-4"><h4 class="text-[10px] font-black">🏆 Paliers</h4><div class="space-y-2 mt-2"><div class="flex justify-between text-[9px]"><span>1 filleul</span><span class="text-[#c5a059]">1.000 F</span></div><div class="flex justify-between text-[9px]"><span>5 filleuls</span><span class="text-[#c5a059]">10.000 F</span></div><div class="flex justify-between text-[9px]"><span>10 filleuls</span><span class="text-[#c5a059]">25.000 F</span></div><div class="flex justify-between text-[9px]"><span>20 filleuls</span><span class="text-[#c5a059]">VIP à vie</span></div></div></div></div></div>
 
-<footer class="bg-white border-t pt-12 pb-6 mt-8"><div class="container mx-auto px-4 text-center"><div class="flex items-center justify-center gap-2 mb-4"><div class="h-8 w-8 rounded-full bg-[#c5a059] flex items-center justify-center text-white font-bold">L</div><span class="text-xl font-black italic text-[#c5a059]">LATYFA SHOP</span></div><p class="text-gray-500 text-[10px] font-bold">© 2026 LATYFA BUSINESS | Côte d'Ivoire</p><p class="text-[8px] text-gray-400 mt-2">📍 Abidjan | 📞 07 09 00 28 81</p><button onclick="ouvrirCGV()" class="text-[8px] text-[#c5a059] underline mt-2">Conditions Générales</button></div></footer>
+<div id="qrModal" class="modal"><div class="modal-content text-center"><h2 class="text-xl font-black italic text-[#c5a059] mb-4">📱 Paiement Mobile</h2><div class="bg-gray-100 p-4 rounded-xl mb-4"><img id="qrImage" src="" class="w-48 h-48 mx-auto"></div><div class="text-2xl font-black text-[#c5a059]" id="qrMontant">0 F</div><button onclick="fermerQR()" class="btn-primary w-full mt-4">J'AI PAYÉ</button></div></div>
+
+<div id="suiviModal" class="modal"><div class="modal-content"><h2 class="text-xl font-black italic text-[#c5a059] mb-4">🚚 Suivi de commande</h2><div class="flex justify-between mb-6 text-[8px] font-black"><div class="text-center"><div class="step-indicator w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center mx-auto">1</div><span>Préparation</span></div><div class="text-center"><div class="step-indicator w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center mx-auto">2</div><span>En cours</span></div><div class="text-center"><div class="step-indicator w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center mx-auto">3</div><span>Livré</span></div></div><div class="bg-gray-100 p-4 rounded-xl"><p class="text-[10px] font-bold">📦 Votre colis est en préparation</p><p class="text-[8px] text-gray-500 mt-1">Délai estimé: 24-48h</p></div><button onclick="fermerSuivi()" class="w-full mt-4 bg-gray-100 py-2 rounded-lg text-[10px]">Fermer</button></div></div>
+
+<div id="avisModal" class="modal"><div class="modal-content"><h2 class="text-xl font-black italic text-[#c5a059] mb-4">⭐ Avis clients</h2><div id="all-reviews" class="space-y-3 max-h-96 overflow-y-auto"></div><button onclick="deposerAvis()" class="btn-primary w-full mt-4">Donner mon avis</button></div></div>
+
+<div id="depotAvisModal" class="modal"><div class="modal-content"><h2 class="text-xl font-black italic text-[#c5a059] mb-4">📝 Donner mon avis</h2><div class="flex gap-1 text-2xl mb-4 justify-center" id="rating-stars"><i class="fa-regular fa-star cursor-pointer" onclick="setRating(1)"></i><i class="fa-regular fa-star cursor-pointer" onclick="setRating(2)"></i><i class="fa-regular fa-star cursor-pointer" onclick="setRating(3)"></i><i class="fa-regular fa-star cursor-pointer" onclick="setRating(4)"></i><i class="fa-regular fa-star cursor-pointer" onclick="setRating(5)"></i></div><input type="text" id="avis-nom" placeholder="Votre nom" class="w-full border p-3 rounded-lg text-sm mb-3"><textarea id="avis-comment" placeholder="Votre commentaire" rows="4" class="w-full border p-3 rounded-lg text-sm mb-3"></textarea><button onclick="soumettreAvis()" class="btn-primary w-full">Publier</button></div></div>
+
+<div id="adminModal" class="modal"><div class="modal-content max-w-4xl"><div class="flex justify-between items-center mb-4"><h2 class="text-xl font-black italic text-[#c5a059]">👑 Administration</h2><button onclick="fermerAdmin()">&times;</button></div><div class="admin-menu"><div class="admin-menu-item active" onclick="switchAdminSection('dashboard')">Dashboard</div><div class="admin-menu-item" onclick="switchAdminSection('produits')">Produits</div><div class="admin-menu-item" onclick="switchAdminSection('commandes')">Commandes</div><div class="admin-menu-item" onclick="switchAdminSection('clients')">Clients</div><div class="admin-menu-item" onclick="switchAdminSection('messagerie')">Messages</div><div class="admin-menu-item" onclick="switchAdminSection('maintenance')">Maintenance</div></div><div id="dashboardSection" class="admin-section active"><canvas id="salesChart" height="200"></canvas></div><div id="produitsSection" class="admin-section"><input type="text" id="adm-name" placeholder="Nom" class="w-full border p-2 mb-2"><input type="number" id="adm-price" placeholder="Prix" class="w-full border p-2 mb-2"><textarea id="adm-img" placeholder="Images (URLs séparées par virgules)" class="w-full border p-2 mb-2"></textarea><button onclick="ajouterProduitAdmin()" class="btn-primary w-full">Ajouter</button><div id="admin-list" class="mt-4 space-y-2"></div></div><div id="commandesSection" class="admin-section"><div id="historique-zone" class="space-y-2 max-h-96 overflow-y-auto"></div></div><div id="clientsSection" class="admin-section"><div id="clients-list" class="space-y-2"></div></div><div id="messagerieSection" class="admin-section"><select id="client-select" class="w-full border p-2 mb-2"><option value="">Tous les clients</option></select><input type="text" id="messageObjet" placeholder="Objet" class="w-full border p-2 mb-2"><textarea id="messageContenu" placeholder="Message" rows="4" class="w-full border p-2 mb-2"></textarea><button onclick="envoyerMessageAdmin()" class="btn-primary w-full">Envoyer</button></div><div id="maintenanceSection" class="admin-section"><button onclick="setMaintenance(true)" class="bg-red-500 text-white px-4 py-2 rounded">Activer maintenance</button><button onclick="setMaintenance(false)" class="bg-green-500 text-white px-4 py-2 rounded">Désactiver</button></div></div></div>
+
+<div id="cgvModal" class="modal"><div class="modal-content"><h2 class="text-xl font-black italic text-[#c5a059] mb-4">Conditions Générales</h2><div class="text-[10px] space-y-4"><p><strong>1. Prix</strong> : Tous les prix sont en FCFA.</p><p><strong>2. Paiement</strong> : Wave, Orange Money, MTN Money, Cash.</p><p><strong>3. Livraison</strong> : 24-48h à Abidjan, 48-72h intérieur.</p><p><strong>4. Retours</strong> : Non acceptés sauf défaut majeur.</p><p><strong>5. Programme Chasse au Trésor</strong> : Les points expirent après 12 mois.</p></div><button onclick="fermerCGV()" class="btn-primary w-full mt-4">J'accepte</button></div></div>
+
+<footer class="bg-white border-t pt-12 pb-6 mt-8"><div class="container mx-auto px-4 text-center"><div class="flex items-center justify-center gap-2 mb-4"><div class="h-8 w-8 rounded-full bg-[#c5a059] flex items-center justify-center text-white font-bold">L</div><span class="text-xl font-black italic text-[#c5a059]">LATYFA SHOP</span></div><div class="flex flex-wrap justify-center gap-6 text-[10px] text-gray-500 mb-4"><span class="cursor-pointer hover:text-[#c5a059]" onclick="ouvrirCGV()">CGV</span><span class="cursor-pointer hover:text-[#c5a059]" onclick="ouvrirSuivi()">Suivi colis</span><span class="cursor-pointer hover:text-[#c5a059]" onclick="ouvrirAdvent()">📅 Calendrier Avent</span></div><p class="text-gray-500 text-[10px] font-bold">© 2026 LATYFA BUSINESS | Côte d'Ivoire</p><p class="text-[8px] text-gray-400 mt-2">📍 Abidjan | 📞 07 09 00 28 81</p></div></footer>
+
+<div class="admin-btn" onclick="ouvrirAdmin()">ADM</div>
 
 <script>
-// ==================== DONNÉES ====================
+// ==================== DONNÉES COMPLÈTES ====================
 const PRODUITS_DE_SECOURS = [
     { id: 1, name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], description: "Sac en cuir de luxe, finition dorée.", enStock: true, cat: "sac", ventes: 45, estNouveau: true },
     { id: 2, name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Collier en perles fines.", enStock: true, cat: "bijoux", ventes: 38 },
     { id: 3, name: "Bracelet Cristal", price: 15000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"], description: "Bracelet en cristal Swarovski.", enStock: true, cat: "bijoux", ventes: 52 },
     { id: 4, name: "Parfum Oud Mystique", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], description: "Parfum oriental aux notes boisées.", enStock: true, cat: "parfum", ventes: 27 },
-    { id: 5, name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], description: "Escarpins dorés.", enStock: true, cat: "chaussures", ventes: 31 },
-    { id: 6, name: "Sac à main Élégance", price: 55000, images: ["https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500"], description: "Sac à main de luxe.", enStock: true, cat: "sac", ventes: 22, estLuxe: true }
+    { id: 5, name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], description: "Escarpins dorés pour vos soirées.", enStock: true, cat: "chaussures", ventes: 31, stockBas: true },
+    { id: 6, name: "Sac à main Élégance", price: 55000, images: ["https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500"], description: "Sac à main de luxe.", enStock: true, cat: "sac", ventes: 22, estLuxe: true },
+    { id: 7, name: "Bague Solitaire Or", price: 89000, images: ["https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500"], description: "Bague en or 18 carats.", enStock: true, cat: "bijoux", ventes: 15, estLuxe: true },
+    { id: 8, name: "Montre Classique", price: 65000, images: ["https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500"], description: "Montre à quartz étanche.", enStock: true, cat: "autres", ventes: 19 }
 ];
 
-let products = [], cart = [], wishlist = [], comparateur = [], clients = [], messages = [], utilisateurConnecte = null;
-let currentProduct = null, pointsFidelite = 0, remiseCodePromo = 0;
+let products = [], cart = [], wishlist = [], comparateur = [], clients = [], messages = [], avis = [], utilisateurConnecte = null;
+let currentProduct = null, pointsFidelite = 0, remiseCodePromo = 0, currentRating = 0;
 let userTreasure = { points: 0, level: "Bronze", daily: {} };
+let parrainageData = { parrains: {} };
+let maintenanceActive = false;
+
 const categories = [
     { id: "tous", nom: "Tout voir", icone: "fa-crown" },
     { id: "bijoux", nom: "Bijoux", icone: "fa-gem" },
     { id: "sac", nom: "Sacs", icone: "fa-bag-shopping" },
     { id: "parfum", nom: "Parfums", icone: "fa-spray-can-sparkles" },
-    { id: "chaussures", nom: "Chaussures", icone: "fa-shoe-prints" }
+    { id: "chaussures", nom: "Chaussures", icone: "fa-shoe-prints" },
+    { id: "autres", nom: "Autres", icone: "fa-plus" }
 ];
-const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
-const tarifsLivraison = { abidjan_nord: 1500, abidjan_sud: 2000, interieur: 3000 };
+
+const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON GRATUITE", "REESSAYER"];
+const tarifsLivraison = { abidjan_nord: 1500, abidjan_sud: 2000, interieur: 3000, bouake: 0 };
+const dailyMissions = [
+    { id: 'visit', name: 'Visite du jour', points: 10, emoji: '👋', action: 'Se connecter' },
+    { id: 'share', name: 'Partager', points: 20, emoji: '📤', action: 'Partager' },
+    { id: 'wishlist', name: 'Favoris', points: 15, emoji: '❤️', action: 'Ajouter 3 favoris', target: 3 },
+    { id: 'review', name: 'Avis', points: 30, emoji: '⭐', action: 'Donner son avis' }
+];
+const notifications = ["Une cliente vient d'acheter des Perles de hanche ✨", "Nouveau colis expédié vers Yamoussoukro 📦", "5 personnes consultent ce produit 🔥"];
 
 // ==================== CHARGEMENT ====================
 async function chargerDonnees() {
     const saved = localStorage.getItem('latyfa_db');
     products = saved ? JSON.parse(saved) : [...PRODUITS_DE_SECOURS];
     if (!saved) localStorage.setItem('latyfa_db', JSON.stringify(products));
-    
     cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
     wishlist = JSON.parse(localStorage.getItem('latyfa_wishlist')) || [];
     comparateur = JSON.parse(localStorage.getItem('latyfa_comparateur')) || [];
     clients = JSON.parse(localStorage.getItem('latyfa_clients')) || [{ id: 1, nom: "Admin", email: "admin@latyfa.com", password: "admin2026", isAdmin: true }];
+    messages = JSON.parse(localStorage.getItem('latyfa_messages')) || [];
+    avis = JSON.parse(localStorage.getItem('latyfa_avis')) || [{ nom: "Mariam K.", note: 5, commentaire: "Super qualité !", date: "2026-02-10", photo: "https://randomuser.me/api/portraits/women/44.jpg" }];
     pointsFidelite = parseInt(localStorage.getItem('latyfa_points')) || 0;
-    
+    const savedParrainage = localStorage.getItem('latyfa_parrainage');
+    if (savedParrainage) parrainageData = JSON.parse(savedParrainage);
     const session = localStorage.getItem('latyfa_session');
     if (session) utilisateurConnecte = JSON.parse(session);
+    maintenanceActive = localStorage.getItem('latyfa_maintenance') === 'true';
     
     initTreasure();
     renderCategories();
     render();
     updateCartCount();
     updateWishlistCount();
+    updateComparateurCount();
     updateUserUI();
-    document.getElementById('loyalty-points')?.setAttribute('data-points', pointsFidelite);
+    document.getElementById('loyalty-points').innerText = pointsFidelite;
+    document.getElementById('loyalty-progress').style.width = Math.min(100, (pointsFidelite / 100) * 100) + '%';
+    updatePopularProducts();
+    startFlashSale();
+    startSocialProof();
 }
 
 function renderCategories() {
@@ -262,29 +341,32 @@ function renderCategories() {
 function filterByCategory(catId) {
     document.querySelectorAll('.category-static-item').forEach(el => el.classList.remove('active'));
     event.target.closest('.category-static-item').classList.add('active');
-    const grid = document.getElementById('product-grid');
     const filtered = catId === "tous" ? products : products.filter(p => p.cat === catId);
-    grid.innerHTML = filtered.map(p => renderProductCard(p)).join('');
+    document.getElementById('product-grid').innerHTML = filtered.map(p => renderProductCard(p)).join('');
 }
 
 function renderProductCard(p) {
     const estNouveau = p.estNouveau || (Date.now() - (p.dateAjout || 0) < 7*24*60*60*1000);
     const estFavori = wishlist.includes(p.id);
     return `<div class="product-card p-3 relative" onclick="voirDetails(${p.id})">
-        <div class="favorite-btn absolute top-2 right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer z-10 ${estFavori ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlist(${p.id})"><i class="fa-${estFavori ? 'solid' : 'regular'} fa-heart"></i></div>
+        <div class="favorite-btn absolute top-2 right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer z-10 shadow-md ${estFavori ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlist(${p.id})"><i class="fa-${estFavori ? 'solid' : 'regular'} fa-heart text-[10px]"></i></div>
         ${estNouveau ? '<span class="badge-nouveau">NOUVEAU</span>' : ''}
         ${p.estLuxe ? '<span class="badge-luxe">LUXE</span>' : ''}
-        ${p.stockBas ? '<span class="stock-alert">🔥 DERNIERS EXEMPLAIRES</span>' : ''}
+        ${p.stockBas ? '<span class="stock-alert">🔥 DERNIERS</span>' : ''}
         <img src="${p.images[0]}" class="h-48 w-full object-cover rounded-lg mb-3">
         <h3 class="text-[11px] font-bold uppercase">${p.name}</h3>
         <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-        <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase hover:bg-[#c5a059] hover:text-white transition">VOIR</div>
+        <div class="flex items-center gap-1 mt-1 text-[8px] text-gray-400"><i class="fa-solid fa-star text-yellow-500"></i><i class="fa-solid fa-star text-yellow-500"></i><i class="fa-solid fa-star text-yellow-500"></i><i class="fa-solid fa-star text-yellow-500"></i><i class="fa-regular fa-star"></i><span>(24)</span></div>
+        <div class="bg-gray-50 text-center py-2 mt-3 rounded text-[9px] font-bold uppercase hover:bg-[#c5a059] hover:text-white transition">VOIR L'ARTICLE</div>
     </div>`;
 }
 
-function render() {
-    const grid = document.getElementById('product-grid');
-    if (grid) grid.innerHTML = products.map(p => renderProductCard(p)).join('');
+function render() { document.getElementById('product-grid').innerHTML = products.map(p => renderProductCard(p)).join(''); }
+function updatePopularProducts() {
+    const container = document.getElementById('popular-products');
+    if (!container) return;
+    const populaires = [...products].sort((a,b)=> (b.ventes||0)-(a.ventes||0)).slice(0,6);
+    container.innerHTML = populaires.map(p => `<div class="flex-shrink-0 w-32 cursor-pointer" onclick="voirDetails(${p.id})"><img src="${p.images[0]}" class="h-28 w-full object-cover rounded-lg mb-1"><p class="text-[9px] font-bold truncate">${p.name}</p><p class="text-[#c5a059] text-[10px] font-black">${p.price.toLocaleString()} F</p></div>`).join('');
 }
 
 // ==================== PRODUITS ====================
@@ -295,9 +377,10 @@ function voirDetails(id) {
     document.getElementById('detail-price').innerText = currentProduct.price.toLocaleString() + " F";
     document.getElementById('detail-desc').innerText = currentProduct.description;
     document.getElementById('detail-img').src = currentProduct.images[0];
+    document.getElementById('detail-thumbnails').innerHTML = currentProduct.images.map((img, i) => `<img src="${img}" class="w-12 h-12 object-cover rounded cursor-pointer border-2 border-transparent hover:border-[#c5a059]" onclick="document.getElementById('detail-img').src='${img}'">`).join('');
     document.getElementById('productDetailModal').classList.add('active');
+    document.getElementById('view-counter').innerHTML = Math.floor(Math.random() * 30) + 15 + " personnes consultent";
 }
-
 function fermerDetail() { document.getElementById('productDetailModal').classList.remove('active'); currentProduct = null; }
 
 // ==================== PANIER ====================
@@ -308,216 +391,151 @@ function ajouterDepuisDetail() {
     localStorage.setItem('latyfa_cart', JSON.stringify(cart));
     updateCartCount();
     fermerDetail();
-    showToast("✨ Produit ajouté");
+    showToast("✨ Produit ajouté au panier");
     ajouterPointsFidelite(currentProduct.price);
+    if (userTreasure.daily?.wishlist?.progress) { userTreasure.daily.wishlist.progress++; updateTreasureUI(); }
 }
-
-function updateCartCount() {
-    const total = cart.reduce((s, i) => s + i.qty, 0);
-    document.getElementById('cart-count').innerText = total;
-}
-
+function updateCartCount() { document.getElementById('cart-count').innerText = cart.reduce((s,i)=>s+i.qty,0); }
 function ouvrirPanier() {
     const modal = document.getElementById('cartModal');
     const itemsDiv = document.getElementById('cart-items');
     const form = document.getElementById('checkout-form');
-    if (cart.length === 0) { itemsDiv.innerHTML = '<div class="text-center py-10 text-gray-400">Panier vide</div>'; form.style.display = "none"; }
+    if (cart.length === 0) { itemsDiv.innerHTML = '<div class="text-center py-10 text-gray-400">🛒 Panier vide</div>'; form.style.display = "none"; }
     else {
         form.style.display = "block";
         itemsDiv.innerHTML = cart.map(i => `<div class="flex items-center gap-3 border-b pb-3"><img src="${i.image}" class="w-12 h-12 object-cover rounded"><div class="flex-1"><p class="text-[10px] font-bold">${i.name}</p><p class="text-[9px] text-[#c5a059]">${(i.price*i.qty).toLocaleString()} F</p></div><div class="flex items-center gap-2"><button onclick="modifierQty(${i.id}, -1)" class="w-6 h-6 bg-gray-100 rounded-full">-</button><span class="text-[10px] w-4 text-center">${i.qty}</span><button onclick="modifierQty(${i.id}, 1)" class="w-6 h-6 bg-gray-100 rounded-full">+</button></div></div>`).join('');
-        const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
         document.getElementById('total-display').innerText = total.toLocaleString() + " F";
     }
     modal.classList.add('active');
 }
-
-function modifierQty(id, delta) {
-    const idx = cart.findIndex(i => i.id === id);
-    if (idx === -1) return;
-    cart[idx].qty += delta;
-    if (cart[idx].qty < 1) cart.splice(idx, 1);
-    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-    updateCartCount();
-    ouvrirPanier();
-}
-
-function viderPanier() { cart = []; localStorage.setItem('latyfa_cart', JSON.stringify(cart)); updateCartCount(); ouvrirPanier(); showToast("Panier vidé"); }
+function modifierQty(id, delta) { let idx = cart.findIndex(i=>i.id===id); if(idx===-1) return; cart[idx].qty+=delta; if(cart[idx].qty<1) cart.splice(idx,1); localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); ouvrirPanier(); }
+function viderPanier() { cart=[]; localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); ouvrirPanier(); showToast("Panier vidé"); }
 function fermerPanier() { document.getElementById('cartModal').classList.remove('active'); }
-
+function selectPayment(method) { document.querySelectorAll('.payment-option').forEach(el=>el.classList.remove('selected')); document.getElementById(`payment-${method}`).classList.add('selected'); document.getElementById('selected-payment').value=method; toggleBoutonCommande(); }
+function toggleBoutonCommande() {
+    let nom=document.getElementById('nom-client')?.value, tel=document.getElementById('tel-client')?.value, quartier=document.getElementById('quartier-client')?.value, zone=document.getElementById('zone-livraison')?.value, chk=document.getElementById('check-verif')?.checked, btn=document.getElementById('btn-final');
+    if(nom && tel && quartier && zone && chk) { btn.classList.remove('bg-gray-300','pointer-events-none'); btn.classList.add('bg-[#c5a059]','cursor-pointer'); btn.disabled=false; }
+    else { btn.classList.add('bg-gray-300','pointer-events-none'); btn.classList.remove('bg-[#c5a059]','cursor-pointer'); btn.disabled=true; }
+}
 function validerCommande() {
-    const nom = document.getElementById('nom-client')?.value.trim();
-    const tel = document.getElementById('tel-client')?.value.trim();
-    const quartier = document.getElementById('quartier-client')?.value.trim();
-    const zone = document.getElementById('zone-livraison')?.value;
-    if (!nom || !tel || !quartier || !zone) { alert("Remplissez tous les champs"); return; }
-    const sousTotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const total = sousTotal + tarifsLivraison[zone];
-    let msg = `*NOUVELLE COMMANDE LATYFA*\n👤 ${nom}\n📞 ${tel}\n📍 ${quartier}\n📦 Livraison: ${tarifsLivraison[zone]} F\n\n*ARTICLES:*\n${cart.map(i => `• ${i.name} x${i.qty} = ${(i.price*i.qty).toLocaleString()} F`).join('\n')}\n\n*TOTAL: ${total.toLocaleString()} F*`;
+    let nom=document.getElementById('nom-client')?.value, tel=document.getElementById('tel-client')?.value, quartier=document.getElementById('quartier-client')?.value, zone=document.getElementById('zone-livraison')?.value;
+    if(!nom||!tel||!quartier||!zone){alert("Remplissez tous les champs");return;}
+    let sousTotal=cart.reduce((s,i)=>s+i.price*i.qty,0), total=sousTotal+tarifsLivraison[zone];
+    let msg=`*NOUVELLE COMMANDE LATYFA*\n👤 ${nom}\n📞 ${tel}\n📍 ${quartier}\n📦 Livraison: ${tarifsLivraison[zone]} F\n\n*ARTICLES:*\n${cart.map(i=>`• ${i.name} x${i.qty} = ${(i.price*i.qty).toLocaleString()} F`).join('\n')}\n\n*TOTAL: ${total.toLocaleString()} F*`;
     window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
-    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-    historique.unshift({ date: new Date().toLocaleString(), client: nom, tel, lieu: quartier, total: total.toLocaleString() + " F", articles: cart.map(i => `${i.name} x${i.qty}`).join(', ') });
-    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
-    cart = []; localStorage.setItem('latyfa_cart', JSON.stringify(cart)); updateCartCount(); fermerPanier(); showToast("Commande envoyée !");
+    let historique=JSON.parse(localStorage.getItem('latyfa_historique'))||[];
+    historique.unshift({date:new Date().toLocaleString(),client:nom,tel,lieu:quartier,total:total.toLocaleString()+" F",articles:cart.map(i=>`${i.name} x${i.qty}`).join(', ')});
+    localStorage.setItem('latyfa_historique',JSON.stringify(historique));
+    cart=[]; localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); fermerPanier(); showToast("Commande envoyée !");
+    ajouterPointsFidelite(sousTotal);
 }
 
 // ==================== FAVORIS ====================
 function toggleWishlist(id) {
-    const idx = wishlist.indexOf(id);
-    idx === -1 ? wishlist.push(id) : wishlist.splice(idx, 1);
-    localStorage.setItem('latyfa_wishlist', JSON.stringify(wishlist));
-    updateWishlistCount();
-    render();
-    showToast(idx === -1 ? "Ajouté aux favoris" : "Retiré des favoris");
+    let idx=wishlist.indexOf(id);
+    idx===-1?wishlist.push(id):wishlist.splice(idx,1);
+    localStorage.setItem('latyfa_wishlist',JSON.stringify(wishlist));
+    updateWishlistCount(); render(); showToast(idx===-1?"❤️ Ajouté aux favoris":"💔 Retiré des favoris");
+    if(userTreasure.daily?.wishlist) { userTreasure.daily.wishlist.progress=(userTreasure.daily.wishlist.progress||0)+1; if(userTreasure.daily.wishlist.progress>=3 && !userTreasure.daily.wishlist.completed) completeMission('wishlist'); updateTreasureUI(); }
 }
-
-function updateWishlistCount() { document.getElementById('wishlist-count').innerText = wishlist.length; }
-function toggleWishlistModal() { document.getElementById('wishlistModal').classList.add('active'); document.getElementById('wishlist-items').innerHTML = wishlist.length ? wishlist.map(id => { let p = products.find(p => p.id === id); return p ? `<div class="flex items-center gap-3 border-b pb-2"><img src="${p.images[0]}" class="w-12 h-12 object-cover rounded cursor-pointer" onclick="voirDetails(${p.id});fermerWishlist()"><div><p class="text-[10px] font-bold">${p.name}</p><p class="text-[#c5a059]">${p.price.toLocaleString()} F</p></div><button onclick="toggleWishlist(${p.id});toggleWishlistModal()" class="ml-auto text-red-500"><i class="fa-solid fa-trash"></i></button></div>` : '' }).join('') : '<p class="text-center text-gray-400">Aucun favori</p>'; }
+function updateWishlistCount() { document.getElementById('wishlist-count').innerText=wishlist.length; }
+function toggleWishlistModal() {
+    let modal=document.getElementById('wishlistModal'), container=document.getElementById('wishlist-items');
+    if(wishlist.length===0) container.innerHTML='<p class="text-center text-gray-400 py-10">Aucun favori</p>';
+    else container.innerHTML=wishlist.map(id=>{let p=products.find(p=>p.id===id); return p?`<div class="flex items-center gap-3 border-b pb-2"><img src="${p.images[0]}" class="w-12 h-12 object-cover rounded cursor-pointer" onclick="voirDetails(${p.id});fermerWishlist()"><div><p class="text-[10px] font-bold">${p.name}</p><p class="text-[#c5a059]">${p.price.toLocaleString()} F</p></div><button onclick="toggleWishlist(${p.id});toggleWishlistModal()" class="ml-auto text-red-500"><i class="fa-solid fa-trash"></i></button></div>`:''}).join('');
+    modal.classList.add('active');
+}
 function fermerWishlist() { document.getElementById('wishlistModal').classList.remove('active'); }
 
 // ==================== COMPARATEUR ====================
-function ajouterComparateur(id) {
-    if (!id) return;
-    if (comparateur.includes(id)) { showToast("Déjà dans le comparateur"); return; }
-    if (comparateur.length >= 4) { showToast("Maximum 4 produits"); return; }
-    comparateur.push(id);
-    localStorage.setItem('latyfa_comparateur', JSON.stringify(comparateur));
-    showToast("Ajouté au comparateur");
-}
-
+function ajouterComparateur(id) { if(!id) return; if(comparateur.includes(id)){showToast("Déjà dans le comparateur");return;} if(comparateur.length>=4){showToast("Max 4 produits");return;} comparateur.push(id); localStorage.setItem('latyfa_comparateur',JSON.stringify(comparateur)); updateComparateurCount(); showToast("Ajouté au comparateur"); }
+function updateComparateurCount() { document.getElementById('comparateur-count').innerText=comparateur.length; }
 function ouvrirComparateur() {
-    const modal = document.getElementById('comparateurModal');
-    const container = document.getElementById('comparateur-items');
-    if (comparateur.length === 0) container.innerHTML = '<p class="col-span-2 text-center text-gray-400">Aucun produit</p>';
-    else container.innerHTML = comparateur.map(id => { let p = products.find(p => p.id === id); return p ? `<div class="border rounded-lg p-3"><img src="${p.images[0]}" class="h-32 w-full object-cover rounded mb-2"><p class="text-[9px] font-bold">${p.name}</p><p class="text-[#c5a059]">${p.price.toLocaleString()} F</p><button onclick="retirerComparateur(${p.id})" class="mt-2 text-red-500 text-[8px]">Retirer</button></div>` : '' }).join('');
+    let modal=document.getElementById('comparateurModal'), container=document.getElementById('comparateur-items');
+    if(comparateur.length===0) container.innerHTML='<p class="col-span-2 text-center text-gray-400">Aucun produit</p>';
+    else container.innerHTML=comparateur.map(id=>{let p=products.find(p=>p.id===id); return p?`<div class="border rounded-lg p-3"><img src="${p.images[0]}" class="h-32 w-full object-cover rounded mb-2"><p class="text-[9px] font-bold">${p.name}</p><p class="text-[#c5a059]">${p.price.toLocaleString()} F</p><button onclick="retirerComparateur(${p.id})" class="mt-2 text-red-500 text-[8px] font-bold">Retirer</button></div>`:''}).join('');
     modal.classList.add('active');
 }
 function fermerComparateur() { document.getElementById('comparateurModal').classList.remove('active'); }
-function retirerComparateur(id) { comparateur = comparateur.filter(i => i !== id); localStorage.setItem('latyfa_comparateur', JSON.stringify(comparateur)); ouvrirComparateur(); }
+function retirerComparateur(id) { comparateur=comparateur.filter(i=>i!==id); localStorage.setItem('latyfa_comparateur',JSON.stringify(comparateur)); updateComparateurCount(); ouvrirComparateur(); }
 
 // ==================== ROUE DE LA FORTUNE ====================
-let wheelSpinning = false;
+let wheelSpinning=false;
 function drawWheel() {
-    const canvas = document.getElementById('canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const arc = 2 * Math.PI / prizes.length;
-    ctx.clearRect(0, 0, 300, 300);
-    for (let i = 0; i < prizes.length; i++) {
-        ctx.beginPath();
-        ctx.fillStyle = i % 2 === 0 ? "#c5a059" : "#1a1a1a";
-        ctx.moveTo(150, 150);
-        ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
-        ctx.fill();
-        ctx.save();
-        ctx.fillStyle = "white";
-        ctx.translate(150, 150);
-        ctx.rotate(i * arc + arc / 2);
-        ctx.font = "bold 12px Montserrat";
-        ctx.fillText(prizes[i], 120, 5);
-        ctx.restore();
-    }
+    let canvas=document.getElementById('canvas'); if(!canvas) return;
+    let ctx=canvas.getContext('2d'), arc=2*Math.PI/prizes.length;
+    ctx.clearRect(0,0,300,300);
+    for(let i=0;i<prizes.length;i++){ ctx.beginPath(); ctx.fillStyle=i%2===0?"#c5a059":"#1a1a1a"; ctx.moveTo(150,150); ctx.arc(150,150,145,i*arc,(i+1)*arc); ctx.fill(); ctx.save(); ctx.fillStyle="white"; ctx.translate(150,150); ctx.rotate(i*arc+arc/2); ctx.font="bold 12px Montserrat"; ctx.fillText(prizes[i],120,5); ctx.restore(); }
 }
 function ouvrirRoue() { drawWheel(); document.getElementById('wheelModal').classList.add('active'); majChances(); }
 function fermerRoue() { document.getElementById('wheelModal').classList.remove('active'); }
 function majChances() {
-    let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: new Date().toDateString(), count: 0 };
-    if (stats.date !== new Date().toDateString()) stats = { date: new Date().toDateString(), count: 0 };
-    document.getElementById('wheel-msg').innerHTML = stats.count >= 1 ? "<span class='text-red-600'>🚫 Limite atteinte aujourd'hui</span>" : "<span class='text-blue-600'>🎡 1 chance aujourd'hui</span>";
+    let stats=JSON.parse(localStorage.getItem('latyfa_wheel_stats'))||{date:new Date().toDateString(),count:0};
+    if(stats.date!==new Date().toDateString()) stats={date:new Date().toDateString(),count:0};
+    document.getElementById('wheel-msg').innerHTML=stats.count>=1?"<span class='text-red-600'>🚫 Limite atteinte aujourd'hui</span>":"<span class='text-blue-600'>🎡 1 chance aujourd'hui</span>";
     return stats;
 }
 function lancerRoue() {
-    let stats = majChances();
-    if (stats.count >= 1) { alert("Vous avez déjà utilisé votre chance aujourd'hui !"); return; }
-    if (wheelSpinning) return;
-    wheelSpinning = true;
-    const canvas = document.getElementById('canvas');
-    const spinBtn = document.getElementById('spin');
-    spinBtn.disabled = true;
-    const random = Math.floor(Math.random() * 360);
-    const totalRotation = 3600 + random;
-    canvas.style.transform = `rotate(${totalRotation}deg)`;
-    setTimeout(() => {
-        const actualAngle = random % 360;
-        const segmentSize = 360 / prizes.length;
-        const resultIndex = Math.floor(((360 - actualAngle + 270) % 360) / segmentSize);
-        const resultat = prizes[resultIndex];
-        stats.count++; localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
-        canvas.style.transform = '';
-        if (resultat === "REESSAYER") alert("😥 Réessayez demain !");
-        else if (resultat === "CADEAU") { canvasConfetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#c5a059'] }); ouvrirCadeauMystere(); }
-        else { canvasConfetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); alert(`🎉 Félicitations ! Vous avez gagné : ${resultat}`); }
-        spinBtn.disabled = false;
-        wheelSpinning = false;
-        majChances();
-    }, 4000);
+    let stats=majChances();
+    if(stats.count>=1){alert("Vous avez déjà utilisé votre chance aujourd'hui !");return;}
+    if(wheelSpinning) return;
+    wheelSpinning=true; let spinBtn=document.getElementById('spin'); spinBtn.disabled=true;
+    let random=Math.floor(Math.random()*360), totalRotation=3600+random;
+    document.getElementById('canvas').style.transform=`rotate(${totalRotation}deg)`;
+    setTimeout(()=>{
+        let actualAngle=random%360, segmentSize=360/prizes.length, resultIndex=Math.floor(((360-actualAngle+270)%360)/segmentSize), resultat=prizes[resultIndex];
+        stats.count++; localStorage.setItem('latyfa_wheel_stats',JSON.stringify(stats));
+        document.getElementById('canvas').style.transform='';
+        if(resultat==="REESSAYER") alert("😥 Réessayez demain !");
+        else if(resultat==="CADEAU"){ canvasConfetti({particleCount:150,spread:70,origin:{y:0.6},colors:['#c5a059']}); alert("🎁 Félicitations ! Vous avez gagné un cadeau mystère !"); cart.push({id:'cadeau-'+Date.now(),name:"🎁 Cadeau Mystère",price:0,qty:1,image:"https://via.placeholder.com/100"}); localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); }
+        else if(resultat==="LIVRAISON GRATUITE"){ alert("🎉 Livraison gratuite sur votre prochaine commande !"); localStorage.setItem('latyfa_livraison_gratuite',Date.now()+30*24*60*60*1000); }
+        else{ canvasConfetti({particleCount:150,spread:70,origin:{y:0.6}}); alert(`🎉 Félicitations ! Vous avez gagné : ${resultat}`); if(resultat.includes("%")){ let code=`LATYFA${Math.floor(Math.random()*1000)}`; localStorage.setItem('latyfa_active_promo',JSON.stringify({code:code,expires:Date.now()+24*60*60*1000,remise:parseInt(resultat)})); alert(`Code promo: ${code}`); } }
+        spinBtn.disabled=false; wheelSpinning=false; majChances();
+    },4000);
 }
-function ouvrirCadeauMystere() { alert("🎁 Vous avez gagné un cadeau mystère ! Un bracelet vous attend dans votre panier."); cart.push({ id: 'cadeau-' + Date.now(), name: "🎁 Cadeau Mystère - Bracelet", price: 0, qty: 1, image: "https://via.placeholder.com/100" }); localStorage.setItem('latyfa_cart', JSON.stringify(cart)); updateCartCount(); }
 
 // ==================== CHASSE AU TRÉSOR ====================
-const dailyMissions = [
-    { id: 'visit', name: 'Visite du jour', points: 10, emoji: '👋', action: 'Se connecter' },
-    { id: 'share', name: 'Partager', points: 20, emoji: '📤', action: 'Partager' },
-    { id: 'wishlist', name: 'Favoris', points: 15, emoji: '❤️', action: 'Ajouter 3 favoris', target: 3 },
-    { id: 'review', name: 'Avis', points: 30, emoji: '⭐', action: 'Donner son avis' }
-];
 function initTreasure() {
-    const saved = localStorage.getItem('latyfa_treasure');
-    if (saved) userTreasure = JSON.parse(saved);
-    else userTreasure = { points: 0, level: 'Bronze', daily: {}, lastDaily: new Date().toDateString() };
-    if (userTreasure.lastDaily !== new Date().toDateString()) { userTreasure.daily = {}; userTreasure.lastDaily = new Date().toDateString(); }
+    let saved=localStorage.getItem('latyfa_treasure');
+    if(saved) userTreasure=JSON.parse(saved);
+    else userTreasure={points:0,level:'Bronze',daily:{},lastDaily:new Date().toDateString()};
+    if(userTreasure.lastDaily!==new Date().toDateString()){ userTreasure.daily={}; userTreasure.lastDaily=new Date().toDateString(); }
     updateTreasureUI();
 }
 function updateTreasureUI() {
-    document.getElementById('treasurePoints').innerText = userTreasure.points;
-    let level = 0, next = 500;
-    if (userTreasure.points >= 5000) { level = 100; next = 5000; }
-    else if (userTreasure.points >= 3000) { level = 60; next = 3000; }
-    else if (userTreasure.points >= 1500) { level = 30; next = 1500; }
-    else if (userTreasure.points >= 500) { level = 10; next = 500; }
-    document.getElementById('treasureProgress').style.width = Math.min(100, (userTreasure.points / next) * 100) + '%';
-    document.getElementById('treasureNext').innerHTML = `Prochain palier: ${next} points`;
-    const container = document.getElementById('dailyMissions');
-    if (container) container.innerHTML = dailyMissions.map(m => `<div class="mission-card ${userTreasure.daily[m.id]?.completed ? 'completed' : ''}" onclick="startMission('${m.id}')"><div class="text-3xl mb-2">${m.emoji}</div><div class="text-[10px] font-bold">${m.name}</div><div class="text-[#c5a059]">+${m.points}</div><button class="bg-[#c5a059] text-black px-3 py-1 rounded-full text-[9px] mt-2">${userTreasure.daily[m.id]?.completed ? '✓ Fait' : m.action}</button></div>`).join('');
+    document.getElementById('treasurePoints').innerText=userTreasure.points;
+    let next=500; if(userTreasure.points>=5000) next=5000; else if(userTreasure.points>=3000) next=3000; else if(userTreasure.points>=1500) next=1500; else if(userTreasure.points>=500) next=500;
+    document.getElementById('treasureProgress').style.width=Math.min(100,(userTreasure.points/next)*100)+'%';
+    document.getElementById('treasureNext').innerHTML=`Prochain palier: ${next} points`;
+    let container=document.getElementById('dailyMissions');
+    if(container) container.innerHTML=dailyMissions.map(m=>`<div class="mission-card ${userTreasure.daily[m.id]?.completed?'completed':''}" onclick="startMission('${m.id}')"><div class="text-3xl mb-2">${m.emoji}</div><div class="text-[10px] font-bold">${m.name}</div><div class="text-[#c5a059]">+${m.points}</div><button class="bg-[#c5a059] text-black px-3 py-1 rounded-full text-[9px] mt-2">${userTreasure.daily[m.id]?.completed?'✓ Fait':m.action}</button></div>`).join('');
 }
 function startMission(id) {
-    if (userTreasure.daily[id]?.completed) { showToast("Mission déjà faite aujourd'hui"); return; }
-    if (id === 'visit') completeMission(id);
-    else if (id === 'share') { window.open("https://wa.me/?text=Découvrez Latyfa Shop"); completeMission(id); }
-    else if (id === 'wishlist') showToast("Ajoutez 3 produits aux favoris");
-    else if (id === 'review') showToast("Laissez un avis sur un produit");
+    if(userTreasure.daily[id]?.completed){showToast("Mission déjà faite");return;}
+    if(id==='visit') completeMission(id);
+    else if(id==='share'){ window.open("https://wa.me/?text=Découvrez Latyfa Shop"); completeMission(id); }
+    else if(id==='wishlist') showToast("Ajoutez 3 produits aux favoris");
+    else if(id==='review') showToast("Laissez un avis sur un produit");
 }
 function completeMission(id) {
-    if (userTreasure.daily[id]?.completed) return;
-    const mission = dailyMissions.find(m => m.id === id);
-    userTreasure.daily[id] = { completed: true };
-    userTreasure.points += mission.points;
-    localStorage.setItem('latyfa_treasure', JSON.stringify(userTreasure));
-    updateTreasureUI();
-    showToast(`✨ +${mission.points} points !`);
+    if(userTreasure.daily[id]?.completed) return;
+    let mission=dailyMissions.find(m=>m.id===id);
+    userTreasure.daily[id]={completed:true}; userTreasure.points+=mission.points;
+    localStorage.setItem('latyfa_treasure',JSON.stringify(userTreasure));
+    updateTreasureUI(); showToast(`✨ +${mission.points} points !`);
 }
-let treasureInterval, treasureTimeLeft = 165;
+let treasureTimeLeft=165, treasureInterval;
 function startTreasureTimer() {
-    if (treasureInterval) clearInterval(treasureInterval);
-    treasureInterval = setInterval(() => {
-        treasureTimeLeft--;
-        if (treasureTimeLeft <= 0) {
-            clearInterval(treasureInterval);
-            document.getElementById('treasureTimer').innerHTML = "🎁 PRÊT !";
-        } else {
-            let m = Math.floor(treasureTimeLeft / 60), s = treasureTimeLeft % 60;
-            document.getElementById('treasureTimer').innerHTML = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-        }
-    }, 1000);
+    if(treasureInterval) clearInterval(treasureInterval);
+    treasureInterval=setInterval(()=>{ treasureTimeLeft--; if(treasureTimeLeft<=0){ clearInterval(treasureInterval); document.getElementById('treasureTimer').innerHTML="🎁 PRÊT !"; } else{ let m=Math.floor(treasureTimeLeft/60),s=treasureTimeLeft%60; document.getElementById('treasureTimer').innerHTML=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; } },1000);
 }
 function openTreasure() {
-    if (treasureTimeLeft > 0) { showToast("Coffre pas encore prêt"); return; }
-    let gain = Math.random() < 0.3 ? 50 : 20;
-    userTreasure.points += gain;
-    localStorage.setItem('latyfa_treasure', JSON.stringify(userTreasure));
-    updateTreasureUI();
-    treasureTimeLeft = 165;
-    startTreasureTimer();
-    canvasConfetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
+    if(treasureTimeLeft>0){showToast("Coffre pas encore prêt");return;}
+    let gain=Math.random()<0.3?50:20;
+    userTreasure.points+=gain; localStorage.setItem('latyfa_treasure',JSON.stringify(userTreasure));
+    updateTreasureUI(); treasureTimeLeft=165; startTreasureTimer();
+    canvasConfetti({particleCount:100,spread:60,origin:{y:0.6}});
     showToast(`🎁 +${gain} points !`);
 }
 startTreasureTimer();
@@ -525,57 +543,162 @@ startTreasureTimer();
 // ==================== AUTHENTIFICATION ====================
 function ouvrirAuthModal() { document.getElementById('authModal').classList.add('active'); }
 function fermerAuthModal() { document.getElementById('authModal').classList.remove('active'); }
-function switchAuthTab(tab) {
-    document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
-    document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
-}
+function switchAuthTab(tab) { document.getElementById('loginForm').style.display=tab==='login'?'block':'none'; document.getElementById('registerForm').style.display=tab==='register'?'block':'none'; }
 function inscription() {
-    let nom = document.getElementById('registerNom').value.trim(), email = document.getElementById('registerEmail').value.trim(), tel = document.getElementById('registerTel').value.trim(), pwd = document.getElementById('registerPassword').value, confirm = document.getElementById('registerConfirm').value;
-    if (!nom || !email || !tel || !pwd) { alert("Remplissez tous les champs"); return; }
-    if (pwd !== confirm) { alert("Mots de passe différents"); return; }
-    if (clients.find(c => c.email === email)) { alert("Email déjà utilisé"); return; }
-    let nouveau = { id: Date.now(), nom, email, tel, password: pwd, dateInscription: new Date().toLocaleDateString() };
-    clients.push(nouveau); localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+    let nom=document.getElementById('registerNom').value.trim(), email=document.getElementById('registerEmail').value.trim(), tel=document.getElementById('registerTel').value.trim(), pwd=document.getElementById('registerPassword').value, confirm=document.getElementById('registerConfirm').value, accept=document.getElementById('registerAccept')?.checked;
+    if(!nom||!email||!tel||!pwd){alert("Remplissez tous les champs");return;}
+    if(pwd!==confirm){alert("Mots de passe différents");return;}
+    if(!accept){alert("Acceptez les CGV");return;}
+    if(clients.find(c=>c.email===email)){alert("Email déjà utilisé");return;}
+    let nouveau={id:Date.now(),nom,email,tel,password:pwd,dateInscription:new Date().toLocaleDateString()};
+    clients.push(nouveau); localStorage.setItem('latyfa_clients',JSON.stringify(clients));
     alert("Inscription réussie !"); switchAuthTab('login');
 }
 function connexion() {
-    let email = document.getElementById('loginEmail').value.trim(), pwd = document.getElementById('loginPassword').value;
-    let client = clients.find(c => c.email === email && c.password === pwd);
-    if (client) { utilisateurConnecte = client; localStorage.setItem('latyfa_session', JSON.stringify(client)); updateUserUI(); fermerAuthModal(); showToast(`👋 Bonjour ${client.nom}`); }
+    let email=document.getElementById('loginEmail').value.trim(), pwd=document.getElementById('loginPassword').value;
+    let client=clients.find(c=>c.email===email && c.password===pwd);
+    if(client){ utilisateurConnecte=client; localStorage.setItem('latyfa_session',JSON.stringify(client)); updateUserUI(); fermerAuthModal(); showToast(`👋 Bonjour ${client.nom}`); }
     else alert("Email ou mot de passe incorrect");
 }
-function deconnexion() { utilisateurConnecte = null; localStorage.removeItem('latyfa_session'); updateUserUI(); showToast("Déconnecté"); }
-function updateUserUI() { document.getElementById('loginBtn').innerText = utilisateurConnecte ? utilisateurConnecte.nom.split(' ')[0] : "Se connecter"; document.getElementById('loginBtn').onclick = utilisateurConnecte ? deconnexion : ouvrirAuthModal; }
-function ajouterPointsFidelite(montant) { pointsFidelite += Math.floor(montant / 1000); localStorage.setItem('latyfa_points', pointsFidelite); }
+function deconnexion() { utilisateurConnecte=null; localStorage.removeItem('latyfa_session'); updateUserUI(); showToast("Déconnecté"); }
+function updateUserUI() { document.getElementById('loginBtn').innerText=utilisateurConnecte?utilisateurConnecte.nom.split(' ')[0]:"Se connecter"; document.getElementById('loginBtn').onclick=utilisateurConnecte?deconnexion:ouvrirAuthModal; }
+function ajouterPointsFidelite(montant) { pointsFidelite+=Math.floor(montant/1000); localStorage.setItem('latyfa_points',pointsFidelite); document.getElementById('loyalty-points').innerText=pointsFidelite; document.getElementById('loyalty-progress').style.width=Math.min(100,(pointsFidelite/100)*100)+'%'; if(pointsFidelite>=100 && !localStorage.getItem('latyfa_reduction')){ showToast("🎉 Réduction de 10% débloquée !"); localStorage.setItem('latyfa_reduction','true'); } }
 
 // ==================== PARRAINAGE ====================
-let parrainageData = { parrains: {} };
-function initParrainage() { let saved = localStorage.getItem('latyfa_parrainage'); if (saved) parrainageData = JSON.parse(saved); }
 function voirParrainage() {
-    if (!utilisateurConnecte) { ouvrirAuthModal(); return; }
-    if (!parrainageData.parrains[utilisateurConnecte.id]) parrainageData.parrains[utilisateurConnecte.id] = { code: 'LATYFA-' + utilisateurConnecte.id + '-' + Math.random().toString(36).substr(2, 6).toUpperCase(), filleuls: [], gains: 0 };
-    document.getElementById('nbFilleuls').innerText = parrainageData.parrains[utilisateurConnecte.id].filleuls.length;
-    document.getElementById('gainTotal').innerText = parrainageData.parrains[utilisateurConnecte.id].gains + ' F';
-    document.getElementById('lienParrainage').value = `https://latyfashop.com?ref=${parrainageData.parrains[utilisateurConnecte.id].code}`;
+    if(!utilisateurConnecte){ouvrirAuthModal();return;}
+    if(!parrainageData.parrains[utilisateurConnecte.id]) parrainageData.parrains[utilisateurConnecte.id]={code:'LATYFA-'+utilisateurConnecte.id+'-'+Math.random().toString(36).substr(2,6).toUpperCase(),filleuls:[],gains:0};
+    document.getElementById('nbFilleuls').innerText=parrainageData.parrains[utilisateurConnecte.id].filleuls.length;
+    document.getElementById('gainTotal').innerText=parrainageData.parrains[utilisateurConnecte.id].gains+' F';
+    document.getElementById('lienParrainage').value=`https://latyfashop.com?ref=${parrainageData.parrains[utilisateurConnecte.id].code}`;
+    let prochain=1; if(parrainageData.parrains[utilisateurConnecte.id].filleuls.length>=20) prochain=0; else if(parrainageData.parrains[utilisateurConnecte.id].filleuls.length>=10) prochain=10; else if(parrainageData.parrains[utilisateurConnecte.id].filleuls.length>=5) prochain=5;
+    document.getElementById('prochainPalier').innerText=prochain;
     document.getElementById('parrainageModal').classList.add('active');
 }
 function fermerParrainage() { document.getElementById('parrainageModal').classList.remove('active'); }
-function copierLien() { let input = document.getElementById('lienParrainage'); input.select(); document.execCommand('copy'); showToast("Lien copié !"); }
+function copierLien() { let input=document.getElementById('lienParrainage'); input.select(); document.execCommand('copy'); showToast("Lien copié !"); }
+function partagerWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent(document.getElementById('lienParrainage').value)}`); }
+function genererQRParrainage() { let qrUrl=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(document.getElementById('lienParrainage').value)}`; document.getElementById('qrImage').src=qrUrl; document.getElementById('qrMontant').innerText="Code parrainage"; document.getElementById('qrModal').classList.add('active'); }
+function fermerQR() { document.getElementById('qrModal').classList.remove('active'); }
+
+// ==================== AVIS ====================
+function ouvrirAvis() {
+    let container=document.getElementById('all-reviews');
+    container.innerHTML=avis.map(a=>`<div class="flex gap-3 border-b pb-3"><img src="${a.photo}" class="w-10 h-10 rounded-full"><div><div class="flex gap-2"><span class="text-[10px] font-bold">${a.nom}</span><span class="text-[8px] text-gray-400">${a.date}</span></div><div class="flex text-[#c5a059] text-[8px]">${Array(5).fill(0).map((_,i)=>`<i class="fa-${i<a.note?'solid':'regular'} fa-star"></i>`).join('')}</div><p class="text-[9px] mt-1">${a.commentaire}</p></div></div>`).join('');
+    document.getElementById('avisModal').classList.add('active');
+}
+function fermerAvis() { document.getElementById('avisModal').classList.remove('active'); }
+function deposerAvis() { document.getElementById('depotAvisModal').classList.add('active'); currentRating=0; document.querySelectorAll('#rating-stars i').forEach(s=>s.className='fa-regular fa-star cursor-pointer'); }
+function fermerDepotAvis() { document.getElementById('depotAvisModal').classList.remove('active'); }
+function setRating(r) { currentRating=r; document.querySelectorAll('#rating-stars i').forEach((s,i)=>{ s.className=i<r?'fa-solid fa-star text-[#c5a059]':'fa-regular fa-star'; }); }
+function soumettreAvis() {
+    let nom=document.getElementById('avis-nom').value, comment=document.getElementById('avis-comment').value;
+    if(!nom||!comment||currentRating===0){alert("Remplissez tous les champs");return;}
+    avis.unshift({nom,note:currentRating,commentaire:comment,date:new Date().toLocaleDateString(),photo:"https://randomuser.me/api/portraits/lego/1.jpg"});
+    localStorage.setItem('latyfa_avis',JSON.stringify(avis));
+    fermerDepotAvis(); showToast("Merci pour votre avis !");
+    if(userTreasure.daily?.review && !userTreasure.daily.review.completed) completeMission('review');
+}
+
+// ==================== CHAT ====================
+function toggleChat() { document.getElementById('chatWindow').classList.toggle('active'); }
+function sendChatMessage() {
+    let input=document.getElementById('chatInput'), msg=input.value.trim();
+    if(!msg) return;
+    let chatDiv=document.getElementById('chatMessages'), now=new Date(), time=`${now.getHours()}:${now.getMinutes().toString().padStart(2,'0')}`;
+    chatDiv.innerHTML+=`<div class="chat-message user"><div class="message-bubble">${msg}</div><div class="message-time text-[8px] text-gray-400 mt-1">${time}</div></div>`;
+    input.value=''; chatDiv.scrollTop=chatDiv.scrollHeight;
+    setTimeout(()=>{ chatDiv.innerHTML+=`<div class="chat-message support"><div class="message-bubble">Merci pour votre message ! Notre équipe vous répondra sous 24h.</div><div class="message-time text-[8px] text-gray-400 mt-1">${new Date().getHours()}:${new Date().getMinutes().toString().padStart(2,'0')}</div></div>`; chatDiv.scrollTop=chatDiv.scrollHeight; },1000);
+}
+
+// ==================== QR CODE ====================
+function genererQRCodeDepuisDetail() {
+    if(!currentProduct){alert("Aucun produit sélectionné");return;}
+    let qrUrl=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Paiement%20Latyfa%20Shop%20${currentProduct.price}%20FCFA`;
+    document.getElementById('qrImage').src=qrUrl; document.getElementById('qrMontant').innerText=currentProduct.price.toLocaleString()+" F";
+    document.getElementById('qrModal').classList.add('active');
+}
+
+// ==================== SUIVI ====================
+function ouvrirSuivi() { document.getElementById('suiviModal').classList.add('active'); }
+function fermerSuivi() { document.getElementById('suiviModal').classList.remove('active'); }
+
+// ==================== CALENDRIER AVENT ====================
+function ouvrirAdvent() { alert("🎄 Calendrier de l'Avent : Ouvrez une case chaque jour !\n(Disponible en décembre)"); }
+
+// ==================== MAINTENANCE ====================
+function checkMaintenance() { if(maintenanceActive && (!utilisateurConnecte||!utilisateurConnecte.isAdmin)) alert("Site en maintenance. Revenez bientôt !"); }
+function setMaintenance(actif) { maintenanceActive=actif; localStorage.setItem('latyfa_maintenance',actif); showToast(actif?"🔧 Mode maintenance activé":"✅ Site actif"); }
+
+// ==================== ADMIN ====================
+function ouvrirAdmin() { let code=prompt("Code admin:"); if(code==="2026"){ document.getElementById('adminModal').classList.add('active'); chargerHistorique(); updateClientsList(); } else if(code) alert("Code incorrect"); }
+function fermerAdmin() { document.getElementById('adminModal').classList.remove('active'); }
+function switchAdminSection(section) { document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active')); document.querySelectorAll('.admin-menu-item').forEach(i=>i.classList.remove('active')); document.getElementById(section+'Section').classList.add('active'); event.target.classList.add('active'); }
+function chargerHistorique() { let historique=JSON.parse(localStorage.getItem('latyfa_historique'))||[]; document.getElementById('historique-zone').innerHTML=historique.map(c=>`<div class="bg-white p-3 rounded-lg border"><p class="text-[9px] font-bold">${c.date} - ${c.client}</p><p class="text-[8px]">${c.articles}</p><p class="text-[#c5a059]">${c.total}</p></div>`).join(''); }
+function updateClientsList() { document.getElementById('clients-list').innerHTML=clients.filter(c=>!c.isAdmin).map(c=>`<div class="flex justify-between text-[9px] border-b py-1"><span>${c.nom}</span><span>${c.email}</span></div>`).join(''); let select=document.getElementById('client-select'); if(select) select.innerHTML=`<option value="">Tous</option>`+clients.filter(c=>!c.isAdmin).map(c=>`<option value="${c.id}">${c.nom}</option>`).join(''); }
+function ajouterProduitAdmin() {
+    let name=document.getElementById('adm-name').value, price=document.getElementById('adm-price').value, img=document.getElementById('adm-img').value;
+    if(!name||!price||!img){alert("Remplissez les champs");return;}
+    let produit={id:Date.now(),name,price:parseInt(price),images:img.split(','),description:"",enStock:true,cat:"autres",ventes:0};
+    products.unshift(produit); localStorage.setItem('latyfa_db',JSON.stringify(products));
+    render(); document.getElementById('adm-name').value=''; document.getElementById('adm-price').value=''; document.getElementById('adm-img').value='';
+    showToast("Produit ajouté");
+}
+function envoyerMessageAdmin() {
+    let clientId=document.getElementById('client-select')?.value, objet=document.getElementById('messageObjet')?.value, contenu=document.getElementById('messageContenu')?.value;
+    if(!objet||!contenu){alert("Message requis");return;}
+    let destinataires=clientId?[parseInt(clientId)]:clients.filter(c=>!c.isAdmin).map(c=>c.id);
+    destinataires.forEach(id=>{ messages.push({id:Date.now()+Math.random(),destinataireId:id,objet,contenu,date:new Date().toLocaleString(),lu:false}); });
+    localStorage.setItem('latyfa_messages',JSON.stringify(messages));
+    alert(`Message envoyé à ${destinataires.length} client(s)`);
+    document.getElementById('messageObjet').value=''; document.getElementById('messageContenu').value='';
+}
+
+// ==================== FLASH SALE ====================
+function startFlashSale() {
+    let endTime=localStorage.getItem('latyfa_flash_end');
+    if(!endTime){ endTime=Date.now()+2*60*60*1000; localStorage.setItem('latyfa_flash_end',endTime); }
+    setInterval(()=>{
+        let remaining=parseInt(localStorage.getItem('latyfa_flash_end'))-Date.now();
+        if(remaining<=0){ document.getElementById('flashCountdown').innerText="TERMINÉ"; return; }
+        let h=Math.floor(remaining/(60*60*1000)), m=Math.floor((remaining%(60*60*1000))/(60*1000)), s=Math.floor((remaining%60000)/1000);
+        document.getElementById('flashCountdown').innerText=`${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    },1000);
+}
+
+// ==================== SOCIAL PROOF ====================
+function startSocialProof() {
+    setInterval(()=>{
+        let box=document.getElementById('social-proof'), text=document.getElementById('proof-text');
+        text.innerText=notifications[Math.floor(Math.random()*notifications.length)];
+        box.classList.add('show');
+        setTimeout(()=>box.classList.remove('show'),5000);
+    },15000);
+}
 
 // ==================== AUTRES ====================
-function ouvrirCGV() { alert("Conditions Générales de Vente\n\n1. Prix en FCFA\n2. Paiement via Mobile Money ou Cash\n3. Livraison sous 24-48h à Abidjan\n4. Pas de retour sauf défaut majeur"); }
-function toggleDarkMode() { document.body.classList.toggle('dark-theme'); }
-function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-function showToast(msg) { let t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
+function ouvrirCGV() { document.getElementById('cgvModal').classList.add('active'); }
+function fermerCGV() { document.getElementById('cgvModal').classList.remove('active'); }
+function toggleDarkMode() { document.body.classList.toggle('dark-theme'); localStorage.setItem('latyfa_theme',document.body.classList.contains('dark-theme')?'dark':'light'); }
+function scrollToTop() { window.scrollTo({top:0,behavior:'smooth'}); }
+function showToast(msg) { let t=document.getElementById('toast'); t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
+function rechercherProduit() {
+    let terme=document.getElementById('search-input').value.toLowerCase();
+    if(!terme){render();return;}
+    let filtered=products.filter(p=>p.name.toLowerCase().includes(terme));
+    document.getElementById('product-grid').innerHTML=filtered.map(p=>renderProductCard(p)).join('');
+}
 
 // ==================== INIT ====================
-window.addEventListener('load', () => {
+window.addEventListener('load',()=>{
     chargerDonnees();
-    initParrainage();
-    setTimeout(() => { let l = document.getElementById('loader'); if (l) l.classList.add('loader-hidden'); }, 800);
-    window.addEventListener('scroll', () => { let b = document.getElementById('backToTop'); if (window.scrollY > 300) b.classList.add('show'); else b.classList.remove('show'); });
-    document.getElementById('check-verif')?.addEventListener('change', () => { let btn = document.getElementById('btn-final'); let chk = document.getElementById('check-verif').checked; if (chk) { btn.classList.remove('bg-gray-300', 'pointer-events-none'); btn.classList.add('bg-[#c5a059]'); btn.disabled = false; } else { btn.classList.add('bg-gray-300', 'pointer-events-none'); btn.classList.remove('bg-[#c5a059]'); btn.disabled = true; } });
-    document.querySelectorAll('#checkout-form input, #zone-livraison').forEach(el => el?.addEventListener('input', () => { let nom = document.getElementById('nom-client')?.value, tel = document.getElementById('tel-client')?.value, quartier = document.getElementById('quartier-client')?.value, zone = document.getElementById('zone-livraison')?.value, btn = document.getElementById('btn-final'), chk = document.getElementById('check-verif')?.checked; if (nom && tel && quartier && zone && chk) { btn.classList.remove('bg-gray-300', 'pointer-events-none'); btn.classList.add('bg-[#c5a059]'); btn.disabled = false; } else { btn.classList.add('bg-gray-300', 'pointer-events-none'); btn.classList.remove('bg-[#c5a059]'); btn.disabled = true; } }));
+    setTimeout(()=>{ let l=document.getElementById('loader'); if(l) l.classList.add('loader-hidden'); },800);
+    window.addEventListener('scroll',()=>{ let b=document.getElementById('backToTop'); if(window.scrollY>300) b.classList.add('show'); else b.classList.remove('show'); });
+    let savedTheme=localStorage.getItem('latyfa_theme'); if(savedTheme==='dark') document.body.classList.add('dark-theme');
+    document.getElementById('search-input')?.addEventListener('input',rechercherProduit);
+    document.querySelectorAll('#checkout-form input, #zone-livraison').forEach(el=>el?.addEventListener('input',toggleBoutonCommande));
+    document.getElementById('check-verif')?.addEventListener('change',toggleBoutonCommande);
+    if(document.getElementById('salesChart')) new Chart(document.getElementById('salesChart'),{type:'line',data:{labels:['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],datasets:[{label:'Ventes',data:[12000,19000,8000,15000,22000,18000,25000],borderColor:'#c5a059',tension:0.4}]},options:{responsive:true}});
 });
 </script>
 </body>
