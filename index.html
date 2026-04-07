@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr" translate="no">
 <head>
@@ -6,19 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>LATYFA BOUTIQUE | Officiel</title>
     
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0HC6CY42YB"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-0HC6CY42YB');
-    </script>
-    
-    <!-- Scripts externes -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     
@@ -26,296 +14,85 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <!-- Styles -->
     <style>
-        :root { 
-            --latyfa-gold: #c5a059;   
-            --latyfa-dark: #1a1a1a;   
-            --latyfa-accent: #ff6600; 
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-        }
-        
-        body { 
-            background-color: #fcfcfc; 
-            font-family: 'Montserrat', sans-serif; 
-            scroll-behavior: smooth; 
-            overflow-x: hidden;
-        }
-        
+        :root { --latyfa-gold: #c5a059; --latyfa-accent: #ff6600; }
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: all 0.3s ease; }
+        body { background-color: #fcfcfc; font-family: 'Montserrat', sans-serif; scroll-behavior: smooth; }
         .logo-font { font-family: 'Playfair Display', serif; color: var(--latyfa-gold) !important; }
-        .text-gold { color: var(--latyfa-gold) !important; }
-        .bg-gold { background-color: var(--latyfa-gold) !important; }
-        .border-gold { border-color: var(--latyfa-gold) !important; }
         
         /* Product Cards */
-        .product-card { 
-            background: white; 
-            border-radius: 12px; 
-            border: 1px solid #e5e7eb; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            cursor: pointer; 
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-        
-        .product-card:hover { 
-            border-color: var(--latyfa-gold); 
-            box-shadow: 0 20px 30px rgba(0,0,0,0.1); 
-            transform: translateY(-4px);
-        }
-        
-        .product-card img {
-            transition: transform 0.5s ease;
-        }
-        
-        .product-card:hover img {
-            transform: scale(1.05);
-        }
+        .product-card { background: white; border-radius: 12px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.3s ease; overflow: hidden; }
+        .product-card:hover { border-color: var(--latyfa-gold); transform: translateY(-4px); box-shadow: 0 20px 30px rgba(0,0,0,0.1); }
+        .product-card img { transition: transform 0.5s ease; }
+        .product-card:hover img { transform: scale(1.05); }
         
         /* Badges */
-        .badge-nouveau {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--latyfa-gold);
-            color: white;
-            font-size: 8px;
-            font-weight: 900;
-            padding: 4px 8px;
-            border-radius: 20px;
-            z-index: 10;
-        }
+        .badge-nouveau { position: absolute; top: 10px; right: 10px; background: var(--latyfa-gold); color: white; font-size: 8px; font-weight: 900; padding: 4px 8px; border-radius: 20px; z-index: 10; }
+        .badge-luxe { position: absolute; top: 10px; left: 10px; background: black; color: white; font-size: 8px; padding: 4px 8px; border-radius: 20px; z-index: 10; }
+        .badge-soldout { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background: #dc2626; color: white; font-size: 12px; font-weight: 900; padding: 8px 16px; border-radius: 30px; z-index: 20; white-space: nowrap; }
+        .stock-alert { position: absolute; top: 40px; right: 10px; background: #dc2626; color: white; font-size: 8px; padding: 4px 8px; border-radius: 20px; animation: pulse 1s infinite; }
         
-        .badge-luxe {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: black;
-            color: white;
-            font-size: 8px;
-            padding: 4px 8px;
-            border-radius: 20px;
-            z-index: 10;
-        }
+        /* Modals */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: 24px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; animation: modalFadeIn 0.3s ease; }
         
-        .badge-soldout {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            background: #dc2626;
-            color: white;
-            font-size: 12px;
-            font-weight: 900;
-            padding: 8px 16px;
-            border-radius: 30px;
-            z-index: 20;
-            border: 2px solid white;
-            white-space: nowrap;
-        }
+        @keyframes modalFadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         
-        /* Modal */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-            align-items: center;
-            justify-content: center;
-        }
+        /* Boutons */
+        .btn-primary { background: linear-gradient(135deg, var(--latyfa-gold), #e2c286); color: white; font-weight: 900; padding: 16px 24px; border-radius: 30px; text-transform: uppercase; font-size: 12px; border: none; cursor: pointer; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(197,160,89,0.6); }
         
-        .modal.active { 
-            display: flex;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 24px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: modalFadeIn 0.3s ease;
-        }
-        
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        
-        /* Bouton principal */
-        .btn-primary {
-            background: linear-gradient(135deg, var(--latyfa-gold), #e2c286);
-            color: white;
-            font-weight: 900;
-            padding: 16px 24px;
-            border-radius: 30px;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 1px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px -5px rgba(197,160,89,0.6);
-        }
-        
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.9);
-            color: var(--latyfa-gold);
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            white-space: nowrap;
-        }
-        
-        .toast.show {
-            opacity: 1;
-        }
-        
-        /* Loader */
-        .loader-hidden {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s, visibility 0.5s;
-        }
+        /* Toast */
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: var(--latyfa-gold); padding: 12px 24px; border-radius: 50px; font-size: 12px; font-weight: bold; z-index: 2000; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .toast.show { opacity: 1; }
         
         /* Dark theme */
-        body.dark-theme {
-            background-color: #121212 !important;
-            color: #e0e0e0;
-        }
+        body.dark-theme { background-color: #121212 !important; color: #e0e0e0; }
+        .dark-theme .product-card, .dark-theme .modal-content { background-color: #1e1e1e !important; border-color: #333 !important; }
         
-        .dark-theme .product-card,
-        .dark-theme .modal-content {
-            background-color: #1e1e1e !important;
-            border-color: #333 !important;
-        }
+        /* Hero animation */
+        @keyframes waveColors { 0%,100% { color: #ff6600; } 33% { color: #ffffff; } 66% { color: #00ff00; } }
+        .hero-title { animation: waveColors 6s ease-in-out infinite; font-weight: 900; }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .modal-content {
-                padding: 20px;
-            }
-            .btn-primary {
-                padding: 12px 20px;
-                font-size: 10px;
-            }
-        }
+        /* Back to top */
+        .back-to-top { position: fixed; bottom: 100px; right: 20px; width: 50px; height: 50px; background: var(--latyfa-gold); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; z-index: 50; }
+        .back-to-top.show { opacity: 1; visibility: visible; }
         
-        /* Animation hero title */
-        @keyframes waveColors {
-            0%, 100% { color: #ff6600; text-shadow: 0 5px 15px rgba(255,102,0,0.8); }
-            33% { color: #ffffff; text-shadow: 0 8px 20px rgba(255,255,255,0.9); }
-            66% { color: #00ff00; text-shadow: 0 5px 15px rgba(0,255,0,0.8); }
-        }
+        /* WhatsApp */
+        .whatsapp-widget { position: fixed; bottom: 170px; left: 20px; z-index: 50; }
+        .whatsapp-widget a { display: flex; width: 60px; height: 60px; background: #25D366; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 30px; }
+        .whatsapp-widget a:hover { transform: scale(1.1); }
         
-        .hero-title {
-            animation: waveColors 6s ease-in-out infinite;
-            font-weight: 900;
-            letter-spacing: 2px;
-        }
+        /* Roue de la fortune */
+        .wheel-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
+        .wheel-mask.active { display: flex; }
+        .wheel-box { background: white; padding: 30px; border-radius: 30px; text-align: center; max-width: 400px; border: 5px solid var(--latyfa-gold); }
+        #canvas { width: 280px; height: 280px; margin: 20px auto; border-radius: 50%; }
         
-        /* Scroll to top */
-        .back-to-top {
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--latyfa-gold);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 50;
-            box-shadow: 0 4px 15px rgba(197,160,89,0.3);
-        }
-        
-        .back-to-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        /* WhatsApp widget */
-        .whatsapp-widget {
-            position: fixed;
-            bottom: 170px;
-            left: 20px;
-            z-index: 50;
-        }
-        
-        .whatsapp-widget a {
-            display: flex;
-            width: 60px;
-            height: 60px;
-            background: #25D366;
-            border-radius: 50%;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 30px;
-            box-shadow: 0 4px 15px rgba(37,211,102,0.4);
-            transition: all 0.3s ease;
-        }
-        
-        .whatsapp-widget a:hover {
-            transform: scale(1.1);
-        }
+        /* Chasse au trésor */
+        .treasure-section { background: linear-gradient(135deg, #1a1a1a, #2d2d2d); border-radius: 24px; padding: 24px; color: white; margin: 40px 0; }
+        .missions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 30px; }
+        .mission-card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .mission-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.1); border-color: #c5a059; }
+        .mission-card.completed { background: rgba(197,160,89,0.2); border-color: #c5a059; }
+        .progress-bar-bg { height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #cd7f32, #ffd700, #e5e4e2); transition: width 0.5s; }
         
         /* Payment options */
-        .payment-option {
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
+        .payment-option { border: 2px solid #e5e7eb; border-radius: 12px; padding: 12px; cursor: pointer; text-align: center; }
+        .payment-option.selected { border-color: var(--latyfa-gold); background: #fef3c7; }
         
-        .payment-option.selected {
-            border-color: var(--latyfa-gold);
-            background: #fef3c7;
-        }
+        /* Categories */
+        .categories-static { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 15px; background: white; border-bottom: 1px solid #f0f0f0; position: sticky; top: 70px; z-index: 45; }
+        .category-static-item { padding: 8px 16px; border-radius: 40px; background: #f5f5f5; font-size: 11px; font-weight: 700; cursor: pointer; }
+        .category-static-item.active { background: var(--latyfa-gold); color: white; }
+        
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .loader-hidden { opacity: 0; visibility: hidden; transition: opacity 0.5s; }
+        @media (max-width: 768px) { .missions-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
@@ -324,637 +101,482 @@
 <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
     <div class="relative">
         <div class="w-24 h-24 rounded-full border-4 border-transparent border-t-[#c5a059] animate-spin"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-            <span class="logo-font text-2xl text-[#c5a059] italic">LATYFA</span>
-        </div>
+        <div class="absolute inset-0 flex items-center justify-center"><span class="logo-font text-2xl">LATYFA</span></div>
     </div>
 </div>
 
 <!-- TOAST -->
-<div id="toast" class="toast">✨ Produit ajouté au panier</div>
+<div id="toast" class="toast">✨ Produit ajouté</div>
 
-<!-- BANNIERE PROMO -->
-<div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">
-    ✨ Promo Exclusive -20% dès 20.000 F d'achat du 14 au 28 fév 2026
-</div>
+<!-- BANDEAUX -->
+<div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold uppercase">✨ PROMO -20% DÈS 20.000 F - DU 14 AU 28 FÉV 2026</div>
+<div class="flash-sale bg-gradient-to-r from-red-500 to-pink-500 text-white py-2 text-center text-[10px] font-bold animate-pulse" id="flashSale">⚡ FLASH SALE : -30% SUR LES BIJOUX ⚡</div>
 
 <!-- HEADER -->
 <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between gap-2">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
         <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop()">
             <div class="h-10 w-10 rounded-full bg-[#c5a059] flex items-center justify-center text-white font-bold">L</div>
-            <span class="text-xl md:text-2xl font-black italic logo-font">LATYFA SHOP</span>
+            <span class="text-xl font-black italic logo-font">LATYFA SHOP</span>
         </div>
-
-        <div class="flex-1 max-w-md hidden md:block">
-            <div class="relative">
-                <input type="text" id="search-input" placeholder="Rechercher un article..." 
-                       class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-            </div>
-        </div>
-
+        
         <div class="flex gap-3 items-center">
-            <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-white transition">
-                Se connecter
-            </button>
-            
-            <button onclick="toggleDarkMode()" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition">
-                <i class="fa-solid fa-moon"></i>
-            </button>
-            
-            <div onclick="ouvrirPanier()" class="text-center cursor-pointer relative">
-                <i class="fa-solid fa-cart-shopping text-gray-600 text-xl"></i>
-                <span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 font-bold min-w-[18px] h-[18px] flex items-center justify-center">0</span>
-            </div>
+            <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-white">Se connecter</button>
+            <div class="relative cursor-pointer" onclick="toggleWishlistModal()"><i class="fa-regular fa-heart text-gray-600 text-xl"></i><span id="wishlist-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span></div>
+            <button onclick="toggleDarkMode()" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center"><i class="fa-solid fa-moon"></i></button>
+            <div onclick="ouvrirPanier()" class="relative cursor-pointer"><i class="fa-solid fa-cart-shopping text-gray-600 text-xl"></i><span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 min-w-[18px] h-[18px] flex items-center justify-center">0</span></div>
+            <button onclick="document.getElementById('treasureSection').scrollIntoView({behavior:'smooth'})" class="hidden md:block"><i class="fa-solid fa-treasure-chest text-xl text-[#c5a059]"></i></button>
         </div>
     </div>
 </header>
 
-<!-- SECTION HERO -->
-<section class="relative w-full h-[350px] md:h-[500px] overflow-hidden bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d]">
+<!-- CATÉGORIES -->
+<div class="categories-static" id="categories-static"></div>
+
+<!-- HERO -->
+<section class="relative w-full h-[350px] overflow-hidden bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d]">
     <div class="absolute inset-0 bg-black/30"></div>
-    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
-        <h1 class="hero-title text-4xl md:text-6xl font-black italic uppercase tracking-tighter drop-shadow-lg">
-            La Boutique du 225
-        </h1>
-        <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em]">
-            Bijoux, vêtements, parfum...
-        </p>
-        <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition-all duration-300 shadow-lg">
-            Découvrir la Collection
-        </a>
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+        <h1 class="hero-title text-4xl md:text-6xl font-black italic uppercase">La Boutique du 225</h1>
+        <p class="text-orange-400 font-bold mt-3 uppercase text-xs tracking-[0.2em]">Bijoux, vêtements, parfums...</p>
+        <a href="#collection" class="mt-8 bg-[#ff6600] text-white px-10 py-4 rounded-full font-black text-xs uppercase hover:scale-105 transition">Découvrir</a>
     </div>
 </section>
 
-<!-- SECTION PRODUITS -->
+<!-- PRODUITS -->
 <section id="collection" class="container mx-auto px-4 py-8">
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-6" id="product-grid"></div>
 </section>
 
-<!-- WIDGET WHATSAPP -->
-<div class="whatsapp-widget">
-    <a href="https://wa.me/2250709002881?text=Bonjour%2C%20j%27ai%20une%20question%20sur%20Latyfa%20Shop" target="_blank">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
-</div>
-
-<!-- BOUTON RETOUR HAUT -->
-<div id="backToTop" class="back-to-top" onclick="scrollToTop()">
-    <i class="fa-solid fa-arrow-up"></i>
-</div>
-
-<!-- MODALE AUTHENTIFICATION -->
-<div id="authModal" class="modal">
-    <div class="modal-content max-w-md">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-black uppercase italic text-[#c5a059]">Compte client</h2>
-            <button onclick="fermerAuthModal()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
-        </div>
-        
-        <div class="flex border-b mb-6">
-            <div class="auth-tab active flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase" onclick="switchAuthTab('login')">Connexion</div>
-            <div class="auth-tab flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase" onclick="switchAuthTab('register')">Inscription</div>
-        </div>
-        
-        <div id="loginForm" class="auth-form">
-            <input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4 focus:border-[#c5a059] outline-none">
-            <input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4 focus:border-[#c5a059] outline-none">
-            <button onclick="connexion()" class="btn-primary w-full">SE CONNECTER</button>
-        </div>
-        
-        <div id="registerForm" class="auth-form" style="display: none;">
-            <input type="text" id="registerNom" placeholder="Nom complet" class="w-full border rounded-xl p-3 text-xs mb-4 focus:border-[#c5a059] outline-none">
-            <input type="email" id="registerEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4 focus:border-[#c5a059] outline-none">
-            <input type="tel" id="registerTel" placeholder="Téléphone" class="w-full border rounded-xl p-3 text-xs mb-4 focus:border-[#c5a059] outline-none">
-            <input type="password" id="registerPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4 focus:border-[#c5a059] outline-none">
-            <input type="password" id="registerConfirm" placeholder="Confirmer" class="w-full border rounded-xl p-3 text-xs mb-4 focus:border-[#c5a059] outline-none">
-            <button onclick="inscription()" class="btn-primary w-full">S'INSCRIRE</button>
-        </div>
+<!-- CHASSE AU TRÉSOR -->
+<section class="treasure-section container mx-auto px-4" id="treasureSection">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-black flex items-center gap-2"><i class="fa-solid fa-treasure-chest text-[#c5a059]"></i>CHASSE AU TRÉSOR</h2>
+        <div class="bg-[#c5a059] text-black px-6 py-2 rounded-full font-black text-xl" id="treasurePoints">0</div>
     </div>
-</div>
-
-<!-- MODALE PANIER -->
-<div id="cartModal" class="modal">
-    <div class="modal-content">
-        <div class="flex justify-between items-center mb-6 border-b pb-4">
-            <h2 class="text-lg font-black uppercase italic text-[#c5a059]">Mon Panier</h2>
-            <button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-100 px-3 py-1 rounded-full">
-                <i class="fa-solid fa-trash-can mr-1"></i> Vider
-            </button>
-        </div>
-        
-        <div id="cart-items" class="space-y-4 mb-6 max-h-[40vh] overflow-y-auto"></div>
-        
-        <div id="checkout-form" style="display:none;" class="space-y-4 border-t pt-4">
-            <input type="text" id="nom-client" placeholder="NOM COMPLET" class="w-full border p-3 rounded-lg text-sm bg-gray-50 focus:border-[#c5a059] outline-none">
-            <input type="tel" id="tel-client" placeholder="WHATSAPP" class="w-full border p-3 rounded-lg text-sm bg-gray-50 focus:border-[#c5a059] outline-none">
-            <input type="text" id="quartier-client" placeholder="QUARTIER" class="w-full border p-3 rounded-lg text-sm bg-gray-50 focus:border-[#c5a059] outline-none">
-            
-            <select id="zone-livraison" class="w-full border p-3 rounded-lg text-sm bg-gray-50">
-                <option value="">-- ZONE LIVRAISON --</option>
-                <option value="abidjan_nord">Abidjan Nord (1.500 F)</option>
-                <option value="abidjan_sud">Abidjan Sud (2.000 F)</option>
-                <option value="interieur">Intérieur (3.000 F)</option>
-            </select>
-            
-            <div class="text-xl font-black flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                <span>TOTAL :</span>
-                <span id="total-display" class="text-red-600">0 F</span>
-            </div>
-            
-            <div class="flex items-start gap-2 py-2">
-                <input type="checkbox" id="check-verif" class="mt-1">
-                <label for="check-verif" class="text-[8px] font-bold uppercase text-gray-500">
-                    Je confirme ma commande
-                </label>
-            </div>
-            
-            <button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 text-white py-4 rounded-full font-black uppercase pointer-events-none transition-all" disabled>
-                Commander via WhatsApp
-            </button>
-        </div>
-        
-        <button onclick="fermerPanier()" class="w-full mt-6 text-[10px] font-bold uppercase text-gray-400 hover:text-black transition-colors underline">
-            Continuer mes achats
-        </button>
+    <div class="progress-container mb-6">
+        <div class="progress-labels flex justify-between text-[10px] mb-1"><span>Bronze</span><span>Argent</span><span>Or</span><span>Platine</span><span>Diamant</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="treasureProgress" style="width:0%"></div></div>
+        <div class="progress-next text-right text-[10px] text-[#c5a059] mt-1" id="treasureNext">Prochain palier: 500 points</div>
     </div>
-</div>
-
-<!-- MODALE DETAIL PRODUIT -->
-<div id="productDetailModal" class="modal">
-    <div class="modal-content max-w-2xl">
-        <div class="flex justify-between items-center mb-4">
-            <h2 id="detail-name" class="text-xl font-black uppercase italic text-[#c5a059]"></h2>
-            <button onclick="fermerDetail()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
-        </div>
-        
-        <img id="detail-img" src="" class="w-full h-64 object-cover rounded-xl mb-4">
-        <p id="detail-price" class="text-[#ff6600] font-black text-2xl mb-2"></p>
-        <p id="detail-desc" class="text-xs text-gray-600 leading-relaxed mb-4"></p>
-        
-        <button onclick="ajouterDepuisDetail()" class="btn-primary w-full mb-4">
-            <i class="fa-solid fa-cart-plus mr-2"></i> Ajouter au panier
-        </button>
+    <div class="missions-grid" id="dailyMissions"></div>
+    <div class="treasure-chest bg-gradient-to-r from-[#c5a059]/20 to-transparent rounded-xl p-6 text-center cursor-pointer border-2 border-dashed border-[#c5a059]" onclick="openTreasure()">
+        <div class="text-5xl mb-2 animate-bounce">🎁</div>
+        <h3 class="font-black">COFFRE MYSTÈRE</h3>
+        <p id="treasureTimer" class="text-2xl font-black text-[#c5a059]">02:45</p>
     </div>
-</div>
+</section>
 
-<footer class="bg-white border-t pt-12 pb-6 mt-8">
+<!-- SECTION DÉVELOPPEUR -->
+<section class="py-16 bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white">
     <div class="container mx-auto px-4 text-center">
-        <div class="flex items-center justify-center gap-2 mb-4">
-            <div class="h-8 w-8 rounded-full bg-[#c5a059] flex items-center justify-center text-white font-bold">L</div>
-            <span class="text-xl font-black italic text-[#c5a059]">LATYFA SHOP</span>
+        <span class="bg-[#c5a059] text-black px-6 py-2 rounded-full text-xs font-black inline-flex items-center gap-2"><i class="fa-solid fa-code"></i>VOUS VOULEZ CRÉER VOTRE SITE ?</span>
+        <div class="mt-8 bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-[#c5a059]/30 max-w-2xl mx-auto">
+            <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-[#c5a059] mx-auto mb-4 bg-gray-700 flex items-center justify-center text-5xl">👨‍💻</div>
+            <h3 class="text-2xl font-black"><span class="text-[#c5a059]">TRAORE ABOUBAMANE</span> KADER</h3>
+            <p class="text-gray-300 text-sm my-4">Développeur Web & Mobile - Création de sites e-commerce, boutiques en ligne, applications</p>
+            <div class="flex flex-wrap gap-3 justify-center">
+                <a href="https://wa.me/2250506113292" target="_blank" class="bg-green-500 px-6 py-3 rounded-full text-xs font-black flex items-center gap-2 hover:scale-105 transition"><i class="fa-brands fa-whatsapp"></i>WhatsApp</a>
+                <a href="mailto:kadertraore224@gmail.com" class="bg-red-500 px-6 py-3 rounded-full text-xs font-black flex items-center gap-2 hover:scale-105 transition"><i class="fa-regular fa-envelope"></i>Email</a>
+            </div>
         </div>
-        <p class="text-gray-500 text-[10px] uppercase font-bold mb-4">© 2026 LATYFA BUSINESS | Côte d'Ivoire</p>
-        <p class="text-[8px] text-gray-400">📍 Abidjan, Côte d'Ivoire | 📞 07 09 00 28 81</p>
     </div>
-</footer>
+</section>
+
+<!-- WIDGETS -->
+<div class="whatsapp-widget"><a href="https://wa.me/2250709002881" target="_blank"><i class="fa-brands fa-whatsapp"></i></a></div>
+<button onclick="ouvrirRoue()" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce border-2 border-[#c5a059]"><i class="fa-solid fa-gift text-[#c5a059] text-2xl"></i></button>
+<div id="backToTop" class="back-to-top" onclick="scrollToTop()"><i class="fa-solid fa-arrow-up"></i></div>
+
+<!-- MODALES -->
+<div id="authModal" class="modal"><div class="modal-content max-w-md"><div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black italic text-[#c5a059]">Compte client</h2><button onclick="fermerAuthModal()" class="text-2xl">&times;</button></div><div class="flex border-b mb-6"><div class="flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase auth-tab active" onclick="switchAuthTab('login')">Connexion</div><div class="flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase auth-tab" onclick="switchAuthTab('register')">Inscription</div></div><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4"><button onclick="connexion()" class="btn-primary w-full">SE CONNECTER</button></div><div id="registerForm" style="display:none"><input type="text" id="registerNom" placeholder="Nom complet" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="email" id="registerEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="tel" id="registerTel" placeholder="Téléphone" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="registerPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="registerConfirm" placeholder="Confirmer" class="w-full border rounded-xl p-3 text-xs mb-4"><button onclick="inscription()" class="btn-primary w-full">S'INSCRIRE</button></div></div></div>
+
+<div id="cartModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black italic text-[#c5a059]">Mon Panier</h2><button onclick="viderPanier()" class="text-red-500 text-[9px]">Vider</button></div><div id="cart-items" class="space-y-4 mb-6 max-h-[40vh] overflow-y-auto"></div><div id="checkout-form" style="display:none"><input type="text" id="nom-client" placeholder="NOM" class="w-full border p-3 rounded-lg text-sm mb-3"><input type="tel" id="tel-client" placeholder="WHATSAPP" class="w-full border p-3 rounded-lg text-sm mb-3"><input type="text" id="quartier-client" placeholder="QUARTIER" class="w-full border p-3 rounded-lg text-sm mb-3"><select id="zone-livraison" class="w-full border p-3 rounded-lg text-sm mb-3"><option value="">Zone livraison</option><option value="abidjan_nord">Abidjan Nord (1.500 F)</option><option value="abidjan_sud">Abidjan Sud (2.000 F)</option><option value="interieur">Intérieur (3.000 F)</option></select><div class="flex justify-between text-xl font-black p-3 bg-gray-50 rounded-xl"><span>TOTAL:</span><span id="total-display">0 F</span></div><div class="flex items-center gap-2 my-3"><input type="checkbox" id="check-verif"><label class="text-[9px]">Je confirme ma commande</label></div><button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 py-4 rounded-full font-black pointer-events-none" disabled>Commander</button></div><button onclick="fermerPanier()" class="w-full mt-4 text-[10px] underline">Continuer</button></div></div>
+
+<div id="productDetailModal" class="modal"><div class="modal-content max-w-2xl"><div class="flex justify-between items-center mb-4"><h2 id="detail-name" class="text-xl font-black italic text-[#c5a059]"></h2><button onclick="fermerDetail()" class="text-2xl">&times;</button></div><img id="detail-img" class="w-full h-64 object-cover rounded-xl mb-4"><p id="detail-price" class="text-[#ff6600] font-black text-2xl mb-2"></p><p id="detail-desc" class="text-xs text-gray-600 mb-4"></p><button onclick="ajouterDepuisDetail()" class="btn-primary w-full mb-2">Ajouter au panier</button><button onclick="ajouterComparateur(currentProduct?.id)" class="w-full border border-[#c5a059] py-3 rounded-lg text-[10px] font-black">Comparer</button></div></div>
+
+<div id="wishlistModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black italic text-[#c5a059]">❤️ Favoris</h2><button onclick="fermerWishlist()">&times;</button></div><div id="wishlist-items" class="space-y-3"></div></div></div>
+
+<div id="wheelModal" class="wheel-mask"><div class="wheel-box"><button onclick="fermerRoue()" class="float-right text-xl">&times;</button><h3 class="logo-font text-xl font-black">LATYFA LUCKY WHEEL</h3><canvas id="canvas" width="300" height="300"></canvas><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-3xl text-[#c5a059] drop-shadow-lg">▼</div><button id="spin" onclick="lancerRoue()" class="btn-primary w-full mt-4">TENTER MA CHANCE</button><p id="wheel-msg" class="text-[10px] mt-2 text-blue-600"></p></div></div>
+
+<div id="comparateurModal" class="modal"><div class="modal-content max-w-3xl"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black italic text-[#c5a059]">⚖️ Comparateur</h2><button onclick="fermerComparateur()">&times;</button></div><div id="comparateur-items" class="grid grid-cols-2 gap-4"></div></div></div>
+
+<div id="parrainageModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-xl font-black italic text-[#c5a059]">🤝 Parrainage</h2><button onclick="fermerParrainage()">&times;</button></div><div class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] p-4 rounded-xl text-white"><div class="grid grid-cols-3 gap-2 text-center mb-4"><div><div class="text-2xl font-black" id="nbFilleuls">0</div><div class="text-[8px]">Filleuls</div></div><div><div class="text-2xl font-black" id="gainTotal">0 F</div><div class="text-[8px]">Gagné</div></div><div><div class="text-2xl font-black" id="prochainPalier">1</div><div class="text-[8px]">Prochain</div></div></div><div class="bg-white p-3 rounded-xl flex gap-2"><input type="text" id="lienParrainage" readonly class="flex-1 text-black text-[9px] p-2 rounded"><button onclick="copierLien()" class="bg-black text-white px-3 py-1 rounded text-[8px]">COPIER</button></div></div></div></div>
+
+<footer class="bg-white border-t pt-12 pb-6 mt-8"><div class="container mx-auto px-4 text-center"><div class="flex items-center justify-center gap-2 mb-4"><div class="h-8 w-8 rounded-full bg-[#c5a059] flex items-center justify-center text-white font-bold">L</div><span class="text-xl font-black italic text-[#c5a059]">LATYFA SHOP</span></div><p class="text-gray-500 text-[10px] font-bold">© 2026 LATYFA BUSINESS | Côte d'Ivoire</p><p class="text-[8px] text-gray-400 mt-2">📍 Abidjan | 📞 07 09 00 28 81</p><button onclick="ouvrirCGV()" class="text-[8px] text-[#c5a059] underline mt-2">Conditions Générales</button></div></footer>
 
 <script>
-    // ==================== DONNÉES DE SECOURS ====================
-    const PRODUITS_DE_SECOURS = [
-        { id: 1, name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], description: "Sac en cuir de luxe, finition dorée.", enStock: true, cat: "sac", ventes: 45 },
-        { id: 2, name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Collier en perles fines, élégance assurée.", enStock: true, cat: "bijoux", ventes: 38 },
-        { id: 3, name: "Bracelet Cristal", price: 15000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"], description: "Bracelet en cristal Swarovski.", enStock: true, cat: "bijoux", ventes: 52 },
-        { id: 4, name: "Parfum Oud Mystique", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], description: "Parfum oriental aux notes boisées.", enStock: true, cat: "parfum", ventes: 27 },
-        { id: 5, name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], description: "Escarpins dorés pour vos soirées.", enStock: true, cat: "chaussures", ventes: 31 }
-    ];
-    
-    // ==================== VARIABLES GLOBALES ====================
-    let products = [];
-    let cart = [];
-    let currentProduct = null;
-    let utilisateurConnecte = null;
-    let clients = [];
-    
-    // ==================== CHARGEMENT DES DONNÉES ====================
-    async function chargerDonnees() {
-        // Charger produits depuis localStorage ou utiliser secours
-        const saved = localStorage.getItem('latyfa_db');
-        if (saved) {
-            try {
-                products = JSON.parse(saved);
-                console.log('✅ Produits chargés depuis localStorage');
-            } catch(e) {
-                products = [...PRODUITS_DE_SECOURS];
-            }
-        } else {
-            products = [...PRODUITS_DE_SECOURS];
-            localStorage.setItem('latyfa_db', JSON.stringify(products));
-        }
-        
-        // Charger panier
-        const savedCart = localStorage.getItem('latyfa_cart');
-        if (savedCart) {
-            try {
-                cart = JSON.parse(savedCart);
-            } catch(e) { cart = []; }
-        }
-        
-        // Charger clients
-        const savedClients = localStorage.getItem('latyfa_clients');
-        if (savedClients) {
-            try {
-                clients = JSON.parse(savedClients);
-            } catch(e) { clients = []; }
-        } else {
-            clients = [
-                { id: 1, nom: "Admin", email: "admin@latyfa.com", tel: "0709002881", password: "admin2026", isAdmin: true }
-            ];
-            localStorage.setItem('latyfa_clients', JSON.stringify(clients));
-        }
-        
-        // Charger session
-        const session = localStorage.getItem('latyfa_session');
-        if (session) {
-            try {
-                utilisateurConnecte = JSON.parse(session);
-                updateUserUI();
-            } catch(e) {}
-        }
-        
-        updateCartCount();
-        render();
-    }
-    
-    // ==================== AFFICHAGE DES PRODUITS ====================
-    function render() {
-        const grid = document.getElementById('product-grid');
-        if (!grid) return;
-        
-        grid.innerHTML = products.map(p => `
-            <div class="product-card p-3 relative cursor-pointer" onclick="voirDetails(${p.id})">
-                <img src="${p.images[0]}" class="h-48 w-full object-cover rounded-lg mb-3">
-                <h3 class="text-[11px] font-bold uppercase text-gray-800">${p.name}</h3>
-                <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-                <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase border border-gray-100 hover:bg-[#c5a059] hover:text-white transition">
-                    Voir l'article
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    function voirDetails(id) {
-        const product = products.find(p => p.id === id);
-        if (!product) return;
-        
-        currentProduct = product;
-        document.getElementById('detail-name').innerText = product.name;
-        document.getElementById('detail-price').innerText = product.price.toLocaleString() + " F";
-        document.getElementById('detail-desc').innerText = product.description || "Produit de luxe de la boutique Latyfa";
-        document.getElementById('detail-img').src = product.images[0];
-        document.getElementById('productDetailModal').classList.add('active');
-    }
-    
-    function fermerDetail() {
-        document.getElementById('productDetailModal').classList.remove('active');
-        currentProduct = null;
-    }
-    
-    // ==================== PANIER ====================
-    function ajouterDepuisDetail() {
-        if (!currentProduct) return;
-        
-        const existing = cart.find(item => item.id === currentProduct.id);
-        if (existing) {
-            existing.qty++;
-        } else {
-            cart.push({
-                id: currentProduct.id,
-                name: currentProduct.name,
-                price: currentProduct.price,
-                qty: 1,
-                image: currentProduct.images[0]
-            });
-        }
-        
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-        updateCartCount();
-        fermerDetail();
-        showToast("✨ Produit ajouté au panier");
-    }
-    
-    function updateCartCount() {
-        const total = cart.reduce((sum, item) => sum + item.qty, 0);
-        const countEl = document.getElementById('cart-count');
-        if (countEl) {
-            countEl.innerText = total;
-            countEl.style.display = total > 0 ? 'flex' : 'none';
-        }
-    }
-    
-    function ouvrirPanier() {
-        const modal = document.getElementById('cartModal');
-        const itemsDiv = document.getElementById('cart-items');
-        const form = document.getElementById('checkout-form');
-        
-        if (cart.length === 0) {
-            itemsDiv.innerHTML = `<div class="text-center py-10 text-gray-400">Votre panier est vide</div>`;
-            form.style.display = "none";
-        } else {
-            form.style.display = "block";
-            itemsDiv.innerHTML = cart.map(item => `
-                <div class="flex items-center gap-3 border-b pb-3">
-                    <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg">
-                    <div class="flex-1">
-                        <p class="text-[10px] font-bold uppercase">${item.name}</p>
-                        <p class="text-[9px] text-[#c5a059] font-black">${(item.price * item.qty).toLocaleString()} F</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="modifierQty(${item.id}, -1)" class="w-6 h-6 bg-gray-100 rounded-full">-</button>
-                        <span class="text-[10px] font-bold w-4 text-center">${item.qty}</span>
-                        <button onclick="modifierQty(${item.id}, 1)" class="w-6 h-6 bg-gray-100 rounded-full">+</button>
-                    </div>
-                </div>
-            `).join('');
-            
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            document.getElementById('total-display').innerText = total.toLocaleString() + " F";
-        }
-        
-        modal.classList.add('active');
-    }
-    
-    function modifierQty(id, delta) {
-        const index = cart.findIndex(item => item.id === id);
-        if (index === -1) return;
-        
-        cart[index].qty += delta;
-        if (cart[index].qty < 1) {
-            cart.splice(index, 1);
-        }
-        
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-        updateCartCount();
-        ouvrirPanier();
-    }
-    
-    function viderPanier() {
-        if (confirm("Vider le panier ?")) {
-            cart = [];
-            localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-            updateCartCount();
-            ouvrirPanier();
-            showToast("🗑️ Panier vidé");
-        }
-    }
-    
-    function fermerPanier() {
-        document.getElementById('cartModal').classList.remove('active');
-    }
-    
-    // ==================== COMMANDE ====================
-    function validerCommande() {
-        const nom = document.getElementById('nom-client').value.trim();
-        const tel = document.getElementById('tel-client').value.trim();
-        const quartier = document.getElementById('quartier-client').value.trim();
-        const zone = document.getElementById('zone-livraison').value;
-        
-        if (!nom || !tel || !quartier || !zone) {
-            alert("Veuillez remplir tous les champs");
-            return;
-        }
-        
-        const frais = { abidjan_nord: 1500, abidjan_sud: 2000, interieur: 3000 };
-        const sousTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        const total = sousTotal + frais[zone];
-        
-        let message = `*NOUVELLE COMMANDE LATYFA*\n\n`;
-        message += `👤 Client: ${nom}\n`;
-        message += `📞 Tél: ${tel}\n`;
-        message += `📍 Quartier: ${quartier}\n`;
-        message += `📦 Frais livraison: ${frais[zone]} F\n\n`;
-        message += `*ARTICLES:*\n`;
-        cart.forEach(item => {
-            message += `• ${item.name} x${item.qty} = ${(item.price * item.qty).toLocaleString()} F\n`;
-        });
-        message += `\n*TOTAL: ${total.toLocaleString()} F*`;
-        
-        window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(message)}`);
-        
-        // Sauvegarder dans historique
-        const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
-        historique.unshift({
-            date: new Date().toLocaleString(),
-            client: nom,
-            tel: tel,
-            lieu: quartier,
-            total: total.toLocaleString() + " F",
-            articles: cart.map(i => `${i.name} x${i.qty}`).join(', ')
-        });
-        localStorage.setItem('latyfa_historique', JSON.stringify(historique));
-        
-        cart = [];
-        localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-        updateCartCount();
-        fermerPanier();
-        showToast("✅ Commande envoyée !");
-    }
-    
-    // ==================== AUTHENTIFICATION ====================
-    function ouvrirAuthModal() {
-        document.getElementById('authModal').classList.add('active');
-    }
-    
-    function fermerAuthModal() {
-        document.getElementById('authModal').classList.remove('active');
-    }
-    
-    function switchAuthTab(tab) {
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const tabs = document.querySelectorAll('.auth-tab');
-        
-        tabs.forEach(t => t.classList.remove('active'));
-        
-        if (tab === 'login') {
-            tabs[0].classList.add('active');
-            loginForm.style.display = 'block';
-            registerForm.style.display = 'none';
-        } else {
-            tabs[1].classList.add('active');
-            registerForm.style.display = 'block';
-            loginForm.style.display = 'none';
-        }
-    }
-    
-    function inscription() {
-        const nom = document.getElementById('registerNom').value.trim();
-        const email = document.getElementById('registerEmail').value.trim();
-        const tel = document.getElementById('registerTel').value.trim();
-        const password = document.getElementById('registerPassword').value;
-        const confirm = document.getElementById('registerConfirm').value;
-        
-        if (!nom || !email || !tel || !password) {
-            alert("Veuillez remplir tous les champs");
-            return;
-        }
-        
-        if (password !== confirm) {
-            alert("Les mots de passe ne correspondent pas");
-            return;
-        }
-        
-        if (clients.find(c => c.email === email)) {
-            alert("Cet email est déjà utilisé");
-            return;
-        }
-        
-        const nouveauClient = {
-            id: Date.now(),
-            nom: nom,
-            email: email,
-            tel: tel,
-            password: password,
-            dateInscription: new Date().toLocaleDateString()
-        };
-        
-        clients.push(nouveauClient);
-        localStorage.setItem('latyfa_clients', JSON.stringify(clients));
-        
-        alert("Inscription réussie ! Vous pouvez vous connecter.");
-        switchAuthTab('login');
-    }
-    
-    function connexion() {
-        const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
-        
-        const client = clients.find(c => c.email === email && c.password === password);
-        
-        if (client) {
-            utilisateurConnecte = client;
-            localStorage.setItem('latyfa_session', JSON.stringify(client));
-            updateUserUI();
-            fermerAuthModal();
-            showToast(`👋 Bonjour ${client.nom} !`);
-        } else {
-            alert("Email ou mot de passe incorrect");
-        }
-    }
-    
-    function deconnexion() {
-        utilisateurConnecte = null;
-        localStorage.removeItem('latyfa_session');
-        updateUserUI();
-        showToast("👋 À bientôt !");
-    }
-    
-    function updateUserUI() {
-        const loginBtn = document.getElementById('loginBtn');
-        if (utilisateurConnecte) {
-            loginBtn.innerText = utilisateurConnecte.nom.split(' ')[0];
-            loginBtn.onclick = deconnexion;
-        } else {
-            loginBtn.innerText = "Se connecter";
-            loginBtn.onclick = ouvrirAuthModal;
-        }
-    }
-    
-    // ==================== UTILITAIRES ====================
-    function showToast(message) {
-        const toast = document.getElementById('toast');
-        toast.innerText = message;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2000);
-    }
-    
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-theme');
-        const isDark = document.body.classList.contains('dark-theme');
-        localStorage.setItem('latyfa_theme', isDark ? 'dark' : 'light');
-        
-        const btn = document.querySelector('#dark-mode-btn i');
-        if (btn) {
-            btn.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-        }
-    }
-    
-    function scrollToTop() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
-    function handleScroll() {
-        const backToTop = document.getElementById('backToTop');
-        if (window.scrollY > 300) {
-            backToTop.classList.add('show');
-        } else {
-            backToTop.classList.remove('show');
-        }
-    }
-    
-    function rechercherProduit() {
-        const terme = document.getElementById('search-input').value.toLowerCase();
-        const grid = document.getElementById('product-grid');
-        
-        if (!terme) {
-            render();
-            return;
-        }
-        
-        const filtered = products.filter(p => p.name.toLowerCase().includes(terme));
-        grid.innerHTML = filtered.map(p => `
-            <div class="product-card p-3 relative cursor-pointer" onclick="voirDetails(${p.id})">
-                <img src="${p.images[0]}" class="h-48 w-full object-cover rounded-lg mb-3">
-                <h3 class="text-[11px] font-bold uppercase">${p.name}</h3>
-                <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-            </div>
-        `).join('');
-    }
-    
-    // ==================== INITIALISATION ====================
-    window.addEventListener('load', () => {
-        chargerDonnees();
-        
-        // Restaurer thème
-        const savedTheme = localStorage.getItem('latyfa_theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-            const btn = document.querySelector('#dark-mode-btn i');
-            if (btn) btn.className = 'fa-solid fa-sun';
-        }
-        
-        window.addEventListener('scroll', handleScroll);
-        
-        // Search input
-        const searchInput = document.getElementById('search-input');
-        if (searchInput) {
-            searchInput.addEventListener('input', rechercherProduit);
-        }
-        
-        // Checkout form validation
-        const inputs = ['nom-client', 'tel-client', 'quartier-client', 'zone-livraison', 'check-verif'];
-        inputs.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.addEventListener('input', toggleBoutonCommande);
-        });
-        
-        // Cacher loader
-        setTimeout(() => {
-            const loader = document.getElementById('loader');
-            if (loader) loader.classList.add('loader-hidden');
-        }, 800);
-    });
-    
-    function toggleBoutonCommande() {
-        const nom = document.getElementById('nom-client')?.value.trim();
-        const tel = document.getElementById('tel-client')?.value.trim();
-        const quartier = document.getElementById('quartier-client')?.value.trim();
-        const zone = document.getElementById('zone-livraison')?.value;
-        const check = document.getElementById('check-verif')?.checked;
-        const btn = document.getElementById('btn-final');
-        
-        if (nom && tel && quartier && zone && check) {
-            btn.classList.remove('bg-gray-300', 'pointer-events-none');
-            btn.classList.add('bg-[#c5a059]', 'cursor-pointer');
-            btn.disabled = false;
-        } else {
-            btn.classList.add('bg-gray-300', 'pointer-events-none');
-            btn.classList.remove('bg-[#c5a059]', 'cursor-pointer');
-            btn.disabled = true;
-        }
-    }
-</script>
+// ==================== DONNÉES ====================
+const PRODUITS_DE_SECOURS = [
+    { id: 1, name: "Sac Prestige Latyfa", price: 45000, images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500"], description: "Sac en cuir de luxe, finition dorée.", enStock: true, cat: "sac", ventes: 45, estNouveau: true },
+    { id: 2, name: "Collier Perle Royale", price: 25000, images: ["https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500"], description: "Collier en perles fines.", enStock: true, cat: "bijoux", ventes: 38 },
+    { id: 3, name: "Bracelet Cristal", price: 15000, images: ["https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500"], description: "Bracelet en cristal Swarovski.", enStock: true, cat: "bijoux", ventes: 52 },
+    { id: 4, name: "Parfum Oud Mystique", price: 35000, images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=500"], description: "Parfum oriental aux notes boisées.", enStock: true, cat: "parfum", ventes: 27 },
+    { id: 5, name: "Escarpins Gold Night", price: 28000, images: ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500"], description: "Escarpins dorés.", enStock: true, cat: "chaussures", ventes: 31 },
+    { id: 6, name: "Sac à main Élégance", price: 55000, images: ["https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500"], description: "Sac à main de luxe.", enStock: true, cat: "sac", ventes: 22, estLuxe: true }
+];
 
+let products = [], cart = [], wishlist = [], comparateur = [], clients = [], messages = [], utilisateurConnecte = null;
+let currentProduct = null, pointsFidelite = 0, remiseCodePromo = 0;
+let userTreasure = { points: 0, level: "Bronze", daily: {} };
+const categories = [
+    { id: "tous", nom: "Tout voir", icone: "fa-crown" },
+    { id: "bijoux", nom: "Bijoux", icone: "fa-gem" },
+    { id: "sac", nom: "Sacs", icone: "fa-bag-shopping" },
+    { id: "parfum", nom: "Parfums", icone: "fa-spray-can-sparkles" },
+    { id: "chaussures", nom: "Chaussures", icone: "fa-shoe-prints" }
+];
+const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
+const tarifsLivraison = { abidjan_nord: 1500, abidjan_sud: 2000, interieur: 3000 };
+
+// ==================== CHARGEMENT ====================
+async function chargerDonnees() {
+    const saved = localStorage.getItem('latyfa_db');
+    products = saved ? JSON.parse(saved) : [...PRODUITS_DE_SECOURS];
+    if (!saved) localStorage.setItem('latyfa_db', JSON.stringify(products));
+    
+    cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
+    wishlist = JSON.parse(localStorage.getItem('latyfa_wishlist')) || [];
+    comparateur = JSON.parse(localStorage.getItem('latyfa_comparateur')) || [];
+    clients = JSON.parse(localStorage.getItem('latyfa_clients')) || [{ id: 1, nom: "Admin", email: "admin@latyfa.com", password: "admin2026", isAdmin: true }];
+    pointsFidelite = parseInt(localStorage.getItem('latyfa_points')) || 0;
+    
+    const session = localStorage.getItem('latyfa_session');
+    if (session) utilisateurConnecte = JSON.parse(session);
+    
+    initTreasure();
+    renderCategories();
+    render();
+    updateCartCount();
+    updateWishlistCount();
+    updateUserUI();
+    document.getElementById('loyalty-points')?.setAttribute('data-points', pointsFidelite);
+}
+
+function renderCategories() {
+    const container = document.getElementById('categories-static');
+    if (!container) return;
+    container.innerHTML = categories.map(c => `<div class="category-static-item" onclick="filterByCategory('${c.id}')"><i class="fa-solid ${c.icone}"></i><span>${c.nom}</span></div>`).join('');
+}
+
+function filterByCategory(catId) {
+    document.querySelectorAll('.category-static-item').forEach(el => el.classList.remove('active'));
+    event.target.closest('.category-static-item').classList.add('active');
+    const grid = document.getElementById('product-grid');
+    const filtered = catId === "tous" ? products : products.filter(p => p.cat === catId);
+    grid.innerHTML = filtered.map(p => renderProductCard(p)).join('');
+}
+
+function renderProductCard(p) {
+    const estNouveau = p.estNouveau || (Date.now() - (p.dateAjout || 0) < 7*24*60*60*1000);
+    const estFavori = wishlist.includes(p.id);
+    return `<div class="product-card p-3 relative" onclick="voirDetails(${p.id})">
+        <div class="favorite-btn absolute top-2 right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer z-10 ${estFavori ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlist(${p.id})"><i class="fa-${estFavori ? 'solid' : 'regular'} fa-heart"></i></div>
+        ${estNouveau ? '<span class="badge-nouveau">NOUVEAU</span>' : ''}
+        ${p.estLuxe ? '<span class="badge-luxe">LUXE</span>' : ''}
+        ${p.stockBas ? '<span class="stock-alert">🔥 DERNIERS EXEMPLAIRES</span>' : ''}
+        <img src="${p.images[0]}" class="h-48 w-full object-cover rounded-lg mb-3">
+        <h3 class="text-[11px] font-bold uppercase">${p.name}</h3>
+        <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
+        <div class="bg-gray-50 text-center py-2 mt-4 rounded text-[9px] font-bold uppercase hover:bg-[#c5a059] hover:text-white transition">VOIR</div>
+    </div>`;
+}
+
+function render() {
+    const grid = document.getElementById('product-grid');
+    if (grid) grid.innerHTML = products.map(p => renderProductCard(p)).join('');
+}
+
+// ==================== PRODUITS ====================
+function voirDetails(id) {
+    currentProduct = products.find(p => p.id === id);
+    if (!currentProduct) return;
+    document.getElementById('detail-name').innerText = currentProduct.name;
+    document.getElementById('detail-price').innerText = currentProduct.price.toLocaleString() + " F";
+    document.getElementById('detail-desc').innerText = currentProduct.description;
+    document.getElementById('detail-img').src = currentProduct.images[0];
+    document.getElementById('productDetailModal').classList.add('active');
+}
+
+function fermerDetail() { document.getElementById('productDetailModal').classList.remove('active'); currentProduct = null; }
+
+// ==================== PANIER ====================
+function ajouterDepuisDetail() {
+    if (!currentProduct) return;
+    const existing = cart.find(i => i.id === currentProduct.id);
+    existing ? existing.qty++ : cart.push({ id: currentProduct.id, name: currentProduct.name, price: currentProduct.price, qty: 1, image: currentProduct.images[0] });
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+    updateCartCount();
+    fermerDetail();
+    showToast("✨ Produit ajouté");
+    ajouterPointsFidelite(currentProduct.price);
+}
+
+function updateCartCount() {
+    const total = cart.reduce((s, i) => s + i.qty, 0);
+    document.getElementById('cart-count').innerText = total;
+}
+
+function ouvrirPanier() {
+    const modal = document.getElementById('cartModal');
+    const itemsDiv = document.getElementById('cart-items');
+    const form = document.getElementById('checkout-form');
+    if (cart.length === 0) { itemsDiv.innerHTML = '<div class="text-center py-10 text-gray-400">Panier vide</div>'; form.style.display = "none"; }
+    else {
+        form.style.display = "block";
+        itemsDiv.innerHTML = cart.map(i => `<div class="flex items-center gap-3 border-b pb-3"><img src="${i.image}" class="w-12 h-12 object-cover rounded"><div class="flex-1"><p class="text-[10px] font-bold">${i.name}</p><p class="text-[9px] text-[#c5a059]">${(i.price*i.qty).toLocaleString()} F</p></div><div class="flex items-center gap-2"><button onclick="modifierQty(${i.id}, -1)" class="w-6 h-6 bg-gray-100 rounded-full">-</button><span class="text-[10px] w-4 text-center">${i.qty}</span><button onclick="modifierQty(${i.id}, 1)" class="w-6 h-6 bg-gray-100 rounded-full">+</button></div></div>`).join('');
+        const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        document.getElementById('total-display').innerText = total.toLocaleString() + " F";
+    }
+    modal.classList.add('active');
+}
+
+function modifierQty(id, delta) {
+    const idx = cart.findIndex(i => i.id === id);
+    if (idx === -1) return;
+    cart[idx].qty += delta;
+    if (cart[idx].qty < 1) cart.splice(idx, 1);
+    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
+    updateCartCount();
+    ouvrirPanier();
+}
+
+function viderPanier() { cart = []; localStorage.setItem('latyfa_cart', JSON.stringify(cart)); updateCartCount(); ouvrirPanier(); showToast("Panier vidé"); }
+function fermerPanier() { document.getElementById('cartModal').classList.remove('active'); }
+
+function validerCommande() {
+    const nom = document.getElementById('nom-client')?.value.trim();
+    const tel = document.getElementById('tel-client')?.value.trim();
+    const quartier = document.getElementById('quartier-client')?.value.trim();
+    const zone = document.getElementById('zone-livraison')?.value;
+    if (!nom || !tel || !quartier || !zone) { alert("Remplissez tous les champs"); return; }
+    const sousTotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const total = sousTotal + tarifsLivraison[zone];
+    let msg = `*NOUVELLE COMMANDE LATYFA*\n👤 ${nom}\n📞 ${tel}\n📍 ${quartier}\n📦 Livraison: ${tarifsLivraison[zone]} F\n\n*ARTICLES:*\n${cart.map(i => `• ${i.name} x${i.qty} = ${(i.price*i.qty).toLocaleString()} F`).join('\n')}\n\n*TOTAL: ${total.toLocaleString()} F*`;
+    window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
+    const historique = JSON.parse(localStorage.getItem('latyfa_historique')) || [];
+    historique.unshift({ date: new Date().toLocaleString(), client: nom, tel, lieu: quartier, total: total.toLocaleString() + " F", articles: cart.map(i => `${i.name} x${i.qty}`).join(', ') });
+    localStorage.setItem('latyfa_historique', JSON.stringify(historique));
+    cart = []; localStorage.setItem('latyfa_cart', JSON.stringify(cart)); updateCartCount(); fermerPanier(); showToast("Commande envoyée !");
+}
+
+// ==================== FAVORIS ====================
+function toggleWishlist(id) {
+    const idx = wishlist.indexOf(id);
+    idx === -1 ? wishlist.push(id) : wishlist.splice(idx, 1);
+    localStorage.setItem('latyfa_wishlist', JSON.stringify(wishlist));
+    updateWishlistCount();
+    render();
+    showToast(idx === -1 ? "Ajouté aux favoris" : "Retiré des favoris");
+}
+
+function updateWishlistCount() { document.getElementById('wishlist-count').innerText = wishlist.length; }
+function toggleWishlistModal() { document.getElementById('wishlistModal').classList.add('active'); document.getElementById('wishlist-items').innerHTML = wishlist.length ? wishlist.map(id => { let p = products.find(p => p.id === id); return p ? `<div class="flex items-center gap-3 border-b pb-2"><img src="${p.images[0]}" class="w-12 h-12 object-cover rounded cursor-pointer" onclick="voirDetails(${p.id});fermerWishlist()"><div><p class="text-[10px] font-bold">${p.name}</p><p class="text-[#c5a059]">${p.price.toLocaleString()} F</p></div><button onclick="toggleWishlist(${p.id});toggleWishlistModal()" class="ml-auto text-red-500"><i class="fa-solid fa-trash"></i></button></div>` : '' }).join('') : '<p class="text-center text-gray-400">Aucun favori</p>'; }
+function fermerWishlist() { document.getElementById('wishlistModal').classList.remove('active'); }
+
+// ==================== COMPARATEUR ====================
+function ajouterComparateur(id) {
+    if (!id) return;
+    if (comparateur.includes(id)) { showToast("Déjà dans le comparateur"); return; }
+    if (comparateur.length >= 4) { showToast("Maximum 4 produits"); return; }
+    comparateur.push(id);
+    localStorage.setItem('latyfa_comparateur', JSON.stringify(comparateur));
+    showToast("Ajouté au comparateur");
+}
+
+function ouvrirComparateur() {
+    const modal = document.getElementById('comparateurModal');
+    const container = document.getElementById('comparateur-items');
+    if (comparateur.length === 0) container.innerHTML = '<p class="col-span-2 text-center text-gray-400">Aucun produit</p>';
+    else container.innerHTML = comparateur.map(id => { let p = products.find(p => p.id === id); return p ? `<div class="border rounded-lg p-3"><img src="${p.images[0]}" class="h-32 w-full object-cover rounded mb-2"><p class="text-[9px] font-bold">${p.name}</p><p class="text-[#c5a059]">${p.price.toLocaleString()} F</p><button onclick="retirerComparateur(${p.id})" class="mt-2 text-red-500 text-[8px]">Retirer</button></div>` : '' }).join('');
+    modal.classList.add('active');
+}
+function fermerComparateur() { document.getElementById('comparateurModal').classList.remove('active'); }
+function retirerComparateur(id) { comparateur = comparateur.filter(i => i !== id); localStorage.setItem('latyfa_comparateur', JSON.stringify(comparateur)); ouvrirComparateur(); }
+
+// ==================== ROUE DE LA FORTUNE ====================
+let wheelSpinning = false;
+function drawWheel() {
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const arc = 2 * Math.PI / prizes.length;
+    ctx.clearRect(0, 0, 300, 300);
+    for (let i = 0; i < prizes.length; i++) {
+        ctx.beginPath();
+        ctx.fillStyle = i % 2 === 0 ? "#c5a059" : "#1a1a1a";
+        ctx.moveTo(150, 150);
+        ctx.arc(150, 150, 145, i * arc, (i + 1) * arc);
+        ctx.fill();
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.translate(150, 150);
+        ctx.rotate(i * arc + arc / 2);
+        ctx.font = "bold 12px Montserrat";
+        ctx.fillText(prizes[i], 120, 5);
+        ctx.restore();
+    }
+}
+function ouvrirRoue() { drawWheel(); document.getElementById('wheelModal').classList.add('active'); majChances(); }
+function fermerRoue() { document.getElementById('wheelModal').classList.remove('active'); }
+function majChances() {
+    let stats = JSON.parse(localStorage.getItem('latyfa_wheel_stats')) || { date: new Date().toDateString(), count: 0 };
+    if (stats.date !== new Date().toDateString()) stats = { date: new Date().toDateString(), count: 0 };
+    document.getElementById('wheel-msg').innerHTML = stats.count >= 1 ? "<span class='text-red-600'>🚫 Limite atteinte aujourd'hui</span>" : "<span class='text-blue-600'>🎡 1 chance aujourd'hui</span>";
+    return stats;
+}
+function lancerRoue() {
+    let stats = majChances();
+    if (stats.count >= 1) { alert("Vous avez déjà utilisé votre chance aujourd'hui !"); return; }
+    if (wheelSpinning) return;
+    wheelSpinning = true;
+    const canvas = document.getElementById('canvas');
+    const spinBtn = document.getElementById('spin');
+    spinBtn.disabled = true;
+    const random = Math.floor(Math.random() * 360);
+    const totalRotation = 3600 + random;
+    canvas.style.transform = `rotate(${totalRotation}deg)`;
+    setTimeout(() => {
+        const actualAngle = random % 360;
+        const segmentSize = 360 / prizes.length;
+        const resultIndex = Math.floor(((360 - actualAngle + 270) % 360) / segmentSize);
+        const resultat = prizes[resultIndex];
+        stats.count++; localStorage.setItem('latyfa_wheel_stats', JSON.stringify(stats));
+        canvas.style.transform = '';
+        if (resultat === "REESSAYER") alert("😥 Réessayez demain !");
+        else if (resultat === "CADEAU") { canvasConfetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#c5a059'] }); ouvrirCadeauMystere(); }
+        else { canvasConfetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); alert(`🎉 Félicitations ! Vous avez gagné : ${resultat}`); }
+        spinBtn.disabled = false;
+        wheelSpinning = false;
+        majChances();
+    }, 4000);
+}
+function ouvrirCadeauMystere() { alert("🎁 Vous avez gagné un cadeau mystère ! Un bracelet vous attend dans votre panier."); cart.push({ id: 'cadeau-' + Date.now(), name: "🎁 Cadeau Mystère - Bracelet", price: 0, qty: 1, image: "https://via.placeholder.com/100" }); localStorage.setItem('latyfa_cart', JSON.stringify(cart)); updateCartCount(); }
+
+// ==================== CHASSE AU TRÉSOR ====================
+const dailyMissions = [
+    { id: 'visit', name: 'Visite du jour', points: 10, emoji: '👋', action: 'Se connecter' },
+    { id: 'share', name: 'Partager', points: 20, emoji: '📤', action: 'Partager' },
+    { id: 'wishlist', name: 'Favoris', points: 15, emoji: '❤️', action: 'Ajouter 3 favoris', target: 3 },
+    { id: 'review', name: 'Avis', points: 30, emoji: '⭐', action: 'Donner son avis' }
+];
+function initTreasure() {
+    const saved = localStorage.getItem('latyfa_treasure');
+    if (saved) userTreasure = JSON.parse(saved);
+    else userTreasure = { points: 0, level: 'Bronze', daily: {}, lastDaily: new Date().toDateString() };
+    if (userTreasure.lastDaily !== new Date().toDateString()) { userTreasure.daily = {}; userTreasure.lastDaily = new Date().toDateString(); }
+    updateTreasureUI();
+}
+function updateTreasureUI() {
+    document.getElementById('treasurePoints').innerText = userTreasure.points;
+    let level = 0, next = 500;
+    if (userTreasure.points >= 5000) { level = 100; next = 5000; }
+    else if (userTreasure.points >= 3000) { level = 60; next = 3000; }
+    else if (userTreasure.points >= 1500) { level = 30; next = 1500; }
+    else if (userTreasure.points >= 500) { level = 10; next = 500; }
+    document.getElementById('treasureProgress').style.width = Math.min(100, (userTreasure.points / next) * 100) + '%';
+    document.getElementById('treasureNext').innerHTML = `Prochain palier: ${next} points`;
+    const container = document.getElementById('dailyMissions');
+    if (container) container.innerHTML = dailyMissions.map(m => `<div class="mission-card ${userTreasure.daily[m.id]?.completed ? 'completed' : ''}" onclick="startMission('${m.id}')"><div class="text-3xl mb-2">${m.emoji}</div><div class="text-[10px] font-bold">${m.name}</div><div class="text-[#c5a059]">+${m.points}</div><button class="bg-[#c5a059] text-black px-3 py-1 rounded-full text-[9px] mt-2">${userTreasure.daily[m.id]?.completed ? '✓ Fait' : m.action}</button></div>`).join('');
+}
+function startMission(id) {
+    if (userTreasure.daily[id]?.completed) { showToast("Mission déjà faite aujourd'hui"); return; }
+    if (id === 'visit') completeMission(id);
+    else if (id === 'share') { window.open("https://wa.me/?text=Découvrez Latyfa Shop"); completeMission(id); }
+    else if (id === 'wishlist') showToast("Ajoutez 3 produits aux favoris");
+    else if (id === 'review') showToast("Laissez un avis sur un produit");
+}
+function completeMission(id) {
+    if (userTreasure.daily[id]?.completed) return;
+    const mission = dailyMissions.find(m => m.id === id);
+    userTreasure.daily[id] = { completed: true };
+    userTreasure.points += mission.points;
+    localStorage.setItem('latyfa_treasure', JSON.stringify(userTreasure));
+    updateTreasureUI();
+    showToast(`✨ +${mission.points} points !`);
+}
+let treasureInterval, treasureTimeLeft = 165;
+function startTreasureTimer() {
+    if (treasureInterval) clearInterval(treasureInterval);
+    treasureInterval = setInterval(() => {
+        treasureTimeLeft--;
+        if (treasureTimeLeft <= 0) {
+            clearInterval(treasureInterval);
+            document.getElementById('treasureTimer').innerHTML = "🎁 PRÊT !";
+        } else {
+            let m = Math.floor(treasureTimeLeft / 60), s = treasureTimeLeft % 60;
+            document.getElementById('treasureTimer').innerHTML = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+    }, 1000);
+}
+function openTreasure() {
+    if (treasureTimeLeft > 0) { showToast("Coffre pas encore prêt"); return; }
+    let gain = Math.random() < 0.3 ? 50 : 20;
+    userTreasure.points += gain;
+    localStorage.setItem('latyfa_treasure', JSON.stringify(userTreasure));
+    updateTreasureUI();
+    treasureTimeLeft = 165;
+    startTreasureTimer();
+    canvasConfetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
+    showToast(`🎁 +${gain} points !`);
+}
+startTreasureTimer();
+
+// ==================== AUTHENTIFICATION ====================
+function ouvrirAuthModal() { document.getElementById('authModal').classList.add('active'); }
+function fermerAuthModal() { document.getElementById('authModal').classList.remove('active'); }
+function switchAuthTab(tab) {
+    document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+}
+function inscription() {
+    let nom = document.getElementById('registerNom').value.trim(), email = document.getElementById('registerEmail').value.trim(), tel = document.getElementById('registerTel').value.trim(), pwd = document.getElementById('registerPassword').value, confirm = document.getElementById('registerConfirm').value;
+    if (!nom || !email || !tel || !pwd) { alert("Remplissez tous les champs"); return; }
+    if (pwd !== confirm) { alert("Mots de passe différents"); return; }
+    if (clients.find(c => c.email === email)) { alert("Email déjà utilisé"); return; }
+    let nouveau = { id: Date.now(), nom, email, tel, password: pwd, dateInscription: new Date().toLocaleDateString() };
+    clients.push(nouveau); localStorage.setItem('latyfa_clients', JSON.stringify(clients));
+    alert("Inscription réussie !"); switchAuthTab('login');
+}
+function connexion() {
+    let email = document.getElementById('loginEmail').value.trim(), pwd = document.getElementById('loginPassword').value;
+    let client = clients.find(c => c.email === email && c.password === pwd);
+    if (client) { utilisateurConnecte = client; localStorage.setItem('latyfa_session', JSON.stringify(client)); updateUserUI(); fermerAuthModal(); showToast(`👋 Bonjour ${client.nom}`); }
+    else alert("Email ou mot de passe incorrect");
+}
+function deconnexion() { utilisateurConnecte = null; localStorage.removeItem('latyfa_session'); updateUserUI(); showToast("Déconnecté"); }
+function updateUserUI() { document.getElementById('loginBtn').innerText = utilisateurConnecte ? utilisateurConnecte.nom.split(' ')[0] : "Se connecter"; document.getElementById('loginBtn').onclick = utilisateurConnecte ? deconnexion : ouvrirAuthModal; }
+function ajouterPointsFidelite(montant) { pointsFidelite += Math.floor(montant / 1000); localStorage.setItem('latyfa_points', pointsFidelite); }
+
+// ==================== PARRAINAGE ====================
+let parrainageData = { parrains: {} };
+function initParrainage() { let saved = localStorage.getItem('latyfa_parrainage'); if (saved) parrainageData = JSON.parse(saved); }
+function voirParrainage() {
+    if (!utilisateurConnecte) { ouvrirAuthModal(); return; }
+    if (!parrainageData.parrains[utilisateurConnecte.id]) parrainageData.parrains[utilisateurConnecte.id] = { code: 'LATYFA-' + utilisateurConnecte.id + '-' + Math.random().toString(36).substr(2, 6).toUpperCase(), filleuls: [], gains: 0 };
+    document.getElementById('nbFilleuls').innerText = parrainageData.parrains[utilisateurConnecte.id].filleuls.length;
+    document.getElementById('gainTotal').innerText = parrainageData.parrains[utilisateurConnecte.id].gains + ' F';
+    document.getElementById('lienParrainage').value = `https://latyfashop.com?ref=${parrainageData.parrains[utilisateurConnecte.id].code}`;
+    document.getElementById('parrainageModal').classList.add('active');
+}
+function fermerParrainage() { document.getElementById('parrainageModal').classList.remove('active'); }
+function copierLien() { let input = document.getElementById('lienParrainage'); input.select(); document.execCommand('copy'); showToast("Lien copié !"); }
+
+// ==================== AUTRES ====================
+function ouvrirCGV() { alert("Conditions Générales de Vente\n\n1. Prix en FCFA\n2. Paiement via Mobile Money ou Cash\n3. Livraison sous 24-48h à Abidjan\n4. Pas de retour sauf défaut majeur"); }
+function toggleDarkMode() { document.body.classList.toggle('dark-theme'); }
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function showToast(msg) { let t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
+
+// ==================== INIT ====================
+window.addEventListener('load', () => {
+    chargerDonnees();
+    initParrainage();
+    setTimeout(() => { let l = document.getElementById('loader'); if (l) l.classList.add('loader-hidden'); }, 800);
+    window.addEventListener('scroll', () => { let b = document.getElementById('backToTop'); if (window.scrollY > 300) b.classList.add('show'); else b.classList.remove('show'); });
+    document.getElementById('check-verif')?.addEventListener('change', () => { let btn = document.getElementById('btn-final'); let chk = document.getElementById('check-verif').checked; if (chk) { btn.classList.remove('bg-gray-300', 'pointer-events-none'); btn.classList.add('bg-[#c5a059]'); btn.disabled = false; } else { btn.classList.add('bg-gray-300', 'pointer-events-none'); btn.classList.remove('bg-[#c5a059]'); btn.disabled = true; } });
+    document.querySelectorAll('#checkout-form input, #zone-livraison').forEach(el => el?.addEventListener('input', () => { let nom = document.getElementById('nom-client')?.value, tel = document.getElementById('tel-client')?.value, quartier = document.getElementById('quartier-client')?.value, zone = document.getElementById('zone-livraison')?.value, btn = document.getElementById('btn-final'), chk = document.getElementById('check-verif')?.checked; if (nom && tel && quartier && zone && chk) { btn.classList.remove('bg-gray-300', 'pointer-events-none'); btn.classList.add('bg-[#c5a059]'); btn.disabled = false; } else { btn.classList.add('bg-gray-300', 'pointer-events-none'); btn.classList.remove('bg-[#c5a059]'); btn.disabled = true; } }));
+});
+</script>
 </body>
 </html>
