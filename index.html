@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Title Here</title>
+    <title>Latyfa Shop</title>
     <style>
         @keyframes float {
             0% { transform: translatey(0); }
@@ -11,19 +11,44 @@
             100% { transform: translatey(0); }
         }
         @keyframes pulse {
-            0% { transform: scale(1); }
+            0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        .spin-animation {
+            animation: spin 4s linear infinite;
+        }
     </style>
 </head>
 <body>
-    <script src="your-script.js"></script>
-    <!-- Replace Facebook App ID with placeholder -->
-    <!-- Placeholder for Facebook App ID -->
+    <header>
+        <h1>Welcome to Latyfa Shop</h1>
+    </header>
+    <main>
+        <section class="float-animation">
+            <h2>Featured Products</h2>
+            <!-- Product cards go here -->
+        </section>
+        <section class="pulse-animation">
+            <h2>New Arrivals</h2>
+            <!-- Product cards go here -->
+        </section>
+        <section class="spin-animation">
+            <h2>Best Sellers</h2>
+            <!-- Product cards go here -->
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 Latyfa Shop. All rights reserved.</p>
+    </footer>
 </body>
 </html>
