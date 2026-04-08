@@ -136,6 +136,10 @@
         
         .loader-hidden { opacity: 0; visibility: hidden; transition: opacity 0.5s; }
         
+        /* Défilement horizontal des produits populaires */
+        .popular-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: thin; padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
+        .popular-scroll > div { flex-shrink: 0; width: 120px; }
+        
         /* Responsive */
         @media (max-width: 640px) {
             .container { padding-left: 12px; padding-right: 12px; }
@@ -145,6 +149,7 @@
             .chat-window { width: 280px; right: -10px; }
             .wheel-box { padding: 16px; }
             #canvas { width: 220px; height: 220px; }
+            .popular-scroll > div { width: 100px; }
         }
     </style>
 </head>
@@ -197,10 +202,10 @@
     </div>
 </section>
 
-<!-- PRODUITS POPULAIRES -->
+<!-- PRODUITS POPULAIRES (défilement horizontal corrigé) -->
 <section class="container mx-auto px-3 py-6">
     <h3 class="text-[9px] font-black uppercase mb-3 flex items-center gap-2"><i class="fa-solid fa-fire text-[#ff6600] text-xs"></i> PRODUITS POPULAIRES</h3>
-    <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" id="popular-products"></div>
+    <div class="popular-scroll" id="popular-products"></div>
 </section>
 
 <!-- GRILLE PRODUITS -->
@@ -356,7 +361,7 @@ function updatePopularProducts() {
     let container = document.getElementById('popular-products');
     if(!container) return;
     let populaires = [...PRODUITS_BASE].sort((a,b)=>(b.ventes||0)-(a.ventes||0)).slice(0,6);
-    container.innerHTML = populaires.map(p => `<div class="flex-shrink-0 w-28 cursor-pointer" onclick="voirDetails(${p.id})"><img src="${p.image}" class="h-24 w-full object-cover rounded-lg mb-1"><p class="text-[8px] font-bold truncate">${p.name}</p><p class="text-[#c5a059] text-[9px] font-black">${p.price.toLocaleString()} F</p></div>`).join('');
+    container.innerHTML = populaires.map(p => `<div class="cursor-pointer" onclick="voirDetails(${p.id})"><img src="${p.image}" class="h-24 w-full object-cover rounded-lg mb-1"><p class="text-[8px] font-bold truncate">${p.name}</p><p class="text-[#c5a059] text-[9px] font-black">${p.price.toLocaleString()} F</p></div>`).join('');
 }
 function voirDetails(id){
     currentProduct = PRODUITS_BASE.find(p=>p.id===id);
