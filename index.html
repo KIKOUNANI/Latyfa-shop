@@ -2,94 +2,84 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>LATYFA BOUTIQUE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>LATYFA BOUTIQUE | Toutes fonctionnalités</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        :root { --gold: #c5a059; --accent: #ff6600; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Montserrat', sans-serif; background: #f5f5f5; }
-        .logo-font { font-family: 'Playfair Display', serif; color: #c5a059; }
+        body { background: #fcfcfc; font-family: 'Montserrat', sans-serif; scroll-behavior: smooth; }
+        .logo-font { font-family: 'Playfair Display', serif; color: var(--gold); }
         
-        /* Bouton retour haut */
-        #backToTop {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 45px;
-            height: 45px;
-            background: #c5a059;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            z-index: 999;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        #backToTop.show { opacity: 1; visibility: visible; }
-        
-        /* Défilement horizontal des produits populaires */
-        .popular-scroll {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            scrollbar-width: thin;
-            padding-bottom: 10px;
-            -webkit-overflow-scrolling: touch;
-        }
-        .popular-item {
-            flex: 0 0 130px;
-            background: white;
-            border-radius: 12px;
-            padding: 10px;
-            cursor: pointer;
-            text-align: center;
-            border: 1px solid #eee;
-        }
-        .popular-item img {
-            width: 100%;
-            height: 110px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-        .popular-item p { font-size: 11px; font-weight: bold; margin-bottom: 4px; }
-        .popular-item span { font-size: 10px; color: #c5a059; font-weight: bold; }
+        /* Produits populaires - défilement horizontal */
+        .popular-scroll { display: flex; gap: 15px; overflow-x: auto; scrollbar-width: thin; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+        .popular-item { flex: 0 0 140px; background: white; border-radius: 12px; padding: 10px; cursor: pointer; text-align: center; border: 1px solid #eee; transition: 0.2s; }
+        .popular-item:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .popular-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; }
+        .popular-item p { font-size: 12px; font-weight: bold; margin-top: 8px; }
+        .popular-item span { font-size: 11px; color: var(--gold); font-weight: bold; }
         
         /* Product cards */
-        .product-card {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
-            cursor: pointer;
-            overflow: hidden;
-            transition: 0.2s;
-        }
-        .product-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .product-card img { width: 100%; height: 160px; object-fit: cover; }
+        .product-card { background: white; border-radius: 12px; border: 1px solid #e5e7eb; cursor: pointer; overflow: hidden; transition: 0.2s; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .product-card img { width: 100%; height: 180px; object-fit: cover; }
+        
+        /* Badges */
+        .badge-new { position: absolute; top: 10px; right: 10px; background: var(--gold); color: white; font-size: 10px; padding: 2px 8px; border-radius: 20px; }
+        .badge-luxe { position: absolute; top: 10px; left: 10px; background: black; color: white; font-size: 10px; padding: 2px 8px; border-radius: 20px; }
         
         /* Modal */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 1000; }
         .modal.active { display: flex; }
-        .modal-content { background: white; border-radius: 24px; padding: 20px; max-width: 90%; width: 400px; max-height: 80vh; overflow-y: auto; }
+        .modal-content { background: white; border-radius: 24px; padding: 20px; max-width: 90%; width: 450px; max-height: 80vh; overflow-y: auto; }
         
-        .btn-primary { background: #c5a059; color: white; font-weight: bold; padding: 12px 20px; border-radius: 30px; border: none; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 12px; }
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: black; color: #c5a059; padding: 8px 16px; border-radius: 30px; font-size: 12px; z-index: 2000; opacity: 0; transition: 0.2s; pointer-events: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--gold), #e2c286); color: white; font-weight: bold; padding: 12px; border-radius: 30px; border: none; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 12px; }
+        .btn-secondary { background: #1a1a1a; color: white; padding: 10px; border-radius: 30px; border: none; cursor: pointer; font-size: 11px; }
+        
+        /* Back to top */
+        #backToTop { position: fixed; bottom: 90px; right: 20px; width: 45px; height: 45px; background: var(--gold); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 999; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        #backToTop.show { opacity: 1; visibility: visible; }
+        
+        /* Chat widget */
+        .chat-widget { position: fixed; bottom: 90px; right: 80px; z-index: 1000; }
+        .chat-button { width: 50px; height: 50px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .chat-window { position: absolute; bottom: 60px; right: 0; width: 280px; background: white; border-radius: 16px; overflow: hidden; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .chat-window.active { display: block; }
+        .chat-header { background: var(--gold); color: white; padding: 10px; display: flex; justify-content: space-between; }
+        .chat-messages { height: 250px; overflow-y: auto; padding: 10px; background: #f9fafb; font-size: 12px; }
+        .chat-message { margin-bottom: 10px; }
+        .chat-message.user { text-align: right; }
+        .chat-message.user span { background: var(--gold); color: white; padding: 6px 10px; border-radius: 15px; display: inline-block; max-width: 80%; }
+        .chat-message.support span { background: #e5e7eb; padding: 6px 10px; border-radius: 15px; display: inline-block; }
+        .chat-footer { display: flex; padding: 8px; border-top: 1px solid #ddd; }
+        .chat-footer input { flex: 1; border: 1px solid #ddd; border-radius: 20px; padding: 8px; outline: none; }
+        .chat-footer button { background: var(--gold); border: none; border-radius: 50%; width: 35px; color: white; cursor: pointer; }
+        
+        /* Dark theme */
+        body.dark { background: #121212; color: #e0e0e0; }
+        body.dark .product-card, body.dark .modal-content, body.dark .popular-item, body.dark .chat-window { background: #1e1e1e; border-color: #333; }
+        
+        /* Toast */
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: black; color: var(--gold); padding: 8px 16px; border-radius: 30px; font-size: 12px; z-index: 2000; opacity: 0; transition: 0.2s; pointer-events: none; white-space: nowrap; }
         .toast.show { opacity: 1; }
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            .popular-item { flex: 0 0 120px; }
+            .product-card img { height: 140px; }
+        }
     </style>
 </head>
 <body>
 
 <!-- TOAST -->
-<div id="toast" class="toast">✨ Produit ajouté</div>
+<div id="toast" class="toast">✨ Action effectuée</div>
 
-<!-- HEADER -->
+<!-- HEADER (UN SEUL BOUTON CONNEXION) -->
 <header class="bg-white shadow sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop()">
@@ -97,26 +87,34 @@
             <span class="text-xl font-black italic logo-font">LATYFA SHOP</span>
         </div>
         <div class="flex gap-3 items-center">
-            <!-- UN SEUL BOUTON CONNEXION -->
-            <button id="loginBtn" onclick="toggleAuth()" class="text-xs font-black uppercase border border-[#c5a059] px-3 py-1.5 rounded-full hover:bg-[#c5a059] hover:text-white transition">Se connecter</button>
-            <div onclick="toggleCart()" class="relative cursor-pointer">
-                <i class="fa-solid fa-cart-shopping text-gray-600 text-lg"></i>
-                <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
-            </div>
+            <button id="loginBtn" onclick="toggleAuthModal()" class="text-xs font-black uppercase border border-[#c5a059] px-3 py-1.5 rounded-full hover:bg-[#c5a059] hover:text-white transition">Se connecter</button>
+            <div onclick="toggleWishlistModal()" class="relative cursor-pointer"><i class="fa-regular fa-heart text-gray-600 text-lg"></i><span id="wishlistCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center">0</span></div>
+            <div onclick="toggleComparateurModal()" class="relative cursor-pointer"><i class="fa-solid fa-scale-balanced text-gray-600 text-lg"></i><span id="comparateurCount" class="absolute -top-2 -right-2 bg-blue-500 text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center">0</span></div>
+            <button onclick="toggleDarkMode()" class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center"><i class="fa-solid fa-moon"></i></button>
+            <div onclick="toggleCartModal()" class="relative cursor-pointer"><i class="fa-solid fa-cart-shopping text-gray-600 text-lg"></i><span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span></div>
         </div>
     </div>
 </header>
 
+<!-- CATÉGORIES STATIQUES (pour filtre) -->
+<div class="categories-static flex justify-center gap-2 py-2 bg-white border-b sticky top-[70px] z-40 overflow-x-auto">
+    <button class="cat-btn active px-4 py-1 rounded-full text-xs font-bold bg-gray-100" data-cat="all">Tout</button>
+    <button class="cat-btn px-4 py-1 rounded-full text-xs font-bold bg-gray-100" data-cat="bijoux">Bijoux</button>
+    <button class="cat-btn px-4 py-1 rounded-full text-xs font-bold bg-gray-100" data-cat="sac">Sacs</button>
+    <button class="cat-btn px-4 py-1 rounded-full text-xs font-bold bg-gray-100" data-cat="parfum">Parfums</button>
+    <button class="cat-btn px-4 py-1 rounded-full text-xs font-bold bg-gray-100" data-cat="chaussures">Chaussures</button>
+</div>
+
 <!-- HERO -->
 <section class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 text-center">
     <h1 class="text-3xl md:text-5xl font-black italic uppercase">La Boutique du 225</h1>
-    <p class="text-orange-400 text-sm mt-2">✨ Bijoux • Sacs • Parfums ✨</p>
-    <a href="#produits" class="inline-block mt-4 bg-[#ff6600] px-6 py-2 rounded-full text-xs font-black">Découvrir</a>
+    <p class="text-orange-400 text-sm mt-2">✨ Bijoux • Sacs • Parfums • Chaussures ✨</p>
+    <button onclick="document.getElementById('produits').scrollIntoView({behavior:'smooth'})" class="mt-4 bg-[#ff6600] px-6 py-2 rounded-full text-xs font-black">Découvrir</button>
 </section>
 
 <!-- PRODUITS POPULAIRES (défilement horizontal) -->
 <section class="container mx-auto px-4 py-6">
-    <h2 class="text-xs font-black uppercase mb-3 flex items-center gap-2"><i class="fa-solid fa-fire text-orange-500"></i> PRODUITS POPULAIRES</h2>
+    <h2 class="text-sm font-black uppercase mb-3 flex items-center gap-2"><i class="fa-solid fa-fire text-orange-500"></i> PRODUITS POPULAIRES</h2>
     <div class="popular-scroll" id="popularProducts"></div>
 </section>
 
@@ -125,183 +123,448 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="productGrid"></div>
 </section>
 
-<!-- BACK TO TOP -->
+<!-- BOUTON ROUE FORTUNE + BACK TO TOP -->
+<button onclick="openWheel()" class="fixed bottom-20 right-4 w-12 h-12 bg-black text-white rounded-full shadow-lg z-40 border-2 border-[#c5a059] flex items-center justify-center"><i class="fa-solid fa-gift text-[#c5a059] text-xl"></i></button>
 <div id="backToTop" onclick="scrollToTop()"><i class="fa-solid fa-arrow-up"></i></div>
 
-<!-- MODALE AUTH -->
-<div id="authModal" class="modal">
-    <div class="modal-content">
-        <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black">Connexion</h2><button onclick="closeAuth()" class="text-xl">&times;</button></div>
-        <input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-3 text-sm">
-        <input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-lg p-2 mb-3 text-sm">
-        <button onclick="login()" class="btn-primary">Se connecter</button>
-        <p class="text-center text-xs mt-3">Pas de compte ? <button onclick="showRegister()" class="text-[#c5a059]">Inscription</button></p>
-        <div id="registerForm" style="display:none; margin-top: 15px;">
-            <input type="text" id="regName" placeholder="Nom" class="w-full border rounded-lg p-2 mb-2 text-sm">
-            <input type="email" id="regEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-2 text-sm">
-            <input type="tel" id="regPhone" placeholder="Téléphone" class="w-full border rounded-lg p-2 mb-2 text-sm">
-            <input type="password" id="regPassword" placeholder="Mot de passe" class="w-full border rounded-lg p-2 mb-2 text-sm">
-            <button onclick="register()" class="btn-primary">S'inscrire</button>
-        </div>
+<!-- CHAT WIDGET -->
+<div class="chat-widget">
+    <div class="chat-button" onclick="toggleChat()"><i class="fa-regular fa-comment-dots text-white text-xl"></i></div>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header"><span class="font-bold">💬 Chat Latyfa</span><button onclick="toggleChat()" class="text-white">×</button></div>
+        <div class="chat-messages" id="chatMessages"><div class="chat-message support"><span>Bonjour ! Comment puis-je vous aider ?</span></div></div>
+        <div class="chat-footer"><input type="text" id="chatInput" placeholder="Votre message..."><button onclick="sendChatMessage()"><i class="fa-regular fa-paper-plane"></i></button></div>
     </div>
 </div>
 
-<!-- MODALE PANIER -->
-<div id="cartModal" class="modal">
-    <div class="modal-content">
-        <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black">Mon Panier</h2><button onclick="closeCart()" class="text-xl">&times;</button></div>
-        <div id="cartItems" class="space-y-2 max-h-64 overflow-y-auto"></div>
-        <div class="border-t pt-3 mt-3"><div class="flex justify-between font-bold"><span>Total :</span><span id="cartTotal">0 F</span></div></div>
-        <button onclick="checkout()" class="btn-primary mt-3">Commander via WhatsApp</button>
-    </div>
-</div>
+<!-- MODALES -->
+<div id="authModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">Compte</h2><button onclick="closeAuthModal()" class="text-xl">&times;</button></div><div class="flex border-b mb-4"><button class="auth-tab active flex-1 py-2 text-sm font-bold" onclick="switchAuthTab('login')">Connexion</button><button class="auth-tab flex-1 py-2 text-sm font-bold" onclick="switchAuthTab('register')">Inscription</button></div><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-3"><input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-lg p-2 mb-3"><button onclick="login()" class="btn-primary">Se connecter</button></div><div id="registerForm" style="display:none"><input type="text" id="regName" placeholder="Nom" class="w-full border rounded-lg p-2 mb-2"><input type="email" id="regEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-2"><input type="tel" id="regPhone" placeholder="Téléphone" class="w-full border rounded-lg p-2 mb-2"><input type="password" id="regPassword" placeholder="Mot de passe" class="w-full border rounded-lg p-2 mb-2"><input type="password" id="regConfirm" placeholder="Confirmer" class="w-full border rounded-lg p-2 mb-2"><div class="flex items-start gap-2 mb-3"><input type="checkbox" id="acceptCGV"><label class="text-xs">J'accepte les CGV</label></div><button onclick="register()" class="btn-primary">S'inscrire</button></div></div></div>
+
+<div id="cartModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">Mon Panier</h2><button onclick="closeCartModal()" class="text-xl">&times;</button></div><div id="cartItems" class="space-y-2 max-h-64 overflow-y-auto"></div><div class="border-t pt-3 mt-3"><div class="flex justify-between font-bold"><span>Total :</span><span id="cartTotal">0 F</span></div></div><button onclick="checkout()" class="btn-primary mt-3">Commander via WhatsApp</button><button onclick="clearCart()" class="text-red-500 text-xs mt-2 w-full text-center">Vider le panier</button></div></div>
+
+<div id="wishlistModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">❤️ Favoris</h2><button onclick="closeWishlistModal()" class="text-xl">&times;</button></div><div id="wishlistItems" class="space-y-2 max-h-64 overflow-y-auto"></div></div></div>
+
+<div id="comparateurModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">⚖️ Comparateur</h2><button onclick="closeComparateurModal()" class="text-xl">&times;</button></div><div id="comparateurItems" class="grid grid-cols-2 gap-2"></div></div></div>
+
+<div id="wheelModal" class="modal"><div class="modal-content text-center"><div class="flex justify-between"><h2 class="text-xl font-black">🎡 Roue de la Fortune</h2><button onclick="closeWheel()" class="text-2xl">&times;</button></div><canvas id="wheelCanvas" width="250" height="250" style="margin:15px auto"></canvas><button onclick="spinWheel()" class="btn-primary">Tourner</button><p id="wheelMsg" class="text-xs mt-2 text-blue-600"></p></div></div>
+
+<div id="parrainageModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">🤝 Parrainage</h2><button onclick="closeParrainageModal()" class="text-xl">&times;</button></div><div class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] p-3 rounded-xl text-white"><div class="grid grid-cols-3 gap-2 text-center"><div><div class="text-xl font-black" id="parrainCount">0</div><div class="text-xs">Filleuls</div></div><div><div class="text-xl font-black" id="parrainGains">0 F</div><div class="text-xs">Gagnés</div></div><div><div class="text-xl font-black" id="parrainNext">1</div><div class="text-xs">Prochain</div></div></div><div class="bg-white p-2 rounded-lg flex gap-2 mt-2"><input type="text" id="parrainLink" readonly class="flex-1 text-black text-xs p-1 rounded"><button onclick="copyParrainLink()" class="bg-black text-white px-2 py-1 rounded text-xs">Copier</button></div></div></div></div>
+
+<div id="avisModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">⭐ Avis clients</h2><button onclick="closeAvisModal()" class="text-xl">&times;</button></div><div id="avisList" class="space-y-2 max-h-64 overflow-y-auto"></div><button onclick="openDepotAvis()" class="btn-primary mt-3">Donner mon avis</button></div></div>
+
+<div id="depotAvisModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">📝 Donner mon avis</h2><button onclick="closeDepotAvis()" class="text-xl">&times;</button></div><div class="flex gap-1 text-2xl mb-3 justify-center" id="starRating"><i class="fa-regular fa-star cursor-pointer" data-note="1"></i><i class="fa-regular fa-star cursor-pointer" data-note="2"></i><i class="fa-regular fa-star cursor-pointer" data-note="3"></i><i class="fa-regular fa-star cursor-pointer" data-note="4"></i><i class="fa-regular fa-star cursor-pointer" data-note="5"></i></div><input type="text" id="avisNom" placeholder="Votre nom" class="w-full border rounded-lg p-2 mb-2"><textarea id="avisComment" placeholder="Votre commentaire" rows="3" class="w-full border rounded-lg p-2 mb-2"></textarea><button onclick="submitAvis()" class="btn-primary">Publier</button></div></div>
+
+<div id="suiviModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">🚚 Suivi commande</h2><button onclick="closeSuiviModal()" class="text-xl">&times;</button></div><div class="flex justify-between text-xs font-bold"><div class="text-center"><div class="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center mx-auto">1</div><span>Préparation</span></div><div class="text-center"><div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center mx-auto">2</div><span>En cours</span></div><div class="text-center"><div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center mx-auto">3</div><span>Livré</span></div></div><div class="bg-gray-100 p-3 rounded-lg mt-3"><p class="text-sm font-bold">Votre colis est en préparation</p><p class="text-xs text-gray-500">Délai estimé: 24-48h</p></div><button onclick="closeSuiviModal()" class="btn-secondary mt-3 w-full">Fermer</button></div></div>
+
+<div id="adminModal" class="modal"><div class="modal-content max-w-2xl"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">👑 Administration</h2><button onclick="closeAdminModal()" class="text-xl">&times;</button></div><div class="flex gap-2 mb-3 overflow-x-auto"><button class="admin-tab active px-3 py-1 bg-gray-200 rounded-full text-xs" data-tab="dashboard">Dashboard</button><button class="admin-tab px-3 py-1 bg-gray-200 rounded-full text-xs" data-tab="produits">Produits</button><button class="admin-tab px-3 py-1 bg-gray-200 rounded-full text-xs" data-tab="commandes">Commandes</button></div><div id="adminDashboard" class="admin-panel"><canvas id="salesChart" height="150"></canvas><div class="grid grid-cols-2 gap-2 mt-3"><div class="bg-gray-50 p-2 rounded text-center"><div class="text-lg font-bold text-[#c5a059]" id="statCA">0 F</div><div class="text-xs">CA Total</div></div><div class="bg-gray-50 p-2 rounded text-center"><div class="text-lg font-bold text-[#c5a059]" id="statCmd">0</div><div class="text-xs">Commandes</div></div></div></div><div id="adminProduits" class="admin-panel hidden"><div class="mb-3"><input type="text" id="newProdName" placeholder="Nom" class="w-full border p-1 rounded text-xs mb-1"><input type="number" id="newProdPrice" placeholder="Prix" class="w-full border p-1 rounded text-xs mb-1"><input type="text" id="newProdImage" placeholder="URL image" class="w-full border p-1 rounded text-xs mb-1"><select id="newProdCat" class="w-full border p-1 rounded text-xs mb-1"><option value="bijoux">Bijoux</option><option value="sac">Sacs</option><option value="parfum">Parfums</option></select><button onclick="addProductAdmin()" class="btn-primary text-xs py-1">Ajouter</button></div><div id="adminProductList" class="space-y-1 max-h-64 overflow-y-auto"></div></div><div id="adminCommandes" class="admin-panel hidden"><div id="adminHistorique" class="space-y-1 max-h-64 overflow-y-auto"></div></div></div></div>
+
+<div id="cgvModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">Conditions Générales</h2><button onclick="closeCGVModal()" class="text-xl">&times;</button></div><div class="text-xs space-y-2 max-h-64 overflow-y-auto"><p><strong>1. Identité :</strong> LATYFA BOUTIQUE - Abidjan</p><p><strong>2. Prix :</strong> en FCFA TTC.</p><p><strong>3. Paiement :</strong> Wave, Orange Money, MTN, cash.</p><p><strong>4. Livraison :</strong> 24-72h selon zone.</p><p><strong>5. Rétractation :</strong> 14 jours.</p></div><button onclick="closeCGVModal()" class="btn-primary mt-3">Fermer</button></div></div>
+
+<footer class="bg-white border-t py-6 mt-8 text-center text-xs text-gray-500"><p>© 2026 LATYFA BUSINESS | Côte d'Ivoire | 📞 07 09 00 28 81</p><button onclick="openCGV()" class="underline mt-1">CGV</button></footer>
+
+<div class="admin-btn fixed bottom-2 left-2 w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-xs cursor-pointer opacity-30 hover:opacity-100" onclick="openAdmin()">ADM</div>
 
 <script>
-// ==================== DONNÉES SIMPLES ====================
-const produits = [
-    { id: 1, name: "Sac Prestige", price: 45000, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", popular: true },
-    { id: 2, name: "Collier Perle", price: 25000, image: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", popular: true },
-    { id: 3, name: "Bracelet Cristal", price: 15000, image: "https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500", popular: true },
-    { id: 4, name: "Parfum Oud", price: 35000, image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500", popular: true },
-    { id: 5, name: "Escarpins Gold", price: 28000, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500", popular: false },
-    { id: 6, name: "Sac Élégance", price: 55000, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500", popular: false }
+// ==================== DONNÉES ====================
+let products = [
+    { id: 1, name: "Sac Prestige", price: 45000, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", cat: "sac", popular: true, new: true },
+    { id: 2, name: "Collier Perle", price: 25000, image: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", cat: "bijoux", popular: true },
+    { id: 3, name: "Bracelet Cristal", price: 15000, image: "https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500", cat: "bijoux", popular: true },
+    { id: 4, name: "Parfum Oud", price: 35000, image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500", cat: "parfum", popular: true },
+    { id: 5, name: "Escarpins Gold", price: 28000, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500", cat: "chaussures", popular: false },
+    { id: 6, name: "Sac Élégance", price: 55000, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500", cat: "sac", popular: false, luxe: true }
 ];
+let cart = [], wishlist = [], comparateur = [], avis = [], clients = [], user = null, points = 0;
+let wheelSegments = ["-5%","REESSAYER","-10%","CADEAU","-15%","REESSAYER","LIVRAISON","REESSAYER"];
+let wheelSpinning = false;
+let currentRating = 0;
 
-let cart = [];
-let user = null;
-
-// ==================== AFFICHAGE ====================
-function afficherProduits() {
+// ==================== INIT ====================
+function loadData() {
+    const savedCart = localStorage.getItem('cart'); if (savedCart) cart = JSON.parse(savedCart);
+    const savedWishlist = localStorage.getItem('wishlist'); if (savedWishlist) wishlist = JSON.parse(savedWishlist);
+    const savedComparateur = localStorage.getItem('comparateur'); if (savedComparateur) comparateur = JSON.parse(savedComparateur);
+    const savedAvis = localStorage.getItem('avis'); if (savedAvis) avis = JSON.parse(savedAvis);
+    const savedClients = localStorage.getItem('clients'); if (savedClients) clients = JSON.parse(savedClients);
+    const savedUser = localStorage.getItem('user'); if (savedUser) user = JSON.parse(savedUser);
+    const savedPoints = localStorage.getItem('points'); if (savedPoints) points = parseInt(savedPoints);
+    updateUI();
+    renderProducts();
+    renderPopular();
+    updateCartCounters();
+    if (user) document.getElementById('loginBtn').innerText = user.name.split(' ')[0];
+}
+function saveAll() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    localStorage.setItem('comparateur', JSON.stringify(comparateur));
+    localStorage.setItem('avis', JSON.stringify(avis));
+    localStorage.setItem('clients', JSON.stringify(clients));
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('points', points);
+}
+function updateUI() {
+    document.getElementById('wishlistCount').innerText = wishlist.length;
+    document.getElementById('comparateurCount').innerText = comparateur.length;
+    document.getElementById('pointsDisplay')?.setAttribute('data-points', points);
+}
+function renderProducts(cat = 'all') {
+    let filtered = cat === 'all' ? products : products.filter(p => p.cat === cat);
     const grid = document.getElementById('productGrid');
-    if (!grid) return;
-    grid.innerHTML = produits.map(p => `
-        <div class="product-card p-2" onclick="ajouterAuPanier(${p.id})">
-            <img src="${p.image}" class="w-full h-36 object-cover rounded-lg">
+    grid.innerHTML = filtered.map(p => `
+        <div class="product-card p-2 relative" onclick="viewProduct(${p.id})">
+            ${p.new ? '<span class="badge-new">NOUVEAU</span>' : ''}
+            ${p.luxe ? '<span class="badge-luxe">LUXE</span>' : ''}
+            <img src="${p.image}" class="h-36 w-full object-cover rounded-lg">
             <h3 class="text-xs font-bold mt-2">${p.name}</h3>
             <div class="text-[#c5a059] font-bold text-sm">${p.price.toLocaleString()} F</div>
-            <button class="w-full mt-2 bg-gray-100 py-1 rounded text-xs font-bold">Ajouter</button>
+            <div class="flex gap-1 mt-2"><button onclick="event.stopPropagation(); addToCart(${p.id})" class="flex-1 bg-gray-100 py-1 rounded text-xs font-bold">Ajouter</button><button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center ${wishlist.includes(p.id) ? 'text-red-500' : ''}"><i class="fa-${wishlist.includes(p.id) ? 'solid' : 'regular'} fa-heart text-xs"></i></button><button onclick="event.stopPropagation(); toggleComparateur(${p.id})" class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center ${comparateur.includes(p.id) ? 'text-blue-500' : ''}"><i class="fa-solid fa-scale-balanced text-xs"></i></button></div>
         </div>
     `).join('');
 }
-
-function afficherPopulaires() {
+function renderPopular() {
+    const pop = products.filter(p => p.popular);
     const container = document.getElementById('popularProducts');
-    if (!container) return;
-    const populaires = produits.filter(p => p.popular);
-    container.innerHTML = populaires.map(p => `
-        <div class="popular-item" onclick="ajouterAuPanier(${p.id})">
-            <img src="${p.image}" alt="">
+    container.innerHTML = pop.map(p => `
+        <div class="popular-item" onclick="viewProduct(${p.id})">
+            <img src="${p.image}">
             <p>${p.name}</p>
             <span>${p.price.toLocaleString()} F</span>
         </div>
     `).join('');
 }
-
-function ajouterAuPanier(id) {
-    const produit = produits.find(p => p.id === id);
-    if (!produit) return;
+function viewProduct(id) {
+    const p = products.find(p => p.id === id);
+    alert(`${p.name}\n${p.price.toLocaleString()} F\n${p.description || 'Produit de qualité'}`);
+}
+function addToCart(id) {
+    const prod = products.find(p => p.id === id);
     const exist = cart.find(i => i.id === id);
     if (exist) exist.qty++;
-    else cart.push({ ...produit, qty: 1 });
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartUI();
+    else cart.push({ ...prod, qty: 1 });
+    saveAll();
+    updateCartCounters();
     showToast("Produit ajouté");
 }
-
-function updateCartUI() {
-    const count = cart.reduce((s, i) => s + i.qty, 0);
-    document.getElementById('cartCount').innerText = count;
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    document.getElementById('cartTotal').innerText = total.toLocaleString() + " F";
+function updateCartCounters() {
+    const total = cart.reduce((s,i)=>s+i.qty,0);
+    document.getElementById('cartCount').innerText = total;
+    const totalPrice = cart.reduce((s,i)=>s+i.price*i.qty,0);
+    document.getElementById('cartTotal').innerText = totalPrice.toLocaleString() + " F";
     const container = document.getElementById('cartItems');
-    if (container) {
-        container.innerHTML = cart.map(i => `
-            <div class="flex justify-between items-center border-b pb-1">
-                <div><span class="font-bold text-sm">${i.name}</span> x${i.qty}</div>
-                <div>${(i.price * i.qty).toLocaleString()} F</div>
-                <button onclick="supprimerDuPanier(${i.id})" class="text-red-500 text-xs">✖</button>
-            </div>
-        `).join('');
-    }
+    if (container) container.innerHTML = cart.map(i => `<div class="flex justify-between items-center border-b pb-1"><span class="text-sm">${i.name} x${i.qty}</span><span>${(i.price*i.qty).toLocaleString()} F</span><button onclick="removeFromCart(${i.id})" class="text-red-500 text-xs">✖</button></div>`).join('');
 }
-
-function supprimerDuPanier(id) {
+function removeFromCart(id) {
     cart = cart.filter(i => i.id !== id);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartUI();
-    if (cart.length === 0) closeCart();
-    else updateCartUI();
+    saveAll();
+    updateCartCounters();
+    if (cart.length === 0) closeCartModal();
 }
-
+function clearCart() { cart = []; saveAll(); updateCartCounters(); closeCartModal(); showToast("Panier vidé"); }
+function toggleWishlist(id) {
+    if (wishlist.includes(id)) wishlist = wishlist.filter(i => i !== id);
+    else wishlist.push(id);
+    saveAll();
+    updateUI();
+    renderProducts(document.querySelector('.cat-btn.active')?.dataset.cat || 'all');
+    showToast(wishlist.includes(id) ? "Ajouté aux favoris" : "Retiré des favoris");
+}
+function toggleComparateur(id) {
+    if (comparateur.includes(id)) comparateur = comparateur.filter(i => i !== id);
+    else if (comparateur.length < 4) comparateur.push(id);
+    else showToast("Maximum 4 produits");
+    saveAll();
+    updateUI();
+    renderProducts(document.querySelector('.cat-btn.active')?.dataset.cat || 'all');
+}
 function checkout() {
     if (cart.length === 0) { alert("Panier vide"); return; }
     let msg = "*Nouvelle commande Latyfa*\n\n";
-    cart.forEach(i => { msg += `${i.name} x${i.qty} = ${(i.price * i.qty).toLocaleString()} F\n`; });
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    msg += `\nTotal: ${total.toLocaleString()} F`;
+    cart.forEach(i => msg += `${i.name} x${i.qty} = ${(i.price*i.qty).toLocaleString()} F\n`);
+    msg += `\nTotal: ${cart.reduce((s,i)=>s+i.price*i.qty,0).toLocaleString()} F`;
     window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
 }
 
 // ==================== AUTH ====================
-function toggleAuth() { document.getElementById('authModal').classList.add('active'); }
-function closeAuth() { document.getElementById('authModal').classList.remove('active'); document.getElementById('registerForm').style.display = 'none'; }
-function showRegister() { document.getElementById('registerForm').style.display = 'block'; }
+function toggleAuthModal() { document.getElementById('authModal').classList.add('active'); }
+function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
+function switchAuthTab(tab) {
+    document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+}
 function login() {
     const email = document.getElementById('loginEmail').value;
     const pwd = document.getElementById('loginPassword').value;
-    if (email === "test@test.com" && pwd === "1234") {
-        user = { name: "Client" };
-        localStorage.setItem('user', JSON.stringify(user));
-        document.getElementById('loginBtn').innerText = "Mon compte";
-        closeAuth();
-        showToast("Connecté");
-    } else alert("Identifiants incorrects (test@test.com / 1234)");
+    const client = clients.find(c => c.email === email && c.password === pwd);
+    if (client) { user = client; saveAll(); document.getElementById('loginBtn').innerText = user.name.split(' ')[0]; closeAuthModal(); showToast("Connecté"); }
+    else alert("Email ou mot de passe incorrect");
 }
 function register() {
     const name = document.getElementById('regName').value;
     const email = document.getElementById('regEmail').value;
     const phone = document.getElementById('regPhone').value;
     const pwd = document.getElementById('regPassword').value;
-    if (name && email && phone && pwd) {
-        user = { name, email, phone };
-        localStorage.setItem('user', JSON.stringify(user));
-        document.getElementById('loginBtn').innerText = "Mon compte";
-        closeAuth();
-        showToast("Inscription réussie");
-    } else alert("Veuillez remplir tous les champs");
+    const confirm = document.getElementById('regConfirm').value;
+    const accept = document.getElementById('acceptCGV').checked;
+    if (!name || !email || !phone || !pwd) { alert("Remplissez tous les champs"); return; }
+    if (pwd !== confirm) { alert("Mots de passe différents"); return; }
+    if (!accept) { alert("Acceptez les CGV"); return; }
+    if (clients.find(c => c.email === email)) { alert("Email déjà utilisé"); return; }
+    const newUser = { id: Date.now(), name, email, phone, password: pwd, points: 0 };
+    clients.push(newUser);
+    user = newUser;
+    saveAll();
+    document.getElementById('loginBtn').innerText = user.name.split(' ')[0];
+    closeAuthModal();
+    showToast("Inscription réussie");
 }
 
-// ==================== UTILITAIRES ====================
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+// ==================== FAVORIS / COMPARATEUR MODALS ====================
+function toggleWishlistModal() {
+    const modal = document.getElementById('wishlistModal');
+    const container = document.getElementById('wishlistItems');
+    const items = wishlist.map(id => products.find(p => p.id === id)).filter(p => p);
+    container.innerHTML = items.map(p => `<div class="flex gap-2 border-b pb-2"><img src="${p.image}" class="w-10 h-10 object-cover rounded"><div><p class="text-sm font-bold">${p.name}</p><p class="text-xs text-[#c5a059]">${p.price.toLocaleString()} F</p></div><button onclick="toggleWishlist(${p.id});toggleWishlistModal()" class="ml-auto text-red-500">✖</button></div>`).join('');
+    modal.classList.add('active');
 }
+function closeWishlistModal() { document.getElementById('wishlistModal').classList.remove('active'); }
+function toggleComparateurModal() {
+    const modal = document.getElementById('comparateurModal');
+    const container = document.getElementById('comparateurItems');
+    const items = comparateur.map(id => products.find(p => p.id === id)).filter(p => p);
+    container.innerHTML = items.map(p => `<div class="border p-2 rounded text-center"><img src="${p.image}" class="h-20 w-full object-cover rounded"><p class="text-xs font-bold mt-1">${p.name}</p><p class="text-[#c5a059] text-xs">${p.price.toLocaleString()} F</p><button onclick="toggleComparateur(${p.id});toggleComparateurModal()" class="text-red-500 text-xs mt-1">Retirer</button></div>`).join('');
+    modal.classList.add('active');
+}
+function closeComparateurModal() { document.getElementById('comparateurModal').classList.remove('active'); }
+
+// ==================== PANIER MODAL ====================
+function toggleCartModal() { document.getElementById('cartModal').classList.add('active'); updateCartCounters(); }
+function closeCartModal() { document.getElementById('cartModal').classList.remove('active'); }
+
+// ==================== ROUE DE LA FORTUNE ====================
+function drawWheel() {
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const arcs = 2 * Math.PI / wheelSegments.length;
+    ctx.clearRect(0, 0, 250, 250);
+    for (let i = 0; i < wheelSegments.length; i++) {
+        ctx.beginPath();
+        ctx.fillStyle = i % 2 === 0 ? "#c5a059" : "#1a1a1a";
+        ctx.moveTo(125, 125);
+        ctx.arc(125, 125, 120, i * arcs, (i + 1) * arcs);
+        ctx.fill();
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.translate(125, 125);
+        ctx.rotate(i * arcs + arcs / 2);
+        ctx.font = "bold 10px Montserrat";
+        ctx.fillText(wheelSegments[i], 95, 5);
+        ctx.restore();
+    }
+}
+function openWheel() { drawWheel(); document.getElementById('wheelModal').classList.add('active'); majChances(); }
+function closeWheel() { document.getElementById('wheelModal').classList.remove('active'); }
+function majChances() {
+    let stats = JSON.parse(localStorage.getItem('wheelStats')) || { date: new Date().toDateString(), count: 0 };
+    if (stats.date !== new Date().toDateString()) stats = { date: new Date().toDateString(), count: 0 };
+    document.getElementById('wheelMsg').innerText = stats.count >= 1 ? "Limite atteinte aujourd'hui" : "1 chance disponible";
+    return stats;
+}
+function spinWheel() {
+    let stats = majChances();
+    if (stats.count >= 1) { alert("Vous avez déjà utilisé votre chance aujourd'hui"); return; }
+    if (wheelSpinning) return;
+    wheelSpinning = true;
+    const canvas = document.getElementById('wheelCanvas');
+    const random = Math.floor(Math.random() * 360);
+    const totalRot = 3600 + random;
+    canvas.style.transition = "transform 4s cubic-bezier(0.15,0,0.15,1)";
+    canvas.style.transform = `rotate(${totalRot}deg)`;
+    setTimeout(() => {
+        const actual = random % 360;
+        const segment = 360 / wheelSegments.length;
+        const idx = Math.floor(((360 - actual + 270) % 360) / segment);
+        const result = wheelSegments[idx];
+        stats.count++; localStorage.setItem('wheelStats', JSON.stringify(stats));
+        canvas.style.transform = "";
+        canvas.style.transition = "";
+        if (result === "REESSAYER") alert("😥 Réessayez demain");
+        else if (result === "CADEAU") { canvasConfetti({ particleCount: 100, spread: 50 }); alert("🎁 Cadeau mystère ajouté au panier"); cart.push({ id: 'gift', name: "🎁 Cadeau", price: 0, qty: 1, image: "" }); saveAll(); updateCartCounters(); }
+        else if (result === "LIVRAISON") alert("🎉 Livraison gratuite sur prochaine commande");
+        else alert(`🎉 Vous avez gagné : ${result}`);
+        wheelSpinning = false;
+        majChances();
+    }, 4000);
+}
+
+// ==================== PARRAINAGE ====================
+let parrainage = { parrains: {} };
+function loadParrainage() { const saved = localStorage.getItem('parrainage'); if (saved) parrainage = JSON.parse(saved); }
+function voirParrainage() {
+    if (!user) { toggleAuthModal(); return; }
+    if (!parrainage.parrains[user.id]) parrainage.parrains[user.id] = { code: 'LATYFA-'+user.id+'-'+Math.random().toString(36).substr(2,6), filleuls: [], gains: 0 };
+    const data = parrainage.parrains[user.id];
+    document.getElementById('parrainCount').innerText = data.filleuls.length;
+    document.getElementById('parrainGains').innerText = data.gains.toLocaleString() + " F";
+    document.getElementById('parrainLink').value = `https://latyfashop.com?ref=${data.code}`;
+    let next = data.filleuls.length >= 20 ? 0 : data.filleuls.length >= 10 ? 20 - data.filleuls.length : data.filleuls.length >= 5 ? 10 - data.filleuls.length : 5 - data.filleuls.length;
+    document.getElementById('parrainNext').innerText = next === 0 ? "VIP" : next;
+    document.getElementById('parrainageModal').classList.add('active');
+}
+function closeParrainageModal() { document.getElementById('parrainageModal').classList.remove('active'); }
+function copyParrainLink() { const input = document.getElementById('parrainLink'); input.select(); document.execCommand('copy'); showToast("Lien copié"); }
+
+// ==================== AVIS ====================
+function openAvisModal() {
+    const container = document.getElementById('avisList');
+    container.innerHTML = avis.map(a => `<div class="border-b pb-2"><div class="flex justify-between"><span class="font-bold">${a.nom}</span><span class="text-xs text-gray-400">${a.date}</span></div><div class="flex text-[#c5a059] text-xs">${'★'.repeat(a.note)}${'☆'.repeat(5-a.note)}</div><p class="text-xs">${a.commentaire}</p></div>`).join('');
+    document.getElementById('avisModal').classList.add('active');
+}
+function closeAvisModal() { document.getElementById('avisModal').classList.remove('active'); }
+function openDepotAvis() { document.getElementById('depotAvisModal').classList.add('active'); currentRating = 0; resetStars(); }
+function closeDepotAvis() { document.getElementById('depotAvisModal').classList.remove('active'); }
+function resetStars() { document.querySelectorAll('#starRating i').forEach(s => s.className = 'fa-regular fa-star cursor-pointer'); }
+function setRating(r) { currentRating = r; document.querySelectorAll('#starRating i').forEach((s,i) => { s.className = i < r ? 'fa-solid fa-star text-[#c5a059]' : 'fa-regular fa-star'; }); }
+function submitAvis() {
+    const nom = document.getElementById('avisNom').value;
+    const comment = document.getElementById('avisComment').value;
+    if (!nom || !comment || currentRating === 0) { alert("Remplissez tous les champs"); return; }
+    avis.unshift({ nom, note: currentRating, commentaire: comment, date: new Date().toLocaleDateString() });
+    saveAll();
+    closeDepotAvis();
+    showToast("Merci pour votre avis");
+}
+document.querySelectorAll('#starRating i').forEach(star => star.addEventListener('click', () => setRating(parseInt(star.dataset.note))));
+
+// ==================== CHAT IA ====================
+function toggleChat() { document.getElementById('chatWindow').classList.toggle('active'); }
+function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    const container = document.getElementById('chatMessages');
+    container.innerHTML += `<div class="chat-message user"><span>${msg}</span></div>`;
+    input.value = '';
+    setTimeout(() => {
+        let rep = "Merci pour votre message. Notre équipe vous répondra bientôt.";
+        if (msg.toLowerCase().includes('prix')) rep = "Nos prix vont de 5 000 à 150 000 FCFA.";
+        else if (msg.toLowerCase().includes('livraison')) rep = "Livraison sous 24-72h selon votre zone.";
+        container.innerHTML += `<div class="chat-message support"><span>🤖 ${rep}</span></div>`;
+        container.scrollTop = container.scrollHeight;
+    }, 500);
+}
+
+// ==================== SUIVI LIVRAISON ====================
+function openSuiviModal() { document.getElementById('suiviModal').classList.add('active'); }
+function closeSuiviModal() { document.getElementById('suiviModal').classList.remove('active'); }
+
+// ==================== ADMIN ====================
+let salesChart = null;
+function openAdmin() {
+    const code = prompt("Code admin :");
+    if (code !== "2026") return;
+    document.getElementById('adminModal').classList.add('active');
+    initAdminStats();
+    renderAdminProducts();
+    renderAdminCommandes();
+    if (salesChart) salesChart.destroy();
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    salesChart = new Chart(ctx, { type: 'line', data: { labels: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'], datasets: [{ label: 'Ventes', data: [12000,19000,8000,15000,22000,18000,25000], borderColor: '#c5a059' }] } });
+}
+function closeAdminModal() { document.getElementById('adminModal').classList.remove('active'); }
+function initAdminStats() {
+    const historique = JSON.parse(localStorage.getItem('historique')) || [];
+    const totalCA = historique.reduce((s,c)=>s+(parseInt(c.total)||0),0);
+    document.getElementById('statCA').innerText = totalCA.toLocaleString() + " F";
+    document.getElementById('statCmd').innerText = historique.length;
+}
+function renderAdminProducts() {
+    const container = document.getElementById('adminProductList');
+    container.innerHTML = products.map(p => `<div class="flex justify-between items-center border-b pb-1 text-sm"><span>${p.name}</span><span>${p.price.toLocaleString()} F</span><button onclick="deleteProduct(${p.id})" class="text-red-500 text-xs">Supprimer</button></div>`).join('');
+}
+function addProductAdmin() {
+    const name = document.getElementById('newProdName').value;
+    const price = parseInt(document.getElementById('newProdPrice').value);
+    const image = document.getElementById('newProdImage').value;
+    const cat = document.getElementById('newProdCat').value;
+    if (!name || !price || !image) { alert("Remplissez tous les champs"); return; }
+    const newId = Date.now();
+    products.push({ id: newId, name, price, image, cat, popular: false });
+    saveAll();
+    renderProducts();
+    renderPopular();
+    renderAdminProducts();
+    document.getElementById('newProdName').value = '';
+    document.getElementById('newProdPrice').value = '';
+    document.getElementById('newProdImage').value = '';
+    showToast("Produit ajouté");
+}
+function deleteProduct(id) {
+    products = products.filter(p => p.id !== id);
+    saveAll();
+    renderProducts();
+    renderPopular();
+    renderAdminProducts();
+}
+function renderAdminCommandes() {
+    const historique = JSON.parse(localStorage.getItem('historique')) || [];
+    document.getElementById('adminHistorique').innerHTML = historique.map(c => `<div class="border-b pb-1 text-xs">${c.date} - ${c.client} - ${c.total}</div>`).join('');
+}
+document.querySelectorAll('.admin-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.admin-panel').forEach(panel => panel.classList.add('hidden'));
+        if (tab === 'dashboard') document.getElementById('adminDashboard').classList.remove('hidden');
+        if (tab === 'produits') document.getElementById('adminProduits').classList.remove('hidden');
+        if (tab === 'commandes') document.getElementById('adminCommandes').classList.remove('hidden');
+    });
+});
+
+// ==================== CGV ====================
+function openCGV() { document.getElementById('cgvModal').classList.add('active'); }
+function closeCGVModal() { document.getElementById('cgvModal').classList.remove('active'); }
+
+// ==================== CATÉGORIES ====================
+document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.dataset.cat;
+        renderProducts(cat);
+    });
+});
+
+// ==================== BACK TO TOP ====================
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+window.addEventListener('scroll', () => {
+    const btn = document.getElementById('backToTop');
+    if (window.scrollY > 200) btn.classList.add('show');
+    else btn.classList.remove('show');
+});
+
+// ==================== MODE SOMBRE ====================
+function toggleDarkMode() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+}
+if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark');
+
+// ==================== TOAST ====================
 function showToast(msg) {
     const toast = document.getElementById('toast');
     toast.innerText = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2000);
 }
-function toggleCart() { document.getElementById('cartModal').classList.add('active'); }
-function closeCart() { document.getElementById('cartModal').classList.remove('active'); }
+
+// ==================== POINTS FIDÉLITÉ (simulé) ====================
+// Intégré dans l'ajout au panier (non implémenté ici pour rester simple, mais structure présente)
 
 // ==================== INIT ====================
-window.addEventListener('load', () => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) cart = JSON.parse(savedCart);
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) user = JSON.parse(savedUser);
-    if (user) document.getElementById('loginBtn').innerText = "Mon compte";
-    afficherProduits();
-    afficherPopulaires();
-    updateCartUI();
-    
-    // Gestion du scroll pour le bouton back to top
-    window.addEventListener('scroll', () => {
-        const btn = document.getElementById('backToTop');
-        if (window.scrollY > 200) btn.classList.add('show');
-        else btn.classList.remove('show');
-    });
-});
+loadData();
+loadParrainage();
 </script>
 </body>
 </html>
