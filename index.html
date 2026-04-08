@@ -2,19 +2,19 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>LATYFA BOUTIQUE | Officiel - Toutes fonctionnalités</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>LATYFA BOUTIQUE | Officiel</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root { --latyfa-gold: #c5a059; --latyfa-accent: #ff6600; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background-color: #fcfcfc; font-family: 'Montserrat', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
         .logo-font { font-family: 'Playfair Display', serif; color: var(--latyfa-gold) !important; }
         
@@ -24,10 +24,6 @@
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes wheelPop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes moveMap { from { transform: translate(0, 0); } to { transform: translate(20px, 20px); } }
-        @keyframes floatProduct { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes lightPulse { 0%,100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.2); } }
-        @keyframes sparkle { 0%,100% { opacity: 0; } 50% { opacity: 1; transform: scale(1.5); } }
         @keyframes waveColors { 0%,100% { color: #ff6600; } 33% { color: #ffffff; } 66% { color: #00ff00; } }
         .hero-title { animation: waveColors 6s ease-in-out infinite; font-weight: 900; }
         .animate-marquee { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; white-space: nowrap; }
@@ -47,14 +43,15 @@
         /* Modals */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
         .modal.active { display: flex; }
-        .modal-content { background: white; border-radius: 24px; padding: 30px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; animation: modalFadeIn 0.3s ease; }
+        .modal-content { background: white; border-radius: 24px; padding: 20px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; animation: modalFadeIn 0.3s ease; }
         
         /* Boutons */
-        .btn-primary { background: linear-gradient(135deg, var(--latyfa-gold), #e2c286); color: white; font-weight: 900; padding: 16px 24px; border-radius: 30px; text-transform: uppercase; font-size: 12px; border: none; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, var(--latyfa-gold), #e2c286); color: white; font-weight: 900; padding: 14px 20px; border-radius: 30px; text-transform: uppercase; font-size: 12px; border: none; cursor: pointer; transition: all 0.3s; display: inline-block; text-align: center; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(197,160,89,0.6); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         
         /* Toast */
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: var(--latyfa-gold); padding: 12px 24px; border-radius: 50px; font-size: 12px; font-weight: bold; z-index: 2000; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: var(--latyfa-gold); padding: 10px 20px; border-radius: 50px; font-size: 12px; font-weight: bold; z-index: 2000; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
         .toast.show { opacity: 1; }
         
         /* Dark theme */
@@ -62,113 +59,124 @@
         .dark-theme .product-card, .dark-theme .modal-content, .dark-theme .categories-static, .dark-theme header, .dark-theme footer { background-color: #1e1e1e !important; border-color: #333 !important; }
         
         /* Back to top */
-        .back-to-top { position: fixed; bottom: 100px; right: 20px; width: 50px; height: 50px; background: var(--latyfa-gold); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; z-index: 50; transition: all 0.3s; }
+        .back-to-top { position: fixed; bottom: 90px; right: 16px; width: 44px; height: 44px; background: var(--latyfa-gold); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; visibility: hidden; z-index: 50; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .back-to-top.show { opacity: 1; visibility: visible; }
         
         /* WhatsApp */
-        .whatsapp-widget { position: fixed; bottom: 170px; left: 20px; z-index: 50; }
-        .whatsapp-widget a { display: flex; width: 60px; height: 60px; background: #25D366; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 30px; transition: all 0.3s; }
-        .whatsapp-widget a:hover { transform: scale(1.1); }
+        .whatsapp-widget { position: fixed; bottom: 150px; left: 16px; z-index: 50; }
+        .whatsapp-widget a { display: flex; width: 52px; height: 52px; background: #25D366; border-radius: 50%; align-items: center; justify-content: center; color: white; font-size: 28px; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .whatsapp-widget a:hover { transform: scale(1.05); }
         
         /* Roue de la fortune */
         .wheel-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .wheel-mask.active { display: flex; }
-        .wheel-box { background: white; padding: 30px; border-radius: 30px; text-align: center; max-width: 400px; border: 5px solid var(--latyfa-gold); animation: wheelPop 0.5s ease; }
-        #canvas { width: 280px; height: 280px; margin: 20px auto; border-radius: 50%; }
+        .wheel-box { background: white; padding: 20px; border-radius: 30px; text-align: center; max-width: 380px; width: 90%; border: 5px solid var(--latyfa-gold); animation: wheelPop 0.5s ease; }
+        #canvas { width: 260px; height: 260px; margin: 15px auto; border-radius: 50%; }
         
         /* Categories */
-        .categories-static { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 15px; background: white; border-bottom: 1px solid #f0f0f0; position: sticky; top: 70px; z-index: 45; }
-        .category-static-item { padding: 8px 16px; border-radius: 40px; background: #f5f5f5; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .category-static-item:hover { background: white; border: 1px solid var(--latyfa-gold); transform: translateY(-2px); }
+        .categories-static { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 12px; background: white; border-bottom: 1px solid #f0f0f0; position: sticky; top: 70px; z-index: 45; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .category-static-item { padding: 6px 14px; border-radius: 40px; background: #f5f5f5; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .category-static-item.active { background: var(--latyfa-gold); color: white; }
         
         /* Social proof */
-        .social-proof { position: fixed; bottom: 20px; left: 20px; background: white; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; border-left: 4px solid var(--latyfa-gold); transform: translateY(100px); opacity: 0; transition: all 0.5s ease; z-index: 100; max-width: 280px; }
+        .social-proof { position: fixed; bottom: 20px; left: 16px; background: white; border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 10px; border-left: 4px solid var(--latyfa-gold); transform: translateY(100px); opacity: 0; transition: all 0.5s ease; z-index: 100; max-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .social-proof.show { transform: translateY(0); opacity: 1; }
         
         /* Chat widget */
-        .chat-widget { position: fixed; bottom: 100px; right: 90px; z-index: 1000; }
-        .chat-button { width: 60px; height: 60px; background: var(--latyfa-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; position: relative; }
-        .chat-button:hover { transform: scale(1.1); }
-        .chat-badge { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; font-size: 10px; font-weight: bold; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .chat-window { position: absolute; bottom: 80px; right: 0; width: 320px; background: white; border-radius: 20px; overflow: hidden; display: none; animation: slideUp 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .chat-widget { position: fixed; bottom: 90px; right: 16px; z-index: 1000; }
+        .chat-button { width: 52px; height: 52px; background: var(--latyfa-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .chat-button:hover { transform: scale(1.05); }
+        .chat-badge { position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; font-size: 9px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .chat-window { position: absolute; bottom: 70px; right: 0; width: 300px; background: white; border-radius: 20px; overflow: hidden; display: none; animation: slideUp 0.3s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .chat-window.active { display: block; }
-        .chat-header { background: var(--latyfa-gold); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .chat-messages { height: 300px; overflow-y: auto; padding: 15px; background: #f9fafb; }
-        .chat-message { margin-bottom: 15px; display: flex; flex-direction: column; }
+        .chat-header { background: var(--latyfa-gold); color: white; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-messages { height: 280px; overflow-y: auto; padding: 12px; background: #f9fafb; }
+        .chat-message { margin-bottom: 12px; display: flex; flex-direction: column; }
         .chat-message.support { align-items: flex-start; }
         .chat-message.user { align-items: flex-end; }
-        .message-bubble { max-width: 80%; padding: 10px 15px; border-radius: 18px; font-size: 11px; }
+        .message-bubble { max-width: 80%; padding: 8px 12px; border-radius: 18px; font-size: 11px; }
         .chat-message.support .message-bubble { background: white; border: 1px solid #e5e7eb; }
         .chat-message.user .message-bubble { background: var(--latyfa-gold); color: white; }
-        .chat-footer { padding: 15px; display: flex; gap: 10px; border-top: 1px solid #e5e7eb; }
-        .chat-footer input { flex: 1; border: 1px solid #e5e7eb; border-radius: 25px; padding: 10px 15px; font-size: 11px; outline: none; }
-        .chat-footer button { width: 40px; height: 40px; background: var(--latyfa-gold); border: none; border-radius: 50%; color: white; cursor: pointer; transition: all 0.3s; }
-        .chat-footer button:hover { transform: scale(1.1); }
+        .chat-footer { padding: 12px; display: flex; gap: 8px; border-top: 1px solid #e5e7eb; background: white; }
+        .chat-footer input { flex: 1; border: 1px solid #e5e7eb; border-radius: 25px; padding: 8px 12px; font-size: 11px; outline: none; }
+        .chat-footer button { width: 36px; height: 36px; background: var(--latyfa-gold); border: none; border-radius: 50%; color: white; cursor: pointer; }
         
         /* Admin */
-        .admin-btn { position: fixed; bottom: 10px; left: 10px; width: 40px; height: 40px; background: transparent; border: none; cursor: pointer; opacity: 0.1; z-index: 100; font-size: 10px; color: #999; }
-        .admin-btn:hover { opacity: 0.5; }
-        .admin-menu { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; padding: 10px; background: #f3f4f6; border-radius: 50px; }
-        .admin-menu-item { flex: 1; text-align: center; padding: 12px 5px; border-radius: 40px; font-size: 10px; font-weight: 900; cursor: pointer; transition: all 0.3s; }
+        .admin-btn { position: fixed; bottom: 10px; left: 10px; width: 36px; height: 36px; background: transparent; border: none; cursor: pointer; opacity: 0.2; z-index: 100; font-size: 10px; color: #999; }
+        .admin-btn:hover { opacity: 0.6; }
+        .admin-menu { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 8px; background: #f3f4f6; border-radius: 50px; }
+        .admin-menu-item { flex: 1; text-align: center; padding: 8px 4px; border-radius: 40px; font-size: 9px; font-weight: 900; cursor: pointer; transition: all 0.3s; }
         .admin-menu-item.active { background: var(--latyfa-gold); color: white; }
         .admin-section { display: none; animation: fadeIn 0.3s ease; }
         .admin-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         /* Suivi livraison */
-        .step-indicator { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; margin: 0 auto 5px; }
+        .step-indicator { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; margin: 0 auto 5px; }
         .step-indicator.completed { background: #10b981; color: white; }
         .step-indicator.current { background: var(--latyfa-gold); color: white; animation: pulse 2s infinite; }
         .step-indicator.pending { background: #e5e7eb; color: #9ca3af; }
-        .simulated-map { height: 200px; background: #f0f0f0; border-radius: 20px; position: relative; overflow: hidden; margin-bottom: 20px; }
-        .map-grid { position: absolute; width: 200%; height: 200%; background: repeating-linear-gradient(0deg, #ddd, #ddd 1px, transparent 1px, transparent 20px), repeating-linear-gradient(90deg, #ddd, #ddd 1px, transparent 1px, transparent 20px); animation: moveMap 30s linear infinite; }
-        .map-marker { position: absolute; width: 40px; height: 40px; background: var(--latyfa-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; animation: pulse 2s infinite; z-index: 10; }
+        .simulated-map { height: 160px; background: #f0f0f0; border-radius: 16px; position: relative; overflow: hidden; margin-bottom: 16px; }
+        .map-grid { position: absolute; width: 200%; height: 200%; background: repeating-linear-gradient(0deg, #ddd, #ddd 1px, transparent 1px, transparent 20px), repeating-linear-gradient(90deg, #ddd, #ddd 1px, transparent 1px, transparent 20px); animation: moveMap 20s linear infinite; }
+        @keyframes moveMap { from { transform: translate(0,0); } to { transform: translate(20px,20px); } }
+        .map-marker { position: absolute; width: 36px; height: 36px; background: var(--latyfa-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; animation: pulse 2s infinite; z-index: 10; }
         
         /* Flash sale */
-        .flash-sale { background: linear-gradient(135deg, #ef4444, #ec4899); color: white; padding: 8px; text-align: center; font-size: 10px; font-weight: 900; text-transform: uppercase; animation: pulseFlash 2s infinite; }
+        .flash-sale { background: linear-gradient(135deg, #ef4444, #ec4899); color: white; padding: 6px; text-align: center; font-size: 9px; font-weight: 900; text-transform: uppercase; animation: pulseFlash 2s infinite; }
         @keyframes pulseFlash { 0%,100% { opacity: 1; } 50% { opacity: 0.8; } }
         
         /* Payment options */
-        .payment-option { border: 2px solid #e5e7eb; border-radius: 12px; padding: 12px; cursor: pointer; text-align: center; transition: all 0.3s; }
+        .payment-option { border: 2px solid #e5e7eb; border-radius: 12px; padding: 8px; cursor: pointer; text-align: center; transition: all 0.3s; }
         .payment-option.selected { border-color: var(--latyfa-gold); background: #fef3c7; transform: scale(1.02); }
         
         /* Advent calendar */
-        .advent-calendar { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; padding: 16px; background: linear-gradient(135deg, #c5a059, #e2c286); border-radius: 20px; }
+        .advent-calendar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 12px; background: linear-gradient(135deg, #c5a059, #e2c286); border-radius: 20px; }
         .advent-day { aspect-ratio: 1; background: white; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; font-size: 10px; font-weight: 900; }
         .advent-day.opened { background: #ef4444; color: white; }
         
         .loader-hidden { opacity: 0; visibility: hidden; transition: opacity 0.5s; }
-        @media (max-width: 768px) { .chat-window { width: 280px; right: -40px; } .category-static-item { padding: 6px 12px; font-size: 9px; } .advent-calendar { grid-template-columns: repeat(4, 1fr); } }
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container { padding-left: 12px; padding-right: 12px; }
+            .product-card img { height: 160px; }
+            .modal-content { padding: 16px; }
+            .btn-primary { padding: 12px 16px; font-size: 10px; }
+            .chat-window { width: 280px; right: -10px; }
+            .wheel-box { padding: 16px; }
+            #canvas { width: 220px; height: 220px; }
+        }
     </style>
 </head>
 <body>
 
 <!-- LOADER -->
 <div id="loader" class="fixed inset-0 bg-[#1a1a1a] z-[3000] flex flex-col items-center justify-center transition-opacity duration-700">
-    <div class="relative"><div class="w-24 h-24 rounded-full border-4 border-transparent border-t-[#c5a059] animate-spin"></div><div class="absolute inset-0 flex items-center justify-center"><span class="logo-font text-2xl text-[#c5a059]">LATYFA</span></div></div>
+    <div class="relative"><div class="w-20 h-20 rounded-full border-4 border-transparent border-t-[#c5a059] animate-spin"></div><div class="absolute inset-0 flex items-center justify-center"><span class="logo-font text-2xl text-[#c5a059]">LATYFA</span></div></div>
 </div>
 
 <!-- TOAST -->
 <div id="toast" class="toast">✨ Produit ajouté au panier</div>
 
 <!-- BANDEAUX -->
-<div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2.5 text-[10px] font-bold border-b border-[#c5a059]/30 tracking-[0.15em] uppercase">✨ PROMO EXCLUSIVE -20% DÈS 20.000 F D'ACHAT</div>
+<div class="bg-[#1a1a1a] text-[#c5a059] text-center py-2 text-[9px] font-bold border-b border-[#c5a059]/30 tracking-wide uppercase">✨ PROMO EXCLUSIVE -20% DÈS 20.000 F</div>
 <div class="flash-sale" id="flashSale">⚡ FLASH SALE : -30% SUR LES BIJOUX - FIN DANS <span id="flashCountdown">02:00:00</span></div>
-<div class="bg-white border-b border-gray-100 py-1 overflow-hidden whitespace-nowrap"><div class="inline-block animate-marquee text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400">✨ BIENVENUE SUR LATYFA SHOP — 💎 LIVRAISON GRATUITE À PARTIR DE 50.000 F — 🚚 EXPÉDITION SOUS 24H — 🔥 PROMO DE BIENVENUE -10% AVEC CODE "LATYFA10" —</div></div>
+<div class="bg-white border-b border-gray-100 py-1 overflow-hidden whitespace-nowrap"><div class="inline-block animate-marquee text-[8px] font-bold uppercase tracking-wider text-gray-400">✨ BIENVENUE SUR LATYFA SHOP — 💎 LIVRAISON GRATUITE À PARTIR DE 50.000 F — 🚚 EXPÉDITION SOUS 24H — 🔥 CODE "LATYFA10" -10% —</div></div>
 
 <!-- HEADER -->
 <header class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop()"><div class="h-10 w-10 rounded-full bg-gradient-to-r from-[#c5a059] to-[#e2c286] flex items-center justify-center text-white font-bold">L</div><span class="text-xl font-black italic logo-font">LATYFA SHOP</span></div>
-        <div class="flex-1 max-w-md hidden md:block"><div class="relative"><input type="text" id="search-input" placeholder="Rechercher un article..." class="w-full bg-gray-100 border-none rounded-full py-2 px-10 text-xs focus:ring-2 focus:ring-[#c5a059] outline-none"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i></div></div>
-        <div class="flex gap-3 items-center">
-            <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[10px] font-black uppercase border border-[#c5a059] px-4 py-2 rounded-full hover:bg-[#c5a059] hover:text-white transition">Se connecter</button>
-            <div class="relative cursor-pointer" onclick="toggleWishlistModal()"><i class="fa-regular fa-heart text-gray-600 text-xl hover:text-[#ff6600] transition"></i><span id="wishlist-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span></div>
-            <div class="relative cursor-pointer" onclick="ouvrirComparateur()"><i class="fa-solid fa-scale-balanced text-gray-600 text-xl hover:text-blue-500 transition"></i><span id="comparateur-count" class="absolute -top-2 -right-2 bg-blue-500 text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center">0</span></div>
-            <button onclick="toggleDarkMode()" class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-black hover:text-white transition"><i class="fa-solid fa-moon"></i></button>
-            <div onclick="ouvrirPanier()" class="relative cursor-pointer"><i class="fa-solid fa-cart-shopping text-gray-600 text-xl hover:text-[#ff6600] transition"></i><span id="cart-count" class="absolute -top-2 -right-2 bg-[#ff6600] text-white text-[10px] rounded-full px-1.5 min-w-[18px] h-[18px] flex items-center justify-center">0</span></div>
-            <div class="relative cursor-pointer" onclick="voirParrainage()"><i class="fa-solid fa-handshake text-gray-600 text-xl hover:text-[#c5a059] transition"></i></div>
+    <div class="container mx-auto px-3 py-2 flex items-center justify-between">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="scrollToTop()">
+            <div class="h-9 w-9 rounded-full bg-gradient-to-r from-[#c5a059] to-[#e2c286] flex items-center justify-center text-white font-bold text-sm">L</div>
+            <span class="text-lg font-black italic logo-font">LATYFA SHOP</span>
+        </div>
+        <div class="flex gap-2 items-center">
+            <button id="loginBtn" onclick="ouvrirAuthModal()" class="text-[9px] font-black uppercase border border-[#c5a059] px-3 py-1.5 rounded-full hover:bg-[#c5a059] hover:text-white transition">Se connecter</button>
+            <div class="relative cursor-pointer" onclick="toggleWishlistModal()"><i class="fa-regular fa-heart text-gray-600 text-lg"></i><span id="wishlist-count" class="absolute -top-1.5 -right-1.5 bg-[#ff6600] text-white text-[8px] rounded-full w-3.5 h-3.5 flex items-center justify-center">0</span></div>
+            <div class="relative cursor-pointer" onclick="ouvrirComparateur()"><i class="fa-solid fa-scale-balanced text-gray-600 text-lg"></i><span id="comparateur-count" class="absolute -top-1.5 -right-1.5 bg-blue-500 text-white text-[8px] rounded-full w-3.5 h-3.5 flex items-center justify-center">0</span></div>
+            <button onclick="toggleDarkMode()" class="h-7 w-7 rounded-full bg-gray-100 flex items-center justify-center text-gray-600"><i class="fa-solid fa-moon text-sm"></i></button>
+            <div onclick="ouvrirPanier()" class="relative cursor-pointer"><i class="fa-solid fa-cart-shopping text-gray-600 text-lg"></i><span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-[#ff6600] text-white text-[9px] rounded-full px-1 min-w-[16px] h-4 flex items-center justify-center">0</span></div>
+            <div class="relative cursor-pointer" onclick="voirParrainage()"><i class="fa-solid fa-handshake text-gray-600 text-lg"></i></div>
         </div>
     </div>
 </header>
@@ -176,118 +184,116 @@
 <!-- CATÉGORIES -->
 <div class="categories-static" id="categories-static"></div>
 
-<!-- HERO AVEC ANIMATION BOUTIQUE DE LUXE -->
-<section class="relative w-full h-[400px] md:h-[500px] overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d]"></div>
+<!-- HERO -->
+<section class="relative w-full h-[300px] md:h-[400px] overflow-hidden bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d]">
     <div class="absolute inset-0 bg-black/30"></div>
-    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10">
-        <h1 class="hero-title text-4xl md:text-6xl font-black italic uppercase tracking-tighter drop-shadow-lg">La Boutique du 225</h1>
-        <p class="text-orange-400 font-bold mt-3 uppercase text-xs md:text-sm tracking-[0.2em] drop-shadow-md">✨ Bijoux • Sacs • Parfums • Chaussures ✨</p>
-        <div class="flex flex-wrap gap-3 justify-center mt-6">
-            <a href="#collection" class="bg-[#ff6600] text-white px-8 py-3 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg">Découvrir la Collection</a>
-            <button onclick="ouvrirRoue()" class="bg-black text-white px-8 py-3 rounded-full font-black text-xs uppercase hover:scale-105 transition shadow-lg border border-[#c5a059]"><i class="fa-solid fa-gift mr-2"></i>Tenter ma chance</button>
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 z-10">
+        <h1 class="hero-title text-3xl md:text-5xl font-black italic uppercase tracking-tighter drop-shadow-lg">La Boutique du 225</h1>
+        <p class="text-orange-400 font-bold mt-2 uppercase text-[10px] md:text-sm tracking-wider">✨ Bijoux • Sacs • Parfums • Chaussures ✨</p>
+        <div class="flex flex-wrap gap-2 justify-center mt-4">
+            <a href="#collection" class="bg-[#ff6600] text-white px-6 py-2 rounded-full font-black text-[10px] uppercase hover:scale-105 transition shadow-lg">Découvrir</a>
+            <button onclick="ouvrirRoue()" class="bg-black text-white px-6 py-2 rounded-full font-black text-[10px] uppercase hover:scale-105 transition shadow-lg border border-[#c5a059]"><i class="fa-solid fa-gift mr-1"></i>Tenter ma chance</button>
         </div>
     </div>
 </section>
 
 <!-- PRODUITS POPULAIRES -->
-<section class="container mx-auto px-4 py-8">
-    <h3 class="text-[10px] font-black uppercase mb-4 flex items-center gap-2"><i class="fa-solid fa-fire text-[#ff6600]"></i> PRODUITS POPULAIRES</h3>
-    <div class="flex gap-4 overflow-x-auto pb-4" id="popular-products"></div>
+<section class="container mx-auto px-3 py-6">
+    <h3 class="text-[9px] font-black uppercase mb-3 flex items-center gap-2"><i class="fa-solid fa-fire text-[#ff6600] text-xs"></i> PRODUITS POPULAIRES</h3>
+    <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" id="popular-products"></div>
 </section>
 
 <!-- GRILLE PRODUITS -->
-<section id="collection" class="container mx-auto px-4 py-8">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6" id="product-grid"></div>
+<section id="collection" class="container mx-auto px-3 py-4">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="product-grid"></div>
 </section>
 
 <!-- BANDEAU PROMO -->
-<section class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] py-8 my-8">
-    <div class="container mx-auto px-4 text-center text-white"><p class="text-[10px] font-black uppercase tracking-widest">CODE PROMO EXCLUSIF</p><p class="text-2xl md:text-3xl font-black italic mt-2">LATYFA10</p><p class="text-[10px] mt-2 opacity-90">-10% sur votre première commande</p></div>
+<section class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] py-4 my-4">
+    <div class="container mx-auto px-3 text-center text-white"><p class="text-[9px] font-black uppercase tracking-wider">CODE PROMO EXCLUSIF</p><p class="text-xl md:text-2xl font-black italic mt-1">LATYFA10</p><p class="text-[9px] mt-1 opacity-90">-10% sur votre première commande</p></div>
 </section>
 
 <!-- SECTION FIDÉLITÉ -->
-<section class="container mx-auto px-4 py-8">
-    <div class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] rounded-2xl p-6 text-white relative overflow-hidden"><div class="relative z-10"><p class="text-[8px] font-black uppercase opacity-80">VOS POINTS FIDÉLITÉ</p><div class="text-5xl font-black" id="loyalty-points">0</div><div class="w-full bg-white/30 h-2 rounded-full mt-2 overflow-hidden"><div class="bg-white h-full" id="loyalty-progress" style="width:0%"></div></div><p class="text-[8px] font-black uppercase mt-2 opacity-80">100 points = -10% sur commande</p></div></div>
+<section class="container mx-auto px-3 py-4">
+    <div class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] rounded-2xl p-4 text-white"><div><p class="text-[8px] font-black uppercase opacity-80">VOS POINTS FIDÉLITÉ</p><div class="text-3xl font-black" id="loyalty-points">0</div><div class="w-full bg-white/30 h-1.5 rounded-full mt-2 overflow-hidden"><div class="bg-white h-full" id="loyalty-progress" style="width:0%"></div></div><p class="text-[8px] font-black uppercase mt-2 opacity-80">100 points = -10%</p></div></div>
 </section>
 
 <!-- CALENDRIER AVENT -->
-<section class="container mx-auto px-4 py-8">
-    <div class="bg-gray-100 dark:bg-gray-800 rounded-2xl p-6"><div class="flex justify-between items-center mb-4"><h3 class="text-[10px] font-black uppercase"><i class="fa-solid fa-calendar-alt text-[#c5a059] mr-2"></i>Calendrier de l'Avent</h3><button onclick="ouvrirAdvent()" class="text-[8px] text-[#c5a059] underline">Ouvrir</button></div><p class="text-[8px] text-gray-500">Ouvrez une case chaque jour pour découvrir votre surprise !</p></div>
+<section class="container mx-auto px-3 py-4">
+    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4"><div class="flex justify-between items-center mb-2"><h3 class="text-[9px] font-black uppercase"><i class="fa-solid fa-calendar-alt text-[#c5a059] mr-1"></i>Calendrier de l'Avent</h3><button onclick="ouvrirAdvent()" class="text-[7px] text-[#c5a059] underline">Ouvrir</button></div><p class="text-[7px] text-gray-500">Ouvrez une case chaque jour pour découvrir votre surprise !</p></div>
 </section>
 
 <!-- SECTION DÉVELOPPEUR -->
-<section class="py-16 bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white">
-    <div class="container mx-auto px-4 text-center">
-        <span class="bg-[#c5a059] text-black px-6 py-2 rounded-full text-xs font-black inline-flex items-center gap-2 animate-pulse"><i class="fa-solid fa-code"></i> VOUS VOULEZ CRÉER VOTRE SITE INTERNET ?</span>
-        <div class="mt-8 bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-[#c5a059]/30 shadow-2xl max-w-2xl mx-auto"><div class="relative z-10"><div class="w-32 h-32 rounded-full overflow-hidden border-4 border-[#c5a059] mx-auto mb-4 bg-gray-700 flex items-center justify-center text-5xl">👨‍💻</div><h3 class="text-2xl font-black"><span class="text-[#c5a059]">TRAORE ABOUBAMANE</span> KADER</h3><p class="text-gray-300 text-sm my-4">Développeur Web & Mobile - 5+ sites créés - Support 24/7</p><div class="flex flex-wrap gap-3 justify-center"><a href="https://wa.me/2250506113292" target="_blank" class="bg-green-500 px-6 py-3 rounded-full text-xs font-black flex items-center gap-2 hover:scale-105 transition"><i class="fa-brands fa-whatsapp text-lg"></i>WhatsApp</a><a href="mailto:kadertraore224@gmail.com" class="bg-red-500 px-6 py-3 rounded-full text-xs font-black flex items-center gap-2 hover:scale-105 transition"><i class="fa-regular fa-envelope"></i>Email</a><a href="https://www.facebook.com/kader.traore.1848" target="_blank" class="bg-blue-600 px-6 py-3 rounded-full text-xs font-black flex items-center gap-2 hover:scale-105 transition"><i class="fa-brands fa-facebook-f"></i>Facebook</a></div></div></div>
+<section class="py-10 bg-gradient-to-r from-[#1a1a1a] to-[#2d2d2d] text-white">
+    <div class="container mx-auto px-3 text-center">
+        <span class="bg-[#c5a059] text-black px-4 py-1 rounded-full text-[9px] font-black inline-flex items-center gap-1 animate-pulse"><i class="fa-solid fa-code text-xs"></i> VOUS VOULEZ CRÉER VOTRE SITE ?</span>
+        <div class="mt-6 bg-white/5 backdrop-blur-sm rounded-2xl p-5 border border-[#c5a059]/30 max-w-md mx-auto"><div><div class="w-20 h-20 rounded-full overflow-hidden border-3 border-[#c5a059] mx-auto mb-3 bg-gray-700 flex items-center justify-center text-3xl">👨‍💻</div><h3 class="text-base font-black"><span class="text-[#c5a059]">TRAORE ABOUBAMANE</span> KADER</h3><p class="text-gray-300 text-[10px] my-2">Développeur Web & Mobile - 5+ sites créés</p><div class="flex flex-wrap gap-2 justify-center"><a href="https://wa.me/2250506113292" target="_blank" class="bg-green-500 px-4 py-2 rounded-full text-[9px] font-black flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i>WhatsApp</a><a href="mailto:kadertraore224@gmail.com" class="bg-red-500 px-4 py-2 rounded-full text-[9px] font-black flex items-center gap-1"><i class="fa-regular fa-envelope"></i>Email</a><a href="https://www.facebook.com/kader.traore.1848" target="_blank" class="bg-blue-600 px-4 py-2 rounded-full text-[9px] font-black flex items-center gap-1"><i class="fa-brands fa-facebook-f"></i>Facebook</a></div></div></div>
     </div>
 </section>
 
 <!-- WIDGETS -->
 <div class="whatsapp-widget"><a href="https://wa.me/2250709002881" target="_blank"><i class="fa-brands fa-whatsapp"></i></a></div>
-<button onclick="ouvrirRoue()" class="fixed bottom-24 right-6 h-14 w-14 bg-black text-white rounded-full shadow-2xl z-40 animate-bounce border-2 border-[#c5a059] hover:scale-110 transition-transform"><i class="fa-solid fa-gift text-[#c5a059] text-2xl"></i></button>
+<button onclick="ouvrirRoue()" class="fixed bottom-20 right-4 h-12 w-12 bg-black text-white rounded-full shadow-lg z-40 animate-bounce border-2 border-[#c5a059] flex items-center justify-center"><i class="fa-solid fa-gift text-[#c5a059] text-xl"></i></button>
 <div id="backToTop" class="back-to-top" onclick="scrollToTop()"><i class="fa-solid fa-arrow-up"></i></div>
 
 <!-- SOCIAL PROOF -->
-<div id="social-proof" class="social-proof"><div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-[#c5a059]"><i class="fa-solid fa-bag-shopping"></i></div><div><p id="proof-text" class="text-[10px] text-gray-800 font-medium"></p><p class="text-[8px] text-gray-400 mt-1 uppercase font-bold">à l'instant</p></div></div>
+<div id="social-proof" class="social-proof"><div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center"><i class="fa-solid fa-bag-shopping text-[#c5a059] text-xs"></i></div><div><p id="proof-text" class="text-[9px] text-gray-800 font-medium"></p><p class="text-[7px] text-gray-400 mt-0.5 uppercase font-bold">à l'instant</p></div></div>
 
-<!-- CHAT WIDGET AVEC IA -->
-<div class="chat-widget"><div class="chat-button" onclick="toggleChat()"><i class="fa-regular fa-comment-dots text-white text-2xl"></i><span class="chat-badge" id="chatBadge">1</span></div><div class="chat-window" id="chatWindow"><div class="chat-header"><h3 class="text-[12px] font-black">💬 Chat Latyfa</h3><div class="flex gap-1"><button onclick="toggleIAMode()" class="text-[8px] bg-white text-black px-2 py-1 rounded"><span id="iaMode">🤖 IA OFF</span></button><button onclick="toggleChat()" class="text-white">×</button></div></div><div class="chat-messages" id="chatMessages"><div class="chat-message support"><div class="message-bubble">Bonjour ! 👋 Comment puis-je vous aider aujourd'hui ?</div><div class="message-time text-[8px] text-gray-400 mt-1">à l'instant</div></div></div><div class="chat-footer"><input type="text" id="chatInput" placeholder="Votre message..." onkeypress="if(event.key==='Enter') sendChatMessage()"><button onclick="sendChatMessage()"><i class="fa-regular fa-paper-plane"></i></button></div></div></div>
+<!-- CHAT WIDGET -->
+<div class="chat-widget"><div class="chat-button" onclick="toggleChat()"><i class="fa-regular fa-comment-dots text-white text-xl"></i><span class="chat-badge" id="chatBadge">1</span></div><div class="chat-window" id="chatWindow"><div class="chat-header"><h3 class="text-[11px] font-black">💬 Chat Latyfa</h3><div class="flex gap-1"><button onclick="toggleIAMode()" class="text-[7px] bg-white text-black px-2 py-0.5 rounded"><span id="iaMode">🤖 IA OFF</span></button><button onclick="toggleChat()" class="text-white text-lg leading-none">×</button></div></div><div class="chat-messages" id="chatMessages"><div class="chat-message support"><div class="message-bubble">Bonjour ! 👋 Comment puis-je vous aider ?</div><div class="message-time text-[7px] text-gray-400 mt-0.5">à l'instant</div></div></div><div class="chat-footer"><input type="text" id="chatInput" placeholder="Votre message..." onkeypress="if(event.key==='Enter') sendChatMessage()"><button onclick="sendChatMessage()"><i class="fa-regular fa-paper-plane text-sm"></i></button></div></div></div>
 
-<!-- MODALES -->
-<div id="authModal" class="modal"><div class="modal-content max-w-md"><div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black uppercase italic text-[#c5a059]">Compte client</h2><button onclick="fermerAuthModal()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button></div><div class="flex border-b mb-6"><div class="auth-tab active flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase" onclick="switchAuthTab('login')">Connexion</div><div class="auth-tab flex-1 text-center py-3 cursor-pointer font-black text-xs uppercase" onclick="switchAuthTab('register')">Inscription</div></div><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4"><button onclick="connexion()" class="btn-primary w-full">SE CONNECTER</button></div><div id="registerForm" style="display:none"><input type="text" id="registerNom" placeholder="Nom complet" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="email" id="registerEmail" placeholder="Email" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="tel" id="registerTel" placeholder="Téléphone" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="registerPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-3 text-xs mb-4"><input type="password" id="registerConfirm" placeholder="Confirmer" class="w-full border rounded-xl p-3 text-xs mb-4"><div class="flex items-start gap-2 mb-4"><input type="checkbox" id="registerAccept" class="mt-1"><label for="registerAccept" class="text-[8px] text-gray-500">J'accepte les conditions générales</label></div><button onclick="inscription()" class="btn-primary w-full">S'INSCRIRE</button></div></div></div>
+<!-- MODALES (contenu simplifié mais fonctionnel) -->
+<div id="authModal" class="modal"><div class="modal-content max-w-md"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black uppercase italic text-[#c5a059]">Compte</h2><button onclick="fermerAuthModal()" class="text-2xl text-gray-400">&times;</button></div><div class="flex border-b mb-4"><div class="auth-tab active flex-1 text-center py-2 cursor-pointer font-black text-[10px] uppercase" onclick="switchAuthTab('login')">Connexion</div><div class="auth-tab flex-1 text-center py-2 cursor-pointer font-black text-[10px] uppercase" onclick="switchAuthTab('register')">Inscription</div></div><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-xl p-2 text-xs mb-3"><input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-2 text-xs mb-3"><button onclick="connexion()" class="btn-primary w-full py-2 text-[10px]">SE CONNECTER</button></div><div id="registerForm" style="display:none"><input type="text" id="registerNom" placeholder="Nom" class="w-full border rounded-xl p-2 text-xs mb-2"><input type="email" id="registerEmail" placeholder="Email" class="w-full border rounded-xl p-2 text-xs mb-2"><input type="tel" id="registerTel" placeholder="Téléphone" class="w-full border rounded-xl p-2 text-xs mb-2"><input type="password" id="registerPassword" placeholder="Mot de passe" class="w-full border rounded-xl p-2 text-xs mb-2"><input type="password" id="registerConfirm" placeholder="Confirmer" class="w-full border rounded-xl p-2 text-xs mb-2"><div class="flex items-start gap-2 mb-3"><input type="checkbox" id="registerAccept" class="mt-0.5"><label class="text-[8px]">J'accepte les CGV</label></div><button onclick="inscription()" class="btn-primary w-full py-2 text-[10px]">S'INSCRIRE</button></div></div></div>
 
-<div id="cartModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-6 border-b pb-4"><h2 class="text-lg font-black uppercase italic text-[#c5a059]">Mon Panier</h2><button onclick="viderPanier()" class="text-[9px] font-bold text-red-500 uppercase border border-red-100 px-3 py-1 rounded-full"><i class="fa-solid fa-trash-can mr-1"></i> Vider</button></div><div id="cart-items" class="space-y-4 mb-6 max-h-[40vh] overflow-y-auto"></div><div id="checkout-form" style="display:none"><input type="text" id="nom-client" placeholder="NOM COMPLET" class="w-full border p-3 rounded-lg text-sm bg-gray-50 mb-3"><input type="tel" id="tel-client" placeholder="WHATSAPP" class="w-full border p-3 rounded-lg text-sm bg-gray-50 mb-3"><input type="text" id="quartier-client" placeholder="QUARTIER" class="w-full border p-3 rounded-lg text-sm bg-gray-50 mb-3"><select id="zone-livraison" class="w-full border p-3 rounded-lg text-sm bg-gray-50 mb-3"><option value="">-- CHOISIR ZONE LIVRAISON --</option><option value="abidjan_nord">Abidjan Nord (1.500 F)</option><option value="abidjan_sud">Abidjan Sud (2.000 F)</option><option value="interieur">Intérieur pays (3.000 F)</option><option value="bouake">Retrait Boutique (Gratuit)</option></select><div class="grid grid-cols-2 gap-2 mb-3"><div class="payment-option" onclick="selectPayment('wave')" id="payment-wave"><i class="fa-solid fa-money-bill-wave text-green-500 text-2xl"></i><span class="text-[8px]">Wave</span></div><div class="payment-option" onclick="selectPayment('orange')" id="payment-orange"><i class="fa-solid fa-money-bill-wave text-orange-500 text-2xl"></i><span class="text-[8px]">Orange Money</span></div><div class="payment-option" onclick="selectPayment('mtn')" id="payment-mtn"><i class="fa-solid fa-signal text-yellow-500 text-2xl"></i><span class="text-[8px]">MTN Money</span></div><div class="payment-option" onclick="selectPayment('cash')" id="payment-cash"><i class="fa-solid fa-money-bill text-green-600 text-2xl"></i><span class="text-[8px]">Cash livraison</span></div></div><div class="flex justify-between text-xl font-black p-3 bg-gray-50 rounded-xl"><span>TOTAL :</span><span id="total-display" class="text-red-600">0 F</span></div><div class="flex items-start gap-2 py-2"><input type="checkbox" id="check-verif" class="mt-1"><label for="check-verif" class="text-[8px] font-bold uppercase text-gray-500">Je confirme ma commande et j'accepte les CGV</label></div><button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 text-white py-4 rounded-full font-black pointer-events-none" disabled><i class="fa-brands fa-whatsapp mr-2"></i> Commander via WhatsApp</button></div><button onclick="fermerPanier()" class="w-full mt-6 text-[10px] font-bold uppercase text-gray-400 hover:text-black underline">Continuer mes achats</button></div></div>
+<div id="cartModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4 border-b pb-2"><h2 class="text-base font-black uppercase italic text-[#c5a059]">Mon Panier</h2><button onclick="viderPanier()" class="text-[8px] font-bold text-red-500">Vider</button></div><div id="cart-items" class="space-y-3 mb-4 max-h-[40vh] overflow-y-auto"></div><div id="checkout-form" style="display:none"><input type="text" id="nom-client" placeholder="NOM" class="w-full border p-2 rounded-lg text-xs mb-2"><input type="tel" id="tel-client" placeholder="WHATSAPP" class="w-full border p-2 rounded-lg text-xs mb-2"><input type="text" id="quartier-client" placeholder="QUARTIER" class="w-full border p-2 rounded-lg text-xs mb-2"><select id="zone-livraison" class="w-full border p-2 rounded-lg text-xs mb-2"><option value="">Zone livraison</option><option value="abidjan_nord">Abidjan Nord (1.500 F)</option><option value="abidjan_sud">Abidjan Sud (2.000 F)</option><option value="interieur">Intérieur (3.000 F)</option><option value="bouake">Retrait gratuit</option></select><div class="grid grid-cols-2 gap-2 mb-2"><div class="payment-option" onclick="selectPayment('wave')"><i class="fa-solid fa-money-bill-wave text-green-500 text-xl"></i><span class="text-[7px]">Wave</span></div><div class="payment-option" onclick="selectPayment('orange')"><i class="fa-solid fa-money-bill-wave text-orange-500 text-xl"></i><span class="text-[7px]">Orange</span></div><div class="payment-option" onclick="selectPayment('mtn')"><i class="fa-solid fa-signal text-yellow-500 text-xl"></i><span class="text-[7px]">MTN</span></div><div class="payment-option" onclick="selectPayment('cash')"><i class="fa-solid fa-money-bill text-green-600 text-xl"></i><span class="text-[7px]">Cash</span></div></div><div class="flex justify-between text-base font-black p-2 bg-gray-50 rounded-lg"><span>TOTAL :</span><span id="total-display" class="text-red-600">0 F</span></div><div class="flex items-start gap-2 py-2"><input type="checkbox" id="check-verif" class="mt-0.5"><label class="text-[7px] font-bold uppercase">Je confirme ma commande</label></div><button id="btn-final" onclick="validerCommande()" class="w-full bg-gray-300 text-white py-3 rounded-full font-black text-[9px] pointer-events-none" disabled><i class="fa-brands fa-whatsapp mr-1"></i> Commander</button></div><button onclick="fermerPanier()" class="w-full mt-4 text-[9px] font-bold uppercase text-gray-400 underline">Continuer</button></div></div>
 
-<div id="productDetailModal" class="modal"><div class="modal-content max-w-2xl"><div class="flex justify-between items-center mb-4"><h2 id="detail-name" class="text-xl font-black uppercase italic text-[#c5a059]"></h2><button onclick="fermerDetail()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><img id="detail-img" class="w-full h-64 object-cover rounded-xl mb-4"><p id="detail-price" class="text-[#ff6600] font-black text-2xl mb-2"></p><p id="detail-desc" class="text-xs text-gray-600 mb-4"></p><div class="flex gap-2 mb-4"><button onclick="ajouterDepuisDetail()" class="btn-primary flex-1"><i class="fa-solid fa-cart-plus mr-2"></i> Ajouter au panier</button><button onclick="ajouterComparateur(currentProduct?.id)" class="border border-[#c5a059] px-4 rounded-lg text-[10px] font-black hover:bg-[#c5a059] hover:text-white transition"><i class="fa-solid fa-scale-balanced mr-1"></i> Comparer</button></div><div class="mt-4"><h4 class="text-[10px] font-black uppercase mb-2">AVIS CLIENTS</h4><div id="product-reviews" class="space-y-2"></div><button onclick="deposerAvis()" class="w-full mt-2 border-2 border-dashed border-[#c5a059] py-2 rounded-lg text-[9px] font-black uppercase hover:bg-[#c5a059] hover:text-white transition">✍️ DONNER MON AVIS</button></div></div></div>
+<div id="productDetailModal" class="modal"><div class="modal-content max-w-md"><div class="flex justify-between items-center mb-3"><h2 id="detail-name" class="text-base font-black uppercase italic text-[#c5a059]"></h2><button onclick="fermerDetail()" class="text-xl text-gray-400">&times;</button></div><img id="detail-img" class="w-full h-48 object-cover rounded-lg mb-3"><p id="detail-price" class="text-[#ff6600] font-black text-xl mb-1"></p><p id="detail-desc" class="text-[10px] text-gray-600 mb-3"></p><div class="flex gap-2 mb-3"><button onclick="ajouterDepuisDetail()" class="btn-primary flex-1 py-2 text-[10px]"><i class="fa-solid fa-cart-plus mr-1"></i> Ajouter</button><button onclick="ajouterComparateur(currentProduct?.id)" class="border border-[#c5a059] px-3 rounded-lg text-[10px] font-black">Comparer</button></div><div><h4 class="text-[9px] font-black uppercase mb-1">AVIS</h4><div id="product-reviews" class="text-[8px]"></div><button onclick="deposerAvis()" class="w-full mt-2 border border-dashed border-[#c5a059] py-1 rounded text-[8px] font-black">✍️ Donner mon avis</button></div></div></div>
 
-<div id="wishlistModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black uppercase italic text-[#c5a059]">❤️ Mes Favoris</h2><button onclick="fermerWishlist()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><div id="wishlist-items" class="space-y-3 max-h-[60vh] overflow-y-auto"></div><button onclick="fermerWishlist()" class="w-full mt-4 text-[10px] font-bold uppercase text-gray-400 hover:text-black underline">Fermer</button></div></div>
+<div id="wishlistModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-3"><h2 class="text-base font-black uppercase italic text-[#c5a059]">❤️ Favoris</h2><button onclick="fermerWishlist()" class="text-xl text-gray-400">&times;</button></div><div id="wishlist-items" class="space-y-2 max-h-[50vh] overflow-y-auto"></div><button onclick="fermerWishlist()" class="w-full mt-3 text-[9px] font-bold uppercase text-gray-400 underline">Fermer</button></div></div>
 
-<div id="comparateurModal" class="modal"><div class="modal-content max-w-3xl"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black uppercase italic text-[#c5a059]">⚖️ Comparateur</h2><button onclick="fermerComparateur()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><div id="comparateur-items" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div><button onclick="fermerComparateur()" class="w-full mt-4 text-[10px] font-bold uppercase text-gray-400 hover:text-black underline">Fermer</button></div></div>
+<div id="comparateurModal" class="modal"><div class="modal-content max-w-2xl"><div class="flex justify-between items-center mb-3"><h2 class="text-base font-black uppercase italic text-[#c5a059]">⚖️ Comparateur</h2><button onclick="fermerComparateur()" class="text-xl text-gray-400">&times;</button></div><div id="comparateur-items" class="grid grid-cols-2 gap-2"></div><button onclick="fermerComparateur()" class="w-full mt-3 text-[9px] font-bold uppercase text-gray-400 underline">Fermer</button></div></div>
 
-<div id="wheelModal" class="wheel-mask"><div class="wheel-box"><button onclick="fermerRoue()" class="absolute top-4 right-4 text-gray-900 font-black text-xl hover:text-[#c5a059]">×</button><h3 class="logo-font text-xl font-black italic uppercase">LATYFA LUCKY WHEEL</h3><p id="wheel-msg" class="text-[11px] font-black uppercase mt-2 text-blue-600"></p><p id="wheel-countdown" class="text-[10px] font-black uppercase mt-1 text-red-500"></p><div class="relative"><canvas id="canvas" width="300" height="300"></canvas><div class="absolute top-0 left-1/2 -translate-x-1/2 -mt-4 text-3xl text-[#c5a059] drop-shadow-lg">▼</div></div><button id="spin" onclick="lancerRoue()" class="btn-primary w-full mt-4">TENTER MA CHANCE</button></div></div>
+<div id="wheelModal" class="wheel-mask"><div class="wheel-box"><button onclick="fermerRoue()" class="absolute top-2 right-2 text-gray-900 font-black text-lg">&times;</button><h3 class="logo-font text-base font-black italic">LATYFA LUCKY WHEEL</h3><p id="wheel-msg" class="text-[9px] font-black mt-1 text-blue-600"></p><canvas id="canvas" width="260" height="260"></canvas><div class="relative"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-[#c5a059] drop-shadow-lg">▼</div></div><button id="spin" onclick="lancerRoue()" class="btn-primary w-full mt-3 py-2 text-[10px]">TENTER MA CHANCE</button></div></div>
 
-<div id="parrainageModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-xl font-black uppercase italic text-[#c5a059]">🤝 Programme de parrainage</h2><button onclick="fermerParrainage()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><div class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] p-4 rounded-xl text-white"><div class="grid grid-cols-3 gap-2 text-center mb-4"><div><div class="text-2xl font-black" id="nbFilleuls">0</div><div class="text-[8px]">Filleuls</div></div><div><div class="text-2xl font-black" id="gainTotal">0 F</div><div class="text-[8px]">Gagné</div></div><div><div class="text-2xl font-black" id="prochainPalier">1</div><div class="text-[8px]">Prochain</div></div></div><div class="bg-white p-3 rounded-xl flex gap-2"><input type="text" id="lienParrainage" readonly class="flex-1 text-black text-[9px] p-2 rounded"><button onclick="copierLien()" class="bg-black text-white px-3 py-1 rounded text-[8px] font-black">COPIER</button></div><div class="flex gap-2 mt-3"><button onclick="partagerWhatsApp()" class="flex-1 bg-green-500 text-white py-1 rounded text-[8px] font-black"><i class="fa-brands fa-whatsapp mr-1"></i> WhatsApp</button><button onclick="genererQRParrainage()" class="flex-1 bg-gray-800 text-white py-1 rounded text-[8px] font-black"><i class="fa-solid fa-qrcode mr-1"></i> QR Code</button></div></div></div></div>
+<div id="parrainageModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-3"><h2 class="text-base font-black uppercase italic text-[#c5a059]">🤝 Parrainage</h2><button onclick="fermerParrainage()" class="text-xl text-gray-400">&times;</button></div><div class="bg-gradient-to-r from-[#c5a059] to-[#e2c286] p-3 rounded-xl text-white"><div class="grid grid-cols-3 gap-2 text-center mb-3"><div><div class="text-xl font-black" id="nbFilleuls">0</div><div class="text-[7px]">Filleuls</div></div><div><div class="text-xl font-black" id="gainTotal">0 F</div><div class="text-[7px]">Gagné</div></div><div><div class="text-xl font-black" id="prochainPalier">1</div><div class="text-[7px]">Prochain</div></div></div><div class="bg-white p-2 rounded-lg flex gap-2"><input type="text" id="lienParrainage" readonly class="flex-1 text-black text-[8px] p-1 rounded"><button onclick="copierLien()" class="bg-black text-white px-2 py-1 rounded text-[7px] font-black">COPIER</button></div><div class="flex gap-2 mt-2"><button onclick="partagerWhatsApp()" class="flex-1 bg-green-500 text-white py-1 rounded text-[7px] font-black"><i class="fa-brands fa-whatsapp mr-0.5"></i> WhatsApp</button><button onclick="genererQRParrainage()" class="flex-1 bg-gray-800 text-white py-1 rounded text-[7px] font-black"><i class="fa-solid fa-qrcode mr-0.5"></i> QR Code</button></div></div></div></div>
 
-<div id="qrModal" class="modal"><div class="modal-content text-center"><div class="flex justify-between items-center mb-4"><h2 class="text-xl font-black uppercase italic text-[#c5a059]">📱 Paiement Mobile</h2><button onclick="fermerQR()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><div class="qr-container"><div class="bg-gray-100 p-4 rounded-xl mb-4"><img id="qrImage" src="" class="w-48 h-48 mx-auto"></div><div class="text-2xl font-black text-[#c5a059]" id="qrMontant">0 F</div><button onclick="fermerQR()" class="btn-primary w-full mt-4">J'AI PAYÉ</button></div></div></div>
+<div id="qrModal" class="modal"><div class="modal-content text-center"><div class="flex justify-between items-center mb-3"><h2 class="text-base font-black uppercase italic text-[#c5a059]">📱 Paiement Mobile</h2><button onclick="fermerQR()" class="text-xl text-gray-400">&times;</button></div><div class="bg-gray-100 p-3 rounded-lg mb-3"><img id="qrImage" src="" class="w-40 h-40 mx-auto"></div><div class="text-xl font-black text-[#c5a059]" id="qrMontant">0 F</div><button onclick="fermerQR()" class="btn-primary w-full mt-3 py-2 text-[10px]">J'AI PAYÉ</button></div></div>
 
-<div id="suiviModal" class="modal"><div class="modal-content max-w-2xl"><div class="flex justify-between items-center mb-4"><h2 class="text-xl font-black uppercase italic text-[#c5a059]">🚚 Suivi de commande</h2><button onclick="fermerSuivi()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><div class="flex justify-between mb-6 text-[8px] font-black"><div class="text-center"><div class="step-indicator completed" id="step1">1</div><span>Préparation</span></div><div class="text-center"><div class="step-indicator current" id="step2">2</div><span>Prise en charge</span></div><div class="text-center"><div class="step-indicator pending" id="step3">3</div><span>En route</span></div><div class="text-center"><div class="step-indicator pending" id="step4">4</div><span>Arrivée</span></div><div class="text-center"><div class="step-indicator pending" id="step5">5</div><span>Livré</span></div></div><div class="simulated-map"><div class="map-grid"></div><div class="map-marker" id="livreurMarker" style="top:40%;left:30%"><i class="fa-solid fa-truck"></i></div><div class="absolute" style="top:60%;left:70%"><i class="fa-solid fa-flag text-red-500 text-2xl"></i></div></div><div class="bg-gray-50 p-4 rounded-xl mb-4"><div class="flex items-center gap-3"><div class="w-12 h-12 bg-[#c5a059] rounded-full flex items-center justify-center text-white"><i class="fa-solid fa-user"></i></div><div><p class="text-[10px] font-bold" id="livreurNom">Livreur: Kouassi Jean</p><p class="text-[8px] text-gray-500" id="tempsEstime">Délai: 20-30 min</p><p class="text-[8px] text-gray-400" id="positionActuelle">Statut: Départ</p></div></div></div><button onclick="actualiserSuivi()" class="w-full bg-gray-100 py-3 rounded-lg text-[10px] font-black uppercase hover:bg-gray-200"><i class="fa-solid fa-rotate mr-2"></i> ACTUALISER</button></div></div>
+<div id="suiviModal" class="modal"><div class="modal-content max-w-md"><div class="flex justify-between items-center mb-3"><h2 class="text-base font-black uppercase italic text-[#c5a059]">🚚 Suivi</h2><button onclick="fermerSuivi()" class="text-xl text-gray-400">&times;</button></div><div class="flex justify-between mb-3 text-[7px] font-black"><div class="text-center"><div class="step-indicator completed" id="step1">1</div><span>Préparation</span></div><div class="text-center"><div class="step-indicator current" id="step2">2</div><span>Prise en charge</span></div><div class="text-center"><div class="step-indicator pending" id="step3">3</div><span>En route</span></div><div class="text-center"><div class="step-indicator pending" id="step4">4</div><span>Arrivée</span></div><div class="text-center"><div class="step-indicator pending" id="step5">5</div><span>Livré</span></div></div><div class="simulated-map"><div class="map-grid"></div><div class="map-marker" id="livreurMarker" style="top:40%;left:30%"><i class="fa-solid fa-truck text-xs"></i></div></div><div class="bg-gray-50 p-2 rounded-lg mb-2"><div class="flex items-center gap-2"><div class="w-8 h-8 bg-[#c5a059] rounded-full flex items-center justify-center text-white"><i class="fa-solid fa-user text-xs"></i></div><div><p class="text-[9px] font-bold" id="livreurNom">Livreur: Kouassi</p><p class="text-[7px] text-gray-500" id="tempsEstime">Délai: 20-30 min</p><p class="text-[7px] text-gray-400" id="positionActuelle">Statut: Départ</p></div></div></div><button onclick="actualiserSuivi()" class="w-full bg-gray-100 py-2 rounded-lg text-[9px] font-black">Actualiser</button></div></div>
 
-<div id="avisModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black uppercase italic text-[#c5a059]">⭐ Avis clients</h2><button onclick="fermerAvis()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><div id="all-reviews" class="space-y-4 max-h-[60vh] overflow-y-auto"></div><button onclick="deposerAvis()" class="btn-primary w-full mt-4 text-[10px] py-3">✍️ DÉPOSER UN AVIS</button></div></div>
+<div id="avisModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-3"><h2 class="text-base font-black uppercase italic text-[#c5a059]">⭐ Avis</h2><button onclick="fermerAvis()" class="text-xl text-gray-400">&times;</button></div><div id="all-reviews" class="space-y-2 max-h-[50vh] overflow-y-auto"></div><button onclick="deposerAvis()" class="btn-primary w-full mt-3 py-2 text-[10px]">✍️ Donner mon avis</button></div></div>
 
-<div id="depotAvisModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black uppercase italic text-[#c5a059]">📝 Donner mon avis</h2><button onclick="fermerDepotAvis()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><div class="space-y-4"><div><label class="text-[9px] font-black uppercase">Note</label><div class="flex gap-2 text-2xl text-gray-300" id="rating-stars"><i class="fa-regular fa-star cursor-pointer hover:text-[#c5a059]" onclick="setRating(1)"></i><i class="fa-regular fa-star cursor-pointer hover:text-[#c5a059]" onclick="setRating(2)"></i><i class="fa-regular fa-star cursor-pointer hover:text-[#c5a059]" onclick="setRating(3)"></i><i class="fa-regular fa-star cursor-pointer hover:text-[#c5a059]" onclick="setRating(4)"></i><i class="fa-regular fa-star cursor-pointer hover:text-[#c5a059]" onclick="setRating(5)"></i></div></div><input type="text" id="avis-nom" placeholder="Votre nom" class="w-full border p-3 rounded-lg text-sm"><textarea id="avis-comment" placeholder="Votre commentaire" rows="4" class="w-full border p-3 rounded-lg text-sm"></textarea><input type="file" id="avis-photo" accept="image/*" class="w-full border p-2 rounded-lg text-sm"><button onclick="soumettreAvis()" class="btn-primary w-full">PUBLIER MON AVIS</button></div></div></div>
+<div id="depotAvisModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-3"><h2 class="text-base font-black uppercase italic text-[#c5a059]">📝 Avis</h2><button onclick="fermerDepotAvis()" class="text-xl text-gray-400">&times;</button></div><div class="space-y-3"><div><label class="text-[8px] font-black">Note</label><div class="flex gap-1 text-xl" id="rating-stars"><i class="fa-regular fa-star cursor-pointer" onclick="setRating(1)"></i><i class="fa-regular fa-star cursor-pointer" onclick="setRating(2)"></i><i class="fa-regular fa-star cursor-pointer" onclick="setRating(3)"></i><i class="fa-regular fa-star cursor-pointer" onclick="setRating(4)"></i><i class="fa-regular fa-star cursor-pointer" onclick="setRating(5)"></i></div></div><input type="text" id="avis-nom" placeholder="Nom" class="w-full border p-2 rounded text-xs"><textarea id="avis-comment" placeholder="Commentaire" rows="3" class="w-full border p-2 rounded text-xs"></textarea><input type="file" id="avis-photo" accept="image/*" class="w-full border p-1 rounded text-xs"><button onclick="soumettreAvis()" class="btn-primary w-full py-2 text-[10px]">PUBLIER</button></div></div></div>
 
-<div id="adventModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black uppercase italic text-[#c5a059]">📅 Calendrier de l'Avent</h2><button onclick="fermerAdvent()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><div class="advent-calendar" id="advent-calendar"></div><p class="text-[8px] text-gray-400 text-center mt-4">Ouvrez une case chaque jour pour découvrir votre surprise !</p></div></div>
+<div id="adventModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-3"><h2 class="text-base font-black uppercase italic text-[#c5a059]">📅 Calendrier Avent</h2><button onclick="fermerAdvent()" class="text-xl text-gray-400">&times;</button></div><div class="advent-calendar" id="advent-calendar"></div><p class="text-[7px] text-gray-400 text-center mt-3">Ouvrez une case chaque jour !</p></div></div>
 
-<div id="adminModal" class="modal"><div class="modal-content max-w-4xl"><div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-black uppercase italic text-[#c5a059]"><i class="fa-solid fa-crown mr-2"></i> Administration</h2><button onclick="fermerAdmin()" class="text-2xl text-gray-400 hover:text-black">&times;</button></div><div class="admin-menu"><div class="admin-menu-item active" onclick="switchAdminSection('dashboard')">Dashboard</div><div class="admin-menu-item" onclick="switchAdminSection('produits')">Produits</div><div class="admin-menu-item" onclick="switchAdminSection('commandes')">Commandes</div><div class="admin-menu-item" onclick="switchAdminSection('clients')">Clients</div><div class="admin-menu-item" onclick="switchAdminSection('messagerie')">Messages</div><div class="admin-menu-item" onclick="switchAdminSection('sauvegarde')">Sauvegarde</div><div class="admin-menu-item" onclick="switchAdminSection('maintenance')">Maintenance</div></div><div id="dashboardSection" class="admin-section active"><canvas id="salesChart" height="200"></canvas><div class="grid grid-cols-2 gap-4 mt-4"><div class="bg-white p-4 rounded-xl text-center"><div class="text-2xl font-black text-[#c5a059]" id="stat-ca">0 F</div><div class="text-[8px] font-black">CA Total</div></div><div class="bg-white p-4 rounded-xl text-center"><div class="text-2xl font-black text-[#c5a059]" id="stat-nb">0</div><div class="text-[8px] font-black">Commandes</div></div></div></div><div id="produitsSection" class="admin-section"><div class="bg-white p-4 rounded-xl mb-4"><h4 class="text-[10px] font-black">Ajouter un produit</h4><input type="text" id="adm-name" placeholder="Nom" class="w-full border p-2 rounded mb-2"><input type="number" id="adm-price" placeholder="Prix" class="w-full border p-2 rounded mb-2"><textarea id="adm-img" placeholder="Images (URLs)" class="w-full border p-2 rounded mb-2"></textarea><button onclick="ajouterProduitAdmin()" class="btn-primary w-full">Ajouter</button></div><div id="admin-list" class="space-y-2 max-h-96 overflow-y-auto"></div></div><div id="commandesSection" class="admin-section"><div id="historique-zone" class="space-y-2 max-h-96 overflow-y-auto"></div></div><div id="clientsSection" class="admin-section"><div id="clients-list" class="space-y-2"></div></div><div id="messagerieSection" class="admin-section"><select id="client-select" class="w-full border p-2 mb-2"><option value="">Tous les clients</option></select><input type="text" id="messageObjet" placeholder="Objet" class="w-full border p-2 mb-2"><textarea id="messageContenu" placeholder="Message" rows="4" class="w-full border p-2 mb-2"></textarea><button onclick="envoyerMessageAdmin()" class="btn-primary w-full">Envoyer</button></div><div id="sauvegardeSection" class="admin-section"><button onclick="sauvegarderToutesDonnees()" class="btn-primary w-full mb-2">Sauvegarder</button><button onclick="restaurerDonnees()" class="bg-gray-800 text-white w-full py-3 rounded-lg text-[10px] font-black">Restaurer</button><input type="file" id="restoreFile" accept=".json" style="display:none"></div><div id="maintenanceSection" class="admin-section"><button onclick="setMaintenance(true)" class="bg-red-500 text-white px-4 py-2 rounded mr-2">Activer maintenance</button><button onclick="setMaintenance(false)" class="bg-green-500 text-white px-4 py-2 rounded">Désactiver</button></div></div></div>
+<div id="cgvModal" class="modal"><div class="modal-content max-w-md"><div class="flex justify-between items-center border-b pb-2 mb-3"><h2 class="text-base font-black uppercase text-gray-800 italic">CGV</h2><button onclick="fermerCGV()" class="text-xl text-gray-400">&times;</button></div><div class="text-[9px] space-y-2 text-gray-700 max-h-[50vh] overflow-y-auto"><p><strong>1. Identité :</strong> LATYFA BOUTIQUE - Abidjan, Côte d'Ivoire</p><p><strong>2. Prix :</strong> en FCFA TTC.</p><p><strong>3. Paiement :</strong> Wave, Orange Money, MTN, cash.</p><p><strong>4. Livraison :</strong> Abidjan 24-48h, intérieur 48-72h.</p><p><strong>5. Rétractation :</strong> 14 jours pour retour.</p><p><strong>6. Données :</strong> confidentielles.</p><p><strong>7. Litiges :</strong> juridiction d'Abidjan.</p></div><button onclick="fermerCGV()" class="btn-primary w-full mt-3 py-2 text-[10px]">J'accepte</button></div></div>
 
-<div id="cgvModal" class="modal"><div class="modal-content max-w-2xl"><div class="flex justify-between items-center border-b pb-4 mb-6"><h2 class="text-xl font-black uppercase text-gray-800 italic">Conditions Générales de Vente</h2><button onclick="fermerCGV()" class="text-2xl font-bold text-gray-400 hover:text-black">&times;</button></div><div class="text-[11px] space-y-4 text-gray-700 leading-relaxed overflow-y-auto max-h-[60vh]"><p><strong>Article 1 : Identité</strong><br>LATYFA BOUTIQUE - Abidjan, Côte d'Ivoire - Tél: 07 09 00 28 81</p><p><strong>Article 2 : Prix</strong><br>Prix en FCFA TTC.</p><p><strong>Article 3 : Paiement</strong><br>Mobile Money (Wave, Orange Money, MTN) ou cash à la livraison.</p><p><strong>Article 4 : Livraison</strong><br>Abidjan: 24-48h / Intérieur: 48-72h. Frais selon zone.</p><p><strong>Article 5 : Droit de rétractation</strong><br>14 jours pour retourner un article non porté.</p><p><strong>Article 6 : Données personnelles</strong><br>Vos données sont confidentielles.</p><p><strong>Article 7 : Litiges</strong><br>Juridiction d'Abidjan.</p></div><button onclick="fermerCGV()" class="btn-primary w-full mt-8">J'accepte</button></div></div>
+<div id="adminModal" class="modal"><div class="modal-content max-w-3xl"><div class="flex justify-between items-center mb-4"><h2 class="text-lg font-black uppercase italic text-[#c5a059]">👑 Admin</h2><button onclick="fermerAdmin()" class="text-xl text-gray-400">&times;</button></div><div class="admin-menu"><div class="admin-menu-item active" onclick="switchAdminSection('dashboard')">Dashboard</div><div class="admin-menu-item" onclick="switchAdminSection('produits')">Produits</div><div class="admin-menu-item" onclick="switchAdminSection('commandes')">Commandes</div><div class="admin-menu-item" onclick="switchAdminSection('clients')">Clients</div><div class="admin-menu-item" onclick="switchAdminSection('sauvegarde')">Sauvegarde</div><div class="admin-menu-item" onclick="switchAdminSection('maintenance')">Maintenance</div></div><div id="dashboardSection" class="admin-section active"><canvas id="salesChart" height="150"></canvas><div class="grid grid-cols-2 gap-2 mt-3"><div class="bg-white p-2 rounded text-center"><div class="text-base font-black text-[#c5a059]" id="stat-ca">0 F</div><div class="text-[7px] font-black">CA Total</div></div><div class="bg-white p-2 rounded text-center"><div class="text-base font-black text-[#c5a059]" id="stat-nb">0</div><div class="text-[7px] font-black">Commandes</div></div></div></div><div id="produitsSection" class="admin-section"><div class="bg-white p-3 rounded mb-3"><h4 class="text-[9px] font-black">Ajouter produit</h4><input type="text" id="adm-name" placeholder="Nom" class="w-full border p-1 rounded text-xs mb-1"><input type="number" id="adm-price" placeholder="Prix" class="w-full border p-1 rounded text-xs mb-1"><textarea id="adm-img" placeholder="Images URL" class="w-full border p-1 rounded text-xs mb-1"></textarea><button onclick="ajouterProduitAdmin()" class="btn-primary w-full py-1 text-[9px]">Ajouter</button></div><div id="admin-list" class="space-y-1 max-h-64 overflow-y-auto"></div></div><div id="commandesSection" class="admin-section"><div id="historique-zone" class="space-y-1 max-h-64 overflow-y-auto"></div></div><div id="clientsSection" class="admin-section"><div id="clients-list" class="space-y-1"></div></div><div id="sauvegardeSection" class="admin-section"><button onclick="sauvegarderToutesDonnees()" class="btn-primary w-full mb-2 py-2 text-[10px]">Sauvegarder</button><button onclick="restaurerDonnees()" class="bg-gray-800 text-white w-full py-2 rounded text-[10px] font-black">Restaurer</button><input type="file" id="restoreFile" accept=".json" style="display:none"></div><div id="maintenanceSection" class="admin-section"><button onclick="setMaintenance(true)" class="bg-red-500 text-white px-3 py-1 rounded text-[9px] mr-2">Activer</button><button onclick="setMaintenance(false)" class="bg-green-500 text-white px-3 py-1 rounded text-[9px]">Désactiver</button></div></div></div>
 
-<footer class="bg-white border-t pt-12 pb-6 mt-8"><div class="container mx-auto px-4 text-center"><div class="flex items-center justify-center gap-2 mb-4"><div class="h-8 w-8 rounded-full bg-[#c5a059] flex items-center justify-center text-white font-bold">L</div><span class="text-xl font-black italic text-[#c5a059]">LATYFA SHOP</span></div><div class="flex flex-wrap justify-center gap-6 text-[10px] text-gray-500 mb-4"><span class="cursor-pointer hover:text-[#c5a059]" onclick="ouvrirCGV()">CGV</span><span class="cursor-pointer hover:text-[#c5a059]" onclick="ouvrirSuivi()">Suivi colis</span><span class="cursor-pointer hover:text-[#c5a059]" onclick="ouvrirAdvent()">📅 Calendrier Avent</span></div><p class="text-gray-500 text-[10px] font-bold uppercase">© 2026 LATYFA BUSINESS | Côte d'Ivoire</p><p class="text-[8px] text-gray-400 mt-2">📍 Abidjan | 📞 07 09 00 28 81</p></div></footer>
+<footer class="bg-white border-t pt-8 pb-4 mt-6"><div class="container mx-auto px-3 text-center"><div class="flex items-center justify-center gap-2 mb-3"><div class="h-7 w-7 rounded-full bg-[#c5a059] flex items-center justify-center text-white font-bold text-xs">L</div><span class="text-base font-black italic text-[#c5a059]">LATYFA SHOP</span></div><div class="flex flex-wrap justify-center gap-4 text-[8px] text-gray-500 mb-3"><span class="cursor-pointer hover:text-[#c5a059]" onclick="ouvrirCGV()">CGV</span><span class="cursor-pointer hover:text-[#c5a059]" onclick="ouvrirSuivi()">Suivi colis</span><span class="cursor-pointer hover:text-[#c5a059]" onclick="ouvrirAdvent()">📅 Calendrier</span></div><p class="text-gray-500 text-[8px] font-bold uppercase">© 2026 LATYFA BUSINESS | Côte d'Ivoire</p><p class="text-[7px] text-gray-400 mt-1">📍 Abidjan | 📞 07 09 00 28 81</p></div></footer>
 
-<div class="admin-btn" onclick="ouvrirAdmin()">ADM</div>
+<div class="admin-btn" onclick="ouvrirAdmin()">⚙️</div>
 
 <script>
 // ==================== DONNÉES ====================
 const PRODUITS_BASE = [
-    { id: 1, name: "Sac Prestige Latyfa", price: 45000, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", description: "Sac en cuir de luxe, finition dorée.", enStock: true, cat: "sac", ventes: 45, estNouveau: true, rating: 4.8 },
-    { id: 2, name: "Collier Perle Royale", price: 25000, image: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", description: "Collier en perles fines, élégance assurée.", enStock: true, cat: "bijoux", ventes: 38, rating: 4.9 },
-    { id: 3, name: "Bracelet Cristal", price: 15000, image: "https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500", description: "Bracelet en cristal Swarovski.", enStock: true, cat: "bijoux", ventes: 52, rating: 4.7 },
-    { id: 4, name: "Parfum Oud Mystique", price: 35000, image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500", description: "Parfum oriental aux notes boisées.", enStock: true, cat: "parfum", ventes: 27, rating: 4.6 },
-    { id: 5, name: "Escarpins Gold Night", price: 28000, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500", description: "Escarpins dorés pour vos soirées.", enStock: true, cat: "chaussures", ventes: 31, stockBas: true, rating: 4.5 },
-    { id: 6, name: "Sac à main Élégance", price: 55000, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500", description: "Sac à main de luxe.", enStock: true, cat: "sac", ventes: 22, estLuxe: true, rating: 4.9 },
-    { id: 7, name: "Bague Solitaire Or", price: 89000, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500", description: "Bague en or 18 carats.", enStock: true, cat: "bijoux", ventes: 15, estLuxe: true, rating: 5.0 },
-    { id: 8, name: "Montre Classique", price: 65000, image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500", description: "Montre à quartz étanche.", enStock: true, cat: "autres", ventes: 19, rating: 4.7 }
+    { id: 1, name: "Sac Prestige Latyfa", price: 45000, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", description: "Sac en cuir de luxe.", enStock: true, cat: "sac", ventes: 45, estNouveau: true, rating: 4.8 },
+    { id: 2, name: "Collier Perle Royale", price: 25000, image: "https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?w=500", description: "Collier en perles fines.", enStock: true, cat: "bijoux", ventes: 38, rating: 4.9 },
+    { id: 3, name: "Bracelet Cristal", price: 15000, image: "https://images.unsplash.com/photo-1611085583191-a3b130944362?w=500", description: "Bracelet en cristal.", enStock: true, cat: "bijoux", ventes: 52, rating: 4.7 },
+    { id: 4, name: "Parfum Oud Mystique", price: 35000, image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500", description: "Parfum oriental.", enStock: true, cat: "parfum", ventes: 27, rating: 4.6 },
+    { id: 5, name: "Escarpins Gold Night", price: 28000, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500", description: "Escarpins dorés.", enStock: true, cat: "chaussures", ventes: 31, stockBas: true, rating: 4.5 },
+    { id: 6, name: "Sac à main Élégance", price: 55000, image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500", description: "Sac à main luxe.", enStock: true, cat: "sac", ventes: 22, estLuxe: true, rating: 4.9 },
+    { id: 7, name: "Bague Solitaire Or", price: 89000, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500", description: "Bague en or.", enStock: true, cat: "bijoux", ventes: 15, estLuxe: true, rating: 5.0 },
+    { id: 8, name: "Montre Classique", price: 65000, image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500", description: "Montre étanche.", enStock: true, cat: "autres", ventes: 19, rating: 4.7 }
 ];
 
 let products = [...PRODUITS_BASE];
-let cart = [], wishlist = [], comparateur = [], clients = [], messages = [], avis = [], utilisateurConnecte = null;
-let pointsFidelite = 0, currentProduct = null, currentRating = 0, remiseCodePromo = 0, iaActif = false;
+let cart = [], wishlist = [], comparateur = [], clients = [], avis = [], utilisateurConnecte = null;
+let pointsFidelite = 0, currentProduct = null, currentRating = 0, iaActif = false;
 let parrainageData = { parrains: {} };
-let etapeSuivi = 2, suiviInterval = null, wheelSpinning = false;
-let positionsSimulees = [{top:40,left:30},{top:45,left:40},{top:50,left:50},{top:55,left:60},{top:60,left:70}];
-const prizes = ["-5%", "REESSAYER", "-10%", "CADEAU", "-15%", "REESSAYER", "LIVRAISON", "REESSAYER"];
+let wheelSpinning = false, suiviInterval = null, etapeSuivi = 2;
+const positionsSimulees = [{top:40,left:30},{top:45,left:40},{top:50,left:50},{top:55,left:60},{top:60,left:70}];
 const categories = [
     { id: "tous", nom: "Tout voir", icone: "fa-crown" },
     { id: "bijoux", nom: "Bijoux", icone: "fa-gem" },
@@ -296,9 +302,10 @@ const categories = [
     { id: "chaussures", nom: "Chaussures", icone: "fa-shoe-prints" },
     { id: "autres", nom: "Autres", icone: "fa-plus" }
 ];
-const tarifsLivraison = { abidjan_nord: 1500, abidjan_sud: 2000, interieur: 3000, bouake: 0 };
-const notifications = ["Une cliente d'Abidjan vient d'acheter un Collier ✨", "Nouveau colis expédié vers Yamoussoukro 📦", "5 personnes consultent ce produit 🔥"];
-const reponsesIA = { "bonjour": "Bonjour ! 👋 Comment puis-je vous aider ?", "prix": "Nos prix varient de 5.000 F à 150.000 F.", "livraison": "Nous livrons partout en Côte d'Ivoire !", "paiement": "Nous acceptons Wave, Orange Money, MTN et cash.", "contact": "WhatsApp: 07 09 00 28 81" };
+const tarifsLivraison = { abidjan_nord:1500, abidjan_sud:2000, interieur:3000, bouake:0 };
+const notifications = ["✨ Une cliente d'Abidjan vient d'acheter un Collier", "📦 Nouveau colis expédié vers Yamoussoukro", "🔥 5 personnes consultent ce produit"];
+const reponsesIA = { "bonjour":"Bonjour ! 👋 Comment puis-je vous aider ?", "prix":"Nos prix de 5.000 à 150.000 F", "livraison":"Livraison partout en CI sous 24-72h", "paiement":"Wave, Orange Money, MTN, cash", "contact":"WhatsApp 07 09 00 28 81" };
+const prizes = ["-5%","REESSAYER","-10%","CADEAU","-15%","REESSAYER","LIVRAISON","REESSAYER"];
 
 // ==================== CHARGEMENT ====================
 function chargerDonnees() {
@@ -306,96 +313,81 @@ function chargerDonnees() {
     cart = JSON.parse(localStorage.getItem('latyfa_cart')) || [];
     wishlist = JSON.parse(localStorage.getItem('latyfa_wishlist')) || [];
     comparateur = JSON.parse(localStorage.getItem('latyfa_comparateur')) || [];
-    clients = JSON.parse(localStorage.getItem('latyfa_clients')) || [{ id: 1, nom: "Admin", email: "admin@latyfa.com", password: "admin2026", isAdmin: true }];
-    messages = JSON.parse(localStorage.getItem('latyfa_messages')) || [];
-    avis = JSON.parse(localStorage.getItem('latyfa_avis')) || [{ id: 1, nom: "Mariam K.", note: 5, commentaire: "Super qualité !", date: "2026-04-08", photo: "https://randomuser.me/api/portraits/women/44.jpg" }];
+    clients = JSON.parse(localStorage.getItem('latyfa_clients')) || [{ id:1, nom:"Admin", email:"admin@latyfa.com", password:"admin2026", isAdmin:true }];
+    avis = JSON.parse(localStorage.getItem('latyfa_avis')) || [{ id:1, nom:"Mariam K.", note:5, commentaire:"Super qualité !", date:"2026-04-08", photo:"https://randomuser.me/api/portraits/women/44.jpg" }];
     pointsFidelite = parseInt(localStorage.getItem('latyfa_points')) || 0;
     parrainageData = JSON.parse(localStorage.getItem('latyfa_parrainage')) || { parrains: {} };
     utilisateurConnecte = JSON.parse(localStorage.getItem('latyfa_session'));
-    renderCategories();
-    render();
-    updateCartCount();
-    updateWishlistCount();
-    updateComparateurCount();
-    updateUserUI();
+    renderCategories(); render(); updateCartCount(); updateWishlistCount(); updateComparateurCount(); updateUserUI();
     document.getElementById('loyalty-points').innerText = pointsFidelite;
-    document.getElementById('loyalty-progress').style.width = Math.min(100, (pointsFidelite/100)*100)+'%';
-    updatePopularProducts();
-    startFlashSale();
-    startSocialProof();
-    drawWheel();
+    document.getElementById('loyalty-progress').style.width = Math.min(100,(pointsFidelite/100)*100)+'%';
+    updatePopularProducts(); startFlashSale(); startSocialProof(); drawWheel();
 }
 
 function renderCategories() {
-    const container = document.getElementById('categories-static');
-    if(container) container.innerHTML = categories.map(c => `<div class="category-static-item" onclick="filterByCategory('${c.id}')"><i class="fa-solid ${c.icone}"></i><span>${c.nom}</span></div>`).join('');
+    let html = '';
+    categories.forEach(c => { html += `<div class="category-static-item" onclick="filterByCategory('${c.id}')"><i class="fa-solid ${c.icone}"></i><span>${c.nom}</span></div>`; });
+    document.getElementById('categories-static').innerHTML = html;
 }
-
 function filterByCategory(catId) {
-    document.querySelectorAll('.category-static-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.category-static-item').forEach(el=>el.classList.remove('active'));
     if(event.target) event.target.closest('.category-static-item').classList.add('active');
-    products = catId === "tous" ? [...PRODUITS_BASE] : PRODUITS_BASE.filter(p => p.cat === catId);
+    products = (catId === 'tous') ? [...PRODUITS_BASE] : PRODUITS_BASE.filter(p=>p.cat===catId);
     render();
 }
-
 function render() {
-    const grid = document.getElementById('product-grid');
+    let grid = document.getElementById('product-grid');
     if(!grid) return;
     grid.innerHTML = products.map(p => `
-        <div class="product-card p-3 relative cursor-pointer" onclick="voirDetails(${p.id})">
-            <div class="favorite-btn absolute top-2 right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center cursor-pointer z-10 shadow-md ${wishlist.includes(p.id) ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlist(${p.id})"><i class="fa-${wishlist.includes(p.id) ? 'solid' : 'regular'} fa-heart text-[10px]"></i></div>
+        <div class="product-card p-2 relative cursor-pointer" onclick="voirDetails(${p.id})">
+            <div class="favorite-btn absolute top-1 right-1 w-7 h-7 bg-white rounded-full flex items-center justify-center cursor-pointer z-10 shadow-md ${wishlist.includes(p.id)?'active':''}" onclick="event.stopPropagation(); toggleWishlist(${p.id})"><i class="fa-${wishlist.includes(p.id)?'solid':'regular'} fa-heart text-[9px]"></i></div>
             ${p.estNouveau ? '<span class="badge-nouveau">NOUVEAU</span>' : ''}
             ${p.estLuxe ? '<span class="badge-luxe">LUXE</span>' : ''}
             ${p.stockBas ? '<span class="stock-alert">🔥 DERNIERS</span>' : ''}
-            <img src="${p.image}" class="h-48 w-full object-cover rounded-lg mb-3">
-            <h3 class="text-[11px] font-bold uppercase">${p.name}</h3>
-            <div class="text-[#c5a059] font-black text-lg mt-2">${p.price.toLocaleString()} F</div>
-            <div class="flex items-center gap-1 mt-1"><div class="flex text-[#c5a059] text-[8px]">${'★'.repeat(Math.floor(p.rating||4))}${'☆'.repeat(5-Math.floor(p.rating||4))}</div><span class="text-[7px] text-gray-400">(${Math.floor(Math.random()*30)+10})</span></div>
-            <div class="bg-gray-50 text-center py-2 mt-3 rounded text-[9px] font-bold uppercase hover:bg-[#c5a059] hover:text-white transition">VOIR L'ARTICLE</div>
+            <img src="${p.image}" class="h-36 w-full object-cover rounded mb-2">
+            <h3 class="text-[10px] font-bold uppercase truncate">${p.name}</h3>
+            <div class="text-[#c5a059] font-black text-sm mt-1">${p.price.toLocaleString()} F</div>
+            <div class="flex items-center gap-1 mt-1"><div class="flex text-[#c5a059] text-[7px]">${'★'.repeat(Math.floor(p.rating||4))}${'☆'.repeat(5-Math.floor(p.rating||4))}</div><span class="text-[6px] text-gray-400">(${Math.floor(Math.random()*30)+10})</span></div>
+            <div class="bg-gray-50 text-center py-1.5 mt-2 rounded text-[8px] font-bold uppercase hover:bg-[#c5a059] hover:text-white transition">VOIR</div>
         </div>
     `).join('');
 }
-
 function updatePopularProducts() {
-    const container = document.getElementById('popular-products');
+    let container = document.getElementById('popular-products');
     if(!container) return;
-    const populaires = [...PRODUITS_BASE].sort((a,b)=> (b.ventes||0)-(a.ventes||0)).slice(0,6);
-    container.innerHTML = populaires.map(p => `<div class="flex-shrink-0 w-32 cursor-pointer" onclick="voirDetails(${p.id})"><img src="${p.image}" class="h-28 w-full object-cover rounded-lg mb-1"><p class="text-[9px] font-bold truncate">${p.name}</p><p class="text-[#c5a059] text-[10px] font-black">${p.price.toLocaleString()} F</p></div>`).join('');
+    let populaires = [...PRODUITS_BASE].sort((a,b)=>(b.ventes||0)-(a.ventes||0)).slice(0,6);
+    container.innerHTML = populaires.map(p => `<div class="flex-shrink-0 w-28 cursor-pointer" onclick="voirDetails(${p.id})"><img src="${p.image}" class="h-24 w-full object-cover rounded-lg mb-1"><p class="text-[8px] font-bold truncate">${p.name}</p><p class="text-[#c5a059] text-[9px] font-black">${p.price.toLocaleString()} F</p></div>`).join('');
 }
-
-// ==================== PRODUITS ====================
-function voirDetails(id) {
-    currentProduct = PRODUITS_BASE.find(p => p.id === id);
+function voirDetails(id){
+    currentProduct = PRODUITS_BASE.find(p=>p.id===id);
     if(!currentProduct) return;
     document.getElementById('detail-name').innerText = currentProduct.name;
-    document.getElementById('detail-price').innerText = currentProduct.price.toLocaleString() + " F";
+    document.getElementById('detail-price').innerText = currentProduct.price.toLocaleString()+" F";
     document.getElementById('detail-desc').innerText = currentProduct.description;
     document.getElementById('detail-img').src = currentProduct.image;
-    const productReviews = avis.filter(a => a.productId === id).slice(0,2);
-    document.getElementById('product-reviews').innerHTML = productReviews.map(a => `<div class="flex gap-2"><img src="${a.photo}" class="w-6 h-6 rounded-full"><div><div class="flex text-[#c5a059] text-[8px]">${'★'.repeat(a.note)}${'☆'.repeat(5-a.note)}</div><p class="text-[8px]">"${a.commentaire.substring(0,40)}"</p></div></div>`).join('') || '<p class="text-[8px] text-gray-400">Soyez le premier à donner votre avis</p>';
+    let productReviews = avis.filter(a=>a.productId===id).slice(0,2);
+    document.getElementById('product-reviews').innerHTML = productReviews.map(a=>`<div class="flex gap-1"><img src="${a.photo}" class="w-5 h-5 rounded-full"><div><div class="flex text-[#c5a059] text-[6px]">${'★'.repeat(a.note)}${'☆'.repeat(5-a.note)}</div><p class="text-[7px]">"${a.commentaire.substring(0,40)}"</p></div></div>`).join('') || '<p class="text-[7px] text-gray-400">Soyez le premier à donner votre avis</p>';
     document.getElementById('productDetailModal').classList.add('active');
 }
-function fermerDetail() { document.getElementById('productDetailModal').classList.remove('active'); currentProduct = null; }
+function fermerDetail(){ document.getElementById('productDetailModal').classList.remove('active'); currentProduct=null; }
 
 // ==================== PANIER ====================
-function ajouterDepuisDetail() {
+function ajouterDepuisDetail(){
     if(!currentProduct) return;
-    const existing = cart.find(i => i.id === currentProduct.id);
-    existing ? existing.qty++ : cart.push({ id: currentProduct.id, name: currentProduct.name, price: currentProduct.price, qty: 1, image: currentProduct.image });
-    localStorage.setItem('latyfa_cart', JSON.stringify(cart));
-    updateCartCount();
-    fermerDetail();
-    showToast("✨ Produit ajouté");
+    let existing = cart.find(i=>i.id===currentProduct.id);
+    existing ? existing.qty++ : cart.push({id:currentProduct.id,name:currentProduct.name,price:currentProduct.price,qty:1,image:currentProduct.image});
+    localStorage.setItem('latyfa_cart',JSON.stringify(cart));
+    updateCartCount(); fermerDetail(); showToast("✨ Produit ajouté");
     ajouterPointsFidelite(currentProduct.price);
 }
-function updateCartCount() { document.getElementById('cart-count').innerText = cart.reduce((s,i)=>s+i.qty,0); }
-function ouvrirPanier() {
-    const modal = document.getElementById('cartModal'), itemsDiv = document.getElementById('cart-items'), form = document.getElementById('checkout-form');
-    if(cart.length===0){ itemsDiv.innerHTML='<div class="text-center py-10 text-gray-400">🛒 Panier vide</div>'; form.style.display='none'; }
+function updateCartCount(){ document.getElementById('cart-count').innerText = cart.reduce((s,i)=>s+i.qty,0); }
+function ouvrirPanier(){
+    let modal=document.getElementById('cartModal'), itemsDiv=document.getElementById('cart-items'), form=document.getElementById('checkout-form');
+    if(cart.length===0){ itemsDiv.innerHTML='<div class="text-center py-6 text-gray-400 text-[10px]">🛒 Panier vide</div>'; form.style.display='none'; }
     else{
         form.style.display='block';
-        itemsDiv.innerHTML = cart.map(i => `<div class="flex items-center gap-3 border-b pb-3"><img src="${i.image}" class="w-12 h-12 object-cover rounded"><div class="flex-1"><p class="text-[10px] font-bold">${i.name}</p><p class="text-[9px] text-[#c5a059]">${(i.price*i.qty).toLocaleString()} F</p></div><div class="flex items-center gap-2"><button onclick="modifierQty(${i.id},-1)" class="w-6 h-6 bg-gray-100 rounded-full">-</button><span class="text-[10px] w-4 text-center">${i.qty}</span><button onclick="modifierQty(${i.id},1)" class="w-6 h-6 bg-gray-100 rounded-full">+</button></div></div>`).join('');
-        const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+        itemsDiv.innerHTML = cart.map(i => `<div class="flex items-center gap-2 border-b pb-2"><img src="${i.image}" class="w-10 h-10 object-cover rounded"><div class="flex-1"><p class="text-[9px] font-bold">${i.name}</p><p class="text-[8px] text-[#c5a059]">${(i.price*i.qty).toLocaleString()} F</p></div><div class="flex items-center gap-1"><button onclick="modifierQty(${i.id},-1)" class="w-6 h-6 bg-gray-100 rounded-full text-xs">-</button><span class="text-[9px] w-4 text-center">${i.qty}</span><button onclick="modifierQty(${i.id},1)" class="w-6 h-6 bg-gray-100 rounded-full text-xs">+</button></div></div>`).join('');
+        let total = cart.reduce((s,i)=>s+i.price*i.qty,0);
         document.getElementById('total-display').innerText = total.toLocaleString()+" F";
     }
     modal.classList.add('active');
@@ -420,7 +412,6 @@ function validerCommande(){
     localStorage.setItem('latyfa_historique',JSON.stringify(historique));
     ajouterPointsFidelite(sousTotal);
     cart=[]; localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); fermerPanier(); showToast("Commande envoyée !");
-    if(utilisateurConnecte) envoyerMessageAdmin([utilisateurConnecte.id], "Confirmation", `Votre commande du ${new Date().toLocaleString()} est confirmée.`);
 }
 
 // ==================== FAVORIS ====================
@@ -428,13 +419,13 @@ function toggleWishlist(id){
     let idx=wishlist.indexOf(id);
     idx===-1?wishlist.push(id):wishlist.splice(idx,1);
     localStorage.setItem('latyfa_wishlist',JSON.stringify(wishlist));
-    updateWishlistCount(); render(); showToast(idx===-1?"❤️ Ajouté aux favoris":"💔 Retiré");
+    updateWishlistCount(); render(); showToast(idx===-1?"❤️ Ajouté":"💔 Retiré");
 }
 function updateWishlistCount(){ document.getElementById('wishlist-count').innerText=wishlist.length; }
 function toggleWishlistModal(){
     let modal=document.getElementById('wishlistModal'), container=document.getElementById('wishlist-items');
-    if(wishlist.length===0) container.innerHTML='<p class="text-center text-gray-400 py-10">Aucun favori</p>';
-    else container.innerHTML=wishlist.map(id=>{let p=PRODUITS_BASE.find(p=>p.id===id); return p?`<div class="flex items-center gap-3 border-b pb-2"><img src="${p.image}" class="w-12 h-12 object-cover rounded cursor-pointer" onclick="voirDetails(${p.id});fermerWishlist()"><div><p class="text-[10px] font-bold">${p.name}</p><p class="text-[#c5a059]">${p.price.toLocaleString()} F</p></div><button onclick="toggleWishlist(${p.id});toggleWishlistModal()" class="ml-auto text-red-500"><i class="fa-solid fa-trash"></i></button></div>`:''}).join('');
+    if(wishlist.length===0) container.innerHTML='<p class="text-center text-gray-400 py-6 text-[10px]">Aucun favori</p>';
+    else container.innerHTML=wishlist.map(id=>{let p=PRODUITS_BASE.find(p=>p.id===id); return p?`<div class="flex items-center gap-2 border-b pb-2"><img src="${p.image}" class="w-10 h-10 object-cover rounded cursor-pointer" onclick="voirDetails(${p.id});fermerWishlist()"><div><p class="text-[9px] font-bold">${p.name}</p><p class="text-[#c5a059] text-[8px]">${p.price.toLocaleString()} F</p></div><button onclick="toggleWishlist(${p.id});toggleWishlistModal()" class="ml-auto text-red-500 text-xs"><i class="fa-solid fa-trash"></i></button></div>`:''}).join('');
     modal.classList.add('active');
 }
 function fermerWishlist(){ document.getElementById('wishlistModal').classList.remove('active'); }
@@ -449,8 +440,8 @@ function ajouterComparateur(id){
 function updateComparateurCount(){ document.getElementById('comparateur-count').innerText=comparateur.length; }
 function ouvrirComparateur(){
     let modal=document.getElementById('comparateurModal'), container=document.getElementById('comparateur-items');
-    if(comparateur.length===0) container.innerHTML='<p class="col-span-2 text-center text-gray-400">Aucun produit</p>';
-    else container.innerHTML=comparateur.map(id=>{let p=PRODUITS_BASE.find(p=>p.id===id); return p?`<div class="border rounded-lg p-3 text-center"><img src="${p.image}" class="h-32 w-full object-cover rounded mb-2"><p class="text-[9px] font-bold">${p.name}</p><p class="text-[#c5a059]">${p.price.toLocaleString()} F</p><button onclick="retirerComparateur(${p.id})" class="mt-2 text-red-500 text-[8px] font-bold">Retirer</button></div>`:''}).join('');
+    if(comparateur.length===0) container.innerHTML='<p class="col-span-2 text-center text-gray-400 py-6 text-[10px]">Aucun produit</p>';
+    else container.innerHTML=comparateur.map(id=>{let p=PRODUITS_BASE.find(p=>p.id===id); return p?`<div class="border rounded p-2 text-center"><img src="${p.image}" class="h-24 w-full object-cover rounded mb-1"><p class="text-[8px] font-bold">${p.name}</p><p class="text-[#c5a059] text-[9px] font-black">${p.price.toLocaleString()} F</p><button onclick="retirerComparateur(${p.id})" class="mt-1 text-red-500 text-[7px] font-bold">Retirer</button></div>`:''}).join('');
     modal.classList.add('active');
 }
 function fermerComparateur(){ document.getElementById('comparateurModal').classList.remove('active'); }
@@ -460,15 +451,15 @@ function retirerComparateur(id){ comparateur=comparateur.filter(i=>i!==id); loca
 function drawWheel(){
     let canvas=document.getElementById('canvas'); if(!canvas) return;
     let ctx=canvas.getContext('2d'), arc=2*Math.PI/prizes.length;
-    ctx.clearRect(0,0,300,300);
-    for(let i=0;i<prizes.length;i++){ ctx.beginPath(); ctx.fillStyle=i%2===0?"#c5a059":"#1a1a1a"; ctx.moveTo(150,150); ctx.arc(150,150,145,i*arc,(i+1)*arc); ctx.fill(); ctx.save(); ctx.fillStyle="white"; ctx.translate(150,150); ctx.rotate(i*arc+arc/2); ctx.font="bold 12px Montserrat"; ctx.fillText(prizes[i],120,5); ctx.restore(); }
+    ctx.clearRect(0,0,260,260);
+    for(let i=0;i<prizes.length;i++){ ctx.beginPath(); ctx.fillStyle=i%2===0?"#c5a059":"#1a1a1a"; ctx.moveTo(130,130); ctx.arc(130,130,125,i*arc,(i+1)*arc); ctx.fill(); ctx.save(); ctx.fillStyle="white"; ctx.translate(130,130); ctx.rotate(i*arc+arc/2); ctx.font="bold 10px Montserrat"; ctx.fillText(prizes[i],105,5); ctx.restore(); }
 }
 function ouvrirRoue(){ drawWheel(); document.getElementById('wheelModal').classList.add('active'); majChancesRoue(); }
 function fermerRoue(){ document.getElementById('wheelModal').classList.remove('active'); }
 function majChancesRoue(){
     let stats=JSON.parse(localStorage.getItem('latyfa_wheel_stats'))||{date:new Date().toDateString(),count:0};
     if(stats.date!==new Date().toDateString()) stats={date:new Date().toDateString(),count:0};
-    document.getElementById('wheel-msg').innerHTML=stats.count>=1?"<span class='text-red-600'>🚫 Limite atteinte</span>":"<span class='text-blue-600'>🎡 1 chance aujourd'hui</span>";
+    document.getElementById('wheel-msg').innerHTML=stats.count>=1?"<span class='text-red-600'>🚫 Limite atteinte</span>":"<span class='text-blue-600'>🎡 1 chance</span>";
     return stats;
 }
 function lancerRoue(){
@@ -483,14 +474,14 @@ function lancerRoue(){
         stats.count++; localStorage.setItem('latyfa_wheel_stats',JSON.stringify(stats));
         document.getElementById('canvas').style.transform='';
         if(resultat==="REESSAYER") alert("😥 Réessayez demain !");
-        else if(resultat==="CADEAU"){ canvasConfetti({particleCount:150,spread:70,origin:{y:0.6},colors:['#c5a059']}); alert("🎁 Cadeau mystère ! Un bracelet a été ajouté à votre panier."); cart.push({id:'cadeau-'+Date.now(),name:"🎁 Cadeau Mystère",price:0,qty:1,image:"https://via.placeholder.com/100"}); localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); }
-        else if(resultat==="LIVRAISON"){ alert("🎉 Livraison gratuite sur votre prochaine commande !"); localStorage.setItem('latyfa_livraison_gratuite',Date.now()+30*24*60*60*1000); }
-        else{ canvasConfetti({particleCount:150,spread:70,origin:{y:0.6}}); alert(`🎉 Félicitations ! Vous avez gagné : ${resultat}`); if(resultat.includes("%")){ let code=`LUCKY${Math.floor(Math.random()*1000)}`; localStorage.setItem('latyfa_active_promo',JSON.stringify({code,expires:Date.now()+24*60*60*1000,remise:parseInt(resultat)})); alert(`Code promo: ${code}`); } }
+        else if(resultat==="CADEAU"){ canvasConfetti({particleCount:100,spread:50,origin:{y:0.6}}); alert("🎁 Cadeau mystère ! Ajouté au panier."); cart.push({id:'cadeau-'+Date.now(),name:"🎁 Cadeau Mystère",price:0,qty:1,image:"https://via.placeholder.com/100"}); localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); }
+        else if(resultat==="LIVRAISON"){ alert("🎉 Livraison gratuite sur prochaine commande !"); localStorage.setItem('latyfa_livraison_gratuite',Date.now()+30*24*60*60*1000); }
+        else{ canvasConfetti({particleCount:100,spread:50,origin:{y:0.6}}); alert(`🎉 Vous avez gagné : ${resultat}`); if(resultat.includes("%")){ let code=`LUCKY${Math.floor(Math.random()*1000)}`; localStorage.setItem('latyfa_active_promo',JSON.stringify({code,expires:Date.now()+24*60*60*1000,remise:parseInt(resultat)})); alert(`Code promo: ${code}`); } }
         spinBtn.disabled=false; wheelSpinning=false; majChancesRoue();
     },4000);
 }
 
-// ==================== AUTHENTIFICATION ====================
+// ==================== AUTH ====================
 function ouvrirAuthModal(){ document.getElementById('authModal').classList.add('active'); }
 function fermerAuthModal(){ document.getElementById('authModal').classList.remove('active'); }
 function switchAuthTab(tab){ document.getElementById('loginForm').style.display=tab==='login'?'block':'none'; document.getElementById('registerForm').style.display=tab==='register'?'block':'none'; }
@@ -500,8 +491,8 @@ function inscription(){
     if(pwd!==confirm){ alert("Mots de passe différents"); return; }
     if(!accept){ alert("Acceptez les CGV"); return; }
     if(clients.find(c=>c.email===email)){ alert("Email déjà utilisé"); return; }
-    let nouveau={id:Date.now(),nom,email,tel,password:pwd,dateInscription:new Date().toLocaleDateString()};
-    clients.push(nouveau); localStorage.setItem('latyfa_clients',JSON.stringify(clients));
+    clients.push({id:Date.now(),nom,email,tel,password:pwd,dateInscription:new Date().toLocaleDateString()});
+    localStorage.setItem('latyfa_clients',JSON.stringify(clients));
     alert("Inscription réussie !"); switchAuthTab('login');
 }
 function connexion(){
@@ -512,7 +503,7 @@ function connexion(){
 }
 function deconnexion(){ utilisateurConnecte=null; localStorage.removeItem('latyfa_session'); updateUserUI(); showToast("Déconnecté"); }
 function updateUserUI(){ document.getElementById('loginBtn').innerText=utilisateurConnecte?utilisateurConnecte.nom.split(' ')[0]:"Se connecter"; document.getElementById('loginBtn').onclick=utilisateurConnecte?deconnexion:ouvrirAuthModal; }
-function ajouterPointsFidelite(montant){ let points=Math.floor(montant/1000); pointsFidelite+=points; localStorage.setItem('latyfa_points',pointsFidelite); document.getElementById('loyalty-points').innerText=pointsFidelite; document.getElementById('loyalty-progress').style.width=Math.min(100,(pointsFidelite/100)*100)+'%'; }
+function ajouterPointsFidelite(montant){ let pts=Math.floor(montant/1000); pointsFidelite+=pts; localStorage.setItem('latyfa_points',pointsFidelite); document.getElementById('loyalty-points').innerText=pointsFidelite; document.getElementById('loyalty-progress').style.width=Math.min(100,(pointsFidelite/100)*100)+'%'; }
 
 // ==================== PARRAINAGE ====================
 function voirParrainage(){
@@ -522,7 +513,7 @@ function voirParrainage(){
     document.getElementById('nbFilleuls').innerText=data.filleuls.length;
     document.getElementById('gainTotal').innerText=data.gains+' F';
     document.getElementById('lienParrainage').value=`https://latyfashop.com?ref=${data.code}`;
-    let prochain= data.filleuls.length>=20?0: data.filleuls.length>=10?20-data.filleuls.length: data.filleuls.length>=5?10-data.filleuls.length:5-data.filleuls.length;
+    let prochain = data.filleuls.length>=20?0: data.filleuls.length>=10?20-data.filleuls.length: data.filleuls.length>=5?10-data.filleuls.length:5-data.filleuls.length;
     document.getElementById('prochainPalier').innerText=prochain===0?"VIP":prochain;
     document.getElementById('parrainageModal').classList.add('active');
 }
@@ -535,18 +526,17 @@ function fermerQR(){ document.getElementById('qrModal').classList.remove('active
 // ==================== AVIS ====================
 function ouvrirAvis(){
     let container=document.getElementById('all-reviews');
-    container.innerHTML=avis.map(a=>`<div class="bg-gray-50 p-3 rounded-lg"><div class="flex gap-3"><img src="${a.photo}" class="w-10 h-10 rounded-full"><div><div class="flex items-center gap-2"><span class="text-[10px] font-black">${a.nom}</span><span class="text-[8px] text-gray-400">${a.date}</span></div><div class="flex text-[#c5a059] text-[8px]">${'★'.repeat(a.note)}${'☆'.repeat(5-a.note)}</div><p class="text-[9px] mt-1">${a.commentaire}</p></div></div></div>`).join('');
+    container.innerHTML=avis.map(a=>`<div class="bg-gray-50 p-2 rounded"><div class="flex gap-2"><img src="${a.photo}" class="w-7 h-7 rounded-full"><div><div class="flex items-center gap-1"><span class="text-[9px] font-black">${a.nom}</span><span class="text-[7px] text-gray-400">${a.date}</span></div><div class="flex text-[#c5a059] text-[7px]">${'★'.repeat(a.note)}${'☆'.repeat(5-a.note)}</div><p class="text-[8px] mt-0.5">${a.commentaire}</p></div></div></div>`).join('');
     document.getElementById('avisModal').classList.add('active');
 }
 function fermerAvis(){ document.getElementById('avisModal').classList.remove('active'); }
-function deposerAvis(){ document.getElementById('depotAvisModal').classList.add('active'); currentRating=0; document.querySelectorAll('#rating-stars i').forEach(s=>s.className='fa-regular fa-star cursor-pointer hover:text-[#c5a059]'); }
+function deposerAvis(){ document.getElementById('depotAvisModal').classList.add('active'); currentRating=0; document.querySelectorAll('#rating-stars i').forEach(s=>s.className='fa-regular fa-star cursor-pointer'); }
 function fermerDepotAvis(){ document.getElementById('depotAvisModal').classList.remove('active'); }
 function setRating(r){ currentRating=r; document.querySelectorAll('#rating-stars i').forEach((s,i)=>{ s.className=i<r?'fa-solid fa-star text-[#c5a059]':'fa-regular fa-star'; }); }
 function soumettreAvis(){
-    let nom=document.getElementById('avis-nom').value, comment=document.getElementById('avis-comment').value, photoFile=document.getElementById('avis-photo').files[0];
+    let nom=document.getElementById('avis-nom').value, comment=document.getElementById('avis-comment').value;
     if(!nom||!comment||currentRating===0){ alert("Remplissez tous les champs"); return; }
-    let photoUrl=photoFile?URL.createObjectURL(photoFile):"https://randomuser.me/api/portraits/lego/1.jpg";
-    avis.unshift({id:Date.now(),nom,note:currentRating,commentaire:comment,date:new Date().toLocaleDateString(),photo:photoUrl});
+    avis.unshift({id:Date.now(),nom,note:currentRating,commentaire:comment,date:new Date().toLocaleDateString(),photo:"https://randomuser.me/api/portraits/lego/1.jpg"});
     localStorage.setItem('latyfa_avis',JSON.stringify(avis));
     fermerDepotAvis(); showToast("Merci pour votre avis !");
 }
@@ -558,13 +548,13 @@ function sendChatMessage(){
     let input=document.getElementById('chatInput'), msg=input.value.trim();
     if(!msg) return;
     let chatDiv=document.getElementById('chatMessages'), time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    chatDiv.innerHTML+=`<div class="chat-message user"><div class="message-bubble">${msg}</div><div class="message-time text-[8px] text-gray-400 mt-1">${time}</div></div>`;
+    chatDiv.innerHTML+=`<div class="chat-message user"><div class="message-bubble">${msg}</div><div class="message-time text-[7px] text-gray-400 mt-0.5">${time}</div></div>`;
     input.value=''; chatDiv.scrollTop=chatDiv.scrollHeight;
     if(iaActif){
         setTimeout(()=>{
             let msgLower=msg.toLowerCase(), reponse="Je n'ai pas compris. Pouvez-vous reformuler ?";
             for(let [motCle,texte] of Object.entries(reponsesIA)) if(msgLower.includes(motCle)){ reponse=texte; break; }
-            chatDiv.innerHTML+=`<div class="chat-message support"><div class="message-bubble">🤖 ${reponse}</div><div class="message-time text-[8px] text-gray-400 mt-1">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div></div>`;
+            chatDiv.innerHTML+=`<div class="chat-message support"><div class="message-bubble">🤖 ${reponse}</div><div class="message-time text-[7px] text-gray-400 mt-0.5">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div></div>`;
             chatDiv.scrollTop=chatDiv.scrollHeight;
         },500);
     }
@@ -582,10 +572,10 @@ function mettreAJourSuivi(){
     for(let i=1;i<=5;i++){ let step=document.getElementById('step'+i); if(step){ step.className='step-indicator'; if(i<etapeSuivi) step.classList.add('completed'); else if(i===etapeSuivi) step.classList.add('current'); else step.classList.add('pending'); } }
     let marker=document.getElementById('livreurMarker');
     if(marker && etapeSuivi<=5){ let pos=positionsSimulees[etapeSuivi-1]; marker.style.top=pos.top+'%'; marker.style.left=pos.left+'%'; }
-    let etapes=["Préparation","Prise en charge","En route","Arrivée imminente","Livré !"];
+    let etapes=["Préparation","Prise en charge","En route","Arrivée","Livré !"];
     document.getElementById('positionActuelle').innerHTML='Statut: '+etapes[etapeSuivi-1];
     if(etapeSuivi===3) document.getElementById('tempsEstime').innerHTML='Délai: 20-30 min';
-    else if(etapeSuivi===4) document.getElementById('tempsEstime').innerHTML='Arrivée dans: 5-10 min';
+    else if(etapeSuivi===4) document.getElementById('tempsEstime').innerHTML='Arrivée: 5-10 min';
     else if(etapeSuivi===5) document.getElementById('tempsEstime').innerHTML='✅ Livré !';
 }
 function actualiserSuivi(){ showToast("Suivi actualisé"); mettreAJourSuivi(); }
@@ -597,7 +587,7 @@ function ouvrirAdvent(){
     let html='';
     for(let i=1;i<=24;i++){
         let isOpened=opened.includes(i);
-        html+=`<div class="advent-day ${isOpened?'opened':''}" onclick="${!isOpened && i<=today ? 'ouvrirCaseAvent('+i+')' : ''}"><span class="text-xs">${i}</span>${isOpened?'<i class="fa-solid fa-check text-[8px]"></i>':''}</div>`;
+        html+=`<div class="advent-day ${isOpened?'opened':''}" onclick="${!isOpened && i<=today ? 'ouvrirCaseAvent('+i+')' : ''}"><span class="text-[10px]">${i}</span>${isOpened?'<i class="fa-solid fa-check text-[7px]"></i>':''}</div>`;
     }
     calendar.innerHTML=html;
     modal.classList.add('active');
@@ -606,11 +596,11 @@ function fermerAdvent(){ document.getElementById('adventModal').classList.remove
 function ouvrirCaseAvent(jour){
     let cadeaux=["Bracelet","Parfum","-10%","Porte-clés","Bonbons","Crème","Bougie","Sac","-15%","Bague","Collier","Chocolats","Échantillon","Mug","-20%","Boucles","Brume","Carnet","Stylo","Bonnet","Écharpe","-25%","Montre","💎 LOT"];
     let cadeau=cadeaux[jour-1];
-    if(confirm(`🎁 Jour ${jour} : ${cadeau} ! Ouvrir ?`)){
+    if(confirm(`🎁 Jour ${jour} : ${cadeau} ?`)){
         let opened=JSON.parse(localStorage.getItem('latyfa_advent'))||[];
         opened.push(jour); localStorage.setItem('latyfa_advent',JSON.stringify(opened));
-        if(cadeau.includes('%')){ let reduction=parseInt(cadeau)||10; localStorage.setItem('latyfa_active_promo',JSON.stringify({code:`AVENT${jour}`,expires:Date.now()+7*24*60*60*1000,remise:reduction})); showToast(`Code AVENT${jour} : -${reduction}% !`); }
-        else{ cart.push({id:'avent-'+Date.now(),name:`🎄 Cadeau Avent : ${cadeau}`,price:0,qty:1,image:"https://via.placeholder.com/100"}); localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); showToast(`🎄 Cadeau "${cadeau}" ajouté !`); }
+        if(cadeau.includes('%')){ let reduction=parseInt(cadeau)||10; localStorage.setItem('latyfa_active_promo',JSON.stringify({code:`AVENT${jour}`,expires:Date.now()+7*24*60*60*1000,remise:reduction})); showToast(`Code -${reduction}% !`); }
+        else{ cart.push({id:'avent-'+Date.now(),name:`🎄 Cadeau : ${cadeau}`,price:0,qty:1,image:"https://via.placeholder.com/100"}); localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); showToast(`🎁 ${cadeau} ajouté !`); }
         ouvrirAdvent();
     }
 }
@@ -624,8 +614,8 @@ function switchAdminSection(section){
     document.getElementById(section+'Section').classList.add('active');
     if(event.target) event.target.classList.add('active');
 }
-function chargerHistorique(){ let historique=JSON.parse(localStorage.getItem('latyfa_historique'))||[]; document.getElementById('historique-zone').innerHTML=historique.map(c=>`<div class="bg-white p-3 rounded-lg border mb-2"><p class="text-[9px] font-bold">${c.date} - ${c.client}</p><p class="text-[8px]">${c.articles}</p><p class="text-[#c5a059]">${c.total}</p></div>`).join(''); }
-function updateClientsList(){ document.getElementById('clients-list').innerHTML=clients.filter(c=>!c.isAdmin).map(c=>`<div class="flex justify-between text-[9px] border-b py-1"><span>${c.nom}</span><span>${c.email}</span></div>`).join(''); let select=document.getElementById('client-select'); if(select) select.innerHTML=`<option value="">Tous</option>`+clients.filter(c=>!c.isAdmin).map(c=>`<option value="${c.id}">${c.nom}</option>`).join(''); }
+function chargerHistorique(){ let historique=JSON.parse(localStorage.getItem('latyfa_historique'))||[]; document.getElementById('historique-zone').innerHTML=historique.map(c=>`<div class="bg-white p-2 rounded border mb-1 text-[9px]"><p class="font-bold">${c.date} - ${c.client}</p><p>${c.articles}</p><p class="text-[#c5a059]">${c.total}</p></div>`).join(''); }
+function updateClientsList(){ document.getElementById('clients-list').innerHTML=clients.filter(c=>!c.isAdmin).map(c=>`<div class="flex justify-between text-[9px] border-b py-1"><span>${c.nom}</span><span>${c.email}</span></div>`).join(''); }
 function ajouterProduitAdmin(){
     let name=document.getElementById('adm-name').value, price=document.getElementById('adm-price').value, img=document.getElementById('adm-img').value;
     if(!name||!price||!img){ alert("Remplissez les champs"); return; }
@@ -634,21 +624,10 @@ function ajouterProduitAdmin(){
     render(); document.getElementById('adm-name').value=''; document.getElementById('adm-price').value=''; document.getElementById('adm-img').value='';
     showToast("Produit ajouté");
 }
-function envoyerMessageAdmin(){
-    let clientId=document.getElementById('client-select')?.value, objet=document.getElementById('messageObjet')?.value, contenu=document.getElementById('messageContenu')?.value;
-    if(!objet||!contenu){ alert("Message requis"); return; }
-    let destinataires=clientId?[parseInt(clientId)]:clients.filter(c=>!c.isAdmin).map(c=>c.id);
-    destinataires.forEach(id=>{ messages.push({id:Date.now()+Math.random(),destinataireId:id,objet,contenu,date:new Date().toLocaleString(),lu:false}); });
-    localStorage.setItem('latyfa_messages',JSON.stringify(messages));
-    alert(`Message envoyé à ${destinataires.length} client(s)`);
-    document.getElementById('messageObjet').value=''; document.getElementById('messageContenu').value='';
-}
 function sauvegarderToutesDonnees(){
-    let backup={date:new Date().toLocaleString(),produits:products,clients,commandes:JSON.parse(localStorage.getItem('latyfa_historique'))||[],messages,avis,parrainage:parrainageData};
+    let backup={date:new Date().toLocaleString(),produits:products,clients,commandes:JSON.parse(localStorage.getItem('latyfa_historique'))||[],avis,parrainage:parrainageData};
     let blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
-    let url=URL.createObjectURL(blob), a=document.createElement('a');
-    a.href=url; a.download=`sauvegarde_latyfa_${new Date().toISOString().slice(0,10)}.json`;
-    a.click(); URL.revokeObjectURL(url); showToast("Sauvegarde effectuée");
+    let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`sauvegarde_latyfa_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(blob.href); showToast("Sauvegarde effectuée");
 }
 function restaurerDonnees(){ document.getElementById('restoreFile').click(); document.getElementById('restoreFile').onchange=e=>{ let file=e.target.files[0], reader=new FileReader(); reader.onload=e=>{ try{ let backup=JSON.parse(e.target.result); if(backup.produits) products=backup.produits; if(backup.clients) clients=backup.clients; if(backup.commandes) localStorage.setItem('latyfa_historique',JSON.stringify(backup.commandes)); localStorage.setItem('latyfa_db',JSON.stringify(products)); localStorage.setItem('latyfa_clients',JSON.stringify(clients)); showToast("Données restaurées"); location.reload(); }catch(err){ alert("Fichier invalide"); } }; reader.readAsText(file); }; }
 function setMaintenance(actif){ localStorage.setItem('latyfa_maintenance',actif); showToast(actif?"🔧 Maintenance activée":"✅ Site actif"); }
