@@ -70,8 +70,8 @@
         /* Roue de la fortune */
         .wheel-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .wheel-mask.active { display: flex; }
-        .wheel-box { background: white; padding: 20px; border-radius: 30px; text-align: center; max-width: 380px; width: 90%; border: 5px solid var(--latyfa-gold); animation: wheelPop 0.5s ease; }
-        #canvas { width: 260px; height: 260px; margin: 15px auto; border-radius: 50%; }
+        .wheel-box { background: white; padding: 20px; border-radius: 30px; text-align: center; max-width: 380px; width: 90%; border: 5px solid var(--latyfa-gold); animation: wheelPop 0.5s ease; position: relative; }
+        #canvas { width: 260px; height: 260px; margin: 15px auto; border-radius: 50%; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); }
         
         /* Categories */
         .categories-static { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 12px; background: white; border-bottom: 1px solid #f0f0f0; position: sticky; top: 70px; z-index: 45; overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -447,7 +447,7 @@ function ouvrirComparateur(){
 function fermerComparateur(){ document.getElementById('comparateurModal').classList.remove('active'); }
 function retirerComparateur(id){ comparateur=comparateur.filter(i=>i!==id); localStorage.setItem('latyfa_comparateur',JSON.stringify(comparateur)); updateComparateurCount(); ouvrirComparateur(); }
 
-// ==================== ROUE DE LA FORTUNE ====================
+// ==================== ROUE DE LA FORTUNE (CORRIGÉE) ====================
 function drawWheel(){
     let canvas=document.getElementById('canvas'); if(!canvas) return;
     let ctx=canvas.getContext('2d'), arc=2*Math.PI/prizes.length;
@@ -467,12 +467,17 @@ function lancerRoue(){
     if(stats.count>=1){ alert("Vous avez déjà utilisé votre chance aujourd'hui !"); return; }
     if(wheelSpinning) return;
     wheelSpinning=true; let spinBtn=document.getElementById('spin'); spinBtn.disabled=true;
-    let random=Math.floor(Math.random()*360), totalRotation=3600+random;
-    document.getElementById('canvas').style.transform=`rotate(${totalRotation}deg)`;
+    let random=Math.floor(Math.random()*360);
+    let totalRotation=3600+random;
+    let canvas=document.getElementById('canvas');
+    canvas.style.transform=`rotate(${totalRotation}deg)`;
     setTimeout(()=>{
-        let actualAngle=random%360, segmentSize=360/prizes.length, resultIndex=Math.floor(((360-actualAngle+270)%360)/segmentSize), resultat=prizes[resultIndex];
+        let actualAngle=random%360;
+        let segmentSize=360/prizes.length;
+        let resultIndex=Math.floor(((360-actualAngle+270)%360)/segmentSize);
+        let resultat=prizes[resultIndex];
         stats.count++; localStorage.setItem('latyfa_wheel_stats',JSON.stringify(stats));
-        document.getElementById('canvas').style.transform='';
+        canvas.style.transform='';
         if(resultat==="REESSAYER") alert("😥 Réessayez demain !");
         else if(resultat==="CADEAU"){ canvasConfetti({particleCount:100,spread:50,origin:{y:0.6}}); alert("🎁 Cadeau mystère ! Ajouté au panier."); cart.push({id:'cadeau-'+Date.now(),name:"🎁 Cadeau Mystère",price:0,qty:1,image:"https://via.placeholder.com/100"}); localStorage.setItem('latyfa_cart',JSON.stringify(cart)); updateCartCount(); }
         else if(resultat==="LIVRAISON"){ alert("🎉 Livraison gratuite sur prochaine commande !"); localStorage.setItem('latyfa_livraison_gratuite',Date.now()+30*24*60*60*1000); }
