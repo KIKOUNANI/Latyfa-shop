@@ -22,19 +22,23 @@
         .sparkle { position: absolute; width: 4px; height: 4px; background: white; border-radius: 50%; box-shadow: 0 0 10px var(--gold); animation: sparkle 3s infinite; }
         @keyframes sparkle { 0%,100% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1.5); } }
         
-        /* Défilement horizontal produits populaires (corrigé) */
-        .popular-scroll {
+        /* Carrousel automatique des produits populaires */
+        .popular-carousel {
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+        }
+        .popular-track {
             display: flex;
             gap: 16px;
-            overflow-x: auto;
-            scrollbar-width: thin;
-            padding-bottom: 12px;
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x mandatory;
+            width: fit-content;
+            animation: scrollPopular 30s linear infinite;
+        }
+        .popular-track:hover {
+            animation-play-state: paused;
         }
         .popular-item {
             flex: 0 0 140px;
-            scroll-snap-align: start;
             background: white;
             border-radius: 16px;
             padding: 10px;
@@ -47,6 +51,11 @@
         .popular-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
         .popular-item p { font-size: 12px; font-weight: 700; margin-top: 4px; }
         .popular-item span { font-size: 11px; color: var(--gold); font-weight: bold; }
+        
+        @keyframes scrollPopular {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
         
         /* Product cards */
         .product-card { background: white; border-radius: 16px; border: 1px solid #e5e7eb; cursor: pointer; overflow: hidden; transition: 0.2s; position: relative; }
@@ -157,10 +166,12 @@
     </div>
 </section>
 
-<!-- PRODUITS POPULAIRES (défilement horizontal corrigé) -->
+<!-- PRODUITS POPULAIRES (carrousel automatique) -->
 <section class="container mx-auto px-4 py-6">
     <h2 class="text-sm font-black uppercase mb-3 flex items-center gap-2"><i class="fa-solid fa-fire text-orange-500"></i> PRODUITS POPULAIRES</h2>
-    <div class="popular-scroll" id="popularProducts"></div>
+    <div class="popular-carousel">
+        <div class="popular-track" id="popularTrack"></div>
+    </div>
 </section>
 
 <!-- RECHERCHE VOCALE + TEXTE -->
@@ -231,7 +242,7 @@
 
 <div id="cgvModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">Conditions Générales</h2><button onclick="closeCGVModal()" class="text-xl">&times;</button></div><div class="text-xs space-y-2 max-h-64 overflow-y-auto"><p><strong>1. Identité :</strong> LATYFA BOUTIQUE - Abidjan, Côte d'Ivoire</p><p><strong>2. Prix :</strong> en FCFA TTC.</p><p><strong>3. Paiement :</strong> Wave, Orange Money, MTN, cash à la livraison.</p><p><strong>4. Livraison :</strong> Abidjan 24-48h, intérieur 48-72h. Frais selon zone.</p><p><strong>5. Droit de rétractation :</strong> 14 jours pour retourner un article non porté.</p><p><strong>6. Données personnelles :</strong> conformément à la loi ivoirienne n°2013-450.</p><p><strong>7. Litiges :</strong> juridiction compétente d'Abidjan.</p></div><button onclick="closeCGVModal()" class="btn-primary mt-3">Fermer</button></div></div>
 
-<!-- FOOTER CORRIGÉ (bas de page restauré) -->
+<!-- FOOTER -->
 <footer class="bg-white border-t py-6 mt-8 text-center text-xs text-gray-500">
     <div class="container mx-auto px-4">
         <div class="flex flex-wrap justify-center gap-4 mb-3">
@@ -281,7 +292,7 @@ function loadData() {
     } catch(e) {}
     updateUI();
     renderProducts();
-    renderPopular();  // Affiche les produits populaires avec le défilement horizontal
+    renderPopularCarousel();  // Remplit le carrousel automatique
     updateCartCounters();
     if (user) document.getElementById('loginBtn').innerText = user.name.split(' ')[0];
     startSocialProof();
@@ -319,11 +330,13 @@ function renderProducts(cat = 'all') {
         </div>
     `).join('');
 }
-function renderPopular() {
+function renderPopularCarousel() {
     const pop = products.filter(p => p.popular);
-    const container = document.getElementById('popularProducts');
-    if (!container) return;
-    container.innerHTML = pop.map(p => `
+    // Dupliquer les produits pour créer un effet de boucle infinie
+    const items = [...pop, ...pop];
+    const track = document.getElementById('popularTrack');
+    if (!track) return;
+    track.innerHTML = items.map(p => `
         <div class="popular-item" onclick="viewProduct(${p.id})">
             <img src="${p.image}" alt="${p.name}">
             <p>${p.name}</p>
@@ -688,7 +701,7 @@ function addProductAdmin() {
     products.push({ id: newId, name, price, image, cat, popular: false });
     saveAll();
     renderProducts();
-    renderPopular();
+    renderPopularCarousel();
     renderAdminProducts();
     document.getElementById('newProdName').value = '';
     document.getElementById('newProdPrice').value = '';
@@ -699,7 +712,7 @@ function deleteProduct(id) {
     products = products.filter(p => p.id !== id);
     saveAll();
     renderProducts();
-    renderPopular();
+    renderPopularCarousel();
     renderAdminProducts();
 }
 function renderAdminCommandes() {
@@ -793,7 +806,6 @@ function showToast(msg) {
 function initChart() {
     const ctx = document.getElementById('salesChart');
     if (!ctx) return;
-    // already initialized in openAdmin
 }
 
 // ==================== INIT ====================
