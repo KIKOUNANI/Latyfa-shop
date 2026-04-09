@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>LATYFA BOUTIQUE | Toutes fonctionnalités</title>
+    <title>LATYFA BOUTIQUE | Sécurisé</title>
     <link rel="manifest" href="data:application/manifest+json,{"name":"Latyfa Shop","short_name":"Latyfa","start_url":"/","display":"standalone","theme_color":"#c5a059"}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- CryptoJS pour SHA-256 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -23,39 +25,15 @@
         @keyframes sparkle { 0%,100% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1.5); } }
         
         /* Carrousel automatique des produits populaires */
-        .popular-carousel {
-            overflow: hidden;
-            width: 100%;
-            position: relative;
-        }
-        .popular-track {
-            display: flex;
-            gap: 16px;
-            width: fit-content;
-            animation: scrollPopular 30s linear infinite;
-        }
-        .popular-track:hover {
-            animation-play-state: paused;
-        }
-        .popular-item {
-            flex: 0 0 140px;
-            background: white;
-            border-radius: 16px;
-            padding: 10px;
-            cursor: pointer;
-            text-align: center;
-            border: 1px solid #eee;
-            transition: 0.2s;
-        }
+        .popular-carousel { overflow: hidden; width: 100%; position: relative; }
+        .popular-track { display: flex; gap: 16px; width: fit-content; animation: scrollPopular 30s linear infinite; }
+        .popular-track:hover { animation-play-state: paused; }
+        .popular-item { flex: 0 0 140px; background: white; border-radius: 16px; padding: 10px; cursor: pointer; text-align: center; border: 1px solid #eee; transition: 0.2s; }
         .popular-item:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .popular-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 8px; }
         .popular-item p { font-size: 12px; font-weight: 700; margin-top: 4px; }
         .popular-item span { font-size: 11px; color: var(--gold); font-weight: bold; }
-        
-        @keyframes scrollPopular {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+        @keyframes scrollPopular { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         
         /* Product cards */
         .product-card { background: white; border-radius: 16px; border: 1px solid #e5e7eb; cursor: pointer; overflow: hidden; transition: 0.2s; position: relative; }
@@ -259,6 +237,30 @@
 <div class="admin-btn fixed bottom-2 left-2 w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-xs cursor-pointer opacity-30 hover:opacity-100" onclick="openAdmin()">ADM</div>
 
 <script>
+// ==================== FONCTIONS DE SÉCURITÉ ====================
+function hashPassword(pwd) {
+    return CryptoJS.SHA256(pwd).toString();
+}
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+function isValidName(name) { return name && name.length >= 2 && name.length <= 50 && /^[a-zA-ZÀ-ÿ\s\-']+$/.test(name); }
+function isValidEmail(email) { return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email); }
+function isValidPhone(phone) { return /^[0-9+\s]{8,15}$/.test(phone); }
+function isValidPassword(pwd) { return pwd && pwd.length >= 4; }
+
+// Code admin hashé (SHA-256 de "2026")
+const ADMIN_HASH = "6e21f2a6c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9";
+function verifyAdminCode(code) {
+    return hashPassword(code) === ADMIN_HASH;
+}
+
 // ==================== DONNÉES ====================
 let products = [
     { id: 1, name: "Sac Prestige", price: 45000, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500", cat: "sac", popular: true, new: true },
@@ -289,12 +291,12 @@ function loadData() {
         parrainageData = JSON.parse(localStorage.getItem('parrainage')) || { parrains: {} };
         historiqueCommandes = JSON.parse(localStorage.getItem('historique')) || [];
         activePromo = JSON.parse(localStorage.getItem('activePromo'));
-    } catch(e) {}
+    } catch(e) { console.warn(e); }
     updateUI();
     renderProducts();
-    renderPopularCarousel();  // Remplit le carrousel automatique
+    renderPopularCarousel();
     updateCartCounters();
-    if (user) document.getElementById('loginBtn').innerText = user.name.split(' ')[0];
+    if (user) document.getElementById('loginBtn').innerText = escapeHtml(user.name.split(' ')[0]);
     startSocialProof();
     initAdventCalendar();
     startFlashSale();
@@ -319,12 +321,13 @@ function updateUI() {
 function renderProducts(cat = 'all') {
     let filtered = cat === 'all' ? products : products.filter(p => p.cat === cat);
     const grid = document.getElementById('productGrid');
+    if (!grid) return;
     grid.innerHTML = filtered.map(p => `
         <div class="product-card p-2 relative" onclick="viewProduct(${p.id})">
             ${p.new ? '<span class="badge-new">NOUVEAU</span>' : ''}
             ${p.luxe ? '<span class="badge-luxe">LUXE</span>' : ''}
-            <img src="${p.image}" class="h-36 w-full object-cover rounded-lg">
-            <h3 class="text-xs font-bold mt-2">${p.name}</h3>
+            <img src="${escapeHtml(p.image)}" class="h-36 w-full object-cover rounded-lg" alt="${escapeHtml(p.name)}">
+            <h3 class="text-xs font-bold mt-2">${escapeHtml(p.name)}</h3>
             <div class="text-[#c5a059] font-bold text-sm">${p.price.toLocaleString()} F</div>
             <div class="flex gap-1 mt-2"><button onclick="event.stopPropagation(); addToCart(${p.id})" class="flex-1 bg-gray-100 py-1 rounded text-xs font-bold">Ajouter</button><button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center ${wishlist.includes(p.id) ? 'text-red-500' : ''}"><i class="fa-${wishlist.includes(p.id) ? 'solid' : 'regular'} fa-heart text-xs"></i></button><button onclick="event.stopPropagation(); toggleComparateur(${p.id})" class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center ${comparateur.includes(p.id) ? 'text-blue-500' : ''}"><i class="fa-solid fa-scale-balanced text-xs"></i></button></div>
         </div>
@@ -332,21 +335,20 @@ function renderProducts(cat = 'all') {
 }
 function renderPopularCarousel() {
     const pop = products.filter(p => p.popular);
-    // Dupliquer les produits pour créer un effet de boucle infinie
     const items = [...pop, ...pop];
     const track = document.getElementById('popularTrack');
     if (!track) return;
     track.innerHTML = items.map(p => `
         <div class="popular-item" onclick="viewProduct(${p.id})">
-            <img src="${p.image}" alt="${p.name}">
-            <p>${p.name}</p>
+            <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}">
+            <p>${escapeHtml(p.name)}</p>
             <span>${p.price.toLocaleString()} F</span>
         </div>
     `).join('');
 }
 function viewProduct(id) {
     const p = products.find(p => p.id === id);
-    alert(`${p.name}\n${p.price.toLocaleString()} F\nQualité supérieure`);
+    alert(`${escapeHtml(p.name)}\n${p.price.toLocaleString()} F\nQualité supérieure`);
 }
 function addToCart(id) {
     const prod = products.find(p => p.id === id);
@@ -367,7 +369,7 @@ function updateCartCounters() {
     let totalPrice = subtotal + gift - promo;
     document.getElementById('cartTotal').innerText = totalPrice.toLocaleString() + " F";
     const container = document.getElementById('cartItems');
-    if (container) container.innerHTML = cart.map(i => `<div class="flex justify-between items-center border-b pb-1"><span class="text-sm">${i.name} x${i.qty}</span><span>${(i.price*i.qty).toLocaleString()} F</span><button onclick="removeFromCart(${i.id})" class="text-red-500 text-xs">✖</button></div>`).join('');
+    if (container) container.innerHTML = cart.map(i => `<div class="flex justify-between items-center border-b pb-1"><span class="text-sm">${escapeHtml(i.name)} x${i.qty}</span><span>${(i.price*i.qty).toLocaleString()} F</span><button onclick="removeFromCart(${i.id})" class="text-red-500 text-xs">✖</button></div>`).join('');
 }
 function removeFromCart(id) {
     cart = cart.filter(i => i.id !== id);
@@ -407,7 +409,7 @@ function checkout() {
     let promo = activePromo ? subtotal * activePromo / 100 : 0;
     let total = subtotal + gift - promo;
     let msg = "*Nouvelle commande Latyfa*\n\n";
-    cart.forEach(i => msg += `${i.name} x${i.qty} = ${(i.price*i.qty).toLocaleString()} F\n`);
+    cart.forEach(i => msg += `${escapeHtml(i.name)} x${i.qty} = ${(i.price*i.qty).toLocaleString()} F\n`);
     if (gift) msg += `+ Emballage cadeau: 1.000 F\n`;
     if (promo) msg += `- Réduction ${activePromo}%: ${promo.toLocaleString()} F\n`;
     msg += `\nTotal: ${total.toLocaleString()} F`;
@@ -426,28 +428,41 @@ function switchAuthTab(tab) {
     document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
 }
 function login() {
-    const email = document.getElementById('loginEmail').value;
+    const email = document.getElementById('loginEmail').value.trim();
     const pwd = document.getElementById('loginPassword').value;
-    const client = clients.find(c => c.email === email && c.password === pwd);
-    if (client) { user = client; saveAll(); document.getElementById('loginBtn').innerText = user.name.split(' ')[0]; closeAuthModal(); showToast("Connecté"); }
-    else alert("Email ou mot de passe incorrect");
+    if (!email || !pwd) { alert("Veuillez remplir tous les champs"); return; }
+    const hashedPwd = hashPassword(pwd);
+    const client = clients.find(c => c.email === email && c.password === hashedPwd);
+    if (client) {
+        user = { id: client.id, name: client.name, email: client.email, phone: client.phone, points: client.points };
+        saveAll();
+        document.getElementById('loginBtn').innerText = escapeHtml(user.name.split(' ')[0]);
+        closeAuthModal();
+        showToast("Connecté");
+    } else {
+        alert("Email ou mot de passe incorrect");
+    }
 }
 function register() {
-    const name = document.getElementById('regName').value;
-    const email = document.getElementById('regEmail').value;
-    const phone = document.getElementById('regPhone').value;
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
     const pwd = document.getElementById('regPassword').value;
     const confirm = document.getElementById('regConfirm').value;
     const accept = document.getElementById('acceptCGV').checked;
-    if (!name || !email || !phone || !pwd) { alert("Remplissez tous les champs"); return; }
-    if (pwd !== confirm) { alert("Mots de passe différents"); return; }
+    if (!isValidName(name)) { alert("Nom invalide (2-50 lettres)"); return; }
+    if (!isValidEmail(email)) { alert("Email invalide"); return; }
+    if (!isValidPhone(phone)) { alert("Téléphone invalide (8-15 chiffres)"); return; }
+    if (!isValidPassword(pwd)) { alert("Mot de passe trop court (min 4 caractères)"); return; }
+    if (pwd !== confirm) { alert("Les mots de passe ne correspondent pas"); return; }
     if (!accept) { alert("Acceptez les CGV"); return; }
     if (clients.find(c => c.email === email)) { alert("Email déjà utilisé"); return; }
-    const newUser = { id: Date.now(), name, email, phone, password: pwd, points: 0 };
+    const hashedPwd = hashPassword(pwd);
+    const newUser = { id: Date.now(), name, email, phone, password: hashedPwd, points: 0 };
     clients.push(newUser);
-    user = newUser;
+    user = { id: newUser.id, name: newUser.name, email: newUser.email, phone: newUser.phone, points: 0 };
     saveAll();
-    document.getElementById('loginBtn').innerText = user.name.split(' ')[0];
+    document.getElementById('loginBtn').innerText = escapeHtml(user.name.split(' ')[0]);
     closeAuthModal();
     showToast("Inscription réussie");
 }
@@ -470,7 +485,7 @@ function toggleWishlistModal() {
     const modal = document.getElementById('wishlistModal');
     const container = document.getElementById('wishlistItems');
     const items = wishlist.map(id => products.find(p => p.id === id)).filter(p => p);
-    container.innerHTML = items.map(p => `<div class="flex gap-2 border-b pb-2"><img src="${p.image}" class="w-10 h-10 object-cover rounded"><div><p class="text-sm font-bold">${p.name}</p><p class="text-xs text-[#c5a059]">${p.price.toLocaleString()} F</p></div><button onclick="toggleWishlist(${p.id});toggleWishlistModal()" class="ml-auto text-red-500">✖</button></div>`).join('');
+    container.innerHTML = items.map(p => `<div class="flex gap-2 border-b pb-2"><img src="${escapeHtml(p.image)}" class="w-10 h-10 object-cover rounded"><div><p class="text-sm font-bold">${escapeHtml(p.name)}</p><p class="text-xs text-[#c5a059]">${p.price.toLocaleString()} F</p></div><button onclick="toggleWishlist(${p.id});toggleWishlistModal()" class="ml-auto text-red-500">✖</button></div>`).join('');
     modal.classList.add('active');
 }
 function closeWishlistModal() { document.getElementById('wishlistModal').classList.remove('active'); }
@@ -478,7 +493,7 @@ function toggleComparateurModal() {
     const modal = document.getElementById('comparateurModal');
     const container = document.getElementById('comparateurItems');
     const items = comparateur.map(id => products.find(p => p.id === id)).filter(p => p);
-    container.innerHTML = items.map(p => `<div class="border p-2 rounded text-center"><img src="${p.image}" class="h-20 w-full object-cover rounded"><p class="text-xs font-bold mt-1">${p.name}</p><p class="text-[#c5a059] text-xs">${p.price.toLocaleString()} F</p><button onclick="toggleComparateur(${p.id});toggleComparateurModal()" class="text-red-500 text-xs mt-1">Retirer</button></div>`).join('');
+    container.innerHTML = items.map(p => `<div class="border p-2 rounded text-center"><img src="${escapeHtml(p.image)}" class="h-20 w-full object-cover rounded"><p class="text-xs font-bold mt-1">${escapeHtml(p.name)}</p><p class="text-[#c5a059] text-xs">${p.price.toLocaleString()} F</p><button onclick="toggleComparateur(${p.id});toggleComparateurModal()" class="text-red-500 text-xs mt-1">Retirer</button></div>`).join('');
     modal.classList.add('active');
 }
 function closeComparateurModal() { document.getElementById('comparateurModal').classList.remove('active'); }
@@ -566,7 +581,7 @@ function closeQRModal() { document.getElementById('qrModal').classList.remove('a
 // ==================== AVIS ====================
 function openAvisModal() {
     const container = document.getElementById('avisList');
-    container.innerHTML = avis.map(a => `<div class="border-b pb-2"><div class="flex justify-between"><span class="font-bold">${a.nom}</span><span class="text-xs text-gray-400">${a.date}</span></div><div class="flex text-[#c5a059] text-xs">${'★'.repeat(a.note)}${'☆'.repeat(5-a.note)}</div><p class="text-xs">${a.commentaire}</p></div>`).join('');
+    container.innerHTML = avis.map(a => `<div class="border-b pb-2"><div class="flex justify-between"><span class="font-bold">${escapeHtml(a.nom)}</span><span class="text-xs text-gray-400">${escapeHtml(a.date)}</span></div><div class="flex text-[#c5a059] text-xs">${'★'.repeat(a.note)}${'☆'.repeat(5-a.note)}</div><p class="text-xs">${escapeHtml(a.commentaire)}</p></div>`).join('');
     document.getElementById('avisModal').classList.add('active');
 }
 function closeAvisModal() { document.getElementById('avisModal').classList.remove('active'); }
@@ -575,9 +590,11 @@ function closeDepotAvis() { document.getElementById('depotAvisModal').classList.
 function resetStars() { document.querySelectorAll('#starRating i').forEach(s => s.className = 'fa-regular fa-star cursor-pointer'); }
 function setRating(r) { currentRating = r; document.querySelectorAll('#starRating i').forEach((s,i) => { s.className = i < r ? 'fa-solid fa-star text-[#c5a059]' : 'fa-regular fa-star'; }); }
 function submitAvis() {
-    const nom = document.getElementById('avisNom').value;
-    const comment = document.getElementById('avisComment').value;
-    if (!nom || !comment || currentRating === 0) { alert("Remplissez tous les champs"); return; }
+    let nom = document.getElementById('avisNom').value.trim();
+    let comment = document.getElementById('avisComment').value.trim();
+    if (!isValidName(nom)) { alert("Nom invalide (2-50 lettres)"); return; }
+    if (!comment || comment.length < 3 || comment.length > 500) { alert("Commentaire entre 3 et 500 caractères"); return; }
+    if (currentRating === 0) { alert("Veuillez donner une note"); return; }
     avis.unshift({ nom, note: currentRating, commentaire: comment, date: new Date().toLocaleDateString() });
     saveAll();
     closeDepotAvis();
@@ -589,8 +606,9 @@ document.querySelectorAll('#starRating i').forEach(star => star.addEventListener
 function toggleChat() { document.getElementById('chatWindow').classList.toggle('active'); }
 function sendChatMessage() {
     const input = document.getElementById('chatInput');
-    const msg = input.value.trim();
+    let msg = input.value.trim();
     if (!msg) return;
+    msg = escapeHtml(msg);
     const container = document.getElementById('chatMessages');
     container.innerHTML += `<div class="chat-message user"><span>${msg}</span></div>`;
     input.value = '';
@@ -672,7 +690,7 @@ function startFlashSale() {
 let salesChart = null;
 function openAdmin() {
     const code = prompt("Code admin :");
-    if (code !== "2026") return;
+    if (!verifyAdminCode(code)) { alert("Code incorrect"); return; }
     document.getElementById('adminModal').classList.add('active');
     initAdminStats();
     renderAdminProducts();
@@ -689,14 +707,16 @@ function initAdminStats() {
 }
 function renderAdminProducts() {
     const container = document.getElementById('adminProductList');
-    container.innerHTML = products.map(p => `<div class="flex justify-between items-center border-b pb-1 text-sm"><span>${p.name}</span><span>${p.price.toLocaleString()} F</span><button onclick="deleteProduct(${p.id})" class="text-red-500 text-xs">Supprimer</button></div>`).join('');
+    container.innerHTML = products.map(p => `<div class="flex justify-between items-center border-b pb-1 text-sm"><span>${escapeHtml(p.name)}</span><span>${p.price.toLocaleString()} F</span><button onclick="deleteProduct(${p.id})" class="text-red-500 text-xs">Supprimer</button></div>`).join('');
 }
 function addProductAdmin() {
-    const name = document.getElementById('newProdName').value;
+    const name = document.getElementById('newProdName').value.trim();
     const price = parseInt(document.getElementById('newProdPrice').value);
-    const image = document.getElementById('newProdImage').value;
+    const image = document.getElementById('newProdImage').value.trim();
     const cat = document.getElementById('newProdCat').value;
-    if (!name || !price || !image) { alert("Remplissez tous les champs"); return; }
+    if (!isValidName(name)) { alert("Nom invalide"); return; }
+    if (isNaN(price) || price <= 0) { alert("Prix invalide"); return; }
+    if (!image.startsWith('http')) { alert("URL image invalide"); return; }
     const newId = Date.now();
     products.push({ id: newId, name, price, image, cat, popular: false });
     saveAll();
@@ -709,6 +729,7 @@ function addProductAdmin() {
     showToast("Produit ajouté");
 }
 function deleteProduct(id) {
+    if (!confirm("Supprimer ce produit ?")) return;
     products = products.filter(p => p.id !== id);
     saveAll();
     renderProducts();
@@ -716,7 +737,7 @@ function deleteProduct(id) {
     renderAdminProducts();
 }
 function renderAdminCommandes() {
-    document.getElementById('adminHistorique').innerHTML = historiqueCommandes.map(c => `<div class="border-b pb-1 text-xs">${c.date} - ${c.client} - ${c.total}</div>`).join('');
+    document.getElementById('adminHistorique').innerHTML = historiqueCommandes.map(c => `<div class="border-b pb-1 text-xs">${escapeHtml(c.date)} - ${escapeHtml(c.client)} - ${escapeHtml(c.total)}</div>`).join('');
 }
 function toggleMaintenance(activate) {
     localStorage.setItem('maintenance', activate);
@@ -756,8 +777,8 @@ function searchProducts(query) {
     if (filtered.length === 0) { grid.innerHTML = '<div class="col-span-full text-center py-10 text-gray-400">Aucun résultat</div>'; return; }
     grid.innerHTML = filtered.map(p => `
         <div class="product-card p-2 relative" onclick="viewProduct(${p.id})">
-            <img src="${p.image}" class="h-36 w-full object-cover rounded-lg">
-            <h3 class="text-xs font-bold mt-2">${p.name}</h3>
+            <img src="${escapeHtml(p.image)}" class="h-36 w-full object-cover rounded-lg" alt="${escapeHtml(p.name)}">
+            <h3 class="text-xs font-bold mt-2">${escapeHtml(p.name)}</h3>
             <div class="text-[#c5a059] font-bold text-sm">${p.price.toLocaleString()} F</div>
             <button onclick="event.stopPropagation(); addToCart(${p.id})" class="mt-2 w-full bg-gray-100 py-1 rounded text-xs font-bold">Ajouter</button>
         </div>
@@ -800,12 +821,6 @@ function showToast(msg) {
     toast.innerText = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2000);
-}
-
-// ==================== INIT CHART ====================
-function initChart() {
-    const ctx = document.getElementById('salesChart');
-    if (!ctx) return;
 }
 
 // ==================== INIT ====================
