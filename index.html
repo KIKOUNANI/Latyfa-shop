@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>LATYFA BOUTIQUE | Sécurisé</title>
+    <!-- Content Security Policy (CSP) renforcée -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com https://api.qrserver.com; connect-src 'self';">
     <link rel="manifest" href="data:application/manifest+json,{"name":"Latyfa Shop","short_name":"Latyfa","start_url":"/","display":"standalone","theme_color":"#c5a059"}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- CryptoJS pour SHA-256 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
@@ -194,7 +195,7 @@
 </section>
 
 <!-- MODALES (toutes) -->
-<div id="authModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">Compte</h2><button onclick="closeAuthModal()" class="text-xl">&times;</button></div><div class="flex border-b mb-4"><button class="auth-tab active flex-1 py-2 text-sm font-bold" onclick="switchAuthTab('login')">Connexion</button><button class="auth-tab flex-1 py-2 text-sm font-bold" onclick="switchAuthTab('register')">Inscription</button></div><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-3"><input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-lg p-2 mb-3"><button onclick="login()" class="btn-primary">Se connecter</button></div><div id="registerForm" style="display:none"><input type="text" id="regName" placeholder="Nom" class="w-full border rounded-lg p-2 mb-2"><input type="email" id="regEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-2"><input type="tel" id="regPhone" placeholder="Téléphone" class="w-full border rounded-lg p-2 mb-2"><input type="password" id="regPassword" placeholder="Mot de passe" class="w-full border rounded-lg p-2 mb-2"><input type="password" id="regConfirm" placeholder="Confirmer" class="w-full border rounded-lg p-2 mb-2"><div class="flex items-start gap-2 mb-3"><input type="checkbox" id="acceptCGV"><label class="text-xs">J'accepte les CGV</label></div><button onclick="register()" class="btn-primary">S'inscrire</button></div></div></div>
+<div id="authModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">Compte</h2><button onclick="closeAuthModal()" class="text-xl">&times;</button></div><div class="flex border-b mb-4"><button class="auth-tab active flex-1 py-2 text-sm font-bold" onclick="switchAuthTab('login')">Connexion</button><button class="auth-tab flex-1 py-2 text-sm font-bold" onclick="switchAuthTab('register')">Inscription</button></div><div id="loginForm"><input type="email" id="loginEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-3"><input type="password" id="loginPassword" placeholder="Mot de passe" class="w-full border rounded-lg p-2 mb-3"><button onclick="login()" class="btn-primary">Se connecter</button><p id="loginError" class="text-xs text-red-500 hidden mt-1"></p></div><div id="registerForm" style="display:none"><input type="text" id="regName" placeholder="Nom" class="w-full border rounded-lg p-2 mb-2"><input type="email" id="regEmail" placeholder="Email" class="w-full border rounded-lg p-2 mb-2"><input type="tel" id="regPhone" placeholder="Téléphone" class="w-full border rounded-lg p-2 mb-2"><input type="password" id="regPassword" placeholder="Mot de passe (min 8 caractères)" class="w-full border rounded-lg p-2 mb-2"><input type="password" id="regConfirm" placeholder="Confirmer" class="w-full border rounded-lg p-2 mb-2"><div class="flex items-start gap-2 mb-3"><input type="checkbox" id="acceptCGV"><label class="text-xs">J'accepte les CGV</label></div><button onclick="register()" class="btn-primary">S'inscrire</button></div></div></div>
 
 <div id="cartModal" class="modal"><div class="modal-content"><div class="flex justify-between mb-4"><h2 class="text-lg font-black">Mon Panier</h2><button onclick="closeCartModal()" class="text-xl">&times;</button></div><div id="cartItems" class="space-y-2 max-h-64 overflow-y-auto"></div><div class="flex items-center gap-2 my-2"><input type="checkbox" id="giftWrap"><label class="text-xs">🎁 Emballage cadeau (+1.000 F)</label></div><div><input type="text" id="promoCode" placeholder="Code promo" class="w-full border rounded-lg p-2 text-sm"><button onclick="applyPromo()" class="text-xs text-blue-500 mt-1">Appliquer</button><p id="promoMsg" class="text-xs text-green-600 hidden"></p></div><div class="border-t pt-3 mt-3"><div class="flex justify-between font-bold"><span>Total :</span><span id="cartTotal">0 F</span></div></div><button onclick="checkout()" class="btn-primary mt-3">Commander via WhatsApp</button><button onclick="clearCart()" class="text-red-500 text-xs mt-2 w-full text-center">Vider le panier</button></div></div>
 
@@ -238,8 +239,11 @@
 
 <script>
 // ==================== FONCTIONS DE SÉCURITÉ ====================
-function hashPassword(pwd) {
-    return CryptoJS.SHA256(pwd).toString();
+function hashPasswordWithSalt(password, salt) {
+    return CryptoJS.SHA256(salt + password).toString();
+}
+function generateSalt() {
+    return CryptoJS.lib.WordArray.random(16).toString();
 }
 function escapeHtml(str) {
     if (!str) return '';
@@ -253,12 +257,44 @@ function escapeHtml(str) {
 function isValidName(name) { return name && name.length >= 2 && name.length <= 50 && /^[a-zA-ZÀ-ÿ\s\-']+$/.test(name); }
 function isValidEmail(email) { return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email); }
 function isValidPhone(phone) { return /^[0-9+\s]{8,15}$/.test(phone); }
-function isValidPassword(pwd) { return pwd && pwd.length >= 4; }
+function isValidPassword(pwd) { return pwd && pwd.length >= 8; }
 
-// Code admin hashé (SHA-256 de "2026")
-const ADMIN_HASH = "6e21f2a6c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9c9";
+// Admin : sel + hash d'un mot de passe fort (ex: "AdminLatyfa2026!")
+const ADMIN_SALT = "a1b2c3d4e5f67890";
+const ADMIN_HASH = hashPasswordWithSalt("AdminLatyfa2026!", ADMIN_SALT);
 function verifyAdminCode(code) {
-    return hashPassword(code) === ADMIN_HASH;
+    return hashPasswordWithSalt(code, ADMIN_SALT) === ADMIN_HASH;
+}
+
+// Limitation des tentatives de connexion (stockée dans localStorage)
+function getLoginAttempts(email) {
+    const attempts = JSON.parse(localStorage.getItem('loginAttempts')) || {};
+    return attempts[email] || { count: 0, blockUntil: 0 };
+}
+function recordLoginAttempt(email, success) {
+    const attempts = JSON.parse(localStorage.getItem('loginAttempts')) || {};
+    if (success) {
+        delete attempts[email];
+    } else {
+        const now = Date.now();
+        const current = attempts[email] || { count: 0, blockUntil: 0 };
+        if (current.blockUntil > now) return;
+        current.count++;
+        if (current.count >= 3) {
+            current.blockUntil = now + 5 * 60 * 1000; // 5 minutes
+        }
+        attempts[email] = current;
+    }
+    localStorage.setItem('loginAttempts', JSON.stringify(attempts));
+}
+function isLoginBlocked(email) {
+    const attempts = JSON.parse(localStorage.getItem('loginAttempts')) || {};
+    const data = attempts[email];
+    if (data && data.blockUntil > Date.now()) {
+        const minutesLeft = Math.ceil((data.blockUntil - Date.now()) / 60000);
+        return { blocked: true, minutesLeft };
+    }
+    return { blocked: false };
 }
 
 // ==================== DONNÉES ====================
@@ -281,12 +317,12 @@ let historiqueCommandes = [];
 // ==================== INIT ====================
 function loadData() {
     try {
-        cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = JSON.parse(sessionStorage.getItem('cart')) || [];
         wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         comparateur = JSON.parse(localStorage.getItem('comparateur')) || [];
         avis = JSON.parse(localStorage.getItem('avis')) || [];
         clients = JSON.parse(localStorage.getItem('clients')) || [];
-        user = JSON.parse(localStorage.getItem('user'));
+        user = JSON.parse(sessionStorage.getItem('user'));
         points = parseInt(localStorage.getItem('points')) || 0;
         parrainageData = JSON.parse(localStorage.getItem('parrainage')) || { parrains: {} };
         historiqueCommandes = JSON.parse(localStorage.getItem('historique')) || [];
@@ -303,12 +339,12 @@ function loadData() {
     initChart();
 }
 function saveAll() {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    sessionStorage.setItem('cart', JSON.stringify(cart));
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
     localStorage.setItem('comparateur', JSON.stringify(comparateur));
     localStorage.setItem('avis', JSON.stringify(avis));
     localStorage.setItem('clients', JSON.stringify(clients));
-    localStorage.setItem('user', JSON.stringify(user));
+    if (user) sessionStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('points', points);
     localStorage.setItem('parrainage', JSON.stringify(parrainageData));
     localStorage.setItem('historique', JSON.stringify(historiqueCommandes));
@@ -414,7 +450,8 @@ function checkout() {
     if (promo) msg += `- Réduction ${activePromo}%: ${promo.toLocaleString()} F\n`;
     msg += `\nTotal: ${total.toLocaleString()} F`;
     window.open(`https://wa.me/2250709002881?text=${encodeURIComponent(msg)}`);
-    historiqueCommandes.unshift({ date: new Date().toLocaleString(), client: user?.name || "Client", total: total.toLocaleString()+" F", articles: cart.map(i=>i.name).join(', ') });
+    // Stockage minimal pour l'admin (uniquement montant et date)
+    historiqueCommandes.unshift({ date: new Date().toLocaleString(), total: total.toLocaleString()+" F" });
     saveAll();
     cart = []; activePromo = null; updateCartCounters(); closeCartModal(); showToast("Commande envoyée !");
     addPoints(total);
@@ -430,17 +467,26 @@ function switchAuthTab(tab) {
 function login() {
     const email = document.getElementById('loginEmail').value.trim();
     const pwd = document.getElementById('loginPassword').value;
-    if (!email || !pwd) { alert("Veuillez remplir tous les champs"); return; }
-    const hashedPwd = hashPassword(pwd);
-    const client = clients.find(c => c.email === email && c.password === hashedPwd);
-    if (client) {
+    const errorDiv = document.getElementById('loginError');
+    if (!email || !pwd) { errorDiv.innerText = "Veuillez remplir tous les champs"; errorDiv.classList.remove('hidden'); return; }
+    const blocked = isLoginBlocked(email);
+    if (blocked.blocked) {
+        errorDiv.innerText = `Trop de tentatives. Réessayez dans ${blocked.minutesLeft} minute(s).`;
+        errorDiv.classList.remove('hidden');
+        return;
+    }
+    const client = clients.find(c => c.email === email);
+    if (client && hashPasswordWithSalt(pwd, client.salt) === client.password) {
         user = { id: client.id, name: client.name, email: client.email, phone: client.phone, points: client.points };
         saveAll();
         document.getElementById('loginBtn').innerText = escapeHtml(user.name.split(' ')[0]);
+        recordLoginAttempt(email, true);
         closeAuthModal();
         showToast("Connecté");
     } else {
-        alert("Email ou mot de passe incorrect");
+        recordLoginAttempt(email, false);
+        errorDiv.innerText = "Email ou mot de passe incorrect";
+        errorDiv.classList.remove('hidden');
     }
 }
 function register() {
@@ -453,12 +499,13 @@ function register() {
     if (!isValidName(name)) { alert("Nom invalide (2-50 lettres)"); return; }
     if (!isValidEmail(email)) { alert("Email invalide"); return; }
     if (!isValidPhone(phone)) { alert("Téléphone invalide (8-15 chiffres)"); return; }
-    if (!isValidPassword(pwd)) { alert("Mot de passe trop court (min 4 caractères)"); return; }
+    if (!isValidPassword(pwd)) { alert("Mot de passe trop court (min 8 caractères)"); return; }
     if (pwd !== confirm) { alert("Les mots de passe ne correspondent pas"); return; }
     if (!accept) { alert("Acceptez les CGV"); return; }
     if (clients.find(c => c.email === email)) { alert("Email déjà utilisé"); return; }
-    const hashedPwd = hashPassword(pwd);
-    const newUser = { id: Date.now(), name, email, phone, password: hashedPwd, points: 0 };
+    const salt = generateSalt();
+    const hashedPwd = hashPasswordWithSalt(pwd, salt);
+    const newUser = { id: Date.now(), name, email, phone, salt, password: hashedPwd, points: 0 };
     clients.push(newUser);
     user = { id: newUser.id, name: newUser.name, email: newUser.email, phone: newUser.phone, points: 0 };
     saveAll();
@@ -737,7 +784,7 @@ function deleteProduct(id) {
     renderAdminProducts();
 }
 function renderAdminCommandes() {
-    document.getElementById('adminHistorique').innerHTML = historiqueCommandes.map(c => `<div class="border-b pb-1 text-xs">${escapeHtml(c.date)} - ${escapeHtml(c.client)} - ${escapeHtml(c.total)}</div>`).join('');
+    document.getElementById('adminHistorique').innerHTML = historiqueCommandes.map(c => `<div class="border-b pb-1 text-xs">${escapeHtml(c.date)} - ${escapeHtml(c.total)}</div>`).join('');
 }
 function toggleMaintenance(activate) {
     localStorage.setItem('maintenance', activate);
